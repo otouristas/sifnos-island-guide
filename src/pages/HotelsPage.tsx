@@ -76,7 +76,7 @@ export default function HotelsPage() {
       id: 6,
       name: 'Vathi Bay Resort',
       location: 'Vathi',
-      description: 'Beachfront luxury with direct access to Vathi's golden sand beach.',
+      description: "Beachfront luxury with direct access to Vathi's golden sand beach.",
       rating: 5,
       price: 280,
       amenities: ['wifi', 'pool', 'breakfast', 'parking', 'restaurant', 'seaView'],
