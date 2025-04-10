@@ -6,6 +6,7 @@ interface SEOProps {
   description: string;
   keywords: string[];
   schemaType?: 'Hotel' | 'TravelAgency' | 'Organization';
+  canonical?: string;
 }
 
 type SchemaData = {
@@ -16,7 +17,7 @@ type SchemaData = {
   [key: string]: any; // Allow for additional properties based on schema type
 }
 
-export default function SEO({ title, description, keywords, schemaType = 'Organization' }: SEOProps) {
+export default function SEO({ title, description, keywords, schemaType = 'Organization', canonical }: SEOProps) {
   const baseSchema: SchemaData = {
     "@context": "https://schema.org",
     "@type": schemaType,
@@ -51,7 +52,8 @@ export default function SEO({ title, description, keywords, schemaType = 'Organi
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content="https://hotelssifnos.com" />
+      <meta property="og:url" content={canonical || "https://hotelssifnos.com"} />
+      {canonical && <link rel="canonical" href={canonical} />}
       <script type="application/ld+json">
         {JSON.stringify(schemaData)}
       </script>

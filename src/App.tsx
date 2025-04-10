@@ -10,10 +10,14 @@ import CookieConsent from "./components/CookieConsent";
 // Pages
 import HomePage from "./pages/HomePage";
 import HotelsPage from "./pages/HotelsPage";
+import HotelDetailPage from "./pages/HotelDetailPage";
 import ContactPage from "./pages/ContactPage";
 import AboutPage from "./pages/AboutPage";
 import FAQPage from "./pages/FAQPage";
 import NotFound from "./pages/NotFound";
+import TravelGuidePage from "./pages/TravelGuidePage";
+import BeachesPage from "./pages/BeachesPage";
+import AboutUsPage from "./pages/AboutUsPage";
 
 // Components
 import Navigation from "./components/Navigation";
@@ -29,6 +33,7 @@ const App = () => (
         description="Find the best hotels and accommodations in Sifnos Island, Greece. Book luxury hotels, boutique stays and villas with sea views."
         keywords={['sifnos hotels', 'greek islands hotels', 'sifnos accommodation', 'sifnos island']}
         schemaType="Organization"
+        canonical="https://hotelssifnos.com"
       />
       <Toaster />
       <Sonner />
@@ -38,10 +43,13 @@ const App = () => (
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/hotels" element={<HotelsPage />} />
+            <Route path="/hotels/:id" element={<HotelDetailPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/about-us" element={<AboutUsPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/faq" element={<FAQPage />} />
-            {/* Add additional routes as they're built */}
+            <Route path="/travel-guide" element={<TravelGuidePage />} />
+            <Route path="/beaches" element={<BeachesPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

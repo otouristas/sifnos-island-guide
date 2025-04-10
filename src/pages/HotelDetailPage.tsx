@@ -1,0 +1,480 @@
+
+import { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import SEO from '../components/SEO';
+import { useToast } from "@/components/ui/use-toast";
+
+export default function HotelDetailPage() {
+  const { id } = useParams();
+  const [hotel, setHotel] = useState(null);
+  const [activeImage, setActiveImage] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchHotelDetails = async () => {
+      try {
+        const { data, error } = await (supabase as any).from('hotels')
+          .select(`
+            *,
+            hotel_amenities(amenity),
+            hotel_photos(id, photo_url, is_main_photo, description),
+            hotel_rooms(id, name, description, price, capacity, size_sqm, amenities, photo_url),
+            hotel_reviews(id, reviewer_name, rating, comment, date, reviewer_photo)
+          `)
+          .eq('id', id)
+          .single();
+
+        if (error) throw error;
+        
+        setHotel(data);
+        
+        // Set active image to main photo or first photo
+        if (data?.hotel_photos?.length > 0) {
+          const mainPhoto = data.hotel_photos.find(photo => photo.is_main_photo);
+          setActiveImage(mainPhoto ? mainPhoto.photo_url : data.hotel_photos[0].photo_url);
+        }
+      } catch (error) {
+        console.error('Error fetching hotel details:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load hotel details. Please try again later.",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHotelDetails();
+  }, [id, toast]);
+
+  // Function to render star rating
+  const renderStarRating = (rating) => {
+    return Array(5).fill(0).map((_, i) => (
+      <Star 
+        key={i} 
+        className={i < rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"} 
+        size={16}
+      />
+    ));
+  };
+
+  // If loading show spinner
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-sifnos-turquoise"></div>
+      </div>
+    );
+  }
+
+  // If hotel not found
+  if (!hotel) {
+    return (
+      <div className="py-20 text-center">
+        <h2 className="text-2xl font-semibold mb-4">Hotel Not Found</h2>
+        <p className="mb-6">The hotel you are looking for does not exist or has been removed.</p>
+        <Link to="/hotels" className="bg-sifnos-turquoise text-white px-6 py-3 rounded-lg hover:bg-sifnos-deep-blue transition-colors">
+          Back to Hotels
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <SEO 
+        title={`${hotel.name} - Hotel in ${hotel.location}, Sifnos Island`}
+        description={hotel.short_description || `Discover ${hotel.name} located in ${hotel.location}, Sifnos. Enjoy luxurious accommodations with modern amenities and stunning views of the Aegean Sea.`}
+        keywords={[
+          'sifnos hotels', 
+          hotel.name.toLowerCase(), 
+          `${hotel.location.toLowerCase()} accommodation`, 
+          'sifnos island hotel', 
+          'aegean sea view',
+          'greek cyclades hotel'
+        ]}
+        schemaType="Hotel"
+        canonical={`https://hotelssifnos.com/hotels/${id}`}
+      />
+      
+      {/* Breadcrumb navigation */}
+      <div className="bg-white pt-6 pb-4 shadow-sm">
+        <div className="page-container">
+          <nav className="text-sm breadcrumbs">
+            <ul className="flex space-x-2">
+              <li><Link to="/" className="text-sifnos-deep-blue hover:text-sifnos-turquoise">Home</Link></li>
+              <li className="text-gray-400">/</li>
+              <li><Link to="/hotels" className="text-sifnos-deep-blue hover:text-sifnos-turquoise">Hotels</Link></li>
+              <li className="text-gray-400">/</li>
+              <li className="text-gray-600 truncate max-w-[200px]">{hotel.name}</li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      
+      {/* Hotel Title Section */}
+      <div className="bg-white">
+        <div className="page-container py-6">
+          <div className="flex flex-wrap items-start justify-between">
+            <div>
+              <h1 className="font-montserrat text-3xl md:text-4xl font-bold mb-2">{hotel.name}</h1>
+              <div className="flex items-center mb-1">
+                <MapPin size={16} className="text-sifnos-turquoise mr-1" />
+                <span className="text-gray-600">{hotel.location}, Sifnos Island</span>
+              </div>
+              <div className="flex items-center">
+                {renderStarRating(hotel.rating)}
+                <span className="text-sm ml-2 text-gray-600">({hotel.hotel_reviews?.length || 0} reviews)</span>
+              </div>
+            </div>
+            <div className="mt-4 md:mt-0">
+              <div className="text-right">
+                <p className="text-sm text-gray-600">Prices starting at</p>
+                <p className="text-3xl font-bold text-sifnos-deep-blue">${hotel.price}<span className="text-sm font-normal text-gray-600"> / night</span></p>
+              </div>
+              <button className="bg-sifnos-turquoise text-white px-6 py-2 rounded-lg mt-2 hover:bg-sifnos-deep-blue transition-colors w-full">
+                Book Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Photo Gallery */}
+      <div className="bg-gray-50 py-8">
+        <div className="page-container">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Main large image */}
+            <div className="md:col-span-2 rounded-lg overflow-hidden aspect-video">
+              <img 
+                src={activeImage || '/placeholder.svg'} 
+                alt={hotel.name} 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            
+            {/* Thumbnails */}
+            <div className="grid grid-cols-3 md:grid-cols-2 gap-2 h-full">
+              {hotel.hotel_photos?.slice(0, 4).map((photo, index) => (
+                <div 
+                  key={photo.id} 
+                  className={`rounded-lg overflow-hidden aspect-square cursor-pointer border-2 ${activeImage === photo.photo_url ? 'border-sifnos-turquoise' : 'border-transparent'}`}
+                  onClick={() => setActiveImage(photo.photo_url)}
+                >
+                  <img 
+                    src={photo.photo_url} 
+                    alt={photo.description || `${hotel.name} - Photo ${index + 1}`} 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+              {hotel.hotel_photos?.length > 4 && (
+                <div 
+                  className="rounded-lg overflow-hidden aspect-square relative cursor-pointer bg-gray-800"
+                  onClick={() => setActiveImage(hotel.hotel_photos[4].photo_url)}
+                >
+                  <img 
+                    src={hotel.hotel_photos[4].photo_url}
+                    alt={`${hotel.name} - More Photos`}
+                    className="w-full h-full object-cover opacity-60"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center text-white font-medium">
+                    +{hotel.hotel_photos.length - 4} more
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Hotel Details */}
+      <div className="py-12">
+        <div className="page-container">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            {/* Left Column - Description & Amenities */}
+            <div className="lg:col-span-2 space-y-8">
+              
+              {/* Description */}
+              <div className="cycladic-card">
+                <h2 className="text-2xl font-montserrat font-semibold mb-4">About {hotel.name}</h2>
+                <p className="text-gray-700 whitespace-pre-line leading-relaxed">
+                  {hotel.description}
+                </p>
+              </div>
+              
+              {/* Amenities */}
+              <div className="cycladic-card">
+                <h2 className="text-2xl font-montserrat font-semibold mb-4">Hotel Amenities</h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4">
+                  {hotel.hotel_amenities?.map((item) => (
+                    <div key={item.amenity} className="flex items-center">
+                      <CheckCircle size={16} className="text-sifnos-turquoise mr-2" />
+                      <span>{item.amenity}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Rooms */}
+              <div className="cycladic-card">
+                <h2 className="text-2xl font-montserrat font-semibold mb-6">Available Rooms</h2>
+                <div className="space-y-6">
+                  {hotel.hotel_rooms?.map((room) => (
+                    <div key={room.id} className="border-b pb-6 last:border-b-0 last:pb-0">
+                      <div className="flex flex-col md:flex-row">
+                        <div className="md:w-1/4 mb-4 md:mb-0">
+                          <img 
+                            src={room.photo_url || '/placeholder.svg'} 
+                            alt={room.name} 
+                            className="w-full h-32 object-cover rounded-lg"
+                          />
+                        </div>
+                        <div className="md:w-3/4 md:pl-6">
+                          <div className="flex justify-between">
+                            <h3 className="text-xl font-semibold">{room.name}</h3>
+                            <p className="font-bold text-sifnos-deep-blue">${room.price}<span className="text-sm font-normal text-gray-600"> / night</span></p>
+                          </div>
+                          
+                          <div className="flex flex-wrap gap-4 mt-2 text-sm text-gray-600">
+                            <div className="flex items-center">
+                              <Users size={16} className="mr-1" />
+                              Up to {room.capacity} guests
+                            </div>
+                            {room.size_sqm && (
+                              <div className="flex items-center">
+                                <span className="mr-1">☐</span>
+                                {room.size_sqm} m²
+                              </div>
+                            )}
+                          </div>
+                          
+                          <p className="mt-2 text-gray-700">{room.description}</p>
+                          
+                          {/* Room Amenities */}
+                          {room.amenities && room.amenities.length > 0 && (
+                            <div className="mt-3 flex flex-wrap gap-2">
+                              {room.amenities.map((amenity, index) => (
+                                <span key={index} className="bg-gray-100 text-xs py-1 px-2 rounded">
+                                  {amenity}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                          
+                          <div className="mt-4">
+                            <button className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-4 py-1 rounded-lg text-sm font-medium transition-colors">
+                              Book this room
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Reviews */}
+              <div className="cycladic-card">
+                <h2 className="text-2xl font-montserrat font-semibold mb-6">Guest Reviews</h2>
+                
+                {hotel.hotel_reviews?.length > 0 ? (
+                  <div className="space-y-6">
+                    {hotel.hotel_reviews.map((review) => (
+                      <div key={review.id} className="border-b pb-6 last:border-b-0 last:pb-0">
+                        <div className="flex items-start">
+                          <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden mr-4 flex-shrink-0">
+                            {review.reviewer_photo ? (
+                              <img 
+                                src={review.reviewer_photo} 
+                                alt={review.reviewer_name} 
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-gray-500">
+                                {review.reviewer_name.charAt(0).toUpperCase()}
+                              </div>
+                            )}
+                          </div>
+                          
+                          <div className="flex-1">
+                            <div className="flex flex-wrap justify-between">
+                              <h4 className="font-semibold">{review.reviewer_name}</h4>
+                              <span className="text-sm text-gray-500">
+                                {new Date(review.date).toLocaleDateString('en-US', {
+                                  year: 'numeric',
+                                  month: 'short',
+                                  day: 'numeric'
+                                })}
+                              </span>
+                            </div>
+                            
+                            <div className="flex my-1">
+                              {renderStarRating(review.rating)}
+                            </div>
+                            
+                            <p className="text-gray-700">{review.comment}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-600">No reviews yet for this hotel.</p>
+                )}
+                
+                <button className="mt-4 font-medium text-sifnos-turquoise hover:text-sifnos-deep-blue transition-colors">
+                  Write a review
+                </button>
+              </div>
+            </div>
+            
+            {/* Right Column - Booking Card & Contact Info */}
+            <div className="space-y-6">
+              
+              {/* Booking Card */}
+              <div className="cycladic-card">
+                <h3 className="text-xl font-semibold mb-4">Book Your Stay</h3>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Check-in Date</label>
+                    <div className="relative">
+                      <input
+                        type="date"
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise"
+                      />
+                      <Calendar size={16} className="absolute left-3 top-3 text-gray-400" />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Check-out Date</label>
+                    <div className="relative">
+                      <input
+                        type="date"
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise"
+                      />
+                      <Calendar size={16} className="absolute left-3 top-3 text-gray-400" />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Guests</label>
+                    <div className="relative">
+                      <select
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise appearance-none"
+                      >
+                        <option>1 Adult</option>
+                        <option>2 Adults</option>
+                        <option>2 Adults, 1 Child</option>
+                        <option>2 Adults, 2 Children</option>
+                      </select>
+                      <Users size={16} className="absolute left-3 top-3 text-gray-400" />
+                    </div>
+                  </div>
+                  
+                  <button className="w-full bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white py-3 rounded-lg transition-colors font-medium">
+                    Check Availability
+                  </button>
+                </div>
+              </div>
+              
+              {/* Contact Info */}
+              <div className="cycladic-card">
+                <h3 className="text-xl font-semibold mb-4">Contact Information</h3>
+                <div className="space-y-3">
+                  {hotel.address && (
+                    <div className="flex items-start">
+                      <MapPin size={18} className="text-sifnos-turquoise mr-2 mt-1" />
+                      <span>{hotel.address}</span>
+                    </div>
+                  )}
+                  
+                  {hotel.phone && (
+                    <div className="flex items-center">
+                      <Phone size={18} className="text-sifnos-turquoise mr-2" />
+                      <a href={`tel:${hotel.phone}`} className="hover:text-sifnos-turquoise">{hotel.phone}</a>
+                    </div>
+                  )}
+                  
+                  {hotel.email && (
+                    <div className="flex items-center">
+                      <Mail size={18} className="text-sifnos-turquoise mr-2" />
+                      <a href={`mailto:${hotel.email}`} className="hover:text-sifnos-turquoise">{hotel.email}</a>
+                    </div>
+                  )}
+                  
+                  {hotel.website && (
+                    <div className="flex items-center">
+                      <GlobeIcon size={18} className="text-sifnos-turquoise mr-2" />
+                      <a href={hotel.website} target="_blank" rel="noopener noreferrer" className="hover:text-sifnos-turquoise">Website</a>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Social Media Links */}
+                <div className="mt-4 flex space-x-3">
+                  {hotel.social_facebook && (
+                    <a 
+                      href={hotel.social_facebook} 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 bg-gray-100 rounded-full hover:bg-sifnos-turquoise/20 transition-colors"
+                    >
+                      <Facebook size={16} />
+                    </a>
+                  )}
+                  
+                  {hotel.social_instagram && (
+                    <a 
+                      href={hotel.social_instagram} 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 bg-gray-100 rounded-full hover:bg-sifnos-turquoise/20 transition-colors"
+                    >
+                      <Instagram size={16} />
+                    </a>
+                  )}
+                  
+                  {hotel.social_twitter && (
+                    <a 
+                      href={hotel.social_twitter} 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 bg-gray-100 rounded-full hover:bg-sifnos-turquoise/20 transition-colors"
+                    >
+                      <Twitter size={16} />
+                    </a>
+                  )}
+                </div>
+              </div>
+              
+              {/* Map */}
+              {hotel.google_map_url && (
+                <div className="cycladic-card">
+                  <h3 className="text-xl font-semibold mb-4">Location</h3>
+                  <div className="h-64 bg-gray-100">
+                    <iframe
+                      src={hotel.google_map_url}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      loading="lazy"
+                      title={`${hotel.name} Location Map`}
+                    ></iframe>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

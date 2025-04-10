@@ -1,35 +1,53 @@
 
+import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import { Link } from 'react-router-dom';
 import { Search, MapPin, Hotel, Home, Utensils, Anchor, Sun, Calendar } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from "@/components/ui/use-toast";
 
 export default function HomePage() {
-  const featuredHotels = [
-    { 
-      id: 1, 
-      name: 'Blue Sea Luxury Hotel',
-      location: 'Platis Gialos',
-      rating: 4.9,
-      imagePath: '/hotel1.jpg',
-      price: 220
-    },
-    { 
-      id: 2, 
-      name: 'Cycladic Elegance',
-      location: 'Kamares',
-      rating: 4.8,
-      imagePath: '/hotel2.jpg',
-      price: 180
-    },
-    { 
-      id: 3, 
-      name: 'Sifnos Bliss Resort',
-      location: 'Apollonia',
-      rating: 4.7,
-      imagePath: '/hotel3.jpg',
-      price: 250
+  const [featuredHotels, setFeaturedHotels] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    async function fetchFeaturedHotels() {
+      try {
+        const { data, error } = await (supabase as any)
+          .from('hotels')
+          .select(`
+            *,
+            hotel_photos(photo_url, is_main_photo)
+          `)
+          .order('rating', { ascending: false })
+          .limit(3);
+
+        if (error) throw error;
+        setFeaturedHotels(data || []);
+      } catch (error) {
+        console.error('Error fetching hotels:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load featured hotels. Please try again later.",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
     }
-  ];
+
+    fetchFeaturedHotels();
+  }, [toast]);
+
+  // Helper function to get main photo URL
+  const getMainPhotoUrl = (hotel) => {
+    if (hotel?.hotel_photos && hotel.hotel_photos.length > 0) {
+      const mainPhoto = hotel.hotel_photos.find(photo => photo.is_main_photo);
+      return mainPhoto ? mainPhoto.photo_url : (hotel.hotel_photos[0]?.photo_url || '/placeholder.svg');
+    }
+    return '/placeholder.svg';
+  };
 
   const popularBeaches = [
     {
@@ -53,8 +71,9 @@ export default function HomePage() {
     <>
       <SEO 
         title="Hotels Sifnos - Find the Best Hotels in Sifnos Island, Greece" 
-        description="Discover the best hotels and accommodations in Sifnos Island, Greece. Book luxury hotels, boutique stays, and villas with sea views."
-        keywords={['sifnos hotels', 'hotels in sifnos', 'best hotels sifnos', 'sifnos accommodation', 'sifnos island']}
+        description="Discover the best hotels and accommodations in Sifnos Island, Greece. Book luxury hotels, boutique stays, and villas with sea views for your perfect Greek island vacation."
+        keywords={['sifnos hotels', 'hotels in sifnos', 'best hotels sifnos', 'sifnos accommodation', 'sifnos island', 'greek islands hotels', 'cyclades accommodations']}
+        canonical="https://hotelssifnos.com"
       />
       
       {/* Hero Section */}
@@ -111,7 +130,7 @@ export default function HomePage() {
                 <Hotel size={30} className="text-sifnos-deep-blue" />
               </div>
               <h3 className="font-montserrat font-semibold text-xl mb-2">Hotels</h3>
-              <p className="text-gray-600">Luxury and boutique hotels with stunning views</p>
+              <p className="text-gray-600">Luxury and boutique hotels with stunning views of the Aegean Sea</p>
             </Link>
             
             <Link to="/villas" className="cycladic-card p-6 text-center hover:bg-gray-50 transition-colors group">
@@ -119,7 +138,7 @@ export default function HomePage() {
                 <Home size={30} className="text-sifnos-deep-blue" />
               </div>
               <h3 className="font-montserrat font-semibold text-xl mb-2">Villas</h3>
-              <p className="text-gray-600">Private villas and homes for a relaxing stay</p>
+              <p className="text-gray-600">Private villas and homes for a relaxing family or group stay</p>
             </Link>
             
             <Link to="/restaurants" className="cycladic-card p-6 text-center hover:bg-gray-50 transition-colors group">
@@ -127,7 +146,7 @@ export default function HomePage() {
                 <Utensils size={30} className="text-sifnos-deep-blue" />
               </div>
               <h3 className="font-montserrat font-semibold text-xl mb-2">Restaurants</h3>
-              <p className="text-gray-600">Top-rated dining experiences on the island</p>
+              <p className="text-gray-600">Top-rated dining experiences featuring authentic Greek cuisine</p>
             </Link>
             
             <Link to="/beaches" className="cycladic-card p-6 text-center hover:bg-gray-50 transition-colors group">
@@ -135,7 +154,7 @@ export default function HomePage() {
                 <Anchor size={30} className="text-sifnos-deep-blue" />
               </div>
               <h3 className="font-montserrat font-semibold text-xl mb-2">Beaches</h3>
-              <p className="text-gray-600">Discover the most beautiful beaches of Sifnos</p>
+              <p className="text-gray-600">Discover the most beautiful beaches and hidden coves of Sifnos</p>
             </Link>
           </div>
         </div>
@@ -145,39 +164,48 @@ export default function HomePage() {
       <section className="py-16">
         <div className="page-container">
           <h2 className="section-title">Featured Hotels</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-            {featuredHotels.map(hotel => (
-              <div key={hotel.id} className="cycladic-card overflow-hidden">
-                <div className="h-48 overflow-hidden">
-                  {/* Placeholder image - in production replace with actual hotel images */}
-                  <div className="bg-sifnos-teal/50 h-full flex items-center justify-center">
-                    <span className="text-white font-medium">Hotel Image</span>
+          
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-sifnos-turquoise"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+              {featuredHotels.map(hotel => (
+                <div key={hotel.id} className="cycladic-card overflow-hidden">
+                  <div className="h-48 overflow-hidden">
+                    <img 
+                      src={getMainPhotoUrl(hotel)} 
+                      alt={hotel.name}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                </div>
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-montserrat font-semibold text-lg">{hotel.name}</h3>
-                    <div className="bg-sifnos-deep-blue text-white px-2 py-1 rounded text-sm">
-                      {hotel.rating}/5
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-montserrat font-semibold text-lg">{hotel.name}</h3>
+                      <div className="bg-sifnos-deep-blue text-white px-2 py-1 rounded text-sm">
+                        {hotel.rating}/5
+                      </div>
+                    </div>
+                    <div className="flex items-center text-gray-600 mb-4">
+                      <MapPin size={16} className="mr-1" />
+                      <span>{hotel.location}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <span className="text-2xl font-bold text-sifnos-deep-blue">${hotel.price}</span>
+                        <span className="text-gray-600 text-sm"> / night</span>
+                      </div>
+                      <Link to={`/hotels/${hotel.id}`} className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-4 py-2 rounded-lg transition-colors duration-300 text-sm font-medium">
+                        View Details
+                      </Link>
                     </div>
                   </div>
-                  <div className="flex items-center text-gray-600 mb-4">
-                    <MapPin size={16} className="mr-1" />
-                    <span>{hotel.location}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <span className="text-2xl font-bold text-sifnos-deep-blue">${hotel.price}</span>
-                      <span className="text-gray-600 text-sm"> / night</span>
-                    </div>
-                    <Link to={`/hotels/${hotel.id}`} className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-4 py-2 rounded-lg transition-colors duration-300 text-sm font-medium">
-                      View Details
-                    </Link>
-                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
+          
           <div className="text-center mt-10">
             <Link to="/hotels" className="inline-block px-6 py-3 border-2 border-sifnos-turquoise text-sifnos-turquoise font-montserrat font-medium rounded-lg hover:bg-sifnos-turquoise hover:text-white transition-colors duration-300">
               View All Hotels
@@ -194,10 +222,11 @@ export default function HomePage() {
             {popularBeaches.map((beach, index) => (
               <div key={index} className="cycladic-card overflow-hidden">
                 <div className="h-48 overflow-hidden">
-                  {/* Placeholder image - in production replace with actual beach images */}
-                  <div className="bg-sifnos-deep-blue/30 h-full flex items-center justify-center">
-                    <Sun size={40} className="text-white/70" />
-                  </div>
+                  <img 
+                    src={beach.imagePath}
+                    alt={beach.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="p-6">
                   <h3 className="font-montserrat font-semibold text-xl mb-2">{beach.name}</h3>
@@ -223,7 +252,7 @@ export default function HomePage() {
               </div>
               <h3 className="font-montserrat font-semibold text-xl mb-3">Best Selection</h3>
               <p className="text-gray-600">
-                We carefully curate the best accommodations in Sifnos to ensure quality stays.
+                We carefully curate the best accommodations in Sifnos to ensure quality stays for every budget and preference.
               </p>
             </div>
             
@@ -233,7 +262,7 @@ export default function HomePage() {
               </div>
               <h3 className="font-montserrat font-semibold text-xl mb-3">Local Expertise</h3>
               <p className="text-gray-600">
-                Our team has intimate knowledge of Sifnos to help you find the perfect stay.
+                Our team has intimate knowledge of Sifnos to help you find the perfect location for your island stay.
               </p>
             </div>
             
@@ -243,7 +272,7 @@ export default function HomePage() {
               </div>
               <h3 className="font-montserrat font-semibold text-xl mb-3">Island Guide</h3>
               <p className="text-gray-600">
-                Comprehensive travel guides to make the most of your Sifnos experience.
+                Comprehensive travel guides to help you discover hidden gems and make the most of your Sifnos experience.
               </p>
             </div>
           </div>
@@ -256,7 +285,7 @@ export default function HomePage() {
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="font-montserrat font-bold text-3xl mb-4">Subscribe to Our Newsletter</h2>
             <p className="mb-6 text-gray-300">
-              Stay updated with special offers, travel tips, and new properties in Sifnos.
+              Stay updated with special offers, travel tips, and new properties in Sifnos. Be the first to know about seasonal promotions.
             </p>
             <form className="flex flex-col sm:flex-row gap-2">
               <input
