@@ -44,12 +44,12 @@ const App = () => (
             <Route path="/" element={<HomePage />} />
             <Route path="/hotels" element={<HotelsPage />} />
             <Route path="/hotels/:id" element={<HotelDetailPage />} />
+            <Route path="/beaches" element={<BeachesPage />} />
+            <Route path="/travel-guide" element={<TravelGuidePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/about-us" element={<AboutUsPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/faq" element={<FAQPage />} />
-            <Route path="/travel-guide" element={<TravelGuidePage />} />
-            <Route path="/beaches" element={<BeachesPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

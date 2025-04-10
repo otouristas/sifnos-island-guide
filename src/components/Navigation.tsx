@@ -6,13 +6,11 @@ import { Menu, X } from 'lucide-react';
 const navItems = [
   { name: 'Home', path: '/' },
   { name: 'Hotels', path: '/hotels' },
-  { name: 'Villas', path: '/villas' },
   { name: 'Beaches', path: '/beaches' },
-  { name: 'Restaurants', path: '/restaurants' },
   { name: 'Travel Guide', path: '/travel-guide' },
+  { name: 'About Us', path: '/about-us' },
   { name: 'FAQ', path: '/faq' },
-  { name: 'Contact', path: '/contact' },
-  { name: 'About Us', path: '/about-us' }
+  { name: 'Contact', path: '/contact' }
 ];
 
 export default function Navigation() {

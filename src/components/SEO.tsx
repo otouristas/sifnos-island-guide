@@ -18,6 +18,11 @@ type SchemaData = {
 }
 
 export default function SEO({ title, description, keywords, schemaType = 'Organization', canonical }: SEOProps) {
+  // Ensure canonical URL is properly formatted
+  const formattedCanonical = canonical ? 
+    (canonical.startsWith('http') ? canonical : `https://hotelssifnos.com${canonical.startsWith('/') ? canonical : `/${canonical}`}`) 
+    : "https://hotelssifnos.com";
+  
   const baseSchema: SchemaData = {
     "@context": "https://schema.org",
     "@type": schemaType,
@@ -52,8 +57,8 @@ export default function SEO({ title, description, keywords, schemaType = 'Organi
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={canonical || "https://hotelssifnos.com"} />
-      {canonical && <link rel="canonical" href={canonical} />}
+      <meta property="og:url" content={formattedCanonical} />
+      <link rel="canonical" href={formattedCanonical} />
       <script type="application/ld+json">
         {JSON.stringify(schemaData)}
       </script>

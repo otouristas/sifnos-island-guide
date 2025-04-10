@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import { Link } from 'react-router-dom';
-import { Search, MapPin, Hotel, Home, Utensils, Anchor, Sun, Calendar } from 'lucide-react';
+import { Search, MapPin, Hotel, Anchor, Calendar } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from "@/components/ui/use-toast";
 
@@ -44,7 +44,8 @@ export default function HomePage() {
   const getMainPhotoUrl = (hotel) => {
     if (hotel?.hotel_photos && hotel.hotel_photos.length > 0) {
       const mainPhoto = hotel.hotel_photos.find(photo => photo.is_main_photo);
-      return mainPhoto ? mainPhoto.photo_url : (hotel.hotel_photos[0]?.photo_url || '/placeholder.svg');
+      if (mainPhoto) return `/uploads/hotels/${mainPhoto.photo_url}`;
+      if (hotel.hotel_photos[0]?.photo_url) return `/uploads/hotels/${hotel.hotel_photos[0].photo_url}`;
     }
     return '/placeholder.svg';
   };
@@ -52,27 +53,27 @@ export default function HomePage() {
   const popularBeaches = [
     {
       name: 'Platis Gialos',
-      description: 'Long sandy beach with clear waters',
-      imagePath: '/beach1.jpg'
+      description: 'Long sandy beach with clear waters and excellent facilities for families',
+      imagePath: '/uploads/beaches/platis-gialos.jpg'
     },
     {
       name: 'Vathi',
-      description: 'Sheltered bay with calm waters',
-      imagePath: '/beach2.jpg'
+      description: 'Sheltered bay with calm waters, perfect for swimming and relaxation',
+      imagePath: '/uploads/beaches/vathi.jpg'
     },
     {
       name: 'Chrysopigi',
-      description: 'Iconic beach with monastery views',
-      imagePath: '/beach3.jpg'
+      description: 'Iconic beach with monastery views and crystal clear waters',
+      imagePath: '/uploads/beaches/chrysopigi.jpg'
     }
   ];
   
   return (
     <>
       <SEO 
-        title="Hotels Sifnos - Find the Best Hotels in Sifnos Island, Greece" 
-        description="Discover the best hotels and accommodations in Sifnos Island, Greece. Book luxury hotels, boutique stays, and villas with sea views for your perfect Greek island vacation."
-        keywords={['sifnos hotels', 'hotels in sifnos', 'best hotels sifnos', 'sifnos accommodation', 'sifnos island', 'greek islands hotels', 'cyclades accommodations']}
+        title="Hotels Sifnos - Find the Best Accommodations in Sifnos Island, Greece" 
+        description="Discover handpicked accommodations in Sifnos Island, Greece. Best prices guaranteed for luxury hotels, boutique stays, and traditional Cycladic houses with sea views. Your perfect Greek island vacation starts here."
+        keywords={['sifnos hotels', 'hotels in sifnos', 'best hotels sifnos', 'sifnos accommodation', 'sifnos island', 'greek islands hotels', 'cyclades accommodations', 'luxury sifnos resorts', 'boutique hotels sifnos']}
         canonical="https://hotelssifnos.com"
       />
       
@@ -120,6 +121,28 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* SEO Introduction Section */}
+      <section className="py-12 bg-white">
+        <div className="page-container">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl font-montserrat font-bold text-sifnos-deep-blue mb-6">Welcome to Hotels Sifnos</h2>
+            <div className="prose prose-lg mx-auto text-gray-700">
+              <p className="mb-4">
+                Nestled in the heart of the Cyclades archipelago, Sifnos is a gem of the Aegean Sea, renowned for its 
+                traditional Cycladic architecture, exceptional cuisine, and pristine beaches. Our curated selection of 
+                accommodations offers the perfect base to explore this enchanting island.
+              </p>
+              <p>
+                Whether you're seeking a luxury beachfront resort, a charming boutique hotel in one of Sifnos' picturesque villages, 
+                or a traditional Cycladic house with spectacular sea views, Hotels Sifnos helps you find the perfect place to stay. 
+                Experience the authentic Greek hospitality and the relaxed island lifestyle that makes Sifnos a favorite destination 
+                for discerning travelers.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Categories Section */}
       <section className="py-16 bg-gray-50">
         <div className="page-container">
@@ -133,28 +156,28 @@ export default function HomePage() {
               <p className="text-gray-600">Luxury and boutique hotels with stunning views of the Aegean Sea</p>
             </Link>
             
-            <Link to="/villas" className="cycladic-card p-6 text-center hover:bg-gray-50 transition-colors group">
-              <div className="w-16 h-16 bg-sifnos-teal/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-sifnos-turquoise/30 transition-colors">
-                <Home size={30} className="text-sifnos-deep-blue" />
-              </div>
-              <h3 className="font-montserrat font-semibold text-xl mb-2">Villas</h3>
-              <p className="text-gray-600">Private villas and homes for a relaxing family or group stay</p>
-            </Link>
-            
-            <Link to="/restaurants" className="cycladic-card p-6 text-center hover:bg-gray-50 transition-colors group">
-              <div className="w-16 h-16 bg-sifnos-teal/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-sifnos-turquoise/30 transition-colors">
-                <Utensils size={30} className="text-sifnos-deep-blue" />
-              </div>
-              <h3 className="font-montserrat font-semibold text-xl mb-2">Restaurants</h3>
-              <p className="text-gray-600">Top-rated dining experiences featuring authentic Greek cuisine</p>
-            </Link>
-            
             <Link to="/beaches" className="cycladic-card p-6 text-center hover:bg-gray-50 transition-colors group">
               <div className="w-16 h-16 bg-sifnos-teal/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-sifnos-turquoise/30 transition-colors">
                 <Anchor size={30} className="text-sifnos-deep-blue" />
               </div>
               <h3 className="font-montserrat font-semibold text-xl mb-2">Beaches</h3>
               <p className="text-gray-600">Discover the most beautiful beaches and hidden coves of Sifnos</p>
+            </Link>
+            
+            <Link to="/travel-guide" className="cycladic-card p-6 text-center hover:bg-gray-50 transition-colors group">
+              <div className="w-16 h-16 bg-sifnos-teal/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-sifnos-turquoise/30 transition-colors">
+                <MapPin size={30} className="text-sifnos-deep-blue" />
+              </div>
+              <h3 className="font-montserrat font-semibold text-xl mb-2">Travel Guide</h3>
+              <p className="text-gray-600">Essential travel information and insider tips for your Sifnos vacation</p>
+            </Link>
+            
+            <Link to="/about-us" className="cycladic-card p-6 text-center hover:bg-gray-50 transition-colors group">
+              <div className="w-16 h-16 bg-sifnos-teal/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-sifnos-turquoise/30 transition-colors">
+                <Hotel size={30} className="text-sifnos-deep-blue" />
+              </div>
+              <h3 className="font-montserrat font-semibold text-xl mb-2">About Us</h3>
+              <p className="text-gray-600">Learn about our mission to provide the best accommodation options in Sifnos</p>
             </Link>
           </div>
         </div>
@@ -192,10 +215,6 @@ export default function HomePage() {
                       <span>{hotel.location}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <div>
-                        <span className="text-2xl font-bold text-sifnos-deep-blue">${hotel.price}</span>
-                        <span className="text-gray-600 text-sm"> / night</span>
-                      </div>
                       <Link to={`/hotels/${hotel.id}`} className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-4 py-2 rounded-lg transition-colors duration-300 text-sm font-medium">
                         View Details
                       </Link>
@@ -274,6 +293,35 @@ export default function HomePage() {
               <p className="text-gray-600">
                 Comprehensive travel guides to help you discover hidden gems and make the most of your Sifnos experience.
               </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Sifnos Highlights */}
+      <section className="py-16 bg-gray-50">
+        <div className="page-container">
+          <h2 className="section-title text-center mx-auto">Discover Sifnos Island</h2>
+          <div className="max-w-4xl mx-auto mt-8">
+            <div className="prose prose-lg mx-auto text-gray-700">
+              <p>
+                Known as the "Island of Flavors" due to its rich culinary traditions, Sifnos offers an authentic Greek island experience. 
+                The island combines beautiful landscapes, traditional Cycladic architecture with whitewashed houses and blue-domed churches, 
+                exquisite beaches, and a relaxed atmosphere that captivates visitors.
+              </p>
+              <p>
+                From the capital Apollonia with its winding alleys and charming boutiques to the picturesque fishing village of Kastro 
+                perched on a cliff overlooking the Aegean Sea, Sifnos presents countless opportunities for exploration and discovery.
+              </p>
+              <p>
+                The island's ceramic tradition dates back thousands of years, and you can still find local artisans creating traditional 
+                pottery. Sifnos is also a paradise for hikers, with well-marked trails connecting villages and offering spectacular views.
+              </p>
+            </div>
+            <div className="text-center mt-8">
+              <Link to="/travel-guide" className="inline-block px-6 py-3 bg-sifnos-turquoise text-white font-montserrat font-medium rounded-lg hover:bg-sifnos-deep-blue transition-colors duration-300">
+                Explore Our Travel Guide
+              </Link>
             </div>
           </div>
         </div>

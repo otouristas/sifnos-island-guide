@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle } from 'lucide-react';
+import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, PlusCircle, MinusCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import SEO from '../components/SEO';
 import { useToast } from "@/components/ui/use-toast";
@@ -11,6 +11,7 @@ export default function HotelDetailPage() {
   const [hotel, setHotel] = useState(null);
   const [activeImage, setActiveImage] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [openFaqIndex, setOpenFaqIndex] = useState(-1);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -34,7 +35,8 @@ export default function HotelDetailPage() {
         // Set active image to main photo or first photo
         if (data?.hotel_photos?.length > 0) {
           const mainPhoto = data.hotel_photos.find(photo => photo.is_main_photo);
-          setActiveImage(mainPhoto ? mainPhoto.photo_url : data.hotel_photos[0].photo_url);
+          const photoUrl = mainPhoto ? mainPhoto.photo_url : data.hotel_photos[0].photo_url;
+          setActiveImage(`/uploads/hotels/${photoUrl}`);
         }
       } catch (error) {
         console.error('Error fetching hotel details:', error);
@@ -61,6 +63,47 @@ export default function HotelDetailPage() {
       />
     ));
   };
+
+  // Toggle FAQ
+  const toggleFaq = (index) => {
+    setOpenFaqIndex(openFaqIndex === index ? -1 : index);
+  };
+
+  // Hotel FAQs
+  const faqs = [
+    {
+      question: "What are the check-in and check-out times?",
+      answer: "Standard check-in time is 2:00 PM and check-out time is 11:00 AM. Early check-in or late check-out may be available upon request, subject to availability."
+    },
+    {
+      question: "Is breakfast included in the room rate?",
+      answer: "Yes, most of our rates include a complimentary breakfast buffet featuring local products and traditional Greek breakfast items."
+    },
+    {
+      question: "Does the hotel have parking facilities?",
+      answer: "Yes, we offer free parking for our guests. However, spaces may be limited during peak season."
+    },
+    {
+      question: "Is there Wi-Fi available at the hotel?",
+      answer: "Yes, we provide complimentary high-speed Wi-Fi throughout the hotel property."
+    },
+    {
+      question: "How far is the hotel from the beach?",
+      answer: "Our hotel is located approximately 5 minutes walking distance from the nearest beach."
+    },
+    {
+      question: "Are there restaurants nearby?",
+      answer: "Yes, there are several excellent restaurants, tavernas, and cafes within walking distance from the hotel."
+    },
+    {
+      question: "Do you have facilities for guests with disabilities?",
+      answer: "We have several rooms designed for accessibility and common areas are wheelchair accessible. Please contact us directly for specific requirements."
+    },
+    {
+      question: "How can I get to the hotel from the port?",
+      answer: "We offer transfer services from the port upon request. Alternatively, taxis are available at the port, or you can rent a car or scooter."
+    }
+  ];
 
   // If loading show spinner
   if (loading) {
@@ -132,12 +175,8 @@ export default function HotelDetailPage() {
               </div>
             </div>
             <div className="mt-4 md:mt-0">
-              <div className="text-right">
-                <p className="text-sm text-gray-600">Prices starting at</p>
-                <p className="text-3xl font-bold text-sifnos-deep-blue">${hotel.price}<span className="text-sm font-normal text-gray-600"> / night</span></p>
-              </div>
-              <button className="bg-sifnos-turquoise text-white px-6 py-2 rounded-lg mt-2 hover:bg-sifnos-deep-blue transition-colors w-full">
-                Book Now
+              <button className="bg-sifnos-turquoise text-white px-6 py-2 rounded-lg hover:bg-sifnos-deep-blue transition-colors w-full">
+                Request Availability
               </button>
             </div>
           </div>
@@ -162,11 +201,11 @@ export default function HotelDetailPage() {
               {hotel.hotel_photos?.slice(0, 4).map((photo, index) => (
                 <div 
                   key={photo.id} 
-                  className={`rounded-lg overflow-hidden aspect-square cursor-pointer border-2 ${activeImage === photo.photo_url ? 'border-sifnos-turquoise' : 'border-transparent'}`}
-                  onClick={() => setActiveImage(photo.photo_url)}
+                  className={`rounded-lg overflow-hidden aspect-square cursor-pointer border-2 ${activeImage === `/uploads/hotels/${photo.photo_url}` ? 'border-sifnos-turquoise' : 'border-transparent'}`}
+                  onClick={() => setActiveImage(`/uploads/hotels/${photo.photo_url}`)}
                 >
                   <img 
-                    src={photo.photo_url} 
+                    src={`/uploads/hotels/${photo.photo_url}`} 
                     alt={photo.description || `${hotel.name} - Photo ${index + 1}`} 
                     className="w-full h-full object-cover"
                   />
@@ -175,10 +214,10 @@ export default function HotelDetailPage() {
               {hotel.hotel_photos?.length > 4 && (
                 <div 
                   className="rounded-lg overflow-hidden aspect-square relative cursor-pointer bg-gray-800"
-                  onClick={() => setActiveImage(hotel.hotel_photos[4].photo_url)}
+                  onClick={() => setActiveImage(`/uploads/hotels/${hotel.hotel_photos[4].photo_url}`)}
                 >
                   <img 
-                    src={hotel.hotel_photos[4].photo_url}
+                    src={`/uploads/hotels/${hotel.hotel_photos[4].photo_url}`}
                     alt={`${hotel.name} - More Photos`}
                     className="w-full h-full object-cover opacity-60"
                   />
@@ -230,16 +269,13 @@ export default function HotelDetailPage() {
                       <div className="flex flex-col md:flex-row">
                         <div className="md:w-1/4 mb-4 md:mb-0">
                           <img 
-                            src={room.photo_url || '/placeholder.svg'} 
+                            src={room.photo_url ? `/uploads/rooms/${room.photo_url}` : '/placeholder.svg'} 
                             alt={room.name} 
                             className="w-full h-32 object-cover rounded-lg"
                           />
                         </div>
                         <div className="md:w-3/4 md:pl-6">
-                          <div className="flex justify-between">
-                            <h3 className="text-xl font-semibold">{room.name}</h3>
-                            <p className="font-bold text-sifnos-deep-blue">${room.price}<span className="text-sm font-normal text-gray-600"> / night</span></p>
-                          </div>
+                          <h3 className="text-xl font-semibold">{room.name}</h3>
                           
                           <div className="flex flex-wrap gap-4 mt-2 text-sm text-gray-600">
                             <div className="flex items-center">
@@ -269,11 +305,42 @@ export default function HotelDetailPage() {
                           
                           <div className="mt-4">
                             <button className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-4 py-1 rounded-lg text-sm font-medium transition-colors">
-                              Book this room
+                              Check Availability
                             </button>
                           </div>
                         </div>
                       </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* FAQs */}
+              <div className="cycladic-card">
+                <h2 className="text-2xl font-montserrat font-semibold mb-6">Frequently Asked Questions</h2>
+                <div className="space-y-4">
+                  {faqs.map((faq, index) => (
+                    <div 
+                      key={index} 
+                      className="border-b pb-4 last:border-b-0 last:pb-0"
+                    >
+                      <button 
+                        className="flex justify-between items-center w-full text-left font-medium text-gray-800 py-2"
+                        onClick={() => toggleFaq(index)}
+                      >
+                        <span>{faq.question}</span>
+                        {openFaqIndex === index ? (
+                          <MinusCircle size={18} className="text-sifnos-turquoise" />
+                        ) : (
+                          <PlusCircle size={18} className="text-sifnos-turquoise" />
+                        )}
+                      </button>
+                      
+                      {openFaqIndex === index && (
+                        <div className="mt-2 text-gray-600 pl-2">
+                          {faq.answer}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -291,7 +358,7 @@ export default function HotelDetailPage() {
                           <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden mr-4 flex-shrink-0">
                             {review.reviewer_photo ? (
                               <img 
-                                src={review.reviewer_photo} 
+                                src={`/uploads/misc/${review.reviewer_photo}`} 
                                 alt={review.reviewer_name} 
                                 className="w-full h-full object-cover"
                               />
@@ -339,7 +406,7 @@ export default function HotelDetailPage() {
               
               {/* Booking Card */}
               <div className="cycladic-card">
-                <h3 className="text-xl font-semibold mb-4">Book Your Stay</h3>
+                <h3 className="text-xl font-semibold mb-4">Request Information</h3>
                 
                 <div className="space-y-4">
                   <div>
@@ -380,7 +447,7 @@ export default function HotelDetailPage() {
                   </div>
                   
                   <button className="w-full bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white py-3 rounded-lg transition-colors font-medium">
-                    Check Availability
+                    Request Information
                   </button>
                 </div>
               </div>

@@ -9,7 +9,6 @@ import { useToast } from "@/components/ui/use-toast";
 export default function HotelsPage() {
   // Filter state
   const [filters, setFilters] = useState({
-    priceRange: [0, 500],
     amenities: {
       wifi: false,
       breakfast: false,
@@ -104,7 +103,8 @@ export default function HotelsPage() {
   const getMainPhotoUrl = (hotel) => {
     if (hotel?.hotel_photos && hotel.hotel_photos.length > 0) {
       const mainPhoto = hotel.hotel_photos.find(photo => photo.is_main_photo);
-      return mainPhoto ? mainPhoto.photo_url : (hotel.hotel_photos[0]?.photo_url || '/placeholder.svg');
+      if (mainPhoto) return `/uploads/hotels/${mainPhoto.photo_url}`;
+      if (hotel.hotel_photos[0]?.photo_url) return `/uploads/hotels/${hotel.hotel_photos[0].photo_url}`;
     }
     return '/placeholder.svg';
   };
@@ -113,8 +113,8 @@ export default function HotelsPage() {
     <>
       <SEO 
         title="Hotels in Sifnos - Find Your Perfect Accommodation" 
-        description="Browse and book from a wide selection of luxury hotels, boutique stays and villas on Sifnos Island, Greece. Discover the perfect place for your Greek island holiday."
-        keywords={['sifnos hotels', 'hotels in sifnos', 'best hotels sifnos', 'sifnos accommodation', 'luxury hotels sifnos', 'boutique hotels sifnos', 'greece hotels']}
+        description="Browse our curated selection of luxury hotels, boutique guesthouses, and traditional Cycladic accommodations on Sifnos Island. Find the perfect place for your Greek island holiday with the best rates guaranteed."
+        keywords={['sifnos hotels', 'hotels in sifnos', 'best hotels sifnos', 'sifnos accommodation', 'luxury hotels sifnos', 'boutique hotels sifnos', 'greece hotels', 'cyclades accommodation']}
         schemaType="Hotel"
         canonical="https://hotelssifnos.com/hotels"
       />
@@ -128,6 +128,28 @@ export default function HotelsPage() {
             </h1>
             <p className="text-lg md:text-xl max-w-2xl mx-auto">
               Find the perfect accommodation for your stay in the beautiful island of Sifnos. Explore our curated selection of luxury, boutique, and family-friendly hotels.
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      {/* SEO Introduction */}
+      <div className="bg-white py-10">
+        <div className="page-container">
+          <div className="max-w-4xl mx-auto prose prose-lg">
+            <p>
+              Welcome to our comprehensive guide to accommodation in Sifnos. Whether you're seeking a 
+              luxurious beachfront resort, a charming boutique hotel in a traditional village, or a family-friendly 
+              guesthouse with authentic Cycladic character, Sifnos offers a diverse range of options to suit every 
+              preference and budget.
+            </p>
+            <p>
+              Known for its exceptional hospitality, Sifnos combines the authenticity of Greek island living with 
+              modern amenities to ensure your stay is comfortable and memorable. Many accommodations feature traditional 
+              Cycladic architecture with white-washed walls, blue accents, and stunning views of the Aegean Sea.
+            </p>
+            <p>
+              Explore our carefully selected hotels below and find your perfect base for exploring all that Sifnos has to offer.
             </p>
           </div>
         </div>
@@ -170,23 +192,6 @@ export default function HotelsPage() {
             <div className="w-full lg:w-1/4 px-4 mb-8 lg:mb-0">
               <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="font-montserrat font-semibold text-xl mb-6 pb-3 border-b">Filters</h2>
-                
-                {/* Price Range */}
-                <div className="mb-6">
-                  <h3 className="font-semibold mb-3">Price Range</h3>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-gray-600">${filters.priceRange[0]}</span>
-                    <span className="text-sm text-gray-600">${filters.priceRange[1]}</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="500"
-                    className="w-full"
-                    value={filters.priceRange[1]}
-                    onChange={(e) => setFilters({...filters, priceRange: [0, parseInt(e.target.value)]})}
-                  />
-                </div>
                 
                 {/* Star Rating */}
                 <div className="mb-6">
@@ -301,9 +306,8 @@ export default function HotelsPage() {
                   <span className="mr-2 text-sm">Sort by:</span>
                   <select className="border rounded-md p-2 text-sm">
                     <option>Recommended</option>
-                    <option>Price (low to high)</option>
-                    <option>Price (high to low)</option>
                     <option>Rating (high to low)</option>
+                    <option>A-Z</option>
                   </select>
                 </div>
               </div>
@@ -355,11 +359,7 @@ export default function HotelsPage() {
                             ))}
                           </div>
                           
-                          <div className="flex justify-between items-center mt-auto">
-                            <div>
-                              <span className="text-2xl font-bold text-sifnos-deep-blue">${hotel.price}</span>
-                              <span className="text-gray-600 text-sm"> / night</span>
-                            </div>
+                          <div className="flex justify-end items-center mt-auto">
                             <Link 
                               to={`/hotels/${hotel.id}`} 
                               className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-6 py-2 rounded-lg transition-colors duration-300 text-sm font-medium"
@@ -401,6 +401,51 @@ export default function HotelsPage() {
                   </div>
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Location Information */}
+      <div className="bg-white py-12">
+        <div className="page-container">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl font-montserrat font-bold text-sifnos-deep-blue mb-4">Where to Stay in Sifnos</h2>
+            <div className="prose prose-lg">
+              <p>
+                Sifnos offers a variety of locations to stay, each with its own unique charm and advantages:
+              </p>
+              
+              <h3>Apollonia</h3>
+              <p>
+                The capital of the island, Apollonia is a picturesque village with winding alleys, white-washed houses, and 
+                a vibrant atmosphere. Staying here puts you at the heart of the island's social scene with easy access to 
+                boutiques, restaurants, and bars.
+              </p>
+              
+              <h3>Kamares</h3>
+              <p>
+                The main port of Sifnos offers a beautiful sandy beach and numerous waterfront cafes and tavernas. 
+                Accommodation here is convenient for those arriving by ferry and wanting immediate access to the sea.
+              </p>
+              
+              <h3>Platis Gialos</h3>
+              <p>
+                One of the island's most popular beaches with golden sand and shallow waters ideal for families. 
+                The beachfront is lined with hotels and restaurants, making it perfect for those wanting a beach-focused holiday.
+              </p>
+              
+              <h3>Kastro</h3>
+              <p>
+                The ancient capital of Sifnos offers a unique historical atmosphere with medieval architecture and 
+                stunning sea views. Accommodation here is more limited but provides an authentic experience in a truly magical setting.
+              </p>
+              
+              <h3>Vathi</h3>
+              <p>
+                A tranquil fishing village with a beautiful sheltered bay and sandy beach. This is the place for 
+                those seeking peace, relaxation, and natural beauty away from the busier areas of the island.
+              </p>
             </div>
           </div>
         </div>
