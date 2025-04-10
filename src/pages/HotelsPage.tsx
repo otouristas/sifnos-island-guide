@@ -89,7 +89,6 @@ export default function HotelsPage() {
     return Array(5).fill(0).map((_, i) => (
       <Star 
         key={i} 
-        size={16} 
         className={i < rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"} 
       />
     ));
