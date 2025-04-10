@@ -5,10 +5,13 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SEO from "./components/SEO";
+import CookieConsent from "./components/CookieConsent";
 
 // Pages
 import HomePage from "./pages/HomePage";
 import HotelsPage from "./pages/HotelsPage";
+import ContactPage from "./pages/ContactPage";
+import AboutPage from "./pages/AboutPage";
 import FAQPage from "./pages/FAQPage";
 import NotFound from "./pages/NotFound";
 
@@ -35,12 +38,15 @@ const App = () => (
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/hotels" element={<HotelsPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
             <Route path="/faq" element={<FAQPage />} />
             {/* Add additional routes as they're built */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         <Footer />
+        <CookieConsent />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
