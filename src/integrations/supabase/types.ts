@@ -9,7 +9,212 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      hotel_amenities: {
+        Row: {
+          amenity: string
+          hotel_id: string
+        }
+        Insert: {
+          amenity: string
+          hotel_id: string
+        }
+        Update: {
+          amenity?: string
+          hotel_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_amenities_hotel_id_fkey"
+            columns: ["hotel_id"]
+            isOneToOne: false
+            referencedRelation: "hotels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_photos: {
+        Row: {
+          created_at: string
+          description: string | null
+          hotel_id: string
+          id: string
+          is_main_photo: boolean | null
+          photo_url: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          hotel_id: string
+          id?: string
+          is_main_photo?: boolean | null
+          photo_url: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          hotel_id?: string
+          id?: string
+          is_main_photo?: boolean | null
+          photo_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_photos_hotel_id_fkey"
+            columns: ["hotel_id"]
+            isOneToOne: false
+            referencedRelation: "hotels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_reviews: {
+        Row: {
+          comment: string
+          date: string
+          hotel_id: string
+          id: string
+          rating: number
+          reviewer_name: string
+          reviewer_photo: string | null
+        }
+        Insert: {
+          comment: string
+          date?: string
+          hotel_id: string
+          id?: string
+          rating: number
+          reviewer_name: string
+          reviewer_photo?: string | null
+        }
+        Update: {
+          comment?: string
+          date?: string
+          hotel_id?: string
+          id?: string
+          rating?: number
+          reviewer_name?: string
+          reviewer_photo?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_reviews_hotel_id_fkey"
+            columns: ["hotel_id"]
+            isOneToOne: false
+            referencedRelation: "hotels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_rooms: {
+        Row: {
+          amenities: string[] | null
+          capacity: number
+          created_at: string
+          description: string
+          hotel_id: string
+          id: string
+          name: string
+          photo_url: string | null
+          price: number
+          size_sqm: number | null
+        }
+        Insert: {
+          amenities?: string[] | null
+          capacity: number
+          created_at?: string
+          description: string
+          hotel_id: string
+          id?: string
+          name: string
+          photo_url?: string | null
+          price: number
+          size_sqm?: number | null
+        }
+        Update: {
+          amenities?: string[] | null
+          capacity?: number
+          created_at?: string
+          description?: string
+          hotel_id?: string
+          id?: string
+          name?: string
+          photo_url?: string | null
+          price?: number
+          size_sqm?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_rooms_hotel_id_fkey"
+            columns: ["hotel_id"]
+            isOneToOne: false
+            referencedRelation: "hotels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotels: {
+        Row: {
+          address: string | null
+          created_at: string
+          description: string
+          email: string | null
+          google_map_url: string | null
+          id: string
+          location: string
+          logo_path: string | null
+          name: string
+          phone: string | null
+          price: number
+          rating: number
+          short_description: string | null
+          social_facebook: string | null
+          social_instagram: string | null
+          social_twitter: string | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          description: string
+          email?: string | null
+          google_map_url?: string | null
+          id?: string
+          location: string
+          logo_path?: string | null
+          name: string
+          phone?: string | null
+          price: number
+          rating: number
+          short_description?: string | null
+          social_facebook?: string | null
+          social_instagram?: string | null
+          social_twitter?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          description?: string
+          email?: string | null
+          google_map_url?: string | null
+          id?: string
+          location?: string
+          logo_path?: string | null
+          name?: string
+          phone?: string | null
+          price?: number
+          rating?: number
+          short_description?: string | null
+          social_facebook?: string | null
+          social_instagram?: string | null
+          social_twitter?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
