@@ -115,7 +115,7 @@ export default function HotelsPage() {
   };
 
   // Amenity icons mapping
-  const amenityIcons = {
+  const amenityIcons: Record<string, JSX.Element> = {
     wifi: <Wifi size={16} className="mr-1" />,
     breakfast: <Coffee size={16} className="mr-1" />,
     tv: <Tv size={16} className="mr-1" />,

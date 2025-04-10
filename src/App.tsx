@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Helmet } from 'react-helmet';
+import SEO from "./components/SEO";
 
 // Pages
 import HomePage from "./pages/HomePage";
@@ -21,26 +21,12 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Helmet>
-        <script type="application/ld+json">{`
-          {
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "Hotels Sifnos",
-            "url": "https://hotelssifnos.com",
-            "logo": "https://hotelssifnos.com/logo.png",
-            "contactPoint": {
-              "@type": "ContactPoint",
-              "telephone": "+302284031234",
-              "contactType": "customer service"
-            },
-            "sameAs": [
-              "https://facebook.com/hotelssifnos",
-              "https://instagram.com/hotelssifnos"
-            ]
-          }
-        `}</script>
-      </Helmet>
+      <SEO 
+        title="Hotels in Sifnos - Your Perfect Greek Island Getaway" 
+        description="Find the best hotels and accommodations in Sifnos Island, Greece. Book luxury hotels, boutique stays and villas with sea views."
+        keywords={['sifnos hotels', 'greek islands hotels', 'sifnos accommodation', 'sifnos island']}
+        schemaType="Organization"
+      />
       <Toaster />
       <Sonner />
       <BrowserRouter>
