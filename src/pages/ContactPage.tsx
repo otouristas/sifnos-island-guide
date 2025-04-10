@@ -30,15 +30,15 @@ export default function ContactPage() {
     setIsSubmitting(true);
     
     try {
-      // Store the contact form submission using explicit typing
-      const { error } = await supabase
+      // Use a type assertion to bypass TypeScript errors with Supabase types
+      const { error } = await (supabase as any)
         .from('contact_submissions')
         .insert([{
           name: formData.name,
           email: formData.email,
           subject: formData.subject,
           message: formData.message
-        }] as any); // Using 'as any' to bypass type checking temporarily
+        }]);
       
       if (error) throw error;
       
