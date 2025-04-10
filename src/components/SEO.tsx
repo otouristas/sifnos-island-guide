@@ -8,8 +8,16 @@ interface SEOProps {
   schemaType?: 'Hotel' | 'TravelAgency' | 'Organization';
 }
 
+type SchemaData = {
+  "@context": string;
+  "@type": string;
+  name: string;
+  url: string;
+  [key: string]: any; // Allow for additional properties based on schema type
+}
+
 export default function SEO({ title, description, keywords, schemaType = 'Organization' }: SEOProps) {
-  const baseSchema = {
+  const baseSchema: SchemaData = {
     "@context": "https://schema.org",
     "@type": schemaType,
     "name": "Hotels Sifnos",

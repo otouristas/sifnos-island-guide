@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
-import { MapPin, Star, Search, Filter, Wifi, Coffee, Tv, Parking } from 'lucide-react';
+import { MapPin, Star, Search, Filter, Wifi, Coffee, Tv, CircleParking } from 'lucide-react';
 
 export default function HotelsPage() {
   // Filter state
@@ -118,7 +118,7 @@ export default function HotelsPage() {
     wifi: <Wifi size={16} className="mr-1" />,
     breakfast: <Coffee size={16} className="mr-1" />,
     tv: <Tv size={16} className="mr-1" />,
-    parking: <Parking size={16} className="mr-1" />
+    parking: <CircleParking size={16} className="mr-1" />
   };
 
   return (
@@ -359,7 +359,7 @@ export default function HotelsPage() {
                         )}
                         {hotel.amenities.includes('parking') && (
                           <span className="flex items-center text-xs bg-gray-100 px-2 py-1 rounded">
-                            <Parking size={12} className="mr-1" /> Parking
+                            <CircleParking size={12} className="mr-1" /> Parking
                           </span>
                         )}
                         {/* Add more amenities based on data */}
