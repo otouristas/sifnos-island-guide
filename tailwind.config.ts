@@ -57,10 +57,11 @@ export default {
           foreground: 'hsl(var(--card-foreground))'
         },
         sifnos: {
-          'primary': '#1E2E48',    // Main Blue
-          'secondary': '#E3D7C3',  // Light Beige
-          'primary-rgb': '30, 46, 72',
-          'secondary-rgb': '227, 215, 195',
+          'deep-blue': '#1E2E48',    // Main Blue
+          'beige': '#E3D7C3',        // Light Beige
+          'primary': '#1E2E48',      // Main Blue
+          'secondary': '#E3D7C3',    // Light Beige
+          'turquoise': '#1E2E48',    // Using main blue for now
         },
         sidebar: {
           DEFAULT: 'hsl(var(--sidebar-background))',

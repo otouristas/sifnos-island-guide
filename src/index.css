@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
 
 @tailwind base;
@@ -99,7 +100,7 @@
 }
 
 .section-title {
-  @apply font-montserrat text-3xl md:text-4xl font-bold text-sifnos-deep-blue mb-6 border-b-2 border-sifnos-turquoise pb-2 inline-block;
+  @apply font-montserrat text-3xl md:text-4xl font-bold text-sifnos-deep-blue mb-6 border-b-2 border-sifnos-beige pb-2 inline-block;
 }
 
 .cycladic-card {
