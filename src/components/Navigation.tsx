@@ -17,18 +17,19 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0">
-              <span className="font-montserrat font-bold text-sifnos-deep-blue text-xl">
-                Hotels<span className="text-sifnos-turquoise">Sifnos</span>
+          <div className="flex items-center space-x-3">
+            <Link to="/" className="flex items-center space-x-2">
+              <img 
+                src="/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png" 
+                alt="HotelsSifnos Logo" 
+                className="h-8 w-8"
+              />
+              <span className="font-montserrat font-bold text-[#1E2E48] text-xl">
+                Hotels<span className="text-[#E3D7C3]">Sifnos</span>
               </span>
             </Link>
           </div>
@@ -40,9 +41,9 @@ export default function Navigation() {
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`font-montserrat px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-sifnos-turquoise ${
+                  className={`font-montserrat px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[#1E2E48] ${
                     location.pathname === item.path 
-                    ? 'text-sifnos-turquoise border-b-2 border-sifnos-turquoise' 
+                    ? 'text-[#1E2E48] border-b-2 border-[#1E2E48]' 
                     : 'text-gray-700'
                   }`}
                 >
@@ -56,8 +57,8 @@ export default function Navigation() {
           <div className="md:hidden">
             <button
               type="button"
-              className="p-2 rounded-md text-sifnos-deep-blue"
-              onClick={toggleMenu}
+              className="p-2 rounded-md text-[#1E2E48]"
+              onClick={() => setIsOpen(!isOpen)}
             >
               <span className="sr-only">Open main menu</span>
               {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -76,8 +77,8 @@ export default function Navigation() {
                 to={item.path}
                 className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
                   location.pathname === item.path
-                  ? 'text-sifnos-turquoise bg-gray-50'
-                  : 'text-gray-700 hover:bg-gray-50 hover:text-sifnos-turquoise'
+                  ? 'text-[#1E2E48] bg-[#E3D7C3]/10'
+                  : 'text-gray-700 hover:bg-[#E3D7C3]/10 hover:text-[#1E2E48]'
                 }`}
                 onClick={() => setIsOpen(false)}
               >
