@@ -18,6 +18,10 @@ export default {
       }
     },
     extend: {
+      fontFamily: {
+        montserrat: ['Montserrat', 'sans-serif'],
+        poppins: ['Poppins', 'sans-serif'],
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -57,10 +61,6 @@ export default {
           'secondary': '#E3D7C3',  // Light Beige
           'primary-rgb': '30, 46, 72',
           'secondary-rgb': '227, 215, 195',
-        },
-        fontFamily: {
-          montserrat: ['Montserrat', 'sans-serif'],
-          poppins: ['Poppins', 'sans-serif'],
         },
         sidebar: {
           DEFAULT: 'hsl(var(--sidebar-background))',
