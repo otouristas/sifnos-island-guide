@@ -1,10 +1,10 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SEO from "./components/SEO";
+import SitemapGenerator from "./components/SitemapGenerator";
 import CookieConsent from "./components/CookieConsent";
 
 // Pages
@@ -29,12 +29,18 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <SEO 
-        title="Hotels in Sifnos - Your Perfect Greek Island Getaway" 
-        description="Find the best hotels and accommodations in Sifnos Island, Greece. Book luxury hotels, boutique stays and villas with sea views."
-        keywords={['sifnos hotels', 'greek islands hotels', 'sifnos accommodation', 'sifnos island']}
+        title="Find Your Perfect Stay in Sifnos - Best Hotels & Accommodation"
+        description="Discover handpicked hotels and luxury accommodations in Sifnos Island, Greece. Compare prices, read reviews, and book your perfect beach vacation in the Cyclades."
+        keywords={[
+          'sifnos hotels', 'greek islands hotels', 'sifnos accommodation', 
+          'luxury hotels sifnos', 'beach hotels sifnos', 'boutique hotels cyclades',
+          'where to stay in sifnos', 'best hotels sifnos greece'
+        ]}
         schemaType="Organization"
         canonical="https://hotelssifnos.com"
+        imageUrl="https://hotelssifnos.com/opengraph-image-p98pqg.png"
       />
+      <SitemapGenerator />
       <Toaster />
       <Sonner />
       <BrowserRouter>
