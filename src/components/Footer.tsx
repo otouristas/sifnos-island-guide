@@ -90,6 +90,34 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Partners Section */}
+        <div className="mt-8 pt-6 border-t border-gray-700">
+          <h3 className="text-center font-montserrat font-semibold text-lg mb-6">Our Partners</h3>
+          <div className="flex flex-wrap justify-center items-center gap-8">
+            <a 
+              href="https://greececyclades.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-gray-300 hover:text-white transition-colors"
+            >
+              GreeceCyclades.com
+            </a>
+            <a 
+              href="https://cycladesrentacar.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+            >
+              <img 
+                src="https://cycladesrentacar.com/cycladesrentacar.svg" 
+                alt="Cyclades Rent A Car" 
+                className="h-8 w-auto"
+              />
+            </a>
+          </div>
+        </div>
+
+        {/* Copyright */}
         <div className="mt-8 pt-6 border-t border-gray-700">
           <p className="text-center text-sm text-gray-400">
             &copy; {new Date().getFullYear()} HotelsSifnos.com. All rights reserved.
