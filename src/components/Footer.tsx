@@ -98,9 +98,13 @@ export default function Footer() {
               href="https://greececyclades.com" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-gray-300 hover:text-white transition-colors"
+              className="hover:opacity-80 transition-opacity"
             >
-              GreeceCyclades.com
+              <img 
+                src="/lovable-uploads/35309f91-b85f-4eef-a002-341d80d7ced4.png" 
+                alt="Discover Cyclades" 
+                className="h-8 w-auto brightness-0 invert"
+              />
             </a>
             <a 
               href="https://cycladesrentacar.com" 
