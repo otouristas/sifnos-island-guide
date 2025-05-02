@@ -1,9 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import { Link } from 'react-router-dom';
 import { Search, MapPin, Hotel, Anchor, Calendar } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import { useToast } from "@/components/ui/use-toast";
 
 export default function HomePage() {
@@ -15,6 +14,7 @@ export default function HomePage() {
     async function fetchFeaturedHotels() {
       try {
         console.log("Fetching featured hotels...");
+        
         const { data, error } = await supabase
           .from('hotels')
           .select(`
@@ -24,12 +24,13 @@ export default function HomePage() {
           .order('rating', { ascending: false })
           .limit(3);
 
-        if (error) {
-          console.error("Supabase error:", error);
+        // Log the response for debugging
+        const success = logSupabaseResponse('featured hotels fetch', data, error);
+        
+        if (!success) {
           throw error;
         }
         
-        console.log("Featured hotels data:", data);
         setFeaturedHotels(data || []);
       } catch (error) {
         console.error('Error fetching hotels:', error);
@@ -200,34 +201,44 @@ export default function HomePage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-              {featuredHotels.map(hotel => (
-                <div key={hotel.id} className="cycladic-card overflow-hidden">
-                  <div className="h-48 overflow-hidden">
-                    <img 
-                      src={getMainPhotoUrl(hotel)} 
-                      alt={hotel.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-montserrat font-semibold text-lg">{hotel.name}</h3>
-                      <div className="bg-sifnos-deep-blue text-white px-2 py-1 rounded text-sm">
-                        {hotel.rating}/5
+              {featuredHotels.length > 0 ? (
+                featuredHotels.map(hotel => (
+                  <div key={hotel.id} className="cycladic-card overflow-hidden">
+                    <div className="h-48 overflow-hidden">
+                      <img 
+                        src={getMainPhotoUrl(hotel)} 
+                        alt={hotel.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          console.log(`Error loading image for hotel ${hotel.id}`);
+                          e.currentTarget.src = '/placeholder.svg';
+                        }}
+                      />
+                    </div>
+                    <div className="p-6">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="font-montserrat font-semibold text-lg">{hotel.name}</h3>
+                        <div className="bg-sifnos-deep-blue text-white px-2 py-1 rounded text-sm">
+                          {hotel.rating}/5
+                        </div>
+                      </div>
+                      <div className="flex items-center text-gray-600 mb-4">
+                        <MapPin size={16} className="mr-1" />
+                        <span>{hotel.location}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <Link to={`/hotels/${hotel.id}`} className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-4 py-2 rounded-lg transition-colors duration-300 text-sm font-medium">
+                          View Details
+                        </Link>
                       </div>
                     </div>
-                    <div className="flex items-center text-gray-600 mb-4">
-                      <MapPin size={16} className="mr-1" />
-                      <span>{hotel.location}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <Link to={`/hotels/${hotel.id}`} className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-4 py-2 rounded-lg transition-colors duration-300 text-sm font-medium">
-                        View Details
-                      </Link>
-                    </div>
                   </div>
+                ))
+              ) : (
+                <div className="col-span-3 text-center py-12">
+                  <p className="text-gray-500">No featured hotels available at the moment.</p>
                 </div>
-              ))}
+              )}
             </div>
           )}
           

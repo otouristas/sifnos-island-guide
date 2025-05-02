@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { MapPin, Star, Search, Filter, Wifi, Coffee, Tv, CircleParking } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import { useToast } from "@/components/ui/use-toast";
 
 export default function HotelsPage() {
@@ -28,7 +28,8 @@ export default function HotelsPage() {
   useEffect(() => {
     async function fetchHotels() {
       try {
-        console.log("Fetching hotels...");
+        console.log("Fetching hotels from Supabase...");
+        
         const { data, error } = await supabase
           .from('hotels')
           .select(`
@@ -37,20 +38,23 @@ export default function HotelsPage() {
             hotel_photos(id, photo_url, is_main_photo)
           `);
 
-        if (error) {
-          console.error("Supabase error:", error);
+        // Log the response for debugging
+        const success = logSupabaseResponse('hotels fetch', data, error);
+        
+        if (!success) {
           throw error;
         }
 
-        console.log("Fetched hotels data:", data);
-        if (data && data.length === 0) {
-          console.log("No hotels found in the database");
-        }
+        console.log(`Hotels found: ${data?.length || 0}`);
         
-        // Log the hotel ID you're looking for specifically
-        console.log("Looking for hotel with ID: 0c9632b6-db5c-4179-8122-0003896e465e");
-        const specificHotel = data?.find(hotel => hotel.id === '0c9632b6-db5c-4179-8122-0003896e465e');
-        console.log("Found specific hotel:", specificHotel);
+        // Check specifically for the hotel we're looking for
+        if (data) {
+          const specificHotel = data.find(hotel => hotel.id === '0c9632b6-db5c-4179-8122-0003896e465e');
+          console.log("Hotel 0c9632b6-db5c-4179-8122-0003896e465e found:", specificHotel ? 'Yes' : 'No');
+          if (specificHotel) {
+            console.log("Hotel details:", specificHotel);
+          }
+        }
         
         setHotels(data || []);
       } catch (error) {
@@ -345,6 +349,10 @@ export default function HotelsPage() {
                               src={getMainPhotoUrl(hotel)} 
                               alt={`${hotel.name} - Hotel in ${hotel.location}, Sifnos`}
                               className="w-full h-full object-cover"
+                              onError={(e) => {
+                                console.log(`Error loading image for hotel ${hotel.id}`);
+                                e.currentTarget.src = '/placeholder.svg';
+                              }}
                             />
                           </div>
                         </div>
@@ -388,6 +396,7 @@ export default function HotelsPage() {
                     <div className="text-center py-12">
                       <h3 className="font-medium text-xl text-gray-700">No hotels found matching your criteria</h3>
                       <p className="text-gray-500 mt-2">Try adjusting your filters or search terms</p>
+                      <p className="text-gray-500 mt-2">Admin: Check Supabase console to ensure hotels data is properly inserted and RLS policies are configured correctly</p>
                     </div>
                   )}
                 </div>
