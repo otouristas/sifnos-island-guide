@@ -1,6 +1,6 @@
 
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Instagram, Twitter, Mail } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -50,16 +50,6 @@ export default function Footer() {
               Contact Us
             </h3>
             <ul className="space-y-2">
-              <li className="flex items-center">
-                <MapPin size={16} className="mr-2 text-sifnos-teal" />
-                <span className="text-gray-300">Apollonia, Sifnos, Greece</span>
-              </li>
-              <li className="flex items-center">
-                <Phone size={16} className="mr-2 text-sifnos-teal" />
-                <a href="tel:+302284031234" className="text-gray-300 hover:text-sifnos-teal transition-colors">
-                  +30 2284 031 234
-                </a>
-              </li>
               <li className="flex items-center">
                 <Mail size={16} className="mr-2 text-sifnos-teal" />
                 <a href="mailto:info@hotelssifnos.com" className="text-gray-300 hover:text-sifnos-teal transition-colors">

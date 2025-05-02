@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Send, AlertCircle, CheckCircle } from 'lucide-react';
+import { Mail, Send, AlertCircle, CheckCircle } from 'lucide-react';
 import SEO from '../components/SEO';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
@@ -106,18 +106,7 @@ export default function ContactPage() {
       {/* Contact Information Section */}
       <div className="bg-white py-16">
         <div className="page-container">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            <div className="cycladic-card p-6 text-center">
-              <div className="w-16 h-16 mx-auto mb-5 bg-sifnos-teal/10 rounded-full flex items-center justify-center">
-                <Phone className="text-sifnos-turquoise w-7 h-7" />
-              </div>
-              <h3 className="font-montserrat font-semibold text-xl mb-3">Phone</h3>
-              <p className="text-gray-600 mb-2">Customer Support</p>
-              <a href="tel:+302284071234" className="text-sifnos-turquoise font-medium hover:text-sifnos-deep-blue transition-colors">
-                +30 22840 71234
-              </a>
-            </div>
-            
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-8 mb-16">
             <div className="cycladic-card p-6 text-center">
               <div className="w-16 h-16 mx-auto mb-5 bg-sifnos-teal/10 rounded-full flex items-center justify-center">
                 <Mail className="text-sifnos-turquoise w-7 h-7" />
@@ -127,18 +116,6 @@ export default function ContactPage() {
               <a href="mailto:info@hotelssifnos.com" className="text-sifnos-turquoise font-medium hover:text-sifnos-deep-blue transition-colors">
                 info@hotelssifnos.com
               </a>
-            </div>
-            
-            <div className="cycladic-card p-6 text-center">
-              <div className="w-16 h-16 mx-auto mb-5 bg-sifnos-teal/10 rounded-full flex items-center justify-center">
-                <MapPin className="text-sifnos-turquoise w-7 h-7" />
-              </div>
-              <h3 className="font-montserrat font-semibold text-xl mb-3">Office</h3>
-              <p className="text-gray-600 mb-2">Apollonia</p>
-              <address className="not-italic text-gray-700">
-                Main Street, Apollonia<br />
-                Sifnos, 84003, Greece
-              </address>
             </div>
           </div>
           
