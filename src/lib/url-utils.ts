@@ -29,7 +29,14 @@ export function generateHotelUrl(name: string, id: string): string {
  * @returns The hotel ID
  */
 export function extractIdFromSlug(slug: string): string {
-  // The ID is the part after the last dash
+  // Find a UUID pattern in the slug
+  // UUID format: 8-4-4-4-12 characters = 36 characters with dashes
+  const matches = slug.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i);
+  if (matches && matches[0]) {
+    return matches[0];
+  }
+  
+  // Fallback to old extraction method if UUID pattern isn't found
   const parts = slug.split('-');
   return parts[parts.length - 1];
 }

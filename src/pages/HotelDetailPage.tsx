@@ -20,8 +20,11 @@ export default function HotelDetailPage() {
   useEffect(() => {
     const fetchHotelDetails = async () => {
       try {
+        if (!slug) return;
+        
         // Extract the ID from the slug
         const id = extractIdFromSlug(slug);
+        console.info(`Extracted hotel ID from slug: ${id}`);
         
         const { data, error } = await supabase.from('hotels')
           .select(`
