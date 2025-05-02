@@ -1,5 +1,5 @@
 
-import { Wifi, Coffee, Tv, CircleParking, AirVent, Utensils, Waves } from 'lucide-react';
+import { Wifi, Coffee, Tv, CircleParking, AirVent, Utensils, Waves, Balcony, Bath, Refrigerator, ShowerHead, Bed, KitchenwareIcon, ElectricalOutlet, Shirt, Smoking } from 'lucide-react';
 
 interface HotelAmenitiesProps {
   amenities: string[];
@@ -14,14 +14,30 @@ const HotelAmenities = ({ amenities }: HotelAmenitiesProps) => {
     parking: <CircleParking size={16} className="mr-1" />,
     airconditioning: <AirVent size={16} className="mr-1" />,
     restaurant: <Utensils size={16} className="mr-1" />,
-    seaview: <Waves size={16} className="mr-1" />
+    seaview: <Waves size={16} className="mr-1" />,
+    balcony: <Balcony size={16} className="mr-1" />,
+    bath: <Bath size={16} className="mr-1" />,
+    'air conditioning': <AirVent size={16} className="mr-1" />,
+    refrigerator: <Refrigerator size={16} className="mr-1" />,
+    shower: <ShowerHead size={16} className="mr-1" />,
+    'sea view': <Waves size={16} className="mr-1" />,
+    'flat-screen tv': <Tv size={16} className="mr-1" />,
+    'free wifi': <Wifi size={16} className="mr-1" />,
+    'full bed': <Bed size={16} className="mr-1" />,
+    'twin bed': <Bed size={16} className="mr-1" />,
+    kitchenware: <KitchenwareIcon size={16} className="mr-1" />,
+    'private bathroom': <Bath size={16} className="mr-1" />,
+    'socket near the bed': <ElectricalOutlet size={16} className="mr-1" />,
+    'wardrobe or closet': <Shirt size={16} className="mr-1" />,
+    'no smoking': <Smoking size={16} className="mr-1 line-through" />,
   };
 
   return (
-    <div className="flex flex-wrap gap-3 mb-4">
+    <div className="flex flex-wrap gap-2">
       {amenities.map((amenity, index) => {
         // Normalize the amenity name for icon lookup
         const normalizedAmenity = amenity.toLowerCase().replace(/\s+/g, '');
+        const alternativeKey = amenity.toLowerCase();
         
         return (
           <span 
@@ -29,7 +45,7 @@ const HotelAmenities = ({ amenities }: HotelAmenitiesProps) => {
             className="flex items-center text-xs bg-gray-100 px-2 py-1 rounded"
             title={amenity}
           >
-            {amenityIcons[normalizedAmenity] || null} 
+            {amenityIcons[normalizedAmenity] || amenityIcons[alternativeKey] || null} 
             {amenity}
           </span>
         );

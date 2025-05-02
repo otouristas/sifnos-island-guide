@@ -351,24 +351,25 @@ export default function HotelDetailPage() {
                 </div>
               </div>
               
-              {/* Rooms */}
+              {/* Rooms - Updated with larger images and enhanced amenities display */}
               <div className="cycladic-card p-6 md:p-8">
                 <h2 className="text-2xl font-montserrat font-semibold mb-6">Available Rooms</h2>
-                <div className="space-y-8">
+                <div className="space-y-10">
                   {hotel.hotel_rooms?.map((room) => (
                     <div key={room.id} className="border-b pb-8 last:border-b-0 last:pb-0">
-                      <div className="flex flex-col md:flex-row gap-4">
-                        <div className="md:w-1/4">
+                      <div className="flex flex-col gap-6">
+                        {/* Larger Room Image */}
+                        <div className="w-full">
                           <img 
                             src={getHotelRoomImagePath(room.photo_url)}
                             alt={room.name} 
-                            className="w-full h-32 object-cover rounded-lg"
+                            className="w-full h-60 md:h-72 object-cover rounded-lg shadow-md"
                           />
                         </div>
-                        <div className="md:w-3/4">
+                        <div className="w-full">
                           <h3 className="text-xl font-semibold">{room.name}</h3>
                           
-                          <div className="flex flex-wrap gap-4 mt-2 text-sm text-gray-600">
+                          <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-600">
                             <div className="flex items-center">
                               <Users size={16} className="mr-1 flex-shrink-0" />
                               Up to {room.capacity} guests
@@ -383,14 +384,15 @@ export default function HotelDetailPage() {
                           
                           <p className="mt-3 text-gray-700">{room.description}</p>
                           
-                          {/* Room Amenities */}
+                          {/* Room Amenities - Enhanced with icons */}
                           {room.amenities && room.amenities.length > 0 && (
-                            <div className="mt-3">
+                            <div className="mt-4">
+                              <p className="text-sm font-medium mb-2">Room Features:</p>
                               <HotelAmenities amenities={room.amenities} />
                             </div>
                           )}
                           
-                          <div className="mt-4">
+                          <div className="mt-6">
                             {hotel.booking_url ? (
                               <a 
                                 href={hotel.booking_url} 
@@ -608,7 +610,7 @@ export default function HotelDetailPage() {
                 </div>
               </div>
               
-              {/* Map section - this is where the error is */}
+              {/* Map section */}
               <div className="cycladic-card p-6">
                 <h3 className="text-xl font-semibold mb-4 flex items-center">
                   <Map size={18} className="mr-2 text-sifnos-turquoise" />
