@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import { Search, Filter, Star } from 'lucide-react';
@@ -308,13 +307,13 @@ export default function HotelsPage() {
               
               {/* Hotels Grid */}
               {!loading && (
-                <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {hotels.length > 0 ? (
                     hotels.map(hotel => (
                       <HotelCard key={hotel.id} hotel={hotel} />
                     ))
                   ) : (
-                    <div className="text-center py-12">
+                    <div className="text-center py-12 col-span-3">
                       <h3 className="font-medium text-xl text-gray-700">No hotels found matching your criteria</h3>
                       <p className="text-gray-500 mt-2">Try adjusting your filters or search terms</p>
                       <p className="text-gray-500 mt-2">Admin: Check Supabase console to ensure hotels data is properly inserted and RLS policies are configured correctly</p>
