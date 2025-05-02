@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { extractIdFromSlug, generateHotelUrl } from '@/lib/url-utils';
 import BookingReviews from '@/components/BookingReviews';
 import HotelAmenities from '@/components/HotelAmenities';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export default function HotelDetailPage() {
   const { slug } = useParams();
@@ -336,27 +337,64 @@ export default function HotelDetailPage() {
                 <p className="text-gray-700 whitespace-pre-line leading-relaxed mb-6">
                   {hotel.description}
                 </p>
-                
-                {/* Added Hotel Amenities directly under the description */}
-                {hotel.hotel_amenities && hotel.hotel_amenities.length > 0 && (
-                  <div className="mt-4">
-                    <p className="font-medium mb-3">Hotel Features:</p>
-                    <HotelAmenities amenities={hotel.hotel_amenities.map(item => item.amenity)} />
-                  </div>
-                )}
               </div>
               
-              {/* Standalone Amenities Section (still keep it) */}
+              {/* Amenities - Updated with Table */}
               <div className="cycladic-card p-6 md:p-8">
                 <h2 className="text-2xl font-montserrat font-semibold mb-5">Hotel Amenities</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-y-5">
-                  {hotel.hotel_amenities?.map((item) => (
-                    <div key={item.amenity} className="flex items-center">
-                      <CheckCircle size={16} className="text-sifnos-turquoise mr-2 flex-shrink-0" />
-                      <span>{item.amenity}</span>
-                    </div>
-                  ))}
-                </div>
+                
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-1/2">Amenity</TableHead>
+                      <TableHead className="w-1/2">Availability</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {hotel.hotel_amenities?.map((item) => (
+                      <TableRow key={item.amenity}>
+                        <TableCell>
+                          <div className="flex items-center">
+                            <HotelAmenities amenities={[item.amenity]} />
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center">
+                            <CheckCircle size={16} className="text-green-500 mr-2 flex-shrink-0" />
+                            <span>Available</span>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    
+                    {/* Show unique room amenities that aren't already in hotel_amenities */}
+                    {hotel.hotel_rooms?.flatMap(room => room.amenities || [])
+                      .filter((amenity, index, self) => 
+                        // Filter unique amenities
+                        self.indexOf(amenity) === index && 
+                        // Filter out amenities that are already in hotel_amenities
+                        !hotel.hotel_amenities?.some(item => 
+                          item.amenity.toLowerCase() === amenity.toLowerCase()
+                        )
+                      )
+                      .map((roomAmenity) => (
+                        <TableRow key={`room-${roomAmenity}`}>
+                          <TableCell>
+                            <div className="flex items-center">
+                              <HotelAmenities amenities={[roomAmenity]} />
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center">
+                              <CheckCircle size={16} className="text-green-500 mr-2 flex-shrink-0" />
+                              <span>In selected rooms</span>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    }
+                  </TableBody>
+                </Table>
               </div>
               
               {/* Rooms - Updated with larger images and enhanced amenities display */}
