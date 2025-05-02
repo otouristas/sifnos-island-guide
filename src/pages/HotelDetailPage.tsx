@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, PlusCircle, MinusCircle } from 'lucide-react';
@@ -8,9 +7,10 @@ import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { extractIdFromSlug, generateHotelUrl } from '@/lib/url-utils';
 
 export default function HotelDetailPage() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [hotel, setHotel] = useState(null);
   const [activeImage, setActiveImage] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,6 +20,9 @@ export default function HotelDetailPage() {
   useEffect(() => {
     const fetchHotelDetails = async () => {
       try {
+        // Extract the ID from the slug
+        const id = extractIdFromSlug(slug);
+        
         const { data, error } = await supabase.from('hotels')
           .select(`
             *,
@@ -55,7 +58,7 @@ export default function HotelDetailPage() {
     };
 
     fetchHotelDetails();
-  }, [id, toast]);
+  }, [slug, toast]);
 
   // Function to render star rating
   const renderStarRating = (rating) => {
@@ -145,6 +148,9 @@ export default function HotelDetailPage() {
     );
   }
 
+  // Update the canonical URL and metadata to use the slug
+  const hotelSlug = generateHotelUrl(hotel.name, hotel.id);
+
   return (
     <>
       <SEO 
@@ -159,7 +165,8 @@ export default function HotelDetailPage() {
           'greek cyclades hotel'
         ]}
         schemaType="Hotel"
-        canonical={`https://hotelssifnos.com/hotels/${id}`}
+        canonical={`https://hotelssifnos.com/hotels/${hotelSlug}`}
+        imageUrl={activeImage ? `https://hotelssifnos.com${activeImage}` : undefined}
       />
       
       {/* Breadcrumb navigation */}

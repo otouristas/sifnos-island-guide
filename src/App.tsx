@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -49,7 +50,8 @@ const App = () => (
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/hotels" element={<HotelsPage />} />
-            <Route path="/hotels/:id" element={<HotelDetailPage />} />
+            {/* Update hotel detail route to use slug pattern */}
+            <Route path="/hotels/:slug" element={<HotelDetailPage />} />
             <Route path="/beaches" element={<BeachesPage />} />
             <Route path="/travel-guide" element={<TravelGuidePage />} />
             <Route path="/about" element={<AboutPage />} />

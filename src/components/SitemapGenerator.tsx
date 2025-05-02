@@ -1,6 +1,7 @@
 
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { generateHotelUrl } from '@/lib/url-utils';
 
 interface SitemapURL {
   loc: string;
@@ -61,11 +62,11 @@ export default function SitemapGenerator() {
       // Get dynamic hotel pages from Supabase
       let hotelPages: SitemapURL[] = [];
       try {
-        const { data: hotels, error } = await supabase.from('hotels').select('id, updated_at');
+        const { data: hotels, error } = await supabase.from('hotels').select('id, name, updated_at');
         
         if (!error && hotels) {
           hotelPages = hotels.map(hotel => ({
-            loc: `${baseURL}/hotels/${hotel.id}`,
+            loc: `${baseURL}/hotels/${generateHotelUrl(hotel.name, hotel.id)}`,
             lastmod: new Date(hotel.updated_at).toISOString(),
             changefreq: 'weekly',
             priority: 0.8

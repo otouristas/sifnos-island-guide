@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Search, MapPin, Hotel, Anchor, Calendar } from 'lucide-react';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import { useToast } from "@/components/ui/use-toast";
+import { generateHotelUrl } from '@/lib/url-utils';
 
 export default function HomePage() {
   const [featuredHotels, setFeaturedHotels] = useState([]);
@@ -227,7 +228,7 @@ export default function HomePage() {
                         <span>{hotel.location}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <Link to={`/hotels/${hotel.id}`} className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-4 py-2 rounded-lg transition-colors duration-300 text-sm font-medium">
+                        <Link to={`/hotels/${generateHotelUrl(hotel.name, hotel.id)}`} className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-4 py-2 rounded-lg transition-colors duration-300 text-sm font-medium">
                           View Details
                         </Link>
                       </div>
