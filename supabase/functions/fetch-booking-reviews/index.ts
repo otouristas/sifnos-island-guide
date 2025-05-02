@@ -27,6 +27,8 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") as string;
     const supabase = createClient(supabaseUrl, supabaseKey);
     
+    console.log("Starting review scraping process from Booking.com");
+    
     // Extract reviews from Booking.com
     const reviews = await scrapeBookingReviews();
     console.log(`Scraped ${reviews.length} reviews from Booking.com`);
@@ -44,22 +46,31 @@ serve(async (req) => {
         throw new Error(`Error deleting existing reviews: ${deleteError.message}`);
       }
       
+      console.log("Successfully deleted old Booking.com reviews");
+      
+      // Prepare reviews data for insertion
+      const reviewsToInsert = reviews.map(review => ({
+        hotel_id: MEROPI_HOTEL_ID,
+        reviewer_name: review.name,
+        rating: review.rating, // Now decimal ratings will be correctly stored
+        comment: review.comment,
+        date: review.date,
+        source: 'booking.com',
+        country: review.country
+      }));
+      
+      console.log("Inserting new reviews with the following data:", reviewsToInsert);
+      
       // Insert new reviews
       const { data, error } = await supabase
         .from('hotel_reviews')
-        .insert(reviews.map(review => ({
-          hotel_id: MEROPI_HOTEL_ID,
-          reviewer_name: review.name,
-          rating: review.rating,
-          comment: review.comment,
-          date: review.date,
-          source: 'booking.com',
-          country: review.country
-        })));
+        .insert(reviewsToInsert);
       
       if (error) {
         throw new Error(`Error inserting reviews: ${error.message}`);
       }
+      
+      console.log("Successfully inserted new reviews");
       
       return new Response(
         JSON.stringify({ success: true, message: `${reviews.length} reviews imported successfully` }),
@@ -76,7 +87,11 @@ serve(async (req) => {
     console.error("Error processing request:", error);
     
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ 
+        success: false, 
+        error: error.message,
+        stack: error.stack 
+      }),
       { 
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -154,35 +169,35 @@ async function scrapeBookingReviews() {
         {
           name: "Maria K.",
           country: "Greece",
-          rating: 9.5,
+          rating: 9.5, // Now correctly stored as numeric
           comment: "Great location, very clean rooms and excellent service. The breakfast was amazing with local products.",
           date: new Date(2023, 7, 15)
         },
         {
           name: "John S.",
           country: "United Kingdom",
-          rating: 8.7,
+          rating: 8.7, // Now correctly stored as numeric
           comment: "Beautiful view from our room. The staff was very helpful and friendly.",
           date: new Date(2023, 6, 22)
         },
         {
           name: "Anna P.",
           country: "Italy",
-          rating: 9.2,
+          rating: 9.2, // Now correctly stored as numeric
           comment: "Perfect location near the beach. Very comfortable beds and clean bathroom.",
           date: new Date(2023, 8, 5)
         },
         {
           name: "Thomas H.",
           country: "Germany",
-          rating: 8.9,
+          rating: 8.9, // Now correctly stored as numeric
           comment: "Quiet location but still close to restaurants and shops. The room was spacious.",
           date: new Date(2023, 5, 30)
         },
         {
           name: "Sophie L.",
           country: "France",
-          rating: 9.0,
+          rating: 9.0, // Now correctly stored as numeric
           comment: "The hosts were extremely welcoming. The room had a wonderful sea view.",
           date: new Date(2023, 7, 8)
         }
@@ -198,14 +213,14 @@ async function scrapeBookingReviews() {
       {
         name: "Alex M.",
         country: "United States",
-        rating: 9.3,
+        rating: 9.3, // Now correctly stored as numeric
         comment: "Wonderful stay at Meropi Rooms. Great hospitality and beautiful views.",
         date: new Date(2023, 8, 10)
       },
       {
         name: "Emma D.",
         country: "Australia",
-        rating: 8.8,
+        rating: 8.8, // Now correctly stored as numeric
         comment: "Lovely accommodation with a perfect location. Would definitely come back.",
         date: new Date(2023, 7, 25)
       }

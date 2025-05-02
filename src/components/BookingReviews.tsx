@@ -26,10 +26,13 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
 
   // Function to render star rating
   const renderStarRating = (rating: number) => {
+    // Convert rating from 0-10 scale to 0-5 scale (Booking.com uses 0-10)
+    const starsOutOf5 = rating / 2;
+    
     return Array(5).fill(0).map((_, i) => (
       <Star 
         key={i} 
-        className={i < Math.round(rating / 2) ? "text-yellow-400 fill-yellow-400" : "text-gray-300"} 
+        className={i < Math.round(starsOutOf5) ? "text-yellow-400 fill-yellow-400" : "text-gray-300"} 
         size={16}
       />
     ));
@@ -201,7 +204,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
                   
                   <div className="flex my-2">
                     {renderStarRating(review.rating)}
-                    <span className="ml-2 text-sm font-medium">{review.rating.toFixed(1)}</span>
+                    <span className="ml-2 text-sm font-medium">{Number(review.rating).toFixed(1)}</span>
                   </div>
                   
                   <p className="text-gray-700">{review.comment}</p>
