@@ -14,7 +14,8 @@ export default function HomePage() {
   useEffect(() => {
     async function fetchFeaturedHotels() {
       try {
-        const { data, error } = await (supabase as any)
+        console.log("Fetching featured hotels...");
+        const { data, error } = await supabase
           .from('hotels')
           .select(`
             *,
@@ -23,7 +24,12 @@ export default function HomePage() {
           .order('rating', { ascending: false })
           .limit(3);
 
-        if (error) throw error;
+        if (error) {
+          console.error("Supabase error:", error);
+          throw error;
+        }
+        
+        console.log("Featured hotels data:", data);
         setFeaturedHotels(data || []);
       } catch (error) {
         console.error('Error fetching hotels:', error);

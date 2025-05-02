@@ -28,6 +28,7 @@ export default function HotelsPage() {
   useEffect(() => {
     async function fetchHotels() {
       try {
+        console.log("Fetching hotels...");
         const { data, error } = await supabase
           .from('hotels')
           .select(`
@@ -37,10 +38,20 @@ export default function HotelsPage() {
           `);
 
         if (error) {
+          console.error("Supabase error:", error);
           throw error;
         }
 
         console.log("Fetched hotels data:", data);
+        if (data && data.length === 0) {
+          console.log("No hotels found in the database");
+        }
+        
+        // Log the hotel ID you're looking for specifically
+        console.log("Looking for hotel with ID: 0c9632b6-db5c-4179-8122-0003896e465e");
+        const specificHotel = data?.find(hotel => hotel.id === '0c9632b6-db5c-4179-8122-0003896e465e');
+        console.log("Found specific hotel:", specificHotel);
+        
         setHotels(data || []);
       } catch (error) {
         console.error('Error fetching hotels:', error);
