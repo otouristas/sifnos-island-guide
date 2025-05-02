@@ -155,6 +155,8 @@ export type Database = {
       hotels: {
         Row: {
           address: string | null
+          booking_platform: string | null
+          booking_url: string | null
           created_at: string
           description: string
           email: string | null
@@ -175,6 +177,8 @@ export type Database = {
         }
         Insert: {
           address?: string | null
+          booking_platform?: string | null
+          booking_url?: string | null
           created_at?: string
           description: string
           email?: string | null
@@ -195,6 +199,8 @@ export type Database = {
         }
         Update: {
           address?: string | null
+          booking_platform?: string | null
+          booking_url?: string | null
           created_at?: string
           description?: string
           email?: string | null

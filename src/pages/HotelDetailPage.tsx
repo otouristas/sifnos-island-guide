@@ -2,9 +2,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, PlusCircle, MinusCircle } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import SEO from '../components/SEO';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
 export default function HotelDetailPage() {
   const { id } = useParams();
@@ -17,7 +20,7 @@ export default function HotelDetailPage() {
   useEffect(() => {
     const fetchHotelDetails = async () => {
       try {
-        const { data, error } = await (supabase as any).from('hotels')
+        const { data, error } = await supabase.from('hotels')
           .select(`
             *,
             hotel_amenities(amenity),
@@ -30,6 +33,7 @@ export default function HotelDetailPage() {
 
         if (error) throw error;
         
+        logSupabaseResponse('fetch hotel details', data, error);
         setHotel(data);
         
         // Set active image to main photo or first photo
@@ -67,6 +71,20 @@ export default function HotelDetailPage() {
   // Toggle FAQ
   const toggleFaq = (index) => {
     setOpenFaqIndex(openFaqIndex === index ? -1 : index);
+  };
+
+  // Get booking platform logo
+  const getBookingPlatformLogo = (platform) => {
+    switch(platform?.toLowerCase()) {
+      case 'booking.com':
+        return '/uploads/misc/booking-com-logo.png';
+      case 'airbnb':
+        return '/uploads/misc/airbnb-logo.png';
+      case 'expedia':
+        return '/uploads/misc/expedia-logo.png';
+      default:
+        return null;
+    }
   };
 
   // Hotel FAQs
@@ -145,7 +163,7 @@ export default function HotelDetailPage() {
       />
       
       {/* Breadcrumb navigation */}
-      <div className="bg-white pt-6 pb-4 shadow-sm">
+      <div className="bg-white pt-4 pb-2 shadow-sm">
         <div className="page-container">
           <nav className="text-sm breadcrumbs">
             <ul className="flex space-x-2">
@@ -159,25 +177,67 @@ export default function HotelDetailPage() {
         </div>
       </div>
       
-      {/* Hotel Title Section */}
+      {/* Hotel Title Section with Logo */}
       <div className="bg-white">
         <div className="page-container py-6">
-          <div className="flex flex-wrap items-start justify-between">
-            <div>
-              <h1 className="font-montserrat text-3xl md:text-4xl font-bold mb-2">{hotel.name}</h1>
-              <div className="flex items-center mb-1">
-                <MapPin size={16} className="text-sifnos-turquoise mr-1" />
-                <span className="text-gray-600">{hotel.location}, Sifnos Island</span>
-              </div>
-              <div className="flex items-center">
-                {renderStarRating(hotel.rating)}
-                <span className="text-sm ml-2 text-gray-600">({hotel.hotel_reviews?.length || 0} reviews)</span>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              {/* Hotel Logo */}
+              {hotel.logo_path && (
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border border-gray-200 bg-white flex items-center justify-center">
+                  <img 
+                    src={`/uploads/hotels/${hotel.logo_path}`} 
+                    alt={`${hotel.name} logo`} 
+                    className="w-full h-full object-contain p-1"
+                  />
+                </div>
+              )}
+              
+              <div>
+                <h1 className="font-montserrat text-3xl md:text-4xl font-bold mb-2">{hotel.name}</h1>
+                <div className="flex items-center mb-1">
+                  <MapPin size={16} className="text-sifnos-turquoise mr-1" />
+                  <span className="text-gray-600">{hotel.location}, Sifnos Island</span>
+                </div>
+                <div className="flex items-center">
+                  {renderStarRating(hotel.rating)}
+                  <span className="text-sm ml-2 text-gray-600">({hotel.hotel_reviews?.length || 0} reviews)</span>
+                </div>
               </div>
             </div>
-            <div className="mt-4 md:mt-0">
-              <button className="bg-sifnos-turquoise text-white px-6 py-2 rounded-lg hover:bg-sifnos-deep-blue transition-colors w-full">
-                Request Availability
-              </button>
+            
+            {/* Booking Button */}
+            <div>
+              {hotel.booking_url && hotel.booking_platform ? (
+                <Card className="p-2 max-w-xs">
+                  <CardContent className="p-2 flex flex-col items-center">
+                    {getBookingPlatformLogo(hotel.booking_platform) && (
+                      <div className="mb-2 h-8">
+                        <img 
+                          src={getBookingPlatformLogo(hotel.booking_platform)} 
+                          alt={hotel.booking_platform} 
+                          className="h-full object-contain"
+                        />
+                      </div>
+                    )}
+                    <div className="text-xs text-muted-foreground mb-2">Sponsored</div>
+                    <a 
+                      href={hotel.booking_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="w-full"
+                    >
+                      <Button variant="default" className="w-full bg-sifnos-turquoise hover:bg-sifnos-deep-blue">
+                        Book Now
+                      </Button>
+                    </a>
+                  </CardContent>
+                </Card>
+              ) : (
+                <Button variant="default" className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue">
+                  Request Availability
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -232,28 +292,28 @@ export default function HotelDetailPage() {
       </div>
       
       {/* Hotel Details */}
-      <div className="py-12">
+      <div className="py-10">
         <div className="page-container">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             {/* Left Column - Description & Amenities */}
-            <div className="lg:col-span-2 space-y-8">
+            <div className="lg:col-span-2 space-y-6">
               
               {/* Description */}
-              <div className="cycladic-card">
-                <h2 className="text-2xl font-montserrat font-semibold mb-4">About {hotel.name}</h2>
+              <div className="cycladic-card p-6 md:p-8">
+                <h2 className="text-2xl font-montserrat font-semibold mb-5">About {hotel.name}</h2>
                 <p className="text-gray-700 whitespace-pre-line leading-relaxed">
                   {hotel.description}
                 </p>
               </div>
               
               {/* Amenities */}
-              <div className="cycladic-card">
-                <h2 className="text-2xl font-montserrat font-semibold mb-4">Hotel Amenities</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4">
+              <div className="cycladic-card p-6 md:p-8">
+                <h2 className="text-2xl font-montserrat font-semibold mb-5">Hotel Amenities</h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-y-5">
                   {hotel.hotel_amenities?.map((item) => (
                     <div key={item.amenity} className="flex items-center">
-                      <CheckCircle size={16} className="text-sifnos-turquoise mr-2" />
+                      <CheckCircle size={16} className="text-sifnos-turquoise mr-2 flex-shrink-0" />
                       <span>{item.amenity}</span>
                     </div>
                   ))}
@@ -261,25 +321,25 @@ export default function HotelDetailPage() {
               </div>
               
               {/* Rooms */}
-              <div className="cycladic-card">
+              <div className="cycladic-card p-6 md:p-8">
                 <h2 className="text-2xl font-montserrat font-semibold mb-6">Available Rooms</h2>
-                <div className="space-y-6">
+                <div className="space-y-8">
                   {hotel.hotel_rooms?.map((room) => (
-                    <div key={room.id} className="border-b pb-6 last:border-b-0 last:pb-0">
-                      <div className="flex flex-col md:flex-row">
-                        <div className="md:w-1/4 mb-4 md:mb-0">
+                    <div key={room.id} className="border-b pb-8 last:border-b-0 last:pb-0">
+                      <div className="flex flex-col md:flex-row gap-4">
+                        <div className="md:w-1/4">
                           <img 
                             src={room.photo_url ? `/uploads/rooms/${room.photo_url}` : '/placeholder.svg'} 
                             alt={room.name} 
                             className="w-full h-32 object-cover rounded-lg"
                           />
                         </div>
-                        <div className="md:w-3/4 md:pl-6">
+                        <div className="md:w-3/4">
                           <h3 className="text-xl font-semibold">{room.name}</h3>
                           
                           <div className="flex flex-wrap gap-4 mt-2 text-sm text-gray-600">
                             <div className="flex items-center">
-                              <Users size={16} className="mr-1" />
+                              <Users size={16} className="mr-1 flex-shrink-0" />
                               Up to {room.capacity} guests
                             </div>
                             {room.size_sqm && (
@@ -290,7 +350,7 @@ export default function HotelDetailPage() {
                             )}
                           </div>
                           
-                          <p className="mt-2 text-gray-700">{room.description}</p>
+                          <p className="mt-3 text-gray-700">{room.description}</p>
                           
                           {/* Room Amenities */}
                           {room.amenities && room.amenities.length > 0 && (
@@ -304,9 +364,21 @@ export default function HotelDetailPage() {
                           )}
                           
                           <div className="mt-4">
-                            <button className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-4 py-1 rounded-lg text-sm font-medium transition-colors">
-                              Check Availability
-                            </button>
+                            {hotel.booking_url ? (
+                              <a 
+                                href={hotel.booking_url} 
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Button className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white">
+                                  Check Availability
+                                </Button>
+                              </a>
+                            ) : (
+                              <Button className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white">
+                                Check Availability
+                              </Button>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -316,7 +388,7 @@ export default function HotelDetailPage() {
               </div>
               
               {/* FAQs */}
-              <div className="cycladic-card">
+              <div className="cycladic-card p-6 md:p-8">
                 <h2 className="text-2xl font-montserrat font-semibold mb-6">Frequently Asked Questions</h2>
                 <div className="space-y-4">
                   {faqs.map((faq, index) => (
@@ -330,9 +402,9 @@ export default function HotelDetailPage() {
                       >
                         <span>{faq.question}</span>
                         {openFaqIndex === index ? (
-                          <MinusCircle size={18} className="text-sifnos-turquoise" />
+                          <MinusCircle size={18} className="text-sifnos-turquoise flex-shrink-0" />
                         ) : (
-                          <PlusCircle size={18} className="text-sifnos-turquoise" />
+                          <PlusCircle size={18} className="text-sifnos-turquoise flex-shrink-0" />
                         )}
                       </button>
                       
@@ -347,7 +419,7 @@ export default function HotelDetailPage() {
               </div>
               
               {/* Reviews */}
-              <div className="cycladic-card">
+              <div className="cycladic-card p-6 md:p-8">
                 <h2 className="text-2xl font-montserrat font-semibold mb-6">Guest Reviews</h2>
                 
                 {hotel.hotel_reviews?.length > 0 ? (
@@ -395,9 +467,9 @@ export default function HotelDetailPage() {
                   <p className="text-gray-600">No reviews yet for this hotel.</p>
                 )}
                 
-                <button className="mt-4 font-medium text-sifnos-turquoise hover:text-sifnos-deep-blue transition-colors">
+                <Button variant="link" className="mt-4 text-sifnos-turquoise hover:text-sifnos-deep-blue p-0">
                   Write a review
-                </button>
+                </Button>
               </div>
             </div>
             
@@ -405,7 +477,7 @@ export default function HotelDetailPage() {
             <div className="space-y-6">
               
               {/* Booking Card */}
-              <div className="cycladic-card">
+              <div className="cycladic-card p-6">
                 <h3 className="text-xl font-semibold mb-4">Request Information</h3>
                 
                 <div className="space-y-4">
@@ -446,40 +518,69 @@ export default function HotelDetailPage() {
                     </div>
                   </div>
                   
-                  <button className="w-full bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white py-3 rounded-lg transition-colors font-medium">
-                    Request Information
-                  </button>
+                  {hotel.booking_url ? (
+                    <a 
+                      href={hotel.booking_url} 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block w-full"
+                    >
+                      <Button className="w-full bg-sifnos-turquoise hover:bg-sifnos-deep-blue">
+                        Check Availability
+                      </Button>
+                    </a>
+                  ) : (
+                    <Button className="w-full bg-sifnos-turquoise hover:bg-sifnos-deep-blue">
+                      Request Information
+                    </Button>
+                  )}
+
+                  {/* Sponsored badge if booking is available */}
+                  {hotel.booking_url && hotel.booking_platform && (
+                    <div className="flex items-center justify-center space-x-2 pt-2">
+                      <Separator className="flex-1" />
+                      <span className="text-xs text-gray-400">Sponsored by</span>
+                      <Separator className="flex-1" />
+                      {getBookingPlatformLogo(hotel.booking_platform) && (
+                        <img 
+                          src={getBookingPlatformLogo(hotel.booking_platform)}
+                          alt={hotel.booking_platform}
+                          className="h-5 object-contain"
+                        />
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
               
               {/* Contact Info */}
-              <div className="cycladic-card">
+              <div className="cycladic-card p-6">
                 <h3 className="text-xl font-semibold mb-4">Contact Information</h3>
                 <div className="space-y-3">
                   {hotel.address && (
                     <div className="flex items-start">
-                      <MapPin size={18} className="text-sifnos-turquoise mr-2 mt-1" />
+                      <MapPin size={18} className="text-sifnos-turquoise mr-2 mt-1 flex-shrink-0" />
                       <span>{hotel.address}</span>
                     </div>
                   )}
                   
                   {hotel.phone && (
                     <div className="flex items-center">
-                      <Phone size={18} className="text-sifnos-turquoise mr-2" />
+                      <Phone size={18} className="text-sifnos-turquoise mr-2 flex-shrink-0" />
                       <a href={`tel:${hotel.phone}`} className="hover:text-sifnos-turquoise">{hotel.phone}</a>
                     </div>
                   )}
                   
                   {hotel.email && (
                     <div className="flex items-center">
-                      <Mail size={18} className="text-sifnos-turquoise mr-2" />
+                      <Mail size={18} className="text-sifnos-turquoise mr-2 flex-shrink-0" />
                       <a href={`mailto:${hotel.email}`} className="hover:text-sifnos-turquoise">{hotel.email}</a>
                     </div>
                   )}
                   
                   {hotel.website && (
                     <div className="flex items-center">
-                      <GlobeIcon size={18} className="text-sifnos-turquoise mr-2" />
+                      <GlobeIcon size={18} className="text-sifnos-turquoise mr-2 flex-shrink-0" />
                       <a href={hotel.website} target="_blank" rel="noopener noreferrer" className="hover:text-sifnos-turquoise">Website</a>
                     </div>
                   )}
@@ -524,9 +625,9 @@ export default function HotelDetailPage() {
               
               {/* Map */}
               {hotel.google_map_url && (
-                <div className="cycladic-card">
+                <div className="cycladic-card p-6">
                   <h3 className="text-xl font-semibold mb-4">Location</h3>
-                  <div className="h-64 bg-gray-100">
+                  <div className="h-64 bg-gray-100 rounded-md overflow-hidden">
                     <iframe
                       src={hotel.google_map_url}
                       width="100%"
