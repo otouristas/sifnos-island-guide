@@ -171,6 +171,9 @@ export default function HotelDetailPage() {
   // Update the canonical URL and metadata to use the slug
   const hotelSlug = generateHotelUrl(hotel.name, hotel.id);
   const isMeropiRooms = hotel.id === '0c9632b6-db5c-4179-8122-0003896e465e';
+  
+  // Fixed Google Maps URL for Meropi Rooms
+  const meropiMapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3780.3010959320573!2d24.67395307627629!3d36.98818015707993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x149892d141f2e833%3A0x82d07f304d07c20a!2sMeropi%20Rooms%20%26%20Apartments!5e1!3m2!1sen!2sgr!4v1746223266808!5m2!1sen!2sgr";
 
   return (
     <>
@@ -608,39 +611,37 @@ export default function HotelDetailPage() {
                 </div>
               </div>
               
-              {/* Map */}
-              {hotel.google_map_url && (
-                <div className="cycladic-card p-6">
-                  <h3 className="text-xl font-semibold mb-4 flex items-center">
-                    <Map size={18} className="mr-2 text-sifnos-turquoise" />
-                    Location
-                  </h3>
-                  <div className="h-64 bg-gray-100 rounded-md overflow-hidden shadow-md">
-                    <iframe
-                      src={hotel.google_map_url}
-                      width="100%"
-                      height="100%"
-                      style={{ border: 0 }}
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      title={`${hotel.name} Location Map`}
-                      className="w-full h-full"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                  <div className="text-xs text-gray-500 mt-2 flex items-center">
-                    <MapPin size={12} className="mr-1" />
-                    <a 
-                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${hotel.name} ${hotel.location} Sifnos Greece`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sifnos-turquoise hover:underline"
-                    >
-                      View larger map
-                    </a>
-                  </div>
+              {/* Map with fixed URL */}
+              <div className="cycladic-card p-6">
+                <h3 className="text-xl font-semibold mb-4 flex items-center">
+                  <Map size={18} className="mr-2 text-sifnos-turquoise" />
+                  Location
+                </h3>
+                <div className="h-64 bg-gray-100 rounded-md overflow-hidden shadow-md">
+                  <iframe
+                    src={isMeropiRooms ? meropiMapUrl : hotel.google_map_url}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title={`${hotel.name} Location Map`}
+                    className="w-full h-full"
+                    allowFullScreen
+                  ></iframe>
                 </div>
-              )}
+                <div className="text-xs text-gray-500 mt-2 flex items-center">
+                  <MapPin size={12} className="mr-1" />
+                  <a 
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${hotel.name} ${hotel.location} Sifnos Greece`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sifnos-turquoise hover:underline"
+                  >
+                    View larger map
+                  </a>
+                </div>
+              </div>
               
               {/* Greece Cyclades Banner */}
               <div className="cycladic-card p-6">
