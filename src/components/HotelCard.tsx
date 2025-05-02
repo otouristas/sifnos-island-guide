@@ -113,7 +113,7 @@ const HotelCard = ({ hotel }: HotelCardProps) => {
       </div>
       <div className="p-4">
         <div className="flex justify-between items-start">
-          <h3 className="font-montserrat font-semibold text-base">{hotel.name}</h3>
+          <h3 className="font-montserrat font-semibold text-base truncate">{hotel.name}</h3>
           <div className="flex items-center">
             {renderStarRating(hotel.rating)}
           </div>
@@ -124,17 +124,17 @@ const HotelCard = ({ hotel }: HotelCardProps) => {
           <span className="text-gray-600 text-xs">{hotel.location}</span>
         </div>
         
-        <p className="text-gray-600 text-sm mb-3 line-clamp-2">{hotel.short_description || hotel.description.substring(0, 100) + '...'}</p>
+        <p className="text-gray-600 text-xs mb-2 line-clamp-2">{hotel.short_description || hotel.description.substring(0, 80) + '...'}</p>
         
-        {/* Amenities */}
-        <div className="mb-3">
-          <HotelAmenities amenities={getHotelAmenities()} />
+        {/* Amenities - only show top 3 */}
+        <div className="mb-2">
+          <HotelAmenities amenities={getHotelAmenities().slice(0, 3)} />
         </div>
         
-        <div className="flex justify-end">
+        <div className="flex justify-end mt-2">
           <Link 
             to={`/hotels/${generateHotelUrl(hotel.name, hotel.id)}`} 
-            className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-4 py-1.5 rounded-lg transition-colors duration-300 text-xs font-medium"
+            className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-3 py-1 rounded text-xs font-medium transition-colors duration-300"
           >
             View Details
           </Link>
