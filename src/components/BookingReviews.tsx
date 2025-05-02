@@ -26,8 +26,8 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
 
   // Function to render star rating
   const renderStarRating = (rating: number) => {
-    // Convert rating from 0-10 scale to 0-5 scale (Booking.com uses 0-10)
-    const starsOutOf5 = rating / 2;
+    // Rating is already on a 0-5 scale now
+    const starsOutOf5 = rating;
     
     return Array(5).fill(0).map((_, i) => (
       <Star 
@@ -53,13 +53,22 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
       setRefreshing(true);
       
       // Trigger the edge function to update reviews
-      const { error } = await supabase.functions.invoke('fetch-booking-reviews');
+      const { data, error } = await supabase.functions.invoke('fetch-booking-reviews');
       
-      if (error) throw error;
+      if (error) {
+        console.error('Edge function error:', error);
+        throw new Error(`Edge function error: ${error.message || 'Unknown error'}`);
+      }
+      
+      console.log('Edge function response:', data);
+      
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to fetch reviews');
+      }
       
       toast({
         title: "Reviews updated",
-        description: "Latest reviews from Booking.com have been fetched",
+        description: data.message || "Latest reviews from Booking.com have been fetched",
       });
       
       // Fetch the updated reviews
@@ -89,6 +98,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
         
       if (error) throw error;
       
+      console.log('Fetched reviews:', data);
       setReviews(data || []);
       
     } catch (error) {

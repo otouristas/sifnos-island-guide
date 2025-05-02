@@ -35,6 +35,16 @@ serve(async (req) => {
     
     // Save reviews to database
     if (reviews.length > 0) {
+      // First, check if there are any constraints on the rating column
+      const { data: tableInfo, error: tableError } = await supabase
+        .rpc('get_table_constraints', { table_name: 'hotel_reviews' });
+      
+      if (tableError) {
+        console.log("Error checking table constraints:", tableError);
+      } else {
+        console.log("Table constraints:", tableInfo);
+      }
+      
       // First, delete old Booking.com reviews for this hotel to avoid duplicates
       const { error: deleteError } = await supabase
         .from('hotel_reviews')
@@ -48,21 +58,29 @@ serve(async (req) => {
       
       console.log("Successfully deleted old Booking.com reviews");
       
-      // Prepare reviews data for insertion
+      // Prepare reviews data for insertion - ensure ratings are between 0 and 5
       const reviewsToInsert = reviews.map(review => {
-        // Ensure rating is a valid numeric value between 0 and 10
-        let rating = parseFloat(review.rating);
-        if (isNaN(rating)) {
-          rating = 0;
-        } else {
-          // Clamp value between 0 and 10
-          rating = Math.max(0, Math.min(10, rating));
+        // Parse rating to number and ensure it's within valid range
+        let rating: number;
+        try {
+          // Convert from 0-10 Booking.com scale to 0-5 scale for our database
+          rating = parseFloat(String(review.rating)) / 2;
+          // Ensure rating is between 0 and 5
+          rating = Math.max(0, Math.min(5, rating));
+          // Round to one decimal place for consistency
+          rating = Math.round(rating * 10) / 10;
+        } catch (e) {
+          console.error("Error parsing rating:", e, "for rating value:", review.rating);
+          // Default to middle rating if parsing fails
+          rating = 2.5;
         }
+        
+        console.log(`Processing review: ${review.name}, original rating: ${review.rating}, transformed rating: ${rating}`);
         
         return {
           hotel_id: MEROPI_HOTEL_ID,
           reviewer_name: review.name,
-          rating: rating, // Now properly parsed as numeric
+          rating: rating,
           comment: review.comment,
           date: review.date,
           source: 'booking.com',
@@ -194,35 +212,35 @@ async function scrapeBookingReviews() {
         {
           name: "Maria K.",
           country: "Greece",
-          rating: 9.5,
+          rating: 9,
           comment: "Great location, very clean rooms and excellent service. The breakfast was amazing with local products.",
           date: new Date(2023, 7, 15)
         },
         {
           name: "John S.",
           country: "United Kingdom",
-          rating: 8.7,
+          rating: 8,
           comment: "Beautiful view from our room. The staff was very helpful and friendly.",
           date: new Date(2023, 6, 22)
         },
         {
           name: "Anna P.",
           country: "Italy",
-          rating: 9.2,
+          rating: 9,
           comment: "Perfect location near the beach. Very comfortable beds and clean bathroom.",
           date: new Date(2023, 8, 5)
         },
         {
           name: "Thomas H.",
           country: "Germany",
-          rating: 8.9,
+          rating: 8,
           comment: "Quiet location but still close to restaurants and shops. The room was spacious.",
           date: new Date(2023, 5, 30)
         },
         {
           name: "Sophie L.",
           country: "France",
-          rating: 9.0,
+          rating: 9,
           comment: "The hosts were extremely welcoming. The room had a wonderful sea view.",
           date: new Date(2023, 7, 8)
         }
@@ -238,14 +256,14 @@ async function scrapeBookingReviews() {
       {
         name: "Alex M.",
         country: "United States",
-        rating: 9.3,
+        rating: 9,
         comment: "Wonderful stay at Meropi Rooms. Great hospitality and beautiful views.",
         date: new Date(2023, 8, 10)
       },
       {
         name: "Emma D.",
         country: "Australia",
-        rating: 8.8,
+        rating: 8,
         comment: "Lovely accommodation with a perfect location. Would definitely come back.",
         date: new Date(2023, 7, 25)
       }
