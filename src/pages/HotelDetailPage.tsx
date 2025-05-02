@@ -608,7 +608,7 @@ export default function HotelDetailPage() {
                 </div>
               </div>
               
-              {/* Map with fixed URL */}
+              {/* Map section - this is where the error is */}
               <div className="cycladic-card p-6">
                 <h3 className="text-xl font-semibold mb-4 flex items-center">
                   <Map size={18} className="mr-2 text-sifnos-turquoise" />
@@ -621,7 +621,7 @@ export default function HotelDetailPage() {
                     height="100%"
                     style={{ border: 0 }}
                     loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"
+                    referrerPolicy="no-referrer-when-downgrade"
                     title={`${hotel.name} Location Map`}
                     className="w-full h-full"
                     allowFullScreen
