@@ -1,5 +1,6 @@
 
 User-agent: *
 Allow: /
+Allow: /lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png
 
 Sitemap: https://hotelssifnos.com/sitemap.xml
