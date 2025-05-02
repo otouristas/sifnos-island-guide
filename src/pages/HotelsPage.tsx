@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, Star } from 'lucide-react';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import { useToast } from "@/components/ui/use-toast";
 import HotelCard from '@/components/HotelCard';
