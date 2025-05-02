@@ -339,62 +339,35 @@ export default function HotelDetailPage() {
                 </p>
               </div>
               
-              {/* Amenities - Updated with Table */}
+              {/* Amenities - Updated to show only icons */}
               <div className="cycladic-card p-6 md:p-8">
                 <h2 className="text-2xl font-montserrat font-semibold mb-5">Hotel Amenities</h2>
                 
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-1/2">Amenity</TableHead>
-                      <TableHead className="w-1/2">Availability</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {hotel.hotel_amenities?.map((item) => (
-                      <TableRow key={item.amenity}>
-                        <TableCell>
-                          <div className="flex items-center">
-                            <HotelAmenities amenities={[item.amenity]} />
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center">
-                            <CheckCircle size={16} className="text-green-500 mr-2 flex-shrink-0" />
-                            <span>Available</span>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                    
-                    {/* Show unique room amenities that aren't already in hotel_amenities */}
-                    {hotel.hotel_rooms?.flatMap(room => room.amenities || [])
-                      .filter((amenity, index, self) => 
-                        // Filter unique amenities
-                        self.indexOf(amenity) === index && 
-                        // Filter out amenities that are already in hotel_amenities
-                        !hotel.hotel_amenities?.some(item => 
-                          item.amenity.toLowerCase() === amenity.toLowerCase()
-                        )
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {/* Hotel amenities */}
+                  {hotel.hotel_amenities?.map((item) => (
+                    <div key={item.amenity} className="flex items-center">
+                      <HotelAmenities amenities={[item.amenity]} />
+                    </div>
+                  ))}
+                  
+                  {/* Show unique room amenities that aren't already in hotel_amenities */}
+                  {hotel.hotel_rooms?.flatMap(room => room.amenities || [])
+                    .filter((amenity, index, self) => 
+                      // Filter unique amenities
+                      self.indexOf(amenity) === index && 
+                      // Filter out amenities that are already in hotel_amenities
+                      !hotel.hotel_amenities?.some(item => 
+                        item.amenity.toLowerCase() === amenity.toLowerCase()
                       )
-                      .map((roomAmenity) => (
-                        <TableRow key={`room-${roomAmenity}`}>
-                          <TableCell>
-                            <div className="flex items-center">
-                              <HotelAmenities amenities={[roomAmenity]} />
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center">
-                              <CheckCircle size={16} className="text-green-500 mr-2 flex-shrink-0" />
-                              <span>In selected rooms</span>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    }
-                  </TableBody>
-                </Table>
+                    )
+                    .map((roomAmenity) => (
+                      <div key={`room-${roomAmenity}`} className="flex items-center">
+                        <HotelAmenities amenities={[roomAmenity]} />
+                      </div>
+                    ))
+                  }
+                </div>
               </div>
               
               {/* Rooms - Updated with larger images and enhanced amenities display */}
