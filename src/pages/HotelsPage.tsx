@@ -28,16 +28,19 @@ export default function HotelsPage() {
   useEffect(() => {
     async function fetchHotels() {
       try {
-        const { data, error } = await (supabase as any).from('hotels').select(`
-          *,
-          hotel_amenities(amenity),
-          hotel_photos(id, photo_url, is_main_photo)
-        `);
+        const { data, error } = await supabase
+          .from('hotels')
+          .select(`
+            *,
+            hotel_amenities(amenity),
+            hotel_photos(id, photo_url, is_main_photo)
+          `);
 
         if (error) {
           throw error;
         }
 
+        console.log("Fetched hotels data:", data);
         setHotels(data || []);
       } catch (error) {
         console.error('Error fetching hotels:', error);
