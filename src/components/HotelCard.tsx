@@ -38,7 +38,7 @@ const HotelCard = ({ hotel }: HotelCardProps) => {
       <Star 
         key={i} 
         className={i < rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"} 
-        size={16}
+        size={14}
       />
     ));
   };
@@ -46,7 +46,9 @@ const HotelCard = ({ hotel }: HotelCardProps) => {
   // Process amenities for display
   const getHotelAmenities = () => {
     if (hotel?.hotel_amenities && hotel.hotel_amenities.length > 0) {
-      return hotel.hotel_amenities.map(item => item.amenity);
+      return hotel.hotel_amenities
+        .map(item => item.amenity)
+        .filter(amenity => amenity !== 'restaurant'); // Remove restaurant from amenities
     }
     return [];
   };
@@ -84,59 +86,55 @@ const HotelCard = ({ hotel }: HotelCardProps) => {
   };
 
   return (
-    <div className="cycladic-card overflow-hidden flex flex-col md:flex-row">
-      <div className="md:w-1/3">
-        <div className="bg-sifnos-teal/20 h-48 md:h-full">
-          <img 
-            src={getMainPhotoUrl()} 
-            alt={`${hotel.name} - Hotel in ${hotel.location}, Sifnos`}
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              console.log(`Error loading image for hotel ${hotel.id}`);
-              e.currentTarget.src = '/placeholder.svg';
-            }}
-          />
-        </div>
-      </div>
-      <div className="md:w-2/3 p-6">
-        <div className="flex flex-wrap justify-between items-start">
-          <div className="flex items-start gap-3">
-            {/* Hotel Logo */}
-            {getHotelLogo() && (
-              <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-200 bg-white flex items-center justify-center">
-                <img 
-                  src={getHotelLogo()}
-                  alt={`${hotel.name} logo`}
-                  className="w-full h-full object-contain p-1"
-                  onError={(e) => {
-                    console.log(`Error loading logo for hotel ${hotel.id}`);
-                    e.currentTarget.src = '/placeholder.svg';
-                  }}
-                />
-              </div>
-            )}
-            <div>
-              <h3 className="font-montserrat font-semibold text-xl">{hotel.name}</h3>
-              <div className="flex items-center mt-1 mb-3">
-                <MapPin size={16} className="text-sifnos-turquoise mr-1" />
-                <span className="text-gray-600 text-sm">{hotel.location}</span>
-              </div>
-            </div>
+    <div className="cycladic-card overflow-hidden">
+      <div className="relative h-40 overflow-hidden">
+        <img 
+          src={getMainPhotoUrl()} 
+          alt={`${hotel.name} - Hotel in ${hotel.location}, Sifnos`}
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            console.log(`Error loading image for hotel ${hotel.id}`);
+            e.currentTarget.src = '/placeholder.svg';
+          }}
+        />
+        {getHotelLogo() && (
+          <div className="absolute bottom-2 left-2 w-10 h-10 rounded-full overflow-hidden border border-gray-200 bg-white flex items-center justify-center">
+            <img 
+              src={getHotelLogo()}
+              alt={`${hotel.name} logo`}
+              className="w-full h-full object-contain p-1"
+              onError={(e) => {
+                console.log(`Error loading logo for hotel ${hotel.id}`);
+                e.currentTarget.src = '/placeholder.svg';
+              }}
+            />
           </div>
+        )}
+      </div>
+      <div className="p-4">
+        <div className="flex justify-between items-start">
+          <h3 className="font-montserrat font-semibold text-base">{hotel.name}</h3>
           <div className="flex items-center">
             {renderStarRating(hotel.rating)}
           </div>
         </div>
         
-        <p className="text-gray-600 mb-4">{hotel.short_description || hotel.description.substring(0, 150) + '...'}</p>
+        <div className="flex items-center mt-1 mb-2">
+          <MapPin size={14} className="text-sifnos-turquoise mr-1" />
+          <span className="text-gray-600 text-xs">{hotel.location}</span>
+        </div>
+        
+        <p className="text-gray-600 text-sm mb-3 line-clamp-2">{hotel.short_description || hotel.description.substring(0, 100) + '...'}</p>
         
         {/* Amenities */}
-        <HotelAmenities amenities={getHotelAmenities()} />
+        <div className="mb-3">
+          <HotelAmenities amenities={getHotelAmenities()} />
+        </div>
         
-        <div className="flex justify-end items-center mt-auto">
+        <div className="flex justify-end">
           <Link 
             to={`/hotels/${generateHotelUrl(hotel.name, hotel.id)}`} 
-            className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-6 py-2 rounded-lg transition-colors duration-300 text-sm font-medium"
+            className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-4 py-1.5 rounded-lg transition-colors duration-300 text-xs font-medium"
           >
             View Details
           </Link>
