@@ -333,12 +333,20 @@ export default function HotelDetailPage() {
               {/* Description */}
               <div className="cycladic-card p-6 md:p-8">
                 <h2 className="text-2xl font-montserrat font-semibold mb-5">About {hotel.name}</h2>
-                <p className="text-gray-700 whitespace-pre-line leading-relaxed">
+                <p className="text-gray-700 whitespace-pre-line leading-relaxed mb-6">
                   {hotel.description}
                 </p>
+                
+                {/* Added Hotel Amenities directly under the description */}
+                {hotel.hotel_amenities && hotel.hotel_amenities.length > 0 && (
+                  <div className="mt-4">
+                    <p className="font-medium mb-3">Hotel Features:</p>
+                    <HotelAmenities amenities={hotel.hotel_amenities.map(item => item.amenity)} />
+                  </div>
+                )}
               </div>
               
-              {/* Amenities */}
+              {/* Standalone Amenities Section (still keep it) */}
               <div className="cycladic-card p-6 md:p-8">
                 <h2 className="text-2xl font-montserrat font-semibold mb-5">Hotel Amenities</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-y-5">
