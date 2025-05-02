@@ -51,14 +51,36 @@ const HotelCard = ({ hotel }: HotelCardProps) => {
     return [];
   };
 
+  // Special case for Meropi Rooms
+  const isMeropiRooms = hotel.id === '0c9632b6-db5c-4179-8122-0003896e465e';
+
   // Get main photo URL or fallback
   const getMainPhotoUrl = () => {
+    // Special case for Meropi Rooms
+    if (isMeropiRooms) {
+      return '/uploads/hotels/meropirooms-hero.webp';
+    }
+    
     if (hotel?.hotel_photos && hotel.hotel_photos.length > 0) {
       const mainPhoto = hotel.hotel_photos.find(photo => photo.is_main_photo);
       if (mainPhoto) return `/uploads/hotels/${mainPhoto.photo_url}`;
       if (hotel.hotel_photos[0]?.photo_url) return `/uploads/hotels/${hotel.hotel_photos[0].photo_url}`;
     }
     return '/placeholder.svg';
+  };
+
+  // Get hotel logo or fallback
+  const getHotelLogo = () => {
+    // Special case for Meropi Rooms
+    if (isMeropiRooms) {
+      return '/uploads/hotels/meropi-logo.svg';
+    }
+    
+    if (hotel.logo_path) {
+      return `/uploads/hotels/${hotel.logo_path}`;
+    }
+    
+    return null;
   };
 
   return (
@@ -80,10 +102,10 @@ const HotelCard = ({ hotel }: HotelCardProps) => {
         <div className="flex flex-wrap justify-between items-start">
           <div className="flex items-start gap-3">
             {/* Hotel Logo */}
-            {hotel.logo_path && (
+            {getHotelLogo() && (
               <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-200 bg-white flex items-center justify-center">
                 <img 
-                  src={`/uploads/hotels/${hotel.logo_path}`}
+                  src={getHotelLogo()}
                   alt={`${hotel.name} logo`}
                   className="w-full h-full object-contain p-1"
                   onError={(e) => {

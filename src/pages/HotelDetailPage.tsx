@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, PlusCircle, MinusCircle } from 'lucide-react';
@@ -16,6 +17,16 @@ export default function HotelDetailPage() {
   const [loading, setLoading] = useState(true);
   const [openFaqIndex, setOpenFaqIndex] = useState(-1);
   const { toast } = useToast();
+  
+  // Define the hotel photos for Meropi
+  const meropiPhotos = [
+    { id: '1', photo_url: 'meropirooms-hero.webp', is_main_photo: true, description: 'Meropi Rooms Exterior' },
+    { id: '2', photo_url: 'meropirooms-one.webp', is_main_photo: false, description: 'Room Interior' },
+    { id: '3', photo_url: 'meropirooms-two.webp', is_main_photo: false, description: 'Room View' },
+    { id: '4', photo_url: 'meropirooms-three.webp', is_main_photo: false, description: 'Room Balcony' },
+    { id: '5', photo_url: 'meropirooms-four.webp', is_main_photo: false, description: 'Room Detail' },
+    { id: '6', photo_url: 'meropirooms-bath.webp', is_main_photo: false, description: 'Bathroom' }
+  ];
 
   useEffect(() => {
     const fetchHotelDetails = async () => {
@@ -40,6 +51,13 @@ export default function HotelDetailPage() {
         if (error) throw error;
         
         logSupabaseResponse('fetch hotel details', data, error);
+        
+        // Special handling for Meropi Rooms - add photos
+        if (data.id === '0c9632b6-db5c-4179-8122-0003896e465e') {
+          data.hotel_photos = meropiPhotos;
+          data.logo_path = 'meropi-logo.svg';
+        }
+        
         setHotel(data);
         
         // Set active image to main photo or first photo
@@ -83,7 +101,7 @@ export default function HotelDetailPage() {
   const getBookingPlatformLogo = (platform) => {
     switch(platform?.toLowerCase()) {
       case 'booking.com':
-        return '/uploads/misc/booking-com-logo.png';
+        return '/uploads/Booking.com.svg';
       case 'airbnb':
         return '/uploads/misc/airbnb-logo.png';
       case 'expedia':
