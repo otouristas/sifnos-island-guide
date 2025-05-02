@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, PlusCircle, MinusCircle } from 'lucide-react';
+import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, PlusCircle, MinusCircle, ExternalLink, Map } from 'lucide-react';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import SEO from '../components/SEO';
 import { useToast } from "@/hooks/use-toast";
@@ -612,19 +611,59 @@ export default function HotelDetailPage() {
               {/* Map */}
               {hotel.google_map_url && (
                 <div className="cycladic-card p-6">
-                  <h3 className="text-xl font-semibold mb-4">Location</h3>
-                  <div className="h-64 bg-gray-100 rounded-md overflow-hidden">
+                  <h3 className="text-xl font-semibold mb-4 flex items-center">
+                    <Map size={18} className="mr-2 text-sifnos-turquoise" />
+                    Location
+                  </h3>
+                  <div className="h-64 bg-gray-100 rounded-md overflow-hidden shadow-md">
                     <iframe
                       src={hotel.google_map_url}
                       width="100%"
                       height="100%"
                       style={{ border: 0 }}
                       loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
                       title={`${hotel.name} Location Map`}
+                      className="w-full h-full"
+                      allowFullScreen
                     ></iframe>
+                  </div>
+                  <div className="text-xs text-gray-500 mt-2 flex items-center">
+                    <MapPin size={12} className="mr-1" />
+                    <a 
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${hotel.name} ${hotel.location} Sifnos Greece`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sifnos-turquoise hover:underline"
+                    >
+                      View larger map
+                    </a>
                   </div>
                 </div>
               )}
+              
+              {/* Greece Cyclades Banner */}
+              <div className="cycladic-card p-6">
+                <h3 className="text-xl font-semibold mb-4 flex items-center">
+                  <ExternalLink size={18} className="mr-2 text-sifnos-turquoise" />
+                  Explore More
+                </h3>
+                <a 
+                  href="https://greececyclades.com" 
+                  target="_blank" 
+                  rel="dofollow"
+                  className="block overflow-hidden rounded-md shadow-md hover:shadow-lg transition-shadow"
+                >
+                  <img 
+                    src="/uploads/banners/greececyclades-banner.png" 
+                    alt="Discover more about Greek Cyclades islands" 
+                    className="w-full h-auto transform transition-transform hover:scale-105 duration-300"
+                  />
+                </a>
+                <p className="mt-3 text-sm text-gray-600">
+                  Discover more beautiful destinations in the Cyclades islands of Greece.
+                </p>
+              </div>
             </div>
           </div>
         </div>
