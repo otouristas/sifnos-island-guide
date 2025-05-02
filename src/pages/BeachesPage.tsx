@@ -1,69 +1,137 @@
+
 import SEO from '../components/SEO';
 import { Link } from 'react-router-dom';
-import { MapPin, Umbrella, Wind, Coffee, Car, Bus, Anchor, ShieldCheck, Sailboat } from 'lucide-react';
+import { MapPin, Umbrella, Wind, Coffee, Car, Bus, Anchor, ShieldCheck, Sailboat, Award, TreePalm, Fishing, Church, Lighthouse } from 'lucide-react';
 
 export default function BeachesPage() {
-  // Sample beaches data
+  // Updated beaches data with the new information
   const beaches = [
     {
       name: "Platis Gialos",
-      description: "One of the longest and most popular beaches on Sifnos, Platis Gialos offers golden sand, crystal-clear turquoise waters, and excellent facilities. This family-friendly beach has numerous restaurants, beach bars, and water sports options along its impressive stretch. The shallow waters make it ideal for families with children.",
-      facilities: ["Sunbeds & Umbrellas", "Restaurants", "Water Sports", "Beach Bars", "Shops"],
+      description: "One of the largest and most popular sandy beaches on Sifnos, especially beloved by Greek visitors. It consistently earns the Blue Flag from the FEE, thanks to its compliance with 32 strict environmental and quality criteria. Nearby attractions include the White Tower (1.5 km northeast), the best-preserved of Sifnos' 77 ancient beacon towers. The area features a lively mix of accommodations, restaurants, shops, cafés, and pottery studios.",
+      facilities: ["Sunbeds & Umbrellas", "Restaurants", "Water Sports", "Beach Bars", "Shops", "Pottery Studios"],
       access: "Bus service from Apollonia or by car with parking available",
       windProtection: "Moderate - protected from north winds",
-      bestFor: ["Families", "Swimming", "Food Lovers"],
+      bestFor: ["Families", "Swimming", "Food Lovers", "Blue Flag Beach"],
       imagePath: "/placeholder.svg",
-      location: "Southern Sifnos"
+      location: "Southern Sifnos",
+      highlights: [
+        "Blue Flag awarded beach",
+        "White Tower (ancient beacon) nearby", 
+        "Hiking routes to southern villages",
+        "View of Kitriani islet with ancient church"
+      ]
     },
     {
       name: "Kamares",
-      description: "The main port of Sifnos features a lovely sandy beach with a view of arriving and departing ferries. The beach is well organized with trees providing natural shade in some areas. The picturesque village behind the beach offers plenty of accommodation options, tavernas, and cafes, making it convenient for visitors staying nearby.",
-      facilities: ["Sunbeds & Umbrellas", "Restaurants", "Beach Bars", "Shops", "Natural Shade"],
-      access: "Walking distance from the port, bus service from Apollonia",
+      description: "The main port of Sifnos and the island's largest coastal village, just 5 km from the capital Apollonia. As the main arrival point, it offers the highest concentration of hotels, rooms to let, tavernas, grocery stores, cafés, bakeries, pottery workshops, and tourist services. It also hosts essential facilities such as the Port Authority and the Municipal Information Office.",
+      facilities: ["Sunbeds & Umbrellas", "Restaurants", "Beach Bars", "Shops", "Natural Shade", "Port Authority", "Municipal Information Office", "Grocery Stores", "Bakeries", "Pottery Workshops"],
+      access: "Main port arrival point, walking distance from the port, bus service from Apollonia",
       windProtection: "Good - protected bay",
-      bestFor: ["Convenience", "Families", "Port Proximity"],
+      bestFor: ["Convenience", "Families", "Port Proximity", "Hiking"],
       imagePath: "/placeholder.svg",
-      location: "Western Sifnos (Port)"
+      location: "Western Sifnos (Port)",
+      highlights: [
+        "Main arrival port for ferries",
+        "Starting point for scenic hiking routes",
+        "Trails to Church of the Nymfon and Mavri Spilia (Black Cave)",
+        "Connection to NATURA protected areas"
+      ]
     },
     {
       name: "Vathi",
-      description: "This stunning horseshoe-shaped bay features a beautiful sandy beach with inviting shallow waters. The traditional fishing village setting creates a peaceful atmosphere, while the beach itself offers both organized sections with facilities and quieter areas for those seeking tranquility. Vathi is known for its excellent seafood tavernas right on the beach.",
-      facilities: ["Sunbeds & Umbrellas", "Restaurants", "Beach Bars", "Natural Shade"],
+      description: "Located 10 km west of Apollonia, Vathi is a peaceful coastal village known for its wide, sandy beach and tranquil vibe. Once a major pottery hub, the village retains its artisanal charm. Excavations at 'Punta tou Polemikou' reveal prehistoric tombs and settlements. Nature lovers can enjoy the rare sand lilies that bloom in August.",
+      facilities: ["Sunbeds & Umbrellas", "Restaurants", "Beach Bars", "Natural Shade", "Pottery Studios"],
       access: "Bus service from Apollonia, road access with parking",
       windProtection: "Excellent - one of the most sheltered beaches",
-      bestFor: ["Tranquility", "Scenery", "Swimming", "Food"],
+      bestFor: ["Tranquility", "Scenery", "Swimming", "Archaeology", "Nature"],
       imagePath: "/placeholder.svg",
-      location: "Southeastern Sifnos"
+      location: "Western Sifnos",
+      highlights: [
+        "Prehistoric archaeological site",
+        "Rare sand lilies (August blooming)",
+        "16th-century Church of Taxiarches",
+        "Hiking trails to Platy Gialos and Fykiada"
+      ]
     },
     {
       name: "Chrysopigi",
-      description: "One of the most picturesque beaches on Sifnos, Chrysopigi is named after the iconic whitewashed monastery that sits on the rocky peninsula separating the beach into two parts. The natural rock formations create interesting swimming areas, and the clear waters are excellent for snorkeling. The small taverna offers delicious local dishes.",
-      facilities: ["Restaurant", "Limited Sunbeds"],
+      description: "Located 10 km from Apollonia, near Platy Gialos, Chrysopigi is the most photographed and revered location on the island. It's home to the Monastery of Panagia Chrysopigi (1523), the patron saint of Sifnos. The annual festival on the eve of Ascension Day includes a moving procession of the holy icon. The peninsula features dramatic rocks perfect for diving, the peaceful Apokoftou beach with just two tavernas.",
+      facilities: ["Restaurant", "Limited Sunbeds", "Monastery"],
       access: "Bus to Faros then 15-minute walk, or drive with limited parking",
       windProtection: "Moderate - depends on which side of the peninsula",
-      bestFor: ["Photography", "Snorkeling", "Natural Beauty"],
+      bestFor: ["Photography", "Snorkeling", "Natural Beauty", "Religious Interest"],
       imagePath: "/placeholder.svg",
-      location: "Southeastern Sifnos"
+      location: "Southeastern Sifnos",
+      highlights: [
+        "Monastery of Panagia Chrysopigi (1523)",
+        "Patron saint of Sifnos",
+        "Annual religious festival",
+        "Nearby White Tower ancient beacon"
+      ]
     },
     {
       name: "Faros",
-      description: "A charming coastal village with a complex of three beautiful beaches: Faros, Glyfo, and Fassolou. The main Faros beach is small but delightful, with fine golden sand and tranquil waters. The village atmosphere is peaceful, and there are excellent tavernas specializing in fresh fish and seafood nearby.",
-      facilities: ["Sunbeds & Umbrellas", "Restaurants", "Natural Shade"],
+      description: "Seven kilometers from Apollonia, Faros is a traditional fishing village and once the main port of Sifnos. Named after the ancient lighthouse ('faros'), it offers serene beaches and cultural experiences. Glyfou beach, known for its brackish water well, is the starting point of a beautiful lit path leading to Apokoftou and Chrysopigi beaches. Nearby, remnants of ancient ore-loading facilities can be seen.",
+      facilities: ["Sunbeds & Umbrellas", "Restaurants", "Natural Shade", "Lit Walking Path"],
       access: "Bus service from Apollonia, road access with parking",
       windProtection: "Good - sheltered bay",
-      bestFor: ["Relaxation", "Swimming", "Local Atmosphere"],
+      bestFor: ["Relaxation", "Swimming", "Local Atmosphere", "Coastal Walks"],
       imagePath: "/placeholder.svg",
-      location: "Southeastern Sifnos"
+      location: "Southeastern Sifnos",
+      highlights: [
+        "Traditional fishing village",
+        "Ancient lighthouse history",
+        "Monastery of Stavros on Fasolou beach",
+        "Hiking trails to Agios Andreas Acropolis and Kastro"
+      ]
+    },
+    {
+      name: "Herronisos",
+      description: "The northernmost beach of Sifnos, 15 km from Apollonia, Herronisos is a secluded fishing village famed for its peaceful atmosphere, traditional pottery, and small beach. Local highlights include Agios Georgios church and an ancient beacon tower above the village. On the road to Herronisos, travelers pass through Troullaki and Diavroucha, where more pottery workshops can be found.",
+      facilities: ["Small Tavernas", "Traditional Pottery"],
+      access: "Limited bus service, better accessible by car with parking",
+      windProtection: "Moderate - exposed to north winds",
+      bestFor: ["Seclusion", "Traditional Charm", "Pottery"],
+      imagePath: "/placeholder.svg",
+      location: "Northern Sifnos",
+      highlights: [
+        "Northernmost beach on the island",
+        "Traditional fishing village",
+        "Ancient beacon tower",
+        "Agios Georgios church"
+      ]
     },
     {
       name: "Vroulidia",
-      description: "This hidden gem is one of the most secluded beaches on Sifnos. Accessible via a partly dirt road and a short hike down, the reward is crystal-clear turquoise waters contrasting with the white pebbles and dramatic cliffs. The beach has minimal facilities, which helps preserve its natural beauty and tranquil atmosphere.",
-      facilities: ["Small Canteen (high season only)"],
+      description: "Located just 1 km from Herronisos and 14 km from Apollonia, Vroulidia is a tranquil pebble beach ideal for relaxation. It offers two seaside cafés that provide umbrellas and sunbeds for visitors, maintaining its natural beauty and quiet atmosphere.",
+      facilities: ["Two Seaside Cafés", "Umbrellas & Sunbeds"],
       access: "Dirt road access with limited parking, then 10-minute hike down",
       windProtection: "Poor - exposed to south winds",
-      bestFor: ["Seclusion", "Natural Beauty", "Snorkeling"],
+      bestFor: ["Seclusion", "Natural Beauty", "Snorkeling", "Peace and Quiet"],
       imagePath: "/placeholder.svg",
-      location: "Southwestern Sifnos"
+      location: "Northern Sifnos",
+      highlights: [
+        "Tranquil pebble beach",
+        "Crystal clear waters",
+        "Unspoiled natural setting"
+      ]
+    },
+    {
+      name: "Fykiada",
+      description: "A secluded sandy beach accessible only by sea or hiking trails from Platy Gialos and Vathi. Near the beach stands the chapel of Agios Georgios and one of the island's oldest olive trees, offering a truly unspoiled experience for those seeking natural beauty away from crowds.",
+      facilities: ["None - Unspoiled Beach"],
+      access: "Only by foot via hiking trails from Platy Gialos or Vathi, or by boat",
+      windProtection: "Variable - somewhat exposed",
+      bestFor: ["Adventure", "Hiking", "Complete Seclusion"],
+      imagePath: "/placeholder.svg",
+      location: "Between Platy Gialos and Vathi",
+      highlights: [
+        "Completely undeveloped beach",
+        "Ancient olive tree",
+        "Chapel of Agios Georgios",
+        "Only accessible by hiking or boat"
+      ]
     }
   ];
   
@@ -143,6 +211,24 @@ export default function BeachesPage() {
                     {beach.description}
                   </p>
                   
+                  {/* Key Highlights */}
+                  {beach.highlights && (
+                    <div className="mb-6">
+                      <h4 className="font-medium text-lg mb-3 flex items-center">
+                        <Award size={18} className="text-sifnos-turquoise mr-2" />
+                        Key Highlights
+                      </h4>
+                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        {beach.highlights.map((highlight) => (
+                          <li key={highlight} className="flex items-start">
+                            <span className="w-1.5 h-1.5 bg-sifnos-turquoise rounded-full mr-2 mt-2"></span>
+                            <span className="text-sm">{highlight}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     {/* Facilities */}
                     <div>
@@ -200,8 +286,51 @@ export default function BeachesPage() {
         </div>
       </div>
 
-      {/* Beach Safety Tips */}
+      {/* FAQ Section */}
       <div className="py-12 bg-white">
+        <div className="page-container">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-montserrat font-semibold text-center mb-8">
+              Frequently Asked Questions About Sifnos Beaches
+            </h2>
+            
+            <div className="cycladic-card space-y-6">
+              <div>
+                <h3 className="font-medium text-lg mb-2">Which is the best beach for families on Sifnos?</h3>
+                <p className="text-gray-700">Platy Gialos and Kamares are ideal for families thanks to their wide sandy shores, shallow waters, and full amenities.</p>
+              </div>
+              
+              <div>
+                <h3 className="font-medium text-lg mb-2">Where can I find traditional pottery workshops?</h3>
+                <p className="text-gray-700">Pottery lovers should visit Kamares, Faros, and Herronisos, where authentic workshops operate year-round.</p>
+              </div>
+              
+              <div>
+                <h3 className="font-medium text-lg mb-2">Are there hiking trails starting from the beach villages?</h3>
+                <p className="text-gray-700">Yes! Kamares, Faros, Vathi, and Platy Gialos all serve as trailheads for scenic routes across Sifnos.</p>
+              </div>
+              
+              <div>
+                <h3 className="font-medium text-lg mb-2">What is the most famous church on Sifnos?</h3>
+                <p className="text-gray-700">The Monastery of Panagia Chrysopigi is the island's most iconic religious site and patron saint, celebrated with a major annual festival.</p>
+              </div>
+              
+              <div>
+                <h3 className="font-medium text-lg mb-2">Can I access Fykiada beach by car?</h3>
+                <p className="text-gray-700">No, Fykiada is only reachable by foot or by boat, offering a serene, crowd-free experience.</p>
+              </div>
+              
+              <div>
+                <h3 className="font-medium text-lg mb-2">Are there Blue Flag beaches on Sifnos?</h3>
+                <p className="text-gray-700">Yes, Platy Gialos consistently earns the Blue Flag award for cleanliness, safety, and eco-friendliness.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Beach Safety Tips */}
+      <div className="py-12 bg-gray-50">
         <div className="page-container">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-montserrat font-semibold text-center mb-8">
