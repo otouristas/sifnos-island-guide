@@ -54,27 +54,27 @@ export default function TravelGuidePage() {
         canonical="https://hotelssifnos.com/travel-guide"
       />
       
-      {/* Hero Section */}
-      <div className="bg-sifnos-deep-blue py-16">
+      {/* Hero Section - Improved vertical padding */}
+      <div className="bg-sifnos-deep-blue py-20 md:py-24">
         <div className="page-container">
           <div className="text-center text-white max-w-3xl mx-auto">
-            <h1 className="font-montserrat text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+            <h1 className="font-montserrat text-3xl md:text-4xl lg:text-5xl font-bold mb-8">
               Sifnos Island Travel Guide
             </h1>
-            <p className="text-lg md:text-xl mb-8">
+            <p className="text-lg md:text-xl mb-10">
               Your comprehensive guide to exploring the authentic beauty, rich traditions, and hidden gems of Sifnos Island
             </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <a href="#getting-around" className="bg-white text-sifnos-deep-blue px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+            <div className="flex flex-wrap justify-center gap-5">
+              <a href="#getting-around" className="bg-white text-sifnos-deep-blue px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors">
                 Getting Around
               </a>
-              <a href="#beaches" className="bg-white text-sifnos-deep-blue px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+              <a href="#beaches" className="bg-white text-sifnos-deep-blue px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors">
                 Beaches
               </a>
-              <a href="#dining" className="bg-white text-sifnos-deep-blue px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+              <a href="#dining" className="bg-white text-sifnos-deep-blue px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors">
                 Dining
               </a>
-              <a href="#attractions" className="bg-white text-sifnos-deep-blue px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+              <a href="#attractions" className="bg-white text-sifnos-deep-blue px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors">
                 Attractions
               </a>
             </div>
@@ -82,14 +82,14 @@ export default function TravelGuidePage() {
         </div>
       </div>
 
-      {/* Introduction */}
-      <div className="py-16">
+      {/* Introduction - More breathing room */}
+      <div className="py-20">
         <div className="page-container">
           <div className="max-w-3xl mx-auto">
-            <h2 className="font-montserrat text-2xl md:text-3xl font-semibold mb-6 text-center">
+            <h2 className="font-montserrat text-2xl md:text-3xl font-semibold mb-8 text-center">
               Welcome to Sifnos
             </h2>
-            <div className="prose prose-lg mx-auto">
+            <div className="prose prose-lg mx-auto space-y-6">
               <p>Nestled in the heart of the Cyclades, Sifnos is a treasure trove of authentic Greek experiences waiting to be discovered. With its whitewashed villages, golden beaches, vibrant culinary scene, and rich pottery tradition, this island offers a perfect blend of relaxation, culture, and adventure.</p>
               
               <p>Unlike its more famous neighbors Mykonos and Santorini, Sifnos has maintained its traditional charm and provides visitors with a more authentic Greek island experience. The island's landscape is a captivating mix of terraced hills, olive groves, and dramatic coastlines dotted with enchanting villages that seem to tumble down to the sea.</p>
@@ -100,35 +100,35 @@ export default function TravelGuidePage() {
         </div>
       </div>
 
-      {/* Travel Guide Categories */}
-      <div className="bg-gray-50 py-16">
+      {/* Travel Guide Categories - Better spacing between elements */}
+      <div className="bg-gray-50 py-20">
         <div className="page-container">
-          <h2 className="font-montserrat text-2xl md:text-3xl font-semibold mb-12 text-center">
+          <h2 className="font-montserrat text-2xl md:text-3xl font-semibold mb-16 text-center">
             Essential Sifnos Travel Information
           </h2>
           
-          <div className="space-y-16">
+          <div className="space-y-24">
             {guideCategories.map((category, index) => (
               <div 
                 key={index}
                 className={`flex flex-col ${
                   index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-                } items-center gap-8`}
+                } items-center gap-10`}
               >
                 <div className="w-full md:w-1/2">
-                  <div className="cycladic-card h-full flex flex-col">
-                    <div className="flex items-center mb-4">
-                      <div className="p-3 bg-sifnos-turquoise/20 rounded-full mr-3">
+                  <div className="cycladic-card h-full flex flex-col p-8">
+                    <div className="flex items-center mb-6">
+                      <div className="p-4 bg-sifnos-turquoise/20 rounded-full mr-4">
                         {category.icon}
                       </div>
                       <h3 className="text-2xl font-montserrat font-semibold">{category.title}</h3>
                     </div>
-                    <p className="text-gray-700 leading-relaxed flex-grow">
+                    <p className="text-gray-700 leading-relaxed flex-grow text-lg">
                       {category.content}
                     </p>
                   </div>
                 </div>
-                <div className="w-full md:w-1/2 h-64">
+                <div className="w-full md:w-1/2 h-72">
                   <div className="bg-sifnos-teal/20 h-full rounded-lg overflow-hidden">
                     <img 
                       src={category.imageUrl} 
@@ -143,69 +143,69 @@ export default function TravelGuidePage() {
         </div>
       </div>
 
-      {/* Villages Section */}
-      <div className="py-16">
+      {/* Villages Section - Improved card spacing */}
+      <div className="py-20">
         <div className="page-container">
-          <h2 className="font-montserrat text-2xl md:text-3xl font-semibold mb-8 text-center">
+          <h2 className="font-montserrat text-2xl md:text-3xl font-semibold mb-12 text-center">
             Charming Villages of Sifnos
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="cycladic-card overflow-hidden">
-              <div className="h-48 bg-sifnos-teal/20">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="cycladic-card overflow-hidden h-full">
+              <div className="h-56 bg-sifnos-teal/20">
                 <img 
                   src="/placeholder.svg"
                   alt="Apollonia, the capital of Sifnos"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-montserrat font-semibold mb-2">Apollonia</h3>
-                <p className="text-gray-700 mb-4">
+              <div className="p-8">
+                <h3 className="text-xl font-montserrat font-semibold mb-4">Apollonia</h3>
+                <p className="text-gray-700 mb-6">
                   The capital and main hub of Sifnos, Apollonia is a charming village with narrow alleys, white Cycladic houses, and a vibrant nightlife. Here you'll find many shops, restaurants, and the island's administration.
                 </p>
                 <div className="flex items-center text-sifnos-deep-blue">
-                  <MapPin size={16} className="mr-1" />
+                  <MapPin size={16} className="mr-2" />
                   <span className="text-sm">Central Sifnos</span>
                 </div>
               </div>
             </div>
             
-            <div className="cycladic-card overflow-hidden">
-              <div className="h-48 bg-sifnos-teal/20">
+            <div className="cycladic-card overflow-hidden h-full">
+              <div className="h-56 bg-sifnos-teal/20">
                 <img 
                   src="/placeholder.svg"
                   alt="Kastro, medieval village in Sifnos"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-montserrat font-semibold mb-2">Kastro</h3>
-                <p className="text-gray-700 mb-4">
+              <div className="p-8">
+                <h3 className="text-xl font-montserrat font-semibold mb-4">Kastro</h3>
+                <p className="text-gray-700 mb-6">
                   A medieval settlement built on top of ancient Sifnos, Kastro features well-preserved Venetian architecture, ancient ruins, and breathtaking views of the Aegean Sea. Don't miss the Archaeological Museum.
                 </p>
                 <div className="flex items-center text-sifnos-deep-blue">
-                  <MapPin size={16} className="mr-1" />
+                  <MapPin size={16} className="mr-2" />
                   <span className="text-sm">Eastern Sifnos</span>
                 </div>
               </div>
             </div>
             
-            <div className="cycladic-card overflow-hidden">
-              <div className="h-48 bg-sifnos-teal/20">
+            <div className="cycladic-card overflow-hidden h-full">
+              <div className="h-56 bg-sifnos-teal/20">
                 <img 
                   src="/placeholder.svg"
                   alt="Artemonas village in Sifnos"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-montserrat font-semibold mb-2">Artemonas</h3>
-                <p className="text-gray-700 mb-4">
+              <div className="p-8">
+                <h3 className="text-xl font-montserrat font-semibold mb-4">Artemonas</h3>
+                <p className="text-gray-700 mb-6">
                   Known for its neoclassical mansions and traditional architecture, Artemonas is one of the most elegant villages on the island. Enjoy walking through its narrow streets and beautiful gardens.
                 </p>
                 <div className="flex items-center text-sifnos-deep-blue">
-                  <MapPin size={16} className="mr-1" />
+                  <MapPin size={16} className="mr-2" />
                   <span className="text-sm">Northern Sifnos</span>
                 </div>
               </div>
@@ -214,53 +214,53 @@ export default function TravelGuidePage() {
         </div>
       </div>
       
-      {/* Seasonal Travel Tips */}
-      <div className="bg-gray-50 py-16">
+      {/* Seasonal Travel Tips - Better list spacing */}
+      <div className="bg-gray-50 py-20">
         <div className="page-container">
-          <h2 className="font-montserrat text-2xl md:text-3xl font-semibold mb-8 text-center">
+          <h2 className="font-montserrat text-2xl md:text-3xl font-semibold mb-12 text-center">
             Seasonal Travel Tips
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="cycladic-card">
-              <h3 className="text-xl font-montserrat font-semibold mb-4 text-center">Summer (June - September)</h3>
-              <ul className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div className="cycladic-card p-8">
+              <h3 className="text-xl font-montserrat font-semibold mb-6 text-center">Summer (June - September)</h3>
+              <ul className="space-y-5">
                 <li className="flex items-start">
-                  <Sun size={16} className="text-sifnos-turquoise mr-2 mt-1 flex-shrink-0" />
+                  <Sun size={18} className="text-sifnos-turquoise mr-3 mt-1 flex-shrink-0" />
                   <span>Book accommodations well in advance as this is the peak season.</span>
                 </li>
                 <li className="flex items-start">
-                  <Sun size={16} className="text-sifnos-turquoise mr-2 mt-1 flex-shrink-0" />
+                  <Sun size={18} className="text-sifnos-turquoise mr-3 mt-1 flex-shrink-0" />
                   <span>Temperatures range from 25°C to 35°C (77°F to 95°F). Bring lightweight clothing, sun protection, and plenty of swimwear.</span>
                 </li>
                 <li className="flex items-start">
-                  <Sun size={16} className="text-sifnos-turquoise mr-2 mt-1 flex-shrink-0" />
+                  <Sun size={18} className="text-sifnos-turquoise mr-3 mt-1 flex-shrink-0" />
                   <span>Visit popular beaches early in the morning or late afternoon to avoid crowds.</span>
                 </li>
                 <li className="flex items-start">
-                  <Sun size={16} className="text-sifnos-turquoise mr-2 mt-1 flex-shrink-0" />
+                  <Sun size={18} className="text-sifnos-turquoise mr-3 mt-1 flex-shrink-0" />
                   <span>Make restaurant reservations, especially in Apollonia and at popular seaside tavernas.</span>
                 </li>
               </ul>
             </div>
             
-            <div className="cycladic-card">
-              <h3 className="text-xl font-montserrat font-semibold mb-4 text-center">Spring & Autumn (April-May, Oct-Nov)</h3>
-              <ul className="space-y-3">
+            <div className="cycladic-card p-8">
+              <h3 className="text-xl font-montserrat font-semibold mb-6 text-center">Spring & Autumn (April-May, Oct-Nov)</h3>
+              <ul className="space-y-5">
                 <li className="flex items-start">
-                  <Waves size={16} className="text-sifnos-turquoise mr-2 mt-1 flex-shrink-0" />
+                  <Waves size={18} className="text-sifnos-turquoise mr-3 mt-1 flex-shrink-0" />
                   <span>Perfect for hiking and exploring the island's nature as temperatures are mild (18°C to 25°C).</span>
                 </li>
                 <li className="flex items-start">
-                  <Waves size={16} className="text-sifnos-turquoise mr-2 mt-1 flex-shrink-0" />
+                  <Waves size={18} className="text-sifnos-turquoise mr-3 mt-1 flex-shrink-0" />
                   <span>Less crowded, with better rates on accommodations.</span>
                 </li>
                 <li className="flex items-start">
-                  <Waves size={16} className="text-sifnos-turquoise mr-2 mt-1 flex-shrink-0" />
+                  <Waves size={18} className="text-sifnos-turquoise mr-3 mt-1 flex-shrink-0" />
                   <span>Spring offers beautiful wildflowers, while autumn provides warmer sea temperatures.</span>
                 </li>
                 <li className="flex items-start">
-                  <Waves size={16} className="text-sifnos-turquoise mr-2 mt-1 flex-shrink-0" />
+                  <Waves size={18} className="text-sifnos-turquoise mr-3 mt-1 flex-shrink-0" />
                   <span>Be prepared for reduced ferry schedules and some closed businesses, especially in late autumn.</span>
                 </li>
               </ul>
@@ -269,18 +269,18 @@ export default function TravelGuidePage() {
         </div>
       </div>
 
-      {/* Call to Action */}
-      <div className="py-16 bg-sifnos-deep-blue text-white">
+      {/* Call to Action - Enhanced padding and button */}
+      <div className="py-20 bg-sifnos-deep-blue text-white">
         <div className="page-container text-center">
-          <h2 className="font-montserrat text-2xl md:text-3xl font-semibold mb-6">
+          <h2 className="font-montserrat text-2xl md:text-3xl font-semibold mb-8">
             Ready to Experience Sifnos?
           </h2>
-          <p className="text-lg mb-8 max-w-2xl mx-auto">
+          <p className="text-lg mb-10 max-w-2xl mx-auto">
             Begin your Sifnos adventure by finding the perfect accommodation that suits your needs and preferences.
           </p>
           <Link 
             to="/hotels" 
-            className="bg-white text-sifnos-deep-blue px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+            className="bg-white text-sifnos-deep-blue px-10 py-4 rounded-lg font-medium hover:bg-gray-100 transition-colors text-lg"
           >
             Browse Sifnos Hotels
           </Link>
