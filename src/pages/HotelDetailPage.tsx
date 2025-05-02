@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, PlusCircle, MinusCircle } from 'lucide-react';
@@ -8,7 +9,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { extractIdFromSlug, generateHotelUrl } from '@/lib/url-utils';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BookingReviews from '@/components/BookingReviews';
 
 export default function HotelDetailPage() {
@@ -43,8 +43,7 @@ export default function HotelDetailPage() {
             *,
             hotel_amenities(amenity),
             hotel_photos(id, photo_url, is_main_photo, description),
-            hotel_rooms(id, name, description, price, capacity, size_sqm, amenities, photo_url),
-            hotel_reviews(id, reviewer_name, rating, comment, date, reviewer_photo)
+            hotel_rooms(id, name, description, price, capacity, size_sqm, amenities, photo_url)
           `)
           .eq('id', id)
           .single();
@@ -231,7 +230,6 @@ export default function HotelDetailPage() {
                 </div>
                 <div className="flex items-center">
                   {renderStarRating(hotel.rating)}
-                  <span className="text-sm ml-2 text-gray-600">({hotel.hotel_reviews?.length || 0} reviews)</span>
                 </div>
               </div>
             </div>
@@ -448,126 +446,16 @@ export default function HotelDetailPage() {
                 </div>
               </div>
               
-              {/* Reviews */}
+              {/* Reviews - Only Booking.com Reviews */}
               <div className="cycladic-card p-6 md:p-8">
-                <h2 className="text-2xl font-montserrat font-semibold mb-6">Guest Reviews</h2>
+                <h2 className="text-2xl font-montserrat font-semibold mb-6">Reviews</h2>
+                {isMeropiRooms && <BookingReviews hotelId={hotel.id} />}
                 
-                <Tabs defaultValue="all" className="w-full">
-                  <TabsList className="mb-6">
-                    <TabsTrigger value="all">All Reviews</TabsTrigger>
-                    {isMeropiRooms && <TabsTrigger value="booking">Booking.com</TabsTrigger>}
-                    <TabsTrigger value="site">Site Reviews</TabsTrigger>
-                  </TabsList>
-                  
-                  <TabsContent value="all" className="space-y-6">
-                    {isMeropiRooms && (
-                      <BookingReviews hotelId={hotel.id} />
-                    )}
-                    
-                    {hotel.hotel_reviews?.length > 0 ? (
-                      <div className="space-y-6 mt-8">
-                        <h3 className="text-lg font-semibold">Site Reviews</h3>
-                        {hotel.hotel_reviews.map((review) => (
-                          <div key={review.id} className="border-b pb-6 last:border-b-0 last:pb-0">
-                            <div className="flex items-start">
-                              <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden mr-4 flex-shrink-0">
-                                {review.reviewer_photo ? (
-                                  <img 
-                                    src={`/uploads/misc/${review.reviewer_photo}`} 
-                                    alt={review.reviewer_name} 
-                                    className="w-full h-full object-cover"
-                                  />
-                                ) : (
-                                  <div className="w-full h-full flex items-center justify-center text-gray-500">
-                                    {review.reviewer_name.charAt(0).toUpperCase()}
-                                  </div>
-                                )}
-                              </div>
-                              
-                              <div className="flex-1">
-                                <div className="flex flex-wrap justify-between">
-                                  <h4 className="font-semibold">{review.reviewer_name}</h4>
-                                  <span className="text-sm text-gray-500">
-                                    {new Date(review.date).toLocaleDateString('en-US', {
-                                      year: 'numeric',
-                                      month: 'short',
-                                      day: 'numeric'
-                                    })}
-                                  </span>
-                                </div>
-                                
-                                <div className="flex my-1">
-                                  {renderStarRating(review.rating)}
-                                </div>
-                                
-                                <p className="text-gray-700">{review.comment}</p>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      !isMeropiRooms && <p className="text-gray-600">No reviews yet for this hotel.</p>
-                    )}
-                  </TabsContent>
-                  
-                  {isMeropiRooms && (
-                    <TabsContent value="booking">
-                      <BookingReviews hotelId={hotel.id} />
-                    </TabsContent>
-                  )}
-                  
-                  <TabsContent value="site">
-                    {hotel.hotel_reviews?.length > 0 ? (
-                      <div className="space-y-6">
-                        {hotel.hotel_reviews.map((review) => (
-                          <div key={review.id} className="border-b pb-6 last:border-b-0 last:pb-0">
-                            <div className="flex items-start">
-                              <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden mr-4 flex-shrink-0">
-                                {review.reviewer_photo ? (
-                                  <img 
-                                    src={`/uploads/misc/${review.reviewer_photo}`} 
-                                    alt={review.reviewer_name} 
-                                    className="w-full h-full object-cover"
-                                  />
-                                ) : (
-                                  <div className="w-full h-full flex items-center justify-center text-gray-500">
-                                    {review.reviewer_name.charAt(0).toUpperCase()}
-                                  </div>
-                                )}
-                              </div>
-                              
-                              <div className="flex-1">
-                                <div className="flex flex-wrap justify-between">
-                                  <h4 className="font-semibold">{review.reviewer_name}</h4>
-                                  <span className="text-sm text-gray-500">
-                                    {new Date(review.date).toLocaleDateString('en-US', {
-                                      year: 'numeric',
-                                      month: 'short',
-                                      day: 'numeric'
-                                    })}
-                                  </span>
-                                </div>
-                                
-                                <div className="flex my-1">
-                                  {renderStarRating(review.rating)}
-                                </div>
-                                
-                                <p className="text-gray-700">{review.comment}</p>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-gray-600">No site reviews yet for this hotel.</p>
-                    )}
-                  </TabsContent>
-                </Tabs>
-                
-                <Button variant="link" className="mt-4 text-sifnos-turquoise hover:text-sifnos-deep-blue p-0">
-                  Write a review
-                </Button>
+                {!isMeropiRooms && (
+                  <div className="text-center py-8">
+                    <p className="text-gray-600">No reviews available for this hotel.</p>
+                  </div>
+                )}
               </div>
             </div>
             

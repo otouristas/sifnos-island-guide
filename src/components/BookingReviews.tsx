@@ -126,7 +126,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
           event: '*',
           schema: 'public',
           table: 'hotel_reviews',
-          filter: `hotel_id=eq.${hotelId}`,
+          filter: `hotel_id=eq.${hotelId} AND source=eq.booking.com`,
         },
         (payload) => {
           console.log('Realtime update received:', payload);
