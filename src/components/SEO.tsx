@@ -79,6 +79,20 @@ export default function SEO({
         "longitude": "24.7458"
       }
     };
+  } else if (schemaType === 'Hotel') {
+    schemaData = {
+      ...schemaData,
+      "description": description,
+      "image": imageUrl,
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Sifnos",
+        "addressRegion": "Cyclades",
+        "addressCountry": "Greece"
+      },
+      "priceRange": "€€€",
+      "telephone": "+30 2284031370"
+    };
   }
 
   return (
@@ -106,11 +120,16 @@ export default function SEO({
       <meta name="twitter:image" content={imageUrl} />
 
       {/* Additional SEO tags */}
-      <meta name="robots" content="index, follow" />
+      <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
       <meta name="googlebot" content="index, follow" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="canonical" href={formattedCanonical} />
-
+      
+      {/* Preload important resources */}
+      <link rel="preconnect" href="https://www.googletagmanager.com" />
+      <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+      <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
+      
       {/* JSON-LD structured data */}
       <script type="application/ld+json">
         {JSON.stringify(schemaData)}
