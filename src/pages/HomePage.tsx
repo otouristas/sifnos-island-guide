@@ -5,6 +5,7 @@ import { Search, MapPin, Hotel, Anchor, Calendar } from 'lucide-react';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import { useToast } from "@/components/ui/use-toast";
 import { generateHotelUrl } from '@/lib/url-utils';
+import HotelCard from '@/components/HotelCard';
 
 export default function HomePage() {
   const [featuredHotels, setFeaturedHotels] = useState([]);
@@ -20,7 +21,8 @@ export default function HomePage() {
           .from('hotels')
           .select(`
             *,
-            hotel_photos(photo_url, is_main_photo)
+            hotel_photos(photo_url, is_main_photo),
+            hotel_amenities(amenity)
           `)
           .order('rating', { ascending: false })
           .limit(3);
@@ -191,7 +193,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Hotels Section */}
+      {/* Featured Hotels Section - Updated to use HotelCard component */}
       <section className="py-16">
         <div className="page-container">
           <h2 className="section-title">Featured Hotels</h2>
@@ -201,42 +203,13 @@ export default function HomePage() {
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-sifnos-turquoise"></div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+            <div className="grid grid-cols-1 gap-8 mt-8">
               {featuredHotels.length > 0 ? (
                 featuredHotels.map(hotel => (
-                  <div key={hotel.id} className="cycladic-card overflow-hidden">
-                    <div className="h-48 overflow-hidden">
-                      <img 
-                        src={getMainPhotoUrl(hotel)} 
-                        alt={hotel.name}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          console.log(`Error loading image for hotel ${hotel.id}`);
-                          e.currentTarget.src = '/placeholder.svg';
-                        }}
-                      />
-                    </div>
-                    <div className="p-6">
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-montserrat font-semibold text-lg">{hotel.name}</h3>
-                        <div className="bg-sifnos-deep-blue text-white px-2 py-1 rounded text-sm">
-                          {hotel.rating}/5
-                        </div>
-                      </div>
-                      <div className="flex items-center text-gray-600 mb-4">
-                        <MapPin size={16} className="mr-1" />
-                        <span>{hotel.location}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <Link to={`/hotels/${generateHotelUrl(hotel.name, hotel.id)}`} className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-4 py-2 rounded-lg transition-colors duration-300 text-sm font-medium">
-                          View Details
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
+                  <HotelCard key={hotel.id} hotel={hotel} />
                 ))
               ) : (
-                <div className="col-span-3 text-center py-12">
+                <div className="text-center py-12">
                   <p className="text-gray-500">No featured hotels available at the moment.</p>
                 </div>
               )}
