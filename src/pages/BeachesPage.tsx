@@ -1,7 +1,6 @@
-
 import SEO from '../components/SEO';
 import { Link } from 'react-router-dom';
-import { MapPin, Umbrella, Wind, Coffee, Car, Bus, Anchor, ShieldCheck, Sailboat, Award, TreePalm, Fishing, Church, Lighthouse } from 'lucide-react';
+import { MapPin, Umbrella, Wind, Coffee, Car, Bus, Anchor, ShieldCheck, Sailboat, Award, TreePalm, Fish, Church } from 'lucide-react';
 
 export default function BeachesPage() {
   // Updated beaches data with the new information
