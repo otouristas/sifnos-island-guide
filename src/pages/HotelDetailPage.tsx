@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, PlusCircle, MinusCircle, ExternalLink, Map } from 'lucide-react';
-import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
+import { supabase, logSupabaseResponse, getHotelRoomImagePath } from '@/integrations/supabase/client';
 import SEO from '../components/SEO';
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { extractIdFromSlug, generateHotelUrl } from '@/lib/url-utils';
 import BookingReviews from '@/components/BookingReviews';
+import HotelAmenities from '@/components/HotelAmenities';
 
 export default function HotelDetailPage() {
   const { slug } = useParams();
@@ -359,7 +360,7 @@ export default function HotelDetailPage() {
                       <div className="flex flex-col md:flex-row gap-4">
                         <div className="md:w-1/4">
                           <img 
-                            src={room.photo_url ? `/uploads/rooms/${room.photo_url}` : '/placeholder.svg'} 
+                            src={getHotelRoomImagePath(room.photo_url)}
                             alt={room.name} 
                             className="w-full h-32 object-cover rounded-lg"
                           />
@@ -384,12 +385,8 @@ export default function HotelDetailPage() {
                           
                           {/* Room Amenities */}
                           {room.amenities && room.amenities.length > 0 && (
-                            <div className="mt-3 flex flex-wrap gap-2">
-                              {room.amenities.map((amenity, index) => (
-                                <span key={index} className="bg-gray-100 text-xs py-1 px-2 rounded">
-                                  {amenity}
-                                </span>
-                              ))}
+                            <div className="mt-3">
+                              <HotelAmenities amenities={room.amenities} />
                             </div>
                           )}
                           
@@ -624,7 +621,7 @@ export default function HotelDetailPage() {
                     height="100%"
                     style={{ border: 0 }}
                     loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
+                    referrerpolicy="no-referrer-when-downgrade"
                     title={`${hotel.name} Location Map`}
                     className="w-full h-full"
                     allowFullScreen

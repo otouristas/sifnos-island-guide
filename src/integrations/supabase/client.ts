@@ -55,3 +55,16 @@ export const handleSupabaseResponse = (action: string, data: any, error: any, sh
   
   return { success: true, data, error: null };
 };
+
+// Helper function to get image path for hotel rooms
+export const getHotelRoomImagePath = (photoUrl: string | null) => {
+  if (!photoUrl) return '/placeholder.svg';
+  
+  // Check if the image is in the hotels directory
+  if (photoUrl.startsWith('meropirooms-')) {
+    return `/uploads/hotels/${photoUrl}`;
+  } 
+  
+  // Default to rooms directory
+  return `/uploads/rooms/${photoUrl}`;
+};
