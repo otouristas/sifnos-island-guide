@@ -357,12 +357,28 @@ export default function HotelsPage() {
                           </div>
                         </div>
                         <div className="md:w-2/3 p-6">
-                          <div className="flex flex-wrap justify-between">
-                            <div>
-                              <h3 className="font-montserrat font-semibold text-xl">{hotel.name}</h3>
-                              <div className="flex items-center mt-1 mb-3">
-                                <MapPin size={16} className="text-sifnos-turquoise mr-1" />
-                                <span className="text-gray-600 text-sm">{hotel.location}</span>
+                          <div className="flex flex-wrap justify-between items-start">
+                            <div className="flex items-start gap-3">
+                              {/* Hotel Logo */}
+                              {hotel.logo_path && (
+                                <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-200 bg-white flex items-center justify-center">
+                                  <img 
+                                    src={`/uploads/hotels/${hotel.logo_path}`}
+                                    alt={`${hotel.name} logo`}
+                                    className="w-full h-full object-contain p-1"
+                                    onError={(e) => {
+                                      console.log(`Error loading logo for hotel ${hotel.id}`);
+                                      e.currentTarget.src = '/placeholder.svg';
+                                    }}
+                                  />
+                                </div>
+                              )}
+                              <div>
+                                <h3 className="font-montserrat font-semibold text-xl">{hotel.name}</h3>
+                                <div className="flex items-center mt-1 mb-3">
+                                  <MapPin size={16} className="text-sifnos-turquoise mr-1" />
+                                  <span className="text-gray-600 text-sm">{hotel.location}</span>
+                                </div>
                               </div>
                             </div>
                             <div className="flex items-center">
