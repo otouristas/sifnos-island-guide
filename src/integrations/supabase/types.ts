@@ -70,30 +70,36 @@ export type Database = {
       hotel_reviews: {
         Row: {
           comment: string
+          country: string | null
           date: string
           hotel_id: string
           id: string
           rating: number
           reviewer_name: string
           reviewer_photo: string | null
+          source: string | null
         }
         Insert: {
           comment: string
+          country?: string | null
           date?: string
           hotel_id: string
           id?: string
           rating: number
           reviewer_name: string
           reviewer_photo?: string | null
+          source?: string | null
         }
         Update: {
           comment?: string
+          country?: string | null
           date?: string
           hotel_id?: string
           id?: string
           rating?: number
           reviewer_name?: string
           reviewer_photo?: string | null
+          source?: string | null
         }
         Relationships: [
           {
