@@ -78,6 +78,40 @@ export default function HomePage() {
     }
   ];
   
+  const renderFeaturedHotelsSection = () => {
+    return (
+      <section className="py-16">
+        <div className="page-container">
+          <h2 className="section-title">Featured Hotels</h2>
+          
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-sifnos-turquoise"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+              {featuredHotels.length > 0 ? (
+                featuredHotels.map(hotel => (
+                  <HotelCard key={hotel.id} hotel={hotel} />
+                ))
+              ) : (
+                <div className="text-center py-12 col-span-3">
+                  <p className="text-gray-500">No featured hotels available at the moment.</p>
+                </div>
+              )}
+            </div>
+          )}
+          
+          <div className="text-center mt-10">
+            <Link to="/hotels" className="inline-block px-6 py-3 border-2 border-sifnos-turquoise text-sifnos-turquoise font-montserrat font-medium rounded-lg hover:bg-sifnos-turquoise hover:text-white transition-colors duration-300">
+              View All Hotels
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  };
+
   return (
     <>
       <SEO 
@@ -193,36 +227,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Hotels Section - Updated to use HotelCard component */}
-      <section className="py-16">
-        <div className="page-container">
-          <h2 className="section-title">Featured Hotels</h2>
-          
-          {loading ? (
-            <div className="flex justify-center items-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-sifnos-turquoise"></div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-8 mt-8">
-              {featuredHotels.length > 0 ? (
-                featuredHotels.map(hotel => (
-                  <HotelCard key={hotel.id} hotel={hotel} />
-                ))
-              ) : (
-                <div className="text-center py-12">
-                  <p className="text-gray-500">No featured hotels available at the moment.</p>
-                </div>
-              )}
-            </div>
-          )}
-          
-          <div className="text-center mt-10">
-            <Link to="/hotels" className="inline-block px-6 py-3 border-2 border-sifnos-turquoise text-sifnos-turquoise font-montserrat font-medium rounded-lg hover:bg-sifnos-turquoise hover:text-white transition-colors duration-300">
-              View All Hotels
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Featured Hotels Section */}
+      {renderFeaturedHotelsSection()}
 
       {/* Popular Beaches */}
       <section className="py-16 bg-gray-50">

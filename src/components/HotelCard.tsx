@@ -86,8 +86,8 @@ const HotelCard = ({ hotel }: HotelCardProps) => {
   };
 
   return (
-    <div className="cycladic-card overflow-hidden">
-      <div className="relative h-40 overflow-hidden">
+    <div className="cycladic-card overflow-hidden h-full">
+      <div className="relative h-48 overflow-hidden">
         <img 
           src={getMainPhotoUrl()} 
           alt={`${hotel.name} - Hotel in ${hotel.location}, Sifnos`}

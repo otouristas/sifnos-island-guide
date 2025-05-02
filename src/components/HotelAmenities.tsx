@@ -31,9 +31,12 @@ const HotelAmenities = ({ amenities }: HotelAmenitiesProps) => {
     'no smoking': <Cigarette size={14} className="mr-1 line-through" />,
   };
 
+  // Filter out 'restaurant' from amenities
+  const filteredAmenities = amenities.filter(amenity => amenity.toLowerCase() !== 'restaurant');
+
   return (
     <div className="flex flex-wrap gap-1.5">
-      {amenities.map((amenity, index) => {
+      {filteredAmenities.map((amenity, index) => {
         // Normalize the amenity name for icon lookup
         const normalizedAmenity = amenity.toLowerCase().replace(/\s+/g, '');
         const alternativeKey = amenity.toLowerCase();
