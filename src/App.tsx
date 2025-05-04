@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -19,6 +18,11 @@ import NotFound from "./pages/NotFound";
 import TravelGuidePage from "./pages/TravelGuidePage";
 import BeachesPage from "./pages/BeachesPage";
 import AboutUsPage from "./pages/AboutUsPage";
+import LocationsPage from "./pages/LocationsPage";
+import LocationPage from "./pages/LocationPage";
+import HotelTypesPage from "./pages/HotelTypesPage";
+import HotelTypePage from "./pages/HotelTypePage";
+import Index from "./pages/Index";
 
 // Components
 import Navigation from "./components/Navigation";
@@ -49,9 +53,17 @@ const App = () => (
         <main>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/index" element={<Index />} />
             <Route path="/hotels" element={<HotelsPage />} />
-            {/* Update hotel detail route to use slug pattern */}
+            {/* Hotel detail route */}
             <Route path="/hotels/:slug" element={<HotelDetailPage />} />
+            {/* Location routes */}
+            <Route path="/locations" element={<LocationsPage />} />
+            <Route path="/locations/:slug" element={<LocationPage />} />
+            {/* Hotel types routes */}
+            <Route path="/hotel-types" element={<HotelTypesPage />} />
+            <Route path="/hotel-types/:slug" element={<HotelTypePage />} />
+            {/* Other routes */}
             <Route path="/beaches" element={<BeachesPage />} />
             <Route path="/travel-guide" element={<TravelGuidePage />} />
             <Route path="/about" element={<AboutPage />} />
