@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, NavLink as RouterNavLink } from 'react-router-dom';
 import { X } from 'lucide-react';
@@ -21,15 +22,18 @@ const NavLink: React.FC<NavLinkProps> = ({ to, children, className }) => (
   </RouterNavLink>
 );
 
-const MobileNavLink: React.FC<NavLinkProps> = ({ to, children, className, onClick }) => (
-  <Link to={to} className={`block py-2 px-4 text-sm hover:bg-gray-100 ${className}`} onClick={onClick}>
+interface MobileNavLinkProps {
+  to: string;
+  children: React.ReactNode;
+  className?: string;
+  onClick: () => void;
+}
+
+const MobileNavLink: React.FC<MobileNavLinkProps> = ({ to, children, className, onClick }) => (
+  <Link to={to} className={`block py-2 px-4 text-sm hover:bg-gray-100 ${className || ''}`} onClick={onClick}>
     {children}
   </Link>
 );
-
-interface MobileNavLinkProps extends NavLinkProps {
-  onClick: () => void;
-}
 
 const Navigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

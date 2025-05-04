@@ -11,6 +11,7 @@ interface SEOProps {
   datePublished?: string;
   dateModified?: string;
   author?: string;
+  noindex?: boolean;
 }
 
 type SchemaData = {
@@ -30,7 +31,8 @@ export default function SEO({
   imageUrl = 'https://hotelssifnos.com/opengraph-image-p98pqg.png',
   datePublished,
   dateModified,
-  author = 'Hotels Sifnos'
+  author = 'Hotels Sifnos',
+  noindex = false
 }: SEOProps) {
   const formattedCanonical = canonical ? 
     (canonical.startsWith('http') ? canonical : `https://hotelssifnos.com${canonical.startsWith('/') ? canonical : `/${canonical}`}`) 
@@ -125,8 +127,11 @@ export default function SEO({
       <meta name="twitter:image" content={imageUrl} />
 
       {/* Additional SEO tags */}
-      <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
-      <meta name="googlebot" content="index, follow" />
+      <meta 
+        name="robots" 
+        content={noindex ? "noindex, nofollow" : "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"} 
+      />
+      <meta name="googlebot" content={noindex ? "noindex, nofollow" : "index, follow"} />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="canonical" href={formattedCanonical} />
       

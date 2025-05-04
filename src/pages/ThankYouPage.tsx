@@ -21,7 +21,6 @@ export default function ThankYouPage() {
         keywords={['hotel registration', 'sifnos hotel listing', 'thank you']}
         schemaType="Organization"
         canonical="https://hotelssifnos.com/thank-you"
-        // Prevent indexing of thank you page
         noindex={true}
       />
       
