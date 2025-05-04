@@ -72,6 +72,8 @@ const PricingContactForm = ({ selectedPlan }: PricingContactFormProps) => {
     setIsSubmitting(true);
     
     try {
+      console.log('Submitting registration form:', values);
+      
       // Insert the registration into Supabase
       const { data, error } = await supabase
         .from('hotel_registrations')
@@ -88,10 +90,13 @@ const PricingContactForm = ({ selectedPlan }: PricingContactFormProps) => {
         .select();
 
       if (error) {
+        console.error('Error storing registration in database:', error);
         throw error;
       }
-
-      // Call edge function to send email notification (will implement separately)
+      
+      console.log('Registration stored in database, sending email notification...');
+      
+      // Call edge function to send email notification
       try {
         const response = await fetch('/api/send-registration-email', {
           method: 'POST',
@@ -110,8 +115,13 @@ const PricingContactForm = ({ selectedPlan }: PricingContactFormProps) => {
           }),
         });
         
+        const responseData = await response.json();
+        
         if (!response.ok) {
-          console.error('Failed to send notification email');
+          console.error('Failed to send notification email:', responseData);
+          // Continue with success flow even if email fails, but log the error
+        } else {
+          console.log('Email sent successfully:', responseData);
         }
       } catch (emailError) {
         console.error('Error sending notification email:', emailError);
@@ -132,7 +142,7 @@ const PricingContactForm = ({ selectedPlan }: PricingContactFormProps) => {
       });
       
     } catch (error: any) {
-      console.error('Error submitting form:', error);
+      console.error('Error submitting registration form:', error);
       toast({
         title: "Something went wrong",
         description: error.message || "Failed to submit your registration. Please try again.",

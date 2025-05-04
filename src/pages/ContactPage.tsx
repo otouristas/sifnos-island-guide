@@ -30,8 +30,10 @@ export default function ContactPage() {
     setIsSubmitting(true);
     
     try {
+      console.log('Submitting contact form:', formData);
+      
       // First store in database
-      const { error } = await (supabase as any)
+      const { error } = await supabase
         .from('contact_submissions')
         .insert([{
           name: formData.name,
@@ -40,30 +42,35 @@ export default function ContactPage() {
           message: formData.message
         }]);
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error storing contact in database:', error);
+        throw error;
+      }
+      
+      console.log('Contact stored in database, sending email notification...');
       
       // Then send email via edge function
-      try {
-        const response = await fetch('/api/send-contact-email', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: formData.name,
-            email: formData.email,
-            subject: formData.subject,
-            message: formData.message
-          }),
-        });
-        
-        if (!response.ok) {
-          console.error('Failed to send contact email');
-        }
-      } catch (emailError) {
-        console.error('Error sending contact email:', emailError);
-        // Continue with success flow even if email fails
+      const response = await fetch('/api/send-contact-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message
+        }),
+      });
+      
+      const responseData = await response.json();
+      
+      if (!response.ok) {
+        console.error('Failed to send contact email:', responseData);
+        throw new Error(responseData.error || 'Failed to send email');
       }
+      
+      console.log('Email sent successfully:', responseData);
       
       setSubmitStatus('success');
       toast({
@@ -90,7 +97,7 @@ export default function ContactPage() {
       
       toast({
         title: "Error",
-        description: "There was a problem sending your message. Please try again.",
+        description: "There was a problem sending your message. Please try again later.",
         variant: "destructive",
       });
       

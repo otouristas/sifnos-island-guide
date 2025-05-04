@@ -21,6 +21,8 @@ serve(async (req) => {
   }
 
   try {
+    console.log('Contact email function called')
+    
     // Use the provided SMTP settings
     const SMTP_HOSTNAME = 'hotelssifnos.com'
     const SMTP_PORT = 465
@@ -29,16 +31,27 @@ serve(async (req) => {
     const ADMIN_EMAIL = 'hello@hotelssifnos.com'
 
     const { name, email, subject, message } = await req.json() as ContactPayload
+    
+    console.log('Received contact form submission:', { name, email, subject })
 
     // Create SMTP client
     const client = new SmtpClient()
-    await client.connectTLS({
-      hostname: SMTP_HOSTNAME,
-      port: SMTP_PORT,
-      username: SMTP_USERNAME,
-      password: SMTP_PASSWORD,
-      tls: true,
-    })
+    console.log('Connecting to SMTP server...')
+    
+    try {
+      await client.connectTLS({
+        hostname: SMTP_HOSTNAME,
+        port: SMTP_PORT,
+        username: SMTP_USERNAME,
+        password: SMTP_PASSWORD,
+        tls: true,
+      })
+      
+      console.log('Connected to SMTP server successfully')
+    } catch (connError) {
+      console.error('SMTP connection error:', connError)
+      throw new Error(`SMTP connection failed: ${connError.message}`)
+    }
 
     // Format message content
     const emailBody = `
@@ -56,16 +69,24 @@ serve(async (req) => {
       <p>${message}</p>
     `
 
-    // Send email
-    await client.send({
-      from: SMTP_USERNAME,
-      to: ADMIN_EMAIL,
-      subject: `Contact Form: ${subject}`,
-      content: emailBody,
-      html: emailBody,
-    })
-
-    await client.close()
+    try {
+      // Send email
+      console.log('Sending email...')
+      const sendResult = await client.send({
+        from: SMTP_USERNAME,
+        to: ADMIN_EMAIL,
+        subject: `Contact Form: ${subject}`,
+        content: emailBody,
+        html: emailBody,
+      })
+      
+      console.log('Email sent successfully:', sendResult)
+    } catch (sendError) {
+      console.error('Error sending email:', sendError)
+      throw new Error(`Failed to send email: ${sendError.message}`)
+    } finally {
+      await client.close()
+    }
 
     return new Response(
       JSON.stringify({ success: true }),
@@ -77,7 +98,7 @@ serve(async (req) => {
       }
     )
   } catch (error) {
-    console.error('Error sending email:', error)
+    console.error('Error in contact email function:', error)
     
     return new Response(
       JSON.stringify({ error: error.message }),
