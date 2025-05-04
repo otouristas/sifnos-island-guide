@@ -66,6 +66,8 @@ const PricingContactForm = ({ selectedPlan }: PricingContactFormProps) => {
         if (!error) {
           // Send email notification via edge function
           try {
+            const registrationId = data && data[0] ? data[0].id : 'unknown';
+            
             await supabase.functions.invoke('send-registration-email', {
               body: {
                 hotel: formData.get('hotelName') as string,
@@ -75,7 +77,15 @@ const PricingContactForm = ({ selectedPlan }: PricingContactFormProps) => {
                 location: formData.get('location') as string,
                 plan: formData.get('selectedPlan') as string,
                 message: formData.get('message') as string || '',
-                registrationId: data[0]?.id || 'unknown'
+                registrationId: registrationId,
+                website: formData.get('website') as string || undefined,
+                googleMapsUrl: formData.get('googleMaps') as string || undefined,
+                bookingUrl: formData.get('bookingUrl') as string || undefined,
+                airbnbUrl: formData.get('airbnbUrl') as string || undefined,
+                socialFacebook: formData.get('socialFacebook') as string || undefined,
+                socialInstagram: formData.get('socialInstagram') as string || undefined,
+                socialTwitter: formData.get('socialTwitter') as string || undefined,
+                address: formData.get('address') as string || undefined
               }
             });
             
