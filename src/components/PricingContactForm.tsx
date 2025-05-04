@@ -21,7 +21,7 @@ import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { Globe, Mail, MapPin, ExternalLink } from "lucide-react";
 import { Facebook, Instagram, Twitter } from "../components/icons/SocialIcons";
-import { supabase, logSupabaseResponse } from "@/integrations/supabase/client";
+import { supabase, handleSupabaseResponse } from "@/integrations/supabase/client";
 
 interface PricingContactFormProps {
   selectedPlan: string | null;
@@ -65,9 +65,7 @@ const PricingContactForm = ({ selectedPlan }: PricingContactFormProps) => {
           social_instagram: formData.get('socialInstagram') as string || null,
           social_twitter: formData.get('socialTwitter') as string || null,
           address: formData.get('address') as string || null
-        });
-        
-        logSupabaseResponse('register hotel', data, error);
+        }).select();
         
         if (!error) {
           // Send email notification via edge function
