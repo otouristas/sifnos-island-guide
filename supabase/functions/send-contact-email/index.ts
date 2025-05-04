@@ -21,11 +21,11 @@ serve(async (req) => {
   }
 
   try {
-    // Get environment variables
-    const SMTP_HOSTNAME = Deno.env.get('SMTP_HOSTNAME') || 'smtp.yourprovider.com'
-    const SMTP_PORT = parseInt(Deno.env.get('SMTP_PORT') || '587')
-    const SMTP_USERNAME = Deno.env.get('SMTP_USERNAME') || 'your_username'
-    const SMTP_PASSWORD = Deno.env.get('SMTP_PASSWORD') || 'your_password'
+    // Use the provided SMTP settings
+    const SMTP_HOSTNAME = 'hotelssifnos.com'
+    const SMTP_PORT = 465
+    const SMTP_USERNAME = 'hello@hotelssifnos.com'
+    const SMTP_PASSWORD = 'Gamiesai@@20'
     const ADMIN_EMAIL = 'hello@hotelssifnos.com'
 
     const { name, email, subject, message } = await req.json() as ContactPayload
@@ -37,6 +37,7 @@ serve(async (req) => {
       port: SMTP_PORT,
       username: SMTP_USERNAME,
       password: SMTP_PASSWORD,
+      tls: true,
     })
 
     // Format message content
