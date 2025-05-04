@@ -1,8 +1,7 @@
 
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getHotelTypeBySlug, HotelType } from '../data/hotelTypes';
-import { notFound } from 'react-router-dom-v5-compat';
 import { supabase } from '@/integrations/supabase/client';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
@@ -13,13 +12,14 @@ export default function HotelTypePage() {
   const [hotelType, setHotelType] = useState<HotelType | null>(null);
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   
   useEffect(() => {
     if (!slug) return;
     
     const typeData = getHotelTypeBySlug(slug);
     if (!typeData) {
-      notFound();
+      navigate('/not-found');
       return;
     }
     
@@ -48,7 +48,7 @@ export default function HotelTypePage() {
     };
     
     fetchHotels();
-  }, [slug]);
+  }, [slug, navigate]);
   
   if (!hotelType) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;

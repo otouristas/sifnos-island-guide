@@ -55,7 +55,8 @@ export default function Breadcrumbs({ items = [], currentPage }: BreadcrumbsProp
       itemListElements.push({
         '@type': 'ListItem',
         'position': position,
-        'name': currentPage
+        'name': currentPage,
+        'item': `https://hotelssifnos.com${location.pathname}` // Add the required 'item' property
       });
     }
     

@@ -1,9 +1,8 @@
 
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getLocationBySlug, Location } from '../data/locations';
 import { supabase } from '@/integrations/supabase/client';
-import { notFound } from 'react-router-dom-v5-compat';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
 import HotelCard from '../components/HotelCard';
@@ -14,13 +13,14 @@ export default function LocationPage() {
   const [location, setLocation] = useState<Location | null>(null);
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   
   useEffect(() => {
     if (!slug) return;
     
     const locationData = getLocationBySlug(slug);
     if (!locationData) {
-      notFound();
+      navigate('/not-found');
       return;
     }
     
@@ -47,7 +47,7 @@ export default function LocationPage() {
     };
     
     fetchHotels();
-  }, [slug]);
+  }, [slug, navigate]);
   
   if (!location) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
