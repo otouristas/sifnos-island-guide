@@ -1,117 +1,17 @@
 
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { Mail, Send, AlertCircle, CheckCircle } from 'lucide-react';
 import SEO from '../components/SEO';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/components/ui/use-toast';
+import { useForm, ValidationError } from '@formspree/react';
+import Breadcrumbs from '../components/Breadcrumbs';
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
+  const [state, handleSubmit] = useForm("xovdeojl");
   
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const { toast } = useToast();
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    try {
-      console.log('Submitting contact form:', formData);
-      
-      // First store in database - using hotel_registrations table
-      const { error } = await supabase
-        .from('hotel_registrations')
-        .insert([{
-          hotel_name: `Contact Form - ${formData.subject}`,
-          contact_name: formData.name,
-          email: formData.email,
-          phone: 'N/A', // This field is required in the hotel_registrations table
-          location: 'Contact Form Submission', // This field is required
-          message: formData.message,
-          selected_plan: 'Contact Form Submission' // This field is required
-        }]);
-      
-      if (error) {
-        console.error('Error storing contact in database:', error);
-        throw error;
-      }
-      
-      console.log('Contact stored in database, sending email notification...');
-      
-      // Then send email via edge function
-      const response = await fetch('/api/send-contact-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          subject: formData.subject,
-          message: formData.message
-        }),
-      });
-      
-      const responseData = await response.json();
-      
-      if (!response.ok) {
-        console.error('Failed to send contact email:', responseData);
-        throw new Error(responseData.error || 'Failed to send email');
-      }
-      
-      console.log('Email sent successfully:', responseData);
-      
-      setSubmitStatus('success');
-      toast({
-        title: "Message sent!",
-        description: "We'll get back to you as soon as possible.",
-        variant: "default",
-      });
-
-      // Reset the form
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
-      });
-
-      // Reset status after 5 seconds
-      setTimeout(() => {
-        setSubmitStatus('idle');
-      }, 5000);
-    } catch (error) {
-      console.error('Error submitting contact form:', error);
-      setSubmitStatus('error');
-      
-      toast({
-        title: "Error",
-        description: "There was a problem sending your message. Please try again later.",
-        variant: "destructive",
-      });
-      
-      // Reset status after 5 seconds
-      setTimeout(() => {
-        setSubmitStatus('idle');
-      }, 5000);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  // Scroll to top on page load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <>
@@ -156,91 +56,90 @@ export default function ContactPage() {
             {/* Contact Form */}
             <div>
               <h2 className="font-montserrat font-bold text-2xl md:text-3xl mb-6">Send Us a Message</h2>
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div>
-                  <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise"
-                  />
+              
+              {state.succeeded ? (
+                <div className="p-6 bg-green-50 border border-green-200 rounded-lg text-center">
+                  <CheckCircle className="w-12 h-12 mx-auto text-green-500 mb-3" />
+                  <h3 className="text-xl font-semibold text-green-800">Message Sent!</h3>
+                  <p className="text-green-700 mt-2">
+                    Thank you for contacting us. We'll get back to you as soon as possible.
+                  </p>
                 </div>
-                
-                <div>
-                  <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise"
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="subject" className="block text-gray-700 font-medium mb-2">Subject</label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise"
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="message" className="block text-gray-700 font-medium mb-2">Message</label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    required
-                    rows={6}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise"
-                  />
-                </div>
-                
-                <div>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white py-3 px-6 rounded-lg transition-colors duration-300 flex items-center justify-center"
-                  >
-                    {isSubmitting ? (
-                      'Sending...'
-                    ) : (
-                      <>
-                        <Send size={18} className="mr-2" />
-                        Send Message
-                      </>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div>
+                    <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Name</label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      required
+                      className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise"
+                    />
+                    <ValidationError prefix="Name" field="name" errors={state.errors} className="text-red-500 text-sm mt-1" />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Email</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      required
+                      className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise"
+                    />
+                    <ValidationError prefix="Email" field="email" errors={state.errors} className="text-red-500 text-sm mt-1" />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="subject" className="block text-gray-700 font-medium mb-2">Subject</label>
+                    <input
+                      type="text"
+                      id="subject"
+                      name="subject"
+                      required
+                      className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise"
+                    />
+                    <ValidationError prefix="Subject" field="subject" errors={state.errors} className="text-red-500 text-sm mt-1" />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="message" className="block text-gray-700 font-medium mb-2">Message</label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      required
+                      rows={6}
+                      className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise"
+                    />
+                    <ValidationError prefix="Message" field="message" errors={state.errors} className="text-red-500 text-sm mt-1" />
+                  </div>
+                  
+                  <div>
+                    <button
+                      type="submit"
+                      disabled={state.submitting}
+                      className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white py-3 px-6 rounded-lg transition-colors duration-300 flex items-center justify-center"
+                    >
+                      {state.submitting ? (
+                        'Sending...'
+                      ) : (
+                        <>
+                          <Send size={18} className="mr-2" />
+                          Send Message
+                        </>
+                      )}
+                    </button>
+                    
+                    {state.errors && Object.keys(state.errors).length > 0 && (
+                      <div className="mt-4 p-3 bg-red-100 text-red-800 rounded-lg flex items-center">
+                        <AlertCircle className="mr-2" size={18} />
+                        There are errors in your submission. Please check the form and try again.
+                      </div>
                     )}
-                  </button>
-                  
-                  {/* Form submission status messages */}
-                  {submitStatus === 'success' && (
-                    <div className="mt-4 p-3 bg-green-100 text-green-800 rounded-lg flex items-center">
-                      <CheckCircle className="mr-2" size={18} />
-                      Your message has been sent successfully! We'll get back to you soon.
-                    </div>
-                  )}
-                  
-                  {submitStatus === 'error' && (
-                    <div className="mt-4 p-3 bg-red-100 text-red-800 rounded-lg flex items-center">
-                      <AlertCircle className="mr-2" size={18} />
-                      There was an error sending your message. Please try again later.
-                    </div>
-                  )}
-                </div>
-              </form>
+                  </div>
+                </form>
+              )}
             </div>
             
             {/* Map */}
