@@ -32,14 +32,17 @@ export default function ContactPage() {
     try {
       console.log('Submitting contact form:', formData);
       
-      // First store in database
+      // First store in database - using hotel_registrations table
       const { error } = await supabase
-        .from('contact_submissions')
+        .from('hotel_registrations')
         .insert([{
-          name: formData.name,
+          hotel_name: `Contact Form - ${formData.subject}`,
+          contact_name: formData.name,
           email: formData.email,
-          subject: formData.subject,
-          message: formData.message
+          phone: 'N/A', // This field is required in the hotel_registrations table
+          location: 'Contact Form Submission', // This field is required
+          message: formData.message,
+          selected_plan: 'Contact Form Submission' // This field is required
         }]);
       
       if (error) {
