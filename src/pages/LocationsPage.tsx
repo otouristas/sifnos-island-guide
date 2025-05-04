@@ -61,7 +61,13 @@ export default function LocationsPage() {
               For beach lovers, Platis Gialos presents one of the island's most beautiful shores with numerous beachfront accommodations. Families particularly appreciate its shallow waters and range of facilities. Those seeking a more authentic and historical experience might prefer Kastro, the medieval former capital, where traditional architecture and spectacular sea views create an unforgettable setting.
             </p>
             <p>
-              Vathi provides a quieter, more secluded experience in a picturesque bay setting, while Faros combines beautiful beaches with a relaxed fishing village atmosphere. Whichever location you choose, Sifnos' excellent bus system and relatively small size make it easy to explore the entire island regardless of where you stay.
+              Vathi provides a quieter, more secluded experience in a picturesque bay setting, while Faros combines beautiful beaches with a relaxed fishing village atmosphere. The elegant village of Artemonas offers neoclassical architecture and refined ambiance, just a short walk from Apollonia.
+            </p>
+            <p>
+              For travelers seeking authentic experiences, smaller settlements like Agios Loukas, Exambela, Katavati, Kato Petali, Pano Petali, and Troullaki offer glimpses into traditional island life. Herronisos in the north provides a remote fishing village experience, while Chrysopigi is famous for its iconic monastery and beautiful beaches.
+            </p>
+            <p>
+              Whichever location you choose, Sifnos' excellent bus system and relatively small size make it easy to explore the entire island regardless of where you stay.
             </p>
           </div>
         </div>
