@@ -1,6 +1,6 @@
 
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Twitter, Mail, MapPin, Phone } from 'lucide-react';
+import { Facebook, Instagram, Twitter, Mail, MapPin } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -78,12 +78,6 @@ export default function Footer() {
                   Sifnos Island, Cyclades, Greece
                 </span>
               </li>
-              <li className="flex items-center">
-                <Phone size={16} className="mr-2 text-sifnos-teal" />
-                <a href="tel:+302284031370" className="text-gray-300 hover:text-sifnos-teal transition-colors">
-                  +30 2284 031 370
-                </a>
-              </li>
             </ul>
             
             {/* Newsletter */}
@@ -144,8 +138,9 @@ export default function Footer() {
             <div className="flex space-x-4 text-sm text-gray-400">
               <Link to="/about-us" className="hover:text-sifnos-teal transition-colors">About Us</Link>
               <Link to="/contact" className="hover:text-sifnos-teal transition-colors">Contact</Link>
-              <a href="#" className="hover:text-sifnos-teal transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-sifnos-teal transition-colors">Terms of Service</a>
+              <Link to="/privacy-policy" className="hover:text-sifnos-teal transition-colors">Privacy Policy</Link>
+              <Link to="/terms-of-service" className="hover:text-sifnos-teal transition-colors">Terms of Service</Link>
+              <Link to="/cookie-policy" className="hover:text-sifnos-teal transition-colors">Cookie Policy</Link>
             </div>
           </div>
           
