@@ -10,6 +10,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import { Button } from "@/components/ui/button";
 import { cn } from '@/lib/utils';
 
 interface NavLinkProps {
@@ -51,13 +52,14 @@ const Navigation = () => {
     <nav className="sticky top-0 z-50 bg-white shadow-md">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
+          {/* Logo and Name */}
           <Link to="/" className="flex items-center">
             <img 
               src="/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png" 
               alt="Hotels Sifnos" 
               className="h-10" 
             />
+            <span className="ml-2 text-lg font-montserrat font-semibold text-sifnos-deep-blue">HotelsSifnos</span>
           </Link>
           
           {/* Desktop Navigation */}
@@ -145,7 +147,16 @@ const Navigation = () => {
             <NavLink to="/beaches">Beaches</NavLink>
             <NavLink to="/travel-guide">Travel Guide</NavLink>
             <NavLink to="/contact">Contact</NavLink>
-            <NavLink to="/pricing" className="text-sifnos-turquoise font-medium">List Your Hotel</NavLink>
+            
+            <Link to="/pricing">
+              <Button 
+                size="sm" 
+                variant="default" 
+                className="bg-sifnos-turquoise hover:bg-sifnos-turquoise/80 text-white font-medium"
+              >
+                List Your Hotel
+              </Button>
+            </Link>
           </div>
           
           {/* Mobile Navigation Toggle */}
@@ -250,13 +261,15 @@ const Navigation = () => {
               >
                 Contact
               </MobileNavLink>
-              <MobileNavLink 
-                to="/pricing" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-sifnos-turquoise font-medium"
-              >
-                List Your Hotel
-              </MobileNavLink>
+              <div className="px-4 py-2">
+                <Link 
+                  to="/pricing" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="inline-block bg-sifnos-turquoise text-white px-4 py-2 rounded text-sm font-medium"
+                >
+                  List Your Hotel
+                </Link>
+              </div>
             </div>
           </div>
         </div>
