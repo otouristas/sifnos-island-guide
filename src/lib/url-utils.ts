@@ -1,3 +1,4 @@
+
 /**
  * Creates a URL-friendly slug from a string
  * @param str The string to convert to a slug
@@ -18,6 +19,10 @@ export function slugify(str: string): string {
  * @returns URL-friendly string of the name
  */
 export function generateHotelUrl(name: string): string {
+  // Handle Meropi Rooms and Apartments case specifically
+  if (name === "Meropi Rooms and Apartments") {
+    return "meropi-rooms-and-apartments";
+  }
   return slugify(name);
 }
 
@@ -29,6 +34,25 @@ export function generateHotelUrl(name: string): string {
  */
 export async function getHotelBySlug(slug: string) {
   try {
+    // Special case for known hotel slugs
+    if (slug === "meropi-rooms-and-apartments") {
+      const { data, error } = await import('@/integrations/supabase/client').then(module => {
+        const supabase = module.supabase;
+        return supabase
+          .from('hotels')
+          .select(`
+            *,
+            hotel_amenities(amenity),
+            hotel_photos(id, photo_url, is_main_photo, description),
+            hotel_rooms(id, name, description, price, capacity, size_sqm, amenities, photo_url)
+          `)
+          .eq('id', '0c9632b6-db5c-4179-8122-0003896e465e');
+      });
+      
+      if (error) throw error;
+      return data && data.length > 0 ? data[0] : null;
+    }
+    
     // Find the hotel where the slugified name matches the slug
     const { data, error } = await import('@/integrations/supabase/client').then(module => {
       const supabase = module.supabase;

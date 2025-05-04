@@ -210,4 +210,12 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+  
+  <!-- Hotel Pages -->
+  <url>
+    <loc>https://hotelssifnos.com/hotels/meropi-rooms-and-apartments</loc>
+    <lastmod>2025-05-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
 </urlset>

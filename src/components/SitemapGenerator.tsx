@@ -140,6 +140,22 @@ export default function SitemapGenerator() {
             changefreq: 'weekly' as const,
             priority: 0.8
           }));
+          
+          // Add explicit entry for Meropi Rooms and Apartments to ensure it's included correctly
+          const meropiHotel = hotels.find(hotel => hotel.name === "Meropi Rooms and Apartments");
+          if (meropiHotel) {
+            console.log("Found Meropi hotel in database, ID:", meropiHotel.id);
+            console.log("Meropi hotel URL slug:", generateHotelUrl(meropiHotel.name));
+          } else {
+            // Add a manual entry if not found in database
+            hotelPages.push({
+              loc: `${baseURL}/hotels/meropi-rooms-and-apartments`,
+              lastmod: currentDate,
+              changefreq: 'weekly' as const,
+              priority: 0.9
+            });
+            console.log("Added manual entry for Meropi Rooms and Apartments");
+          }
         }
       } catch (error) {
         console.error('Error fetching hotels for sitemap:', error);
