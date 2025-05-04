@@ -1,20 +1,61 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { generateHotelUrl } from '@/lib/url-utils';
-import OriginalHotelCard from '@/components/HotelCard';
 
-// Create a wrapper component to override the link behavior
-export const HotelCardWithNewUrl = ({ hotel, ...props }) => {
-  // We can't modify the original component, but we can use it within a wrapper
-  // that provides the correct URL context
+// Define the HotelCard component that creates proper URLs
+const HotelCard = ({ hotel, showLogo = false, ...props }) => {
+  // Create the URL-friendly slug for the hotel
+  const hotelSlug = generateHotelUrl(hotel.name);
   
-  // This is a workaround if we can't edit the original component
-  // In a real scenario, we would update the original component
+  // Find the main photo for the hotel
+  const mainPhoto = hotel.hotel_photos?.find(photo => photo.is_main_photo)?.photo_url || '';
   
-  // Return the original component unmodified, as it's read-only
-  // The URL transformation will happen in the pages that use it
-  return <OriginalHotelCard hotel={hotel} {...props} />;
+  return (
+    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1">
+      <Link to={`/hotels/${hotelSlug}`} className="block">
+        {/* Hotel image */}
+        <div className="relative h-48 overflow-hidden">
+          <img 
+            src={mainPhoto} 
+            alt={hotel.name} 
+            className="w-full h-full object-cover"
+          />
+          {showLogo && hotel.logo_url && (
+            <div className="absolute bottom-2 right-2 bg-white p-1 rounded-md">
+              <img 
+                src={hotel.logo_url} 
+                alt={`${hotel.name} logo`} 
+                className="h-8" 
+              />
+            </div>
+          )}
+        </div>
+        
+        {/* Hotel details */}
+        <div className="p-4">
+          <h3 className="text-lg font-semibold text-gray-800 mb-1">{hotel.name}</h3>
+          <p className="text-sm text-gray-600 mb-2">{hotel.location}</p>
+          
+          {/* Amenities */}
+          {hotel.hotel_amenities && hotel.hotel_amenities.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-2">
+              {hotel.hotel_amenities.slice(0, 3).map((amenity, i) => (
+                <span key={i} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                  {amenity.amenity}
+                </span>
+              ))}
+              {hotel.hotel_amenities.length > 3 && (
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                  +{hotel.hotel_amenities.length - 3} more
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+      </Link>
+    </div>
+  );
 };
 
-// Export the original component as default to maintain compatibility
-export default OriginalHotelCard;
+export default HotelCard;
