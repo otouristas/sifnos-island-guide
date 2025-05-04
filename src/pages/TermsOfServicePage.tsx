@@ -16,10 +16,9 @@ const TermsOfServicePage = () => {
       <div className="page-container">
         <Breadcrumbs
           items={[
-            { name: "Home", href: "/" },
-            { name: "Terms of Service", href: "/terms-of-service" }
+            { label: "Home", href: "/" },
+            { label: "Terms of Service", href: "/terms-of-service" }
           ]}
-          schemaType="BreadcrumbList"
         />
       
         <h1 className="section-title mb-8">Terms of Service</h1>

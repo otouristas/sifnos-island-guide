@@ -17,10 +17,9 @@ const CookiePolicyPage = () => {
       <div className="page-container">
         <Breadcrumbs
           items={[
-            { name: "Home", href: "/" },
-            { name: "Cookie Policy", href: "/cookie-policy" }
+            { label: "Home", href: "/" },
+            { label: "Cookie Policy", href: "/cookie-policy" }
           ]}
-          schemaType="BreadcrumbList"
         />
       
         <h1 className="section-title mb-8">Cookie Policy</h1>

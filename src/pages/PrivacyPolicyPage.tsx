@@ -17,10 +17,9 @@ const PrivacyPolicyPage = () => {
       <div className="page-container">
         <Breadcrumbs
           items={[
-            { name: "Home", href: "/" },
-            { name: "Privacy Policy", href: "/privacy-policy" }
+            { label: "Home", href: "/" },
+            { label: "Privacy Policy", href: "/privacy-policy" }
           ]}
-          schemaType="BreadcrumbList"
         />
       
         <h1 className="section-title mb-8">Privacy Policy</h1>
