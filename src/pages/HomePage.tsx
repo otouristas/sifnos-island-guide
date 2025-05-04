@@ -92,7 +92,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
               {featuredHotels.length > 0 ? (
                 featuredHotels.map(hotel => (
-                  <HotelCard key={hotel.id} hotel={hotel} showLogo={false} />
+                  <HotelCard key={hotel.id} hotel={hotel} showLogo={true} />
                 ))
               ) : (
                 <div className="text-center py-12 col-span-3">
