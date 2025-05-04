@@ -27,6 +27,12 @@ interface PricingContactFormProps {
   selectedPlan: string | null;
 }
 
+// Define a type for the registration data response from Supabase
+interface RegistrationData {
+  id: string;
+  [key: string]: any; // Allow other properties
+}
+
 const PricingContactForm = ({ selectedPlan }: PricingContactFormProps) => {
   const [state, handleSubmit] = useFormspreeForm("mvgakjzd");
   const navigate = useNavigate();
@@ -66,10 +72,12 @@ const PricingContactForm = ({ selectedPlan }: PricingContactFormProps) => {
         if (!error) {
           // Send email notification via edge function
           try {
-            // Safely extract registration ID
-            const registrationId = data && Array.isArray(data) && data.length > 0 && data[0] && 'id' in data[0] 
-              ? data[0].id 
-              : 'unknown';
+            // Safely extract registration ID with proper type checking
+            let registrationId = 'unknown';
+            if (data && Array.isArray(data) && data.length > 0) {
+              const registration = data[0] as RegistrationData;
+              registrationId = registration.id;
+            }
             
             await supabase.functions.invoke('send-registration-email', {
               body: {
