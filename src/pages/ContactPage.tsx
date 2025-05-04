@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Mail, Send, AlertCircle, CheckCircle } from 'lucide-react';
 import SEO from '../components/SEO';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -30,7 +30,7 @@ export default function ContactPage() {
     setIsSubmitting(true);
     
     try {
-      // Save to Supabase
+      // Use a type assertion to bypass TypeScript errors with Supabase types
       const { error } = await (supabase as any)
         .from('contact_submissions')
         .insert([{
@@ -41,29 +41,6 @@ export default function ContactPage() {
         }]);
       
       if (error) throw error;
-      
-      // Send email via edge function
-      try {
-        const response = await fetch('/api/send-contact-email', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: formData.name,
-            email: formData.email,
-            subject: formData.subject,
-            message: formData.message
-          }),
-        });
-        
-        if (!response.ok) {
-          console.error('Failed to send contact email');
-        }
-      } catch (emailError) {
-        console.error('Error sending contact email:', emailError);
-        // Continue with success flow even if email fails
-      }
       
       setSubmitStatus('success');
       toast({

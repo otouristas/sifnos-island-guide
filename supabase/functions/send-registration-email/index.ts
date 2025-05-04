@@ -30,7 +30,7 @@ serve(async (req) => {
     const SMTP_PORT = parseInt(Deno.env.get('SMTP_PORT') || '587')
     const SMTP_USERNAME = Deno.env.get('SMTP_USERNAME') || 'your_username'
     const SMTP_PASSWORD = Deno.env.get('SMTP_PASSWORD') || 'your_password'
-    const ADMIN_EMAIL = 'hello@hotelssifnos.com'
+    const ADMIN_EMAIL = Deno.env.get('ADMIN_EMAIL') || 'admin@hotelssifnos.com'
 
     const { hotel, contactName, email, phone, location, plan, message, registrationId } = await req.json() as EmailPayload
 
@@ -43,139 +43,25 @@ serve(async (req) => {
       password: SMTP_PASSWORD,
     })
 
-    // Format message with a beautiful HTML template
+    // Format message content
     const emailBody = `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>New Hotel Registration</title>
-        <style>
-          body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-          }
-          .header {
-            background-color: #1e3a8a;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-radius: 5px 5px 0 0;
-          }
-          .content {
-            background-color: #f9fafb;
-            padding: 20px;
-            border-radius: 0 0 5px 5px;
-            border: 1px solid #e5e7eb;
-            border-top: none;
-          }
-          .info-item {
-            margin-bottom: 10px;
-            padding: 10px;
-            background-color: white;
-            border-radius: 5px;
-            border-left: 4px solid #1e3a8a;
-          }
-          .info-label {
-            font-weight: bold;
-            color: #1e3a8a;
-          }
-          .message-box {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #e8f4ff;
-            border-radius: 5px;
-            border-left: 4px solid #3b82f6;
-          }
-          .footer {
-            margin-top: 20px;
-            text-align: center;
-            color: #6b7280;
-            font-size: 0.9em;
-          }
-          .plan-badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-weight: bold;
-            margin-left: 10px;
-          }
-          .basic {
-            background-color: #e5e7eb;
-            color: #374151;
-          }
-          .premium {
-            background-color: #10b981;
-            color: white;
-          }
-          .professional {
-            background-color: #3b82f6;
-            color: white;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <h1>New Hotel Registration</h1>
-          <p>A new hotel registration has been submitted on HotelsSifnos.com</p>
-        </div>
-        
-        <div class="content">
-          <h2>Registration Details</h2>
-          
-          <div class="info-item">
-            <span class="info-label">Registration ID:</span> ${registrationId}
-          </div>
-          
-          <div class="info-item">
-            <span class="info-label">Hotel Name:</span> ${hotel}
-          </div>
-          
-          <div class="info-item">
-            <span class="info-label">Contact Person:</span> ${contactName}
-          </div>
-          
-          <div class="info-item">
-            <span class="info-label">Email:</span> <a href="mailto:${email}">${email}</a>
-          </div>
-          
-          <div class="info-item">
-            <span class="info-label">Phone:</span> ${phone}
-          </div>
-          
-          <div class="info-item">
-            <span class="info-label">Location:</span> ${location}
-          </div>
-          
-          <div class="info-item">
-            <span class="info-label">Selected Plan:</span> 
-            ${plan}
-            <span class="plan-badge ${plan.toLowerCase()}">
-              ${plan === 'Basic' ? '€0' : plan === 'Premium' ? '€249' : '€499'}
-            </span>
-          </div>
-          
-          ${message ? `
-          <div class="message-box">
-            <strong>Additional Message:</strong>
-            <p>${message}</p>
-          </div>
-          ` : ''}
-          
-          <p>Please log in to the admin dashboard to review this registration.</p>
-          
-          <div class="footer">
-            <p>This is an automated message from HotelsSifnos.com</p>
-            <p>© ${new Date().getFullYear()} Hotels Sifnos. All rights reserved.</p>
-          </div>
-        </div>
-      </body>
-      </html>
+      <h1>New Hotel Registration</h1>
+      <p>A new hotel registration has been submitted on HotelsSifnos.com</p>
+      
+      <h2>Registration Details:</h2>
+      <ul>
+        <li><strong>Registration ID:</strong> ${registrationId}</li>
+        <li><strong>Hotel Name:</strong> ${hotel}</li>
+        <li><strong>Contact Person:</strong> ${contactName}</li>
+        <li><strong>Email:</strong> ${email}</li>
+        <li><strong>Phone:</strong> ${phone}</li>
+        <li><strong>Location:</strong> ${location}</li>
+        <li><strong>Selected Plan:</strong> ${plan}</li>
+      </ul>
+      
+      ${message ? `<h2>Additional Message:</h2><p>${message}</p>` : ''}
+      
+      <p>Please log in to the admin dashboard to review this registration.</p>
     `
 
     // Send email
