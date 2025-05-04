@@ -67,48 +67,6 @@ export type Database = {
           },
         ]
       }
-      hotel_registrations: {
-        Row: {
-          contact_name: string
-          created_at: string
-          email: string
-          hotel_name: string
-          id: string
-          location: string
-          message: string | null
-          phone: string
-          selected_plan: string
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          contact_name: string
-          created_at?: string
-          email: string
-          hotel_name: string
-          id?: string
-          location: string
-          message?: string | null
-          phone: string
-          selected_plan: string
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          contact_name?: string
-          created_at?: string
-          email?: string
-          hotel_name?: string
-          id?: string
-          location?: string
-          message?: string | null
-          phone?: string
-          selected_plan?: string
-          status?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       hotel_reviews: {
         Row: {
           comment: string

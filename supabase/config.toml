@@ -1,24 +1,57 @@
 
+# A string used to distinguish different Supabase projects on the same host. Defaults to the
+# working directory name when running `supabase init`.
 project_id = "wdzlruiekcznbcicjgrz"
 
 [api]
 enabled = true
 port = 54321
 schemas = ["public", "storage"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
 
 [db]
 port = 54322
+shadow_port = 54320
+major_version = 15
+
+[db.pooler]
+enabled = false
+port = 54329
+pool_mode = "transaction"
+default_pool_size = 20
+max_client_conn = 100
+
+[realtime]
+enabled = true
 
 [studio]
 enabled = true
 port = 54323
-api_url = "http://localhost:54321"
+api_url = "https://api.supabase.com"
+
+[inbucket]
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
 
 [auth]
-enable_signup = true
+enabled = true
 site_url = "http://localhost:3000"
-additional_redirect_urls = ["https://localhost:3000"]
+
+[auth.email]
+enabled = true
+double_confirm_changes = true
+double_confirm_deletions = true
+
+[analytics]
+enabled = false
+port = 54327
+vector_port = 54328
+backend = "postgres"
 
 [functions]
-[functions.send-registration-email]
+[functions.fetch-booking-reviews]
 verify_jwt = false

@@ -90,7 +90,7 @@ export default function PricingContactForm({ selectedPlan, onSubmitSuccess }: Pr
       });
       
       onSubmitSuccess();
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error submitting form:', error);
       toast({
         title: 'Error submitting registration',
