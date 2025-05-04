@@ -11,6 +11,14 @@ interface EmailPayload {
   plan: string
   message: string
   registrationId: string
+  website?: string
+  googleMapsUrl?: string
+  bookingUrl?: string
+  airbnbUrl?: string
+  socialFacebook?: string
+  socialInstagram?: string
+  socialTwitter?: string
+  address?: string
 }
 
 const corsHeaders = {
@@ -34,7 +42,11 @@ serve(async (req) => {
     const SMTP_PASSWORD = 'Gamiesai@@20'
     const ADMIN_EMAIL = 'hello@hotelssifnos.com'
 
-    const { hotel, contactName, email, phone, location, plan, message, registrationId } = await req.json() as EmailPayload
+    const { 
+      hotel, contactName, email, phone, location, plan, message, 
+      registrationId, website, googleMapsUrl, bookingUrl, airbnbUrl,
+      socialFacebook, socialInstagram, socialTwitter, address
+    } = await req.json() as EmailPayload
     
     console.log('Received registration submission:', { hotel, contactName, email, location, plan })
 
@@ -57,6 +69,21 @@ serve(async (req) => {
       throw new Error(`SMTP connection failed: ${connError.message}`)
     }
 
+    // Format online presence information
+    const formatLink = (url: string | undefined, label: string) => {
+      return url ? `<li><strong>${label}:</strong> <a href="${url}">${url}</a></li>` : '';
+    };
+
+    const onlinePresence = `
+      ${formatLink(website, 'Website')}
+      ${formatLink(googleMapsUrl, 'Google Maps')}
+      ${formatLink(bookingUrl, 'Booking.com')}
+      ${formatLink(airbnbUrl, 'Airbnb')}
+      ${formatLink(socialFacebook, 'Facebook')}
+      ${formatLink(socialInstagram, 'Instagram')}
+      ${formatLink(socialTwitter, 'Twitter')}
+    `;
+
     // Format message content
     const emailBody = `
       <h1>New Hotel Registration</h1>
@@ -71,7 +98,14 @@ serve(async (req) => {
         <li><strong>Phone:</strong> ${phone}</li>
         <li><strong>Location:</strong> ${location}</li>
         <li><strong>Selected Plan:</strong> ${plan}</li>
+        ${address ? `<li><strong>Address:</strong> ${address}</li>` : ''}
       </ul>
+      
+      ${onlinePresence.trim() !== '' ? 
+        `<h2>Online Presence:</h2>
+        <ul>
+          ${onlinePresence}
+        </ul>` : ''}
       
       ${message ? `<h2>Additional Message:</h2><p>${message}</p>` : ''}
       

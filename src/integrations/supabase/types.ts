@@ -69,43 +69,67 @@ export type Database = {
       }
       hotel_registrations: {
         Row: {
+          address: string | null
+          airbnb_url: string | null
+          booking_url: string | null
           contact_name: string
           created_at: string
           email: string
+          google_maps_url: string | null
           hotel_name: string
           id: string
           location: string
           message: string | null
           phone: string
           selected_plan: string
+          social_facebook: string | null
+          social_instagram: string | null
+          social_twitter: string | null
           status: string
           updated_at: string
+          website: string | null
         }
         Insert: {
+          address?: string | null
+          airbnb_url?: string | null
+          booking_url?: string | null
           contact_name: string
           created_at?: string
           email: string
+          google_maps_url?: string | null
           hotel_name: string
           id?: string
           location: string
           message?: string | null
           phone: string
           selected_plan: string
+          social_facebook?: string | null
+          social_instagram?: string | null
+          social_twitter?: string | null
           status?: string
           updated_at?: string
+          website?: string | null
         }
         Update: {
+          address?: string | null
+          airbnb_url?: string | null
+          booking_url?: string | null
           contact_name?: string
           created_at?: string
           email?: string
+          google_maps_url?: string | null
           hotel_name?: string
           id?: string
           location?: string
           message?: string | null
           phone?: string
           selected_plan?: string
+          social_facebook?: string | null
+          social_instagram?: string | null
+          social_twitter?: string | null
           status?: string
           updated_at?: string
+          website?: string | null
         }
         Relationships: []
       }

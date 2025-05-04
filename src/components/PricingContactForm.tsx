@@ -21,6 +21,7 @@ import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { Globe, Mail, MapPin, ExternalLink } from "lucide-react";
 import { Facebook, Instagram, Twitter } from "../components/icons/SocialIcons";
+import { supabase, logSupabaseResponse } from "@/integrations/supabase/client";
 
 interface PricingContactFormProps {
   selectedPlan: string | null;
@@ -29,6 +30,70 @@ interface PricingContactFormProps {
 const PricingContactForm = ({ selectedPlan }: PricingContactFormProps) => {
   const [state, handleSubmit] = useFormspreeForm("mvgakjzd");
   const navigate = useNavigate();
+  
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    
+    // Submit to Formspree first
+    await handleSubmit(event);
+    
+    // If Formspree submission was successful, also save to Supabase
+    if (state.succeeded) {
+      const formData = new FormData(event.currentTarget);
+      
+      try {
+        // Insert into Supabase
+        const { data, error } = await supabase.from('hotel_registrations').insert({
+          hotel_name: formData.get('hotelName') as string,
+          contact_name: formData.get('contactName') as string,
+          email: formData.get('email') as string,
+          phone: formData.get('phone') as string,
+          location: formData.get('location') as string,
+          selected_plan: formData.get('selectedPlan') as string,
+          message: formData.get('message') as string || null,
+          website: formData.get('website') as string || null,
+          google_maps_url: formData.get('googleMaps') as string || null,
+          booking_url: formData.get('bookingUrl') as string || null,
+          airbnb_url: formData.get('airbnbUrl') as string || null,
+          social_facebook: formData.get('socialFacebook') as string || null,
+          social_instagram: formData.get('socialInstagram') as string || null,
+          social_twitter: formData.get('socialTwitter') as string || null,
+          address: formData.get('address') as string || null
+        });
+        
+        logSupabaseResponse('register hotel', data, error);
+        
+        if (!error) {
+          // Send email notification via edge function
+          try {
+            await supabase.functions.invoke('send-registration-email', {
+              body: {
+                hotel: formData.get('hotelName') as string,
+                contactName: formData.get('contactName') as string,
+                email: formData.get('email') as string,
+                phone: formData.get('phone') as string,
+                location: formData.get('location') as string,
+                plan: formData.get('selectedPlan') as string,
+                message: formData.get('message') as string || '',
+                registrationId: data[0]?.id || 'unknown'
+              }
+            });
+            
+            console.log('Registration email sent successfully');
+          } catch (emailError) {
+            console.error('Error sending registration email:', emailError);
+            // Continue anyway as the registration was successful
+          }
+          
+          // Redirect to thank you page
+          navigate('/thank-you');
+        }
+      } catch (supabaseError) {
+        console.error('Error saving to Supabase:', supabaseError);
+        // We don't need to show an error message as Formspree was successful
+      }
+    }
+  };
   
   if (state.succeeded) {
     return (
@@ -53,7 +118,7 @@ const PricingContactForm = ({ selectedPlan }: PricingContactFormProps) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleFormSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Basic Information */}
         <div>
