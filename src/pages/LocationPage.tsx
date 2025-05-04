@@ -53,10 +53,12 @@ export default function LocationPage() {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
   
+  const pageTitle = `Hotels in ${location.name}, Sifnos - Best Places to Stay`;
+  
   return (
     <>
       <SEO 
-        title={location.meta.title}
+        title={pageTitle}
         description={location.meta.description}
         keywords={location.keywords}
         schemaType="TouristDestination"
@@ -84,7 +86,7 @@ export default function LocationPage() {
               <span>{location.name}, Sifnos Island</span>
             </div>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
-              Hotels in {location.name}
+              Hotels in {location.name}, Sifnos
             </h1>
           </div>
         </div>
@@ -100,7 +102,7 @@ export default function LocationPage() {
         {/* Hotels Section */}
         <section className="my-12">
           <h2 className="text-2xl font-bold text-sifnos-deep-blue mb-6">
-            Available Hotels in {location.name}
+            Available Hotels in {location.name}, Sifnos
           </h2>
           
           {/* Loading State */}
@@ -133,10 +135,10 @@ export default function LocationPage() {
         {/* Nearby Attractions */}
         <section className="my-12 bg-gray-50 p-6 rounded-lg">
           <h2 className="text-2xl font-bold text-sifnos-deep-blue mb-4">
-            Attractions near {location.name}
+            Attractions near {location.name}, Sifnos
           </h2>
           <p className="text-gray-700 mb-4">
-            Explore the beautiful surroundings and popular attractions near {location.name}.
+            Explore the beautiful surroundings and popular attractions near {location.name}, Sifnos.
             Find the perfect place to stay and enjoy everything this area has to offer.
           </p>
           <Link 

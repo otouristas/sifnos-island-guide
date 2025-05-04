@@ -95,10 +95,15 @@ export default function SEO({
     };
   }
 
+  // If title doesn't already contain "Sifnos", append it to maintain brand consistency
+  const fullTitle = title.includes("Sifnos") ? 
+    `${title} | Hotels Sifnos` : 
+    `${title} | Hotels Sifnos`;
+
   return (
     <Helmet>
       <html lang="en" />
-      <title>{`${title} | Hotels Sifnos`}</title>
+      <title>{fullTitle}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords.join(', ')} />
       <meta name="author" content={author} />

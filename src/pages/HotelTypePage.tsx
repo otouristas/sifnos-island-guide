@@ -54,10 +54,12 @@ export default function HotelTypePage() {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
   
+  const pageTitle = `${hotelType.title} in Sifnos - Best Places to Stay`;
+  
   return (
     <>
       <SEO 
-        title={hotelType.meta.title}
+        title={pageTitle}
         description={hotelType.meta.description}
         keywords={hotelType.keywords}
         schemaType="Hotel"
@@ -81,7 +83,7 @@ export default function HotelTypePage() {
           <div className="absolute inset-0 bg-black bg-opacity-40"></div>
           <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black to-transparent">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
-              {hotelType.title} in Sifnos
+              {hotelType.title} in Sifnos Island
             </h1>
           </div>
         </div>
@@ -97,7 +99,7 @@ export default function HotelTypePage() {
         {/* Hotels Section */}
         <section className="my-12">
           <h2 className="text-2xl font-bold text-sifnos-deep-blue mb-6">
-            Top {hotelType.title} in Sifnos
+            Top {hotelType.title} in Sifnos Island
           </h2>
           
           {/* Loading State */}
