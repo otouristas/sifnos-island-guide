@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { generateHotelUrl } from '@/lib/url-utils';
 import { hotelTypes } from '@/data/hotelTypes';
-import { locations } from '@/data/locations';
+import { sifnosLocations } from '@/data/locations';
 
 interface SitemapURL {
   loc: string;
@@ -104,7 +104,7 @@ export default function SitemapGenerator() {
           changefreq: 'weekly',
           priority: 0.8
         },
-        ...locations.map(location => ({
+        ...sifnosLocations.map(location => ({
           loc: `${baseURL}/locations/${location.slug}`,
           lastmod: currentDate,
           changefreq: 'weekly',
