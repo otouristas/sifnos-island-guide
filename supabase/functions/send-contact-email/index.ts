@@ -2,15 +2,11 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { SmtpClient } from 'https://deno.land/x/smtp@v0.7.0/mod.ts'
 
-interface EmailPayload {
-  hotel: string
-  contactName: string
+interface ContactFormPayload {
+  name: string
   email: string
-  phone: string
-  location: string
-  plan: string
+  subject: string
   message: string
-  registrationId: string
 }
 
 const corsHeaders = {
@@ -32,7 +28,7 @@ serve(async (req) => {
     const SMTP_PASSWORD = Deno.env.get('SMTP_PASSWORD') || 'your_password'
     const ADMIN_EMAIL = 'hello@hotelssifnos.com'
 
-    const { hotel, contactName, email, phone, location, plan, message, registrationId } = await req.json() as EmailPayload
+    const { name, email, subject, message } = await req.json() as ContactFormPayload
 
     // Create SMTP client
     const client = new SmtpClient()
@@ -43,14 +39,14 @@ serve(async (req) => {
       password: SMTP_PASSWORD,
     })
 
-    // Format message with a beautiful HTML template
+    // Format message with a beautiful HTML template specifically for contact form
     const emailBody = `
       <!DOCTYPE html>
       <html lang="en">
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>New Hotel Registration</title>
+        <title>Contact Form Submission</title>
         <style>
           body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -61,7 +57,7 @@ serve(async (req) => {
             padding: 20px;
           }
           .header {
-            background-color: #1e3a8a;
+            background-color: #10b981;
             color: white;
             padding: 20px;
             text-align: center;
@@ -79,18 +75,18 @@ serve(async (req) => {
             padding: 10px;
             background-color: white;
             border-radius: 5px;
-            border-left: 4px solid #1e3a8a;
+            border-left: 4px solid #10b981;
           }
           .info-label {
             font-weight: bold;
-            color: #1e3a8a;
+            color: #10b981;
           }
           .message-box {
             margin-top: 20px;
             padding: 15px;
-            background-color: #e8f4ff;
+            background-color: #f0fdf4;
             border-radius: 5px;
-            border-left: 4px solid #3b82f6;
+            border-left: 4px solid #10b981;
           }
           .footer {
             margin-top: 20px;
@@ -98,46 +94,17 @@ serve(async (req) => {
             color: #6b7280;
             font-size: 0.9em;
           }
-          .plan-badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-weight: bold;
-            margin-left: 10px;
-          }
-          .basic {
-            background-color: #e5e7eb;
-            color: #374151;
-          }
-          .premium {
-            background-color: #10b981;
-            color: white;
-          }
-          .professional {
-            background-color: #3b82f6;
-            color: white;
-          }
         </style>
       </head>
       <body>
         <div class="header">
-          <h1>New Hotel Registration</h1>
-          <p>A new hotel registration has been submitted on HotelsSifnos.com</p>
+          <h1>New Contact Form Submission</h1>
+          <p>Someone has reached out via the contact form on HotelsSifnos.com</p>
         </div>
         
         <div class="content">
-          <h2>Registration Details</h2>
-          
           <div class="info-item">
-            <span class="info-label">Registration ID:</span> ${registrationId}
-          </div>
-          
-          <div class="info-item">
-            <span class="info-label">Hotel Name:</span> ${hotel}
-          </div>
-          
-          <div class="info-item">
-            <span class="info-label">Contact Person:</span> ${contactName}
+            <span class="info-label">From:</span> ${name}
           </div>
           
           <div class="info-item">
@@ -145,29 +112,13 @@ serve(async (req) => {
           </div>
           
           <div class="info-item">
-            <span class="info-label">Phone:</span> ${phone}
+            <span class="info-label">Subject:</span> ${subject}
           </div>
           
-          <div class="info-item">
-            <span class="info-label">Location:</span> ${location}
-          </div>
-          
-          <div class="info-item">
-            <span class="info-label">Selected Plan:</span> 
-            ${plan}
-            <span class="plan-badge ${plan.toLowerCase()}">
-              ${plan === 'Basic' ? '€0' : plan === 'Premium' ? '€249' : '€499'}
-            </span>
-          </div>
-          
-          ${message ? `
           <div class="message-box">
-            <strong>Additional Message:</strong>
+            <strong>Message:</strong>
             <p>${message}</p>
           </div>
-          ` : ''}
-          
-          <p>Please log in to the admin dashboard to review this registration.</p>
           
           <div class="footer">
             <p>This is an automated message from HotelsSifnos.com</p>
@@ -182,7 +133,7 @@ serve(async (req) => {
     await client.send({
       from: SMTP_USERNAME,
       to: ADMIN_EMAIL,
-      subject: `New Hotel Registration: ${hotel}`,
+      subject: `Contact Form: ${subject}`,
       content: emailBody,
       html: emailBody,
     })
