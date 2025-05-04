@@ -27,6 +27,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://hotelssifnos.com/about</loc>
+    <lastmod>2025-05-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://hotelssifnos.com/about-us</loc>
     <lastmod>2025-05-04</lastmod>
     <changefreq>monthly</changefreq>
@@ -43,6 +49,30 @@
     <lastmod>2025-05-04</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://hotelssifnos.com/pricing</loc>
+    <lastmod>2025-05-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://hotelssifnos.com/privacy-policy</loc>
+    <lastmod>2025-05-04</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://hotelssifnos.com/terms-of-service</loc>
+    <lastmod>2025-05-04</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://hotelssifnos.com/cookie-policy</loc>
+    <lastmod>2025-05-04</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
   
   <!-- Locations Pages -->
