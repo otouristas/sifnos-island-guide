@@ -107,7 +107,7 @@ export default function SitemapGenerator() {
         ...sifnosLocations.map(location => ({
           loc: `${baseURL}/locations/${location.slug}`,
           lastmod: currentDate,
-          changefreq: 'weekly',
+          changefreq: 'weekly' as const,
           priority: 0.7
         }))
       ];
@@ -123,7 +123,7 @@ export default function SitemapGenerator() {
         ...hotelTypes.map(type => ({
           loc: `${baseURL}/hotel-types/${type.slug}`,
           lastmod: currentDate,
-          changefreq: 'weekly',
+          changefreq: 'weekly' as const,
           priority: 0.7
         }))
       ];
@@ -137,7 +137,7 @@ export default function SitemapGenerator() {
           hotelPages = hotels.map(hotel => ({
             loc: `${baseURL}/hotels/${generateHotelUrl(hotel.name)}`,
             lastmod: new Date(hotel.updated_at).toISOString().split('T')[0],
-            changefreq: 'weekly',
+            changefreq: 'weekly' as const,
             priority: 0.8
           }));
         }
