@@ -196,7 +196,7 @@ export default function HomePage() {
         </div>
       </div>
       
-      {/* List Your Hotel Section - Updated with better contrast */}
+      {/* List Your Hotel Section - Updated with better button contrast */}
       <div className="py-20 bg-gradient-to-r from-sifnos-deep-blue to-blue-900 text-white">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -236,7 +236,7 @@ export default function HomePage() {
                 <Button asChild size="lg" className="bg-white text-sifnos-deep-blue hover:bg-gray-100">
                   <Link to="/pricing">View Plans</Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="border-white border-2 backdrop-blur-sm hover:bg-white/20">
+                <Button asChild variant="outline" size="lg" className="border-white border-2 bg-sifnos-turquoise/20 text-white hover:bg-sifnos-turquoise/40 hover:text-white hover:border-white">
                   <Link to="/contact">Contact Us</Link>
                 </Button>
               </div>
