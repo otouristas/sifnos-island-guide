@@ -66,7 +66,10 @@ const PricingContactForm = ({ selectedPlan }: PricingContactFormProps) => {
         if (!error) {
           // Send email notification via edge function
           try {
-            const registrationId = data && data[0] ? data[0].id : 'unknown';
+            // Safely extract registration ID
+            const registrationId = data && Array.isArray(data) && data.length > 0 && data[0] && 'id' in data[0] 
+              ? data[0].id 
+              : 'unknown';
             
             await supabase.functions.invoke('send-registration-email', {
               body: {
