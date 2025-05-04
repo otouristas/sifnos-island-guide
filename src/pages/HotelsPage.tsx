@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import { Search, Filter, Star } from 'lucide-react';
@@ -100,10 +101,10 @@ export default function HotelsPage() {
         canonical="https://hotelssifnos.com/hotels"
       />
       
-      {/* Hero Section */}
-      <div className="bg-sifnos-deep-blue py-12">
+      {/* Hero Section - Fixed padding */}
+      <div className="bg-sifnos-deep-blue">
         <div className="page-container">
-          <div className="text-center text-white">
+          <div className="text-center text-white py-6">
             <h1 className="font-montserrat text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
               Hotels in Sifnos Island
             </h1>
@@ -115,7 +116,7 @@ export default function HotelsPage() {
       </div>
       
       {/* SEO Introduction */}
-      <div className="bg-white py-10">
+      <div className="bg-white">
         <div className="page-container">
           <div className="max-w-4xl mx-auto prose prose-lg">
             <p>
@@ -166,7 +167,7 @@ export default function HotelsPage() {
       </div>
       
       {/* Content Section */}
-      <div className="bg-gray-50 py-12">
+      <div className="bg-gray-50">
         <div className="page-container">
           <div className="flex flex-wrap -mx-4">
             {/* Filters Sidebar */}
@@ -350,7 +351,7 @@ export default function HotelsPage() {
       </div>
 
       {/* Location Information */}
-      <div className="bg-white py-12">
+      <div className="bg-white">
         <div className="page-container">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl font-montserrat font-bold text-sifnos-deep-blue mb-4">Where to Stay in Sifnos</h2>
