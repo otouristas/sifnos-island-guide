@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -26,6 +25,8 @@ import HotelTypePage from "./pages/HotelTypePage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
 import CookiePolicyPage from "./pages/CookiePolicyPage";
+import PricingPage from "./pages/PricingPage";
+import ThankYouPage from "./pages/ThankYouPage";
 import Index from "./pages/Index";
 
 // Components
@@ -67,6 +68,9 @@ const App = () => (
             {/* Hotel types routes */}
             <Route path="/hotel-types" element={<HotelTypesPage />} />
             <Route path="/hotel-types/:slug" element={<HotelTypePage />} />
+            {/* Pricing routes */}
+            <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/thank-you" element={<ThankYouPage />} />
             {/* Other routes */}
             <Route path="/beaches" element={<BeachesPage />} />
             <Route path="/travel-guide" element={<TravelGuidePage />} />
