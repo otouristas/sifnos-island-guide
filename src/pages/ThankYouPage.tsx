@@ -23,6 +23,7 @@ const ThankYouPage = () => {
         description="Thank you for registering your hotel on HotelsSifnos. We'll be in touch soon to complete your listing."
         canonical="https://hotelssifnos.com/thank-you"
         noIndex={true}
+        keywords={['hotel registration', 'sifnos accommodation', 'thank you']}
       />
 
       <div className="container mx-auto px-4 py-16 text-center max-w-3xl">

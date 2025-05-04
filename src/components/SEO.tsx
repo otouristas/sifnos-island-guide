@@ -4,13 +4,14 @@ import { Helmet } from 'react-helmet';
 interface SEOProps {
   title: string;
   description: string;
-  keywords: string[];
+  keywords?: string[];
   schemaType?: 'Hotel' | 'TravelAgency' | 'Organization' | 'Article' | 'TouristDestination';
   canonical?: string;
   imageUrl?: string;
   datePublished?: string;
   dateModified?: string;
   author?: string;
+  noIndex?: boolean;
 }
 
 type SchemaData = {
@@ -24,13 +25,14 @@ type SchemaData = {
 export default function SEO({ 
   title, 
   description, 
-  keywords, 
+  keywords = [], 
   schemaType = 'Organization',
   canonical,
   imageUrl = 'https://hotelssifnos.com/opengraph-image-p98pqg.png',
   datePublished,
   dateModified,
-  author = 'Hotels Sifnos'
+  author = 'Hotels Sifnos',
+  noIndex = false
 }: SEOProps) {
   const formattedCanonical = canonical ? 
     (canonical.startsWith('http') ? canonical : `https://hotelssifnos.com${canonical.startsWith('/') ? canonical : `/${canonical}`}`) 
@@ -105,8 +107,16 @@ export default function SEO({
       <html lang="en" />
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
-      <meta name="keywords" content={keywords.join(', ')} />
+      {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
       <meta name="author" content={author} />
+      
+      {/* Robots meta tag for indexing control */}
+      {noIndex ? (
+        <meta name="robots" content="noindex, nofollow" />
+      ) : (
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+      )}
+      <meta name="googlebot" content={noIndex ? "noindex, nofollow" : "index, follow"} />
       
       {/* Open Graph tags */}
       <meta property="og:title" content={title} />
@@ -125,8 +135,6 @@ export default function SEO({
       <meta name="twitter:image" content={imageUrl} />
 
       {/* Additional SEO tags */}
-      <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
-      <meta name="googlebot" content="index, follow" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="canonical" href={formattedCanonical} />
       
