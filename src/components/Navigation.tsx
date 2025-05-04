@@ -1,7 +1,16 @@
 
 import React, { useState } from 'react';
 import { Link, NavLink as RouterNavLink } from 'react-router-dom';
-import { X } from 'lucide-react';
+import { X, ChevronDown } from 'lucide-react';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import { cn } from '@/lib/utils';
 
 interface NavLinkProps {
   to: string;
@@ -53,12 +62,90 @@ const Navigation = () => {
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            <NavLink to="/hotels">Hotels</NavLink>
-            <NavLink to="/locations">Locations</NavLink>
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="bg-transparent hover:bg-transparent focus:bg-transparent">Hotels</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[200px] gap-1 p-2">
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            to="/hotels"
+                            className="block p-2 hover:bg-gray-100 rounded"
+                          >
+                            All Hotels
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            to="/hotel-types/luxury"
+                            className="block p-2 hover:bg-gray-100 rounded"
+                          >
+                            Luxury Hotels
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            to="/hotel-types/boutique"
+                            className="block p-2 hover:bg-gray-100 rounded"
+                          >
+                            Boutique Hotels
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="bg-transparent hover:bg-transparent focus:bg-transparent">Locations</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[200px] gap-1 p-2">
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            to="/locations"
+                            className="block p-2 hover:bg-gray-100 rounded"
+                          >
+                            All Locations
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            to="/locations/apollonia"
+                            className="block p-2 hover:bg-gray-100 rounded"
+                          >
+                            Apollonia
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            to="/locations/kamares"
+                            className="block p-2 hover:bg-gray-100 rounded"
+                          >
+                            Kamares
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+            
             <NavLink to="/beaches">Beaches</NavLink>
             <NavLink to="/travel-guide">Travel Guide</NavLink>
-            <NavLink to="/pricing" className="text-sifnos-turquoise font-medium">List Your Hotel</NavLink>
             <NavLink to="/contact">Contact</NavLink>
+            <NavLink to="/pricing" className="text-sifnos-turquoise font-medium">List Your Hotel</NavLink>
           </div>
           
           {/* Mobile Navigation Toggle */}
@@ -95,18 +182,56 @@ const Navigation = () => {
         <div className="md:hidden bg-white shadow-lg">
           <div className="container mx-auto px-4 py-2">
             <div className="flex flex-col space-y-3 py-2">
-              <MobileNavLink 
-                to="/hotels" 
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Hotels
-              </MobileNavLink>
-              <MobileNavLink 
-                to="/locations" 
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Locations
-              </MobileNavLink>
+              <div className="space-y-2">
+                <div className="font-medium px-4 py-1">Hotels</div>
+                <MobileNavLink 
+                  to="/hotels" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="pl-8"
+                >
+                  All Hotels
+                </MobileNavLink>
+                <MobileNavLink 
+                  to="/hotel-types/luxury" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="pl-8"
+                >
+                  Luxury Hotels
+                </MobileNavLink>
+                <MobileNavLink 
+                  to="/hotel-types/boutique" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="pl-8"
+                >
+                  Boutique Hotels
+                </MobileNavLink>
+              </div>
+
+              <div className="space-y-2">
+                <div className="font-medium px-4 py-1">Locations</div>
+                <MobileNavLink 
+                  to="/locations" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="pl-8"
+                >
+                  All Locations
+                </MobileNavLink>
+                <MobileNavLink 
+                  to="/locations/apollonia" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="pl-8"
+                >
+                  Apollonia
+                </MobileNavLink>
+                <MobileNavLink 
+                  to="/locations/kamares" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="pl-8"
+                >
+                  Kamares
+                </MobileNavLink>
+              </div>
+              
               <MobileNavLink 
                 to="/beaches" 
                 onClick={() => setMobileMenuOpen(false)}
@@ -120,17 +245,17 @@ const Navigation = () => {
                 Travel Guide
               </MobileNavLink>
               <MobileNavLink 
+                to="/contact" 
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Contact
+              </MobileNavLink>
+              <MobileNavLink 
                 to="/pricing" 
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-sifnos-turquoise font-medium"
               >
                 List Your Hotel
-              </MobileNavLink>
-              <MobileNavLink 
-                to="/contact" 
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Contact
               </MobileNavLink>
             </div>
           </div>
