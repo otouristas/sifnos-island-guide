@@ -11,8 +11,16 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
   // Find the main photo for the hotel
   const mainPhoto = hotel.hotel_photos?.find(photo => photo.is_main_photo)?.photo_url || '';
   
-  // Construct the proper image URL with the /uploads/hotels/ prefix
-  const imageUrl = mainPhoto ? `/uploads/hotels/${mainPhoto}` : '/placeholder.svg';
+  // Construct image URL based on hotel name and available photos
+  let imageUrl = '/placeholder.svg';
+  
+  // Special case for Meropi hotel which has local images saved
+  if (hotel.name === "Meropi Rooms and Apartments") {
+    imageUrl = '/uploads/hotels/meropirooms-hero.webp';
+  } else if (mainPhoto) {
+    // For other hotels, use the photos from the database
+    imageUrl = `/uploads/hotels/${mainPhoto}`;
+  }
   
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1">
