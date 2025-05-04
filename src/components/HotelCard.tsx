@@ -87,7 +87,7 @@ const HotelCard = ({ hotel, showLogo = false }: HotelCardProps) => {
   };
 
   return (
-    <div className="cycladic-card overflow-hidden">
+    <div className="cycladic-card overflow-hidden relative">
       <div className="h-48 overflow-hidden">
         <img 
           src={getMainPhotoUrl()} 
@@ -98,9 +98,9 @@ const HotelCard = ({ hotel, showLogo = false }: HotelCardProps) => {
             e.currentTarget.src = '/placeholder.svg';
           }}
         />
-        {/* Only show logo if showLogo prop is true and hotel has a logo */}
+        {/* Logo positioning fixed - moved inside the card */}
         {showLogo && getHotelLogo() && (
-          <div className="absolute bottom-2 left-2 w-10 h-10 rounded-full overflow-hidden border border-gray-200 bg-white flex items-center justify-center">
+          <div className="absolute top-2 right-2 w-10 h-10 rounded-full overflow-hidden border border-gray-200 bg-white flex items-center justify-center shadow-sm">
             <img 
               src={getHotelLogo()}
               alt={`${hotel.name} logo`}
