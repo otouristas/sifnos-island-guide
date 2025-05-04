@@ -27,6 +27,8 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
 import CookiePolicyPage from "./pages/CookiePolicyPage";
 import Index from "./pages/Index";
+import PricingPage from "./pages/PricingPage";
+import ThankYouPage from "./pages/ThankYouPage";
 
 // Components
 import Navigation from "./components/Navigation";
@@ -74,6 +76,9 @@ const App = () => (
             <Route path="/about-us" element={<AboutUsPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/faq" element={<FAQPage />} />
+            {/* Pricing and registration */}
+            <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/thank-you" element={<ThankYouPage />} />
             {/* Legal pages */}
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/terms-of-service" element={<TermsOfServicePage />} />

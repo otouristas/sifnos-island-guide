@@ -42,6 +42,7 @@ export default function Footer() {
               <li><Link to="/beaches" className="text-gray-300 hover:text-sifnos-teal transition-colors">Beaches</Link></li>
               <li><Link to="/travel-guide" className="text-gray-300 hover:text-sifnos-teal transition-colors">Travel Guide</Link></li>
               <li><Link to="/faq" className="text-gray-300 hover:text-sifnos-teal transition-colors">FAQ</Link></li>
+              <li><Link to="/pricing" className="text-gray-300 hover:text-sifnos-teal transition-colors">List Your Hotel</Link></li>
             </ul>
           </div>
           
