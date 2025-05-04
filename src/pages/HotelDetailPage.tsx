@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { extractIdFromSlug, generateHotelUrl } from '@/lib/url-utils';
+import { getHotelBySlug, generateHotelUrl } from '@/lib/url-utils';
 import BookingReviews from '@/components/BookingReviews';
 import HotelAmenities from '@/components/HotelAmenities';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -35,36 +35,30 @@ export default function HotelDetailPage() {
       try {
         if (!slug) return;
         
-        // Extract the ID from the slug
-        const id = extractIdFromSlug(slug);
-        console.info(`Extracted hotel ID from slug: ${id}`);
+        // Get hotel by slug instead of by ID
+        const hotelData = await getHotelBySlug(slug);
         
-        const { data, error } = await supabase.from('hotels')
-          .select(`
-            *,
-            hotel_amenities(amenity),
-            hotel_photos(id, photo_url, is_main_photo, description),
-            hotel_rooms(id, name, description, price, capacity, size_sqm, amenities, photo_url)
-          `)
-          .eq('id', id)
-          .single();
-
-        if (error) throw error;
-        
-        logSupabaseResponse('fetch hotel details', data, error);
-        
-        // Special handling for Meropi Rooms - add photos
-        if (data.id === '0c9632b6-db5c-4179-8122-0003896e465e') {
-          data.hotel_photos = meropiPhotos;
-          data.logo_path = 'meropi-logo.svg';
+        if (!hotelData) {
+          toast({
+            title: "Hotel not found",
+            description: "We couldn't find the hotel you're looking for.",
+            variant: "destructive"
+          });
+          return;
         }
         
-        setHotel(data);
+        // Special handling for Meropi Rooms - add photos
+        if (hotelData.id === '0c9632b6-db5c-4179-8122-0003896e465e') {
+          hotelData.hotel_photos = meropiPhotos;
+          hotelData.logo_path = 'meropi-logo.svg';
+        }
+        
+        setHotel(hotelData);
         
         // Set active image to main photo or first photo
-        if (data?.hotel_photos?.length > 0) {
-          const mainPhoto = data.hotel_photos.find(photo => photo.is_main_photo);
-          const photoUrl = mainPhoto ? mainPhoto.photo_url : data.hotel_photos[0].photo_url;
+        if (hotelData?.hotel_photos?.length > 0) {
+          const mainPhoto = hotelData.hotel_photos.find(photo => photo.is_main_photo);
+          const photoUrl = mainPhoto ? mainPhoto.photo_url : hotelData.hotel_photos[0].photo_url;
           setActiveImage(`/uploads/hotels/${photoUrl}`);
         }
       } catch (error) {
@@ -171,7 +165,7 @@ export default function HotelDetailPage() {
   }
 
   // Update the canonical URL and metadata to use the slug
-  const hotelSlug = generateHotelUrl(hotel.name, hotel.id);
+  const hotelSlug = generateHotelUrl(hotel.name);
   const isMeropiRooms = hotel.id === '0c9632b6-db5c-4179-8122-0003896e465e';
   
   // Fixed Google Maps URL for Meropi Rooms

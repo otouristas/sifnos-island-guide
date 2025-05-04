@@ -66,7 +66,7 @@ export default function SitemapGenerator() {
         
         if (!error && hotels) {
           hotelPages = hotels.map(hotel => ({
-            loc: `${baseURL}/hotels/${generateHotelUrl(hotel.name, hotel.id)}`,
+            loc: `${baseURL}/hotels/${generateHotelUrl(hotel.name)}`,
             lastmod: new Date(hotel.updated_at).toISOString(),
             changefreq: 'weekly',
             priority: 0.8
