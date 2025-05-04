@@ -2,15 +2,11 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { SmtpClient } from 'https://deno.land/x/smtp@v0.7.0/mod.ts'
 
-interface EmailPayload {
-  hotel: string
-  contactName: string
+interface ContactPayload {
+  name: string
   email: string
-  phone: string
-  location: string
-  plan: string
+  subject: string
   message: string
-  registrationId: string
 }
 
 const corsHeaders = {
@@ -32,7 +28,7 @@ serve(async (req) => {
     const SMTP_PASSWORD = Deno.env.get('SMTP_PASSWORD') || 'your_password'
     const ADMIN_EMAIL = 'hello@hotelssifnos.com'
 
-    const { hotel, contactName, email, phone, location, plan, message, registrationId } = await req.json() as EmailPayload
+    const { name, email, subject, message } = await req.json() as ContactPayload
 
     // Create SMTP client
     const client = new SmtpClient()
@@ -45,30 +41,25 @@ serve(async (req) => {
 
     // Format message content
     const emailBody = `
-      <h1>New Hotel Registration</h1>
-      <p>A new hotel registration has been submitted on HotelsSifnos.com</p>
+      <h1>New Contact Form Submission</h1>
+      <p>A new message has been submitted via the contact form on HotelsSifnos.com</p>
       
-      <h2>Registration Details:</h2>
+      <h2>Contact Details:</h2>
       <ul>
-        <li><strong>Registration ID:</strong> ${registrationId}</li>
-        <li><strong>Hotel Name:</strong> ${hotel}</li>
-        <li><strong>Contact Person:</strong> ${contactName}</li>
+        <li><strong>Name:</strong> ${name}</li>
         <li><strong>Email:</strong> ${email}</li>
-        <li><strong>Phone:</strong> ${phone}</li>
-        <li><strong>Location:</strong> ${location}</li>
-        <li><strong>Selected Plan:</strong> ${plan}</li>
+        <li><strong>Subject:</strong> ${subject}</li>
       </ul>
       
-      ${message ? `<h2>Additional Message:</h2><p>${message}</p>` : ''}
-      
-      <p>Please log in to the admin dashboard to review this registration.</p>
+      <h2>Message:</h2>
+      <p>${message}</p>
     `
 
     // Send email
     await client.send({
       from: SMTP_USERNAME,
       to: ADMIN_EMAIL,
-      subject: `New Hotel Registration: ${hotel}`,
+      subject: `Contact Form: ${subject}`,
       content: emailBody,
       html: emailBody,
     })

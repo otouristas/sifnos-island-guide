@@ -30,7 +30,7 @@ export default function ContactPage() {
     setIsSubmitting(true);
     
     try {
-      // Use a type assertion to bypass TypeScript errors with Supabase types
+      // First store in database
       const { error } = await (supabase as any)
         .from('contact_submissions')
         .insert([{
@@ -41,6 +41,29 @@ export default function ContactPage() {
         }]);
       
       if (error) throw error;
+      
+      // Then send email via edge function
+      try {
+        const response = await fetch('/api/send-contact-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            subject: formData.subject,
+            message: formData.message
+          }),
+        });
+        
+        if (!response.ok) {
+          console.error('Failed to send contact email');
+        }
+      } catch (emailError) {
+        console.error('Error sending contact email:', emailError);
+        // Continue with success flow even if email fails
+      }
       
       setSubmitStatus('success');
       toast({
