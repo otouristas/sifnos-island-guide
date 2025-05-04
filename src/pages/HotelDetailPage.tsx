@@ -210,38 +210,43 @@ export default function HotelDetailPage() {
         </div>
       </div>
       
-      {/* Hotel Title Section with Logo */}
+      {/* Hotel Title Section with Logo - UPDATED FOR BETTER RESPONSIVENESS */}
       <div className="bg-white">
         <div className="page-container py-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              {/* Hotel Logo */}
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+              {/* Hotel Logo - Updated with better responsive sizing */}
               {hotel.logo_path && (
-                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border border-gray-200 bg-white flex items-center justify-center">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full overflow-hidden border border-gray-200 bg-white flex items-center justify-center flex-shrink-0">
                   <img 
                     src={`/uploads/hotels/${hotel.logo_path}`} 
                     alt={`${hotel.name} logo`} 
                     className="w-full h-full object-contain p-1"
+                    onError={(e) => {
+                      console.log(`Error loading logo for hotel ${hotel.id}`);
+                      e.currentTarget.src = '/placeholder.svg';
+                    }}
                   />
                 </div>
               )}
               
-              <div>
-                <h1 className="font-montserrat text-3xl md:text-4xl font-bold mb-2">{hotel.name}</h1>
-                <div className="flex items-center mb-1">
+              {/* Hotel name and location - centered on mobile, left-aligned on larger screens */}
+              <div className="text-center sm:text-left">
+                <h1 className="font-montserrat text-2xl sm:text-3xl md:text-4xl font-bold mb-2">{hotel.name}</h1>
+                <div className="flex items-center justify-center sm:justify-start mb-1">
                   <MapPin size={16} className="text-sifnos-turquoise mr-1" />
                   <span className="text-gray-600">{hotel.location}, Sifnos Island</span>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center justify-center sm:justify-start">
                   {renderStarRating(hotel.rating)}
                 </div>
               </div>
             </div>
             
             {/* Booking Button */}
-            <div>
+            <div className="w-full sm:w-auto mt-4 sm:mt-0">
               {hotel.booking_url && hotel.booking_platform ? (
-                <Card className="p-2 max-w-xs">
+                <Card className="p-2 max-w-xs mx-auto sm:mx-0">
                   <CardContent className="p-2 flex flex-col items-center">
                     {getBookingPlatformLogo(hotel.booking_platform) && (
                       <div className="mb-2 h-8">
@@ -266,7 +271,7 @@ export default function HotelDetailPage() {
                   </CardContent>
                 </Card>
               ) : (
-                <Button variant="default" className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue">
+                <Button variant="default" className="w-full sm:w-auto bg-sifnos-turquoise hover:bg-sifnos-deep-blue">
                   Request Availability
                 </Button>
               )}
