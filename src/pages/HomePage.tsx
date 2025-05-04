@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { Search, MapPin, Star } from 'lucide-react';
+import { Search, MapPin, Star, BookOpen, BadgeDollarSign } from 'lucide-react';
 import HotelCard from '@/components/HotelCard';
 import LocationCard from '@/components/LocationCard';
 import HotelTypeCard from '@/components/HotelTypeCard';
@@ -230,7 +230,7 @@ export default function HomePage() {
             
             <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm">
               <div className="w-16 h-16 bg-sifnos-turquoise rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="lucide-euro text-2xl text-white" />
+                <BadgeDollarSign size={28} className="text-white" />
               </div>
               <h3 className="text-xl font-bold mb-2">Best Price Guarantee</h3>
               <p className="opacity-80">
@@ -240,7 +240,7 @@ export default function HomePage() {
             
             <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm">
               <div className="w-16 h-16 bg-sifnos-turquoise rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="lucide-book-open text-2xl text-white" />
+                <BookOpen size={28} className="text-white" />
               </div>
               <h3 className="text-xl font-bold mb-2">Complete Guide</h3>
               <p className="opacity-80">
