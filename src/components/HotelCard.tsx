@@ -29,9 +29,10 @@ interface Hotel {
 
 interface HotelCardProps {
   hotel: Hotel;
+  showLogo?: boolean; // New prop to control logo visibility
 }
 
-const HotelCard = ({ hotel }: HotelCardProps) => {
+const HotelCard = ({ hotel, showLogo = false }: HotelCardProps) => {
   // Function to render star rating
   const renderStarRating = (rating: number) => {
     return Array(5).fill(0).map((_, i) => (
@@ -97,7 +98,8 @@ const HotelCard = ({ hotel }: HotelCardProps) => {
             e.currentTarget.src = '/placeholder.svg';
           }}
         />
-        {getHotelLogo() && (
+        {/* Only show logo if showLogo prop is true and hotel has a logo */}
+        {showLogo && getHotelLogo() && (
           <div className="absolute bottom-2 left-2 w-10 h-10 rounded-full overflow-hidden border border-gray-200 bg-white flex items-center justify-center">
             <img 
               src={getHotelLogo()}
