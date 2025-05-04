@@ -11,15 +11,22 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
   // Find the main photo for the hotel
   const mainPhoto = hotel.hotel_photos?.find(photo => photo.is_main_photo)?.photo_url || '';
   
+  // If no main photo is found, use a default placeholder
+  const imageUrl = mainPhoto || '/placeholder.svg';
+  
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1">
       <Link to={`/hotels/${hotelSlug}`} className="block">
         {/* Hotel image */}
         <div className="relative h-48 overflow-hidden">
           <img 
-            src={mainPhoto} 
+            src={imageUrl} 
             alt={hotel.name} 
             className="w-full h-full object-cover"
+            onError={(e) => {
+              // Fallback to placeholder if image fails to load
+              e.currentTarget.src = '/placeholder.svg';
+            }}
           />
           {showLogo && hotel.logo_url && (
             <div className="absolute bottom-2 right-2 bg-white p-1 rounded-md">
