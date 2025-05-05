@@ -1,4 +1,3 @@
-
 import React from 'react';
 import SEO from '@/components/SEO';
 import Breadcrumbs from '@/components/Breadcrumbs';
@@ -95,7 +94,7 @@ const PrivacyPolicyPage = () => {
             <h2 className="text-xl font-semibold text-sifnos-deep-blue mt-6 mb-3">9. Contact Us</h2>
             <p className="mb-4">
               If you have any questions about this privacy policy or our privacy practices, please contact us at:<br />
-              Email: <a href="mailto:info@hotelssifnos.com" className="text-sifnos-turquoise hover:text-sifnos-deep-blue">info@hotelssifnos.com</a>
+              Email: <a href="mailto:hello@hotelssifnos.com" className="text-sifnos-turquoise hover:text-sifnos-deep-blue">hello@hotelssifnos.com</a>
             </p>
             
             <div className="border-t border-gray-200 pt-6 mt-8">

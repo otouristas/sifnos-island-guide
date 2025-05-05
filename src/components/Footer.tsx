@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Twitter, Mail, MapPin } from 'lucide-react';
 
@@ -69,8 +68,8 @@ export default function Footer() {
             <ul className="space-y-3">
               <li className="flex items-center">
                 <Mail size={16} className="mr-2 text-sifnos-teal" />
-                <a href="mailto:info@hotelssifnos.com" className="text-gray-300 hover:text-sifnos-teal transition-colors">
-                  info@hotelssifnos.com
+                <a href="mailto:hello@hotelssifnos.com" className="text-gray-300 hover:text-sifnos-teal transition-colors">
+                  hello@hotelssifnos.com
                 </a>
               </li>
               <li className="flex items-center">

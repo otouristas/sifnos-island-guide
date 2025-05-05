@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { Mail, Send, AlertCircle, CheckCircle } from 'lucide-react';
 import SEO from '../components/SEO';
@@ -46,8 +45,8 @@ export default function ContactPage() {
               </div>
               <h3 className="font-montserrat font-semibold text-xl mb-3">Email</h3>
               <p className="text-gray-600 mb-2">Send us a message</p>
-              <a href="mailto:info@hotelssifnos.com" className="text-sifnos-turquoise font-medium hover:text-sifnos-deep-blue transition-colors">
-                info@hotelssifnos.com
+              <a href="mailto:hello@hotelssifnos.com" className="text-sifnos-turquoise font-medium hover:text-sifnos-deep-blue transition-colors">
+                hello@hotelssifnos.com
               </a>
             </div>
           </div>
