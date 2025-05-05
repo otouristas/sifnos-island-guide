@@ -57,5 +57,5 @@ export * from "./calendar";
 
 // Notification components
 export * from "./toast";
-export { ToastProvider, ToastViewport } from "./toaster";
+export * from "./toaster"; // This will now correctly export ToastProvider and ToastViewport
 export * from "./sonner";
