@@ -21,9 +21,14 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
   if (hotel.name === "Meropi Rooms and Apartments") {
     imageUrl = '/uploads/hotels/meropirooms-hero.webp';
   } else if (hotel.name === "Filadaki Villas") {
-    // For Filadaki Villas, use the filadaki-studios folder
+    // For Filadaki Villas, handle image paths correctly
     if (mainPhoto) {
-      imageUrl = `/uploads/hotels/filadaki-studios/${mainPhoto}`;
+      // Check if mainPhoto already includes the folder path to avoid duplication
+      if (mainPhoto.includes('filadaki-studios/')) {
+        imageUrl = `/uploads/hotels/${mainPhoto}`;
+      } else {
+        imageUrl = `/uploads/hotels/filadaki-studios/${mainPhoto}`;
+      }
       console.log(`Using Filadaki custom image path: ${imageUrl}`);
     } else {
       // Default image for Filadaki if no main photo
