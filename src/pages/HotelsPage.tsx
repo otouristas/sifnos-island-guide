@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import { Search, Filter, Star } from 'lucide-react';
@@ -52,19 +53,10 @@ export default function HotelsPage() {
         const success = logSupabaseResponse('hotels fetch', data, error);
         
         if (!success) {
-          throw error;
+          throw error || new Error('Failed to fetch hotels');
         }
 
         console.log(`Hotels found: ${data?.length || 0}`);
-        
-        // Check specifically for the hotel we're looking for
-        if (data) {
-          const specificHotel = data.find(hotel => hotel.id === '0c9632b6-db5c-4179-8122-0003896e465e');
-          console.log("Hotel 0c9632b6-db5c-4179-8122-0003896e465e found:", specificHotel ? 'Yes' : 'No');
-          if (specificHotel) {
-            console.log("Hotel details:", specificHotel);
-          }
-        }
         
         setHotels(data || []);
       } catch (error) {
@@ -80,7 +72,7 @@ export default function HotelsPage() {
     }
 
     fetchHotels();
-  }, [toast, filters.hotelType]); // Add filters.hotelType to the dependency array
+  }, [toast, filters.hotelType]); 
 
   // Function to handle star rating filter
   const handleStarRatingChange = (rating) => {
@@ -186,7 +178,7 @@ export default function HotelsPage() {
       
       {/* Content Section */}
       <div className="bg-gray-50">
-        <div className="page-container">
+        <div className="page-container py-8">
           <div className="flex flex-wrap -mx-4">
             {/* Filters Sidebar */}
             <div className="w-full lg:w-1/4 px-4 mb-8 lg:mb-0">
@@ -240,7 +232,8 @@ export default function HotelsPage() {
                           {Array(5).fill(0).map((_, i) => (
                             <Star 
                               key={i} 
-                              className={i < rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"} 
+                              size={16}
+                              className={i < rating ? "text-yellow-400 fill-yellow-400 w-4 h-4" : "text-gray-300 w-4 h-4"} 
                             />
                           ))}
                         </div>
@@ -396,7 +389,7 @@ export default function HotelsPage() {
 
       {/* Location Information */}
       <div className="bg-white">
-        <div className="page-container">
+        <div className="page-container py-12">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl font-montserrat font-bold text-sifnos-deep-blue mb-4">Where to Stay in Sifnos</h2>
             <div className="prose prose-lg">
