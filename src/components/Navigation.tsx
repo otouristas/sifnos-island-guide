@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
-import { HashLink } from 'react-router-hash-link';
 import { Menu, X } from 'lucide-react';
 
 const Navigation = () => {
