@@ -15,6 +15,8 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
   // Construct image URL based on hotel name and available photos
   let imageUrl = '/placeholder.svg';
   
+  console.log(`HotelCard: Hotel name: ${hotel.name}, mainPhoto: ${mainPhoto}`);
+  
   // Special case for Meropi hotel which has local images saved
   if (hotel.name === "Meropi Rooms and Apartments") {
     imageUrl = '/uploads/hotels/meropirooms-hero.webp';
@@ -22,9 +24,11 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
     // For Filadaki Villas, use the filadaki-studios folder
     if (mainPhoto) {
       imageUrl = `/uploads/hotels/filadaki-studios/${mainPhoto}`;
+      console.log(`Using Filadaki custom image path: ${imageUrl}`);
     } else {
       // Default image for Filadaki if no main photo
       imageUrl = '/uploads/hotels/filadaki-studios/filadaki1.jpeg';
+      console.log(`Using Filadaki default image: ${imageUrl}`);
     }
   } else if (mainPhoto) {
     // For other hotels, use the photos from the database
@@ -45,8 +49,8 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
             className="w-full h-full object-cover"
             onError={(e) => {
               // Fallback to placeholder if image fails to load
-              e.currentTarget.src = '/placeholder.svg';
               console.error(`Failed to load image for ${hotel.name}: ${imageUrl}`);
+              e.currentTarget.src = '/placeholder.svg';
             }}
           />
           {/* Display hotel type icon if available */}
