@@ -32,6 +32,12 @@ export default function SitemapGenerator() {
           priority: 0.9
         },
         {
+          loc: `${baseURL}/touristas-ai`,
+          lastmod: currentDate,
+          changefreq: 'daily',
+          priority: 0.9
+        },
+        {
           loc: `${baseURL}/beaches`,
           lastmod: currentDate,
           changefreq: 'weekly',

@@ -6,16 +6,20 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TouristasAI from '@/components/TouristasAI';
+import SEO from '@/components/SEO';
 
 export default function TouristasAIPage() {
   const [activeTab, setActiveTab] = useState<string>('assistant');
   
   return (
     <>
-      <Helmet>
-        <title>Touristas AI - Find Your Perfect Stay in Sifnos | HotelsSifnos</title>
-        <meta name="description" content="Use our AI-powered recommendation tool to find the perfect hotel in Sifnos based on your preferences." />
-      </Helmet>
+      <SEO
+        title="AI Hotel Finder - Find Your Perfect Stay in Sifnos"
+        description="Use our AI-powered recommendation tool to find the perfect hotel in Sifnos based on your preferences. Get personalized hotel suggestions for beach, luxury, family, or budget stays."
+        keywords={['sifnos ai hotel finder', 'ai hotel recommendations sifnos', 'best hotels sifnos', 'personalized hotel search', 'sifnos accommodation finder']}
+        schemaType="TravelAgency"
+        canonical="/touristas-ai"
+      />
       
       <div className="bg-gradient-to-b from-sifnos-deep-blue to-sifnos-deep-blue/90 text-white">
         <div className="container mx-auto px-4 pt-12 pb-6">
