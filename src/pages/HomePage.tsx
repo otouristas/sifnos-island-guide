@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -6,6 +5,7 @@ import { Search, MapPin, Star, BookOpen, BadgeDollarSign, Hotel } from 'lucide-r
 import HotelCard from '@/components/HotelCard';
 import LocationCard from '@/components/LocationCard';
 import HotelTypeCard from '@/components/HotelTypeCard';
+import TouristasAI from '@/components/TouristasAI';
 import SEO from '@/components/SEO';
 import { sifnosLocations } from '../data/locations';
 import { hotelTypes } from '../data/hotelTypes';
@@ -99,8 +99,28 @@ export default function HomePage() {
         </div>
       </div>
       
-      {/* Featured Hotels Section */}
+      {/* Touristas AI Section */}
       <div className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap items-center justify-between mb-6">
+            <div>
+              <h2 className="text-3xl font-montserrat font-bold text-sifnos-deep-blue">
+                Find Your Perfect Hotel with Touristas AI
+              </h2>
+              <p className="text-gray-600">
+                Tell us your preferences and we'll recommend the best accommodations for your stay
+              </p>
+            </div>
+          </div>
+          
+          <div className="mt-6">
+            <TouristasAI />
+          </div>
+        </div>
+      </div>
+      
+      {/* Featured Hotels Section */}
+      <div className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap items-center justify-between mb-6">
             <div>
@@ -133,7 +153,7 @@ export default function HomePage() {
       </div>
       
       {/* Locations Section */}
-      <div className="py-16 bg-gray-50">
+      <div className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap items-center justify-between mb-6">
             <div>
@@ -166,7 +186,7 @@ export default function HomePage() {
       </div>
       
       {/* Hotel Types Section */}
-      <div className="py-16 bg-white">
+      <div className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap items-center justify-between mb-6">
             <div>
