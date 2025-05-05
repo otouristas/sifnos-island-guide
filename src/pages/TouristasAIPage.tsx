@@ -1,4 +1,3 @@
-
 import { Helmet } from 'react-helmet';
 import { useState } from 'react';
 import { Bot, Search, Filter, Sparkles, MapPin, Hotel } from 'lucide-react';
@@ -42,7 +41,7 @@ export default function TouristasAIPage() {
             <div className="flex items-center gap-4">
               <Button
                 variant="outline" 
-                className="border-white/40 text-white font-medium hover:bg-white/20 backdrop-blur-sm"
+                className="border border-white bg-white/20 text-white font-medium hover:bg-white hover:text-sifnos-deep-blue backdrop-blur-sm transition-all"
                 onClick={() => setActiveTab('assistant')}
               >
                 <Bot className="mr-2 h-4 w-4" />
@@ -50,7 +49,7 @@ export default function TouristasAIPage() {
               </Button>
               <Button
                 variant="outline"
-                className="border-white/40 text-white font-medium hover:bg-white/20 backdrop-blur-sm"
+                className="border border-white bg-white/20 text-white font-medium hover:bg-white hover:text-sifnos-deep-blue backdrop-blur-sm transition-all"
                 onClick={() => setActiveTab('search')}  
               >
                 <Search className="mr-2 h-4 w-4" />
@@ -68,14 +67,14 @@ export default function TouristasAIPage() {
               <TabsList className="grid grid-cols-2 bg-white/20 backdrop-blur-sm border border-white/20">
                 <TabsTrigger 
                   value="assistant" 
-                  className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-white font-medium"
+                  className="data-[state=active]:bg-white data-[state=active]:text-sifnos-deep-blue data-[state=inactive]:text-white font-medium"
                 >
                   <Sparkles className="mr-2 h-4 w-4" />
                   AI Recommendations
                 </TabsTrigger>
                 <TabsTrigger 
                   value="search" 
-                  className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-white font-medium"
+                  className="data-[state=active]:bg-white data-[state=active]:text-sifnos-deep-blue data-[state=inactive]:text-white font-medium"
                 >
                   <Filter className="mr-2 h-4 w-4" />
                   Filter Search
