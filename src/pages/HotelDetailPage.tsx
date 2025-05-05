@@ -379,11 +379,12 @@ export default function HotelDetailPage() {
                         {/* Larger Room Image */}
                         <div className="w-full">
                           <img 
-                            src={getHotelRoomImagePath(room.photo_url)}
+                            src={getHotelRoomImagePath(room.photo_url, hotel.name)}
                             alt={room.name} 
                             className="w-full h-60 md:h-72 object-cover rounded-lg shadow-md"
                           />
                         </div>
+                        
                         <div className="w-full">
                           <h3 className="text-xl font-semibold">{room.name}</h3>
                           

@@ -98,6 +98,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
         
       if (error) throw error;
       
+      console.log('Fetched reviews for hotel ID:', hotelId);
       console.log('Fetched reviews:', data);
       setReviews(data || []);
       
@@ -236,7 +237,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
       
       <div className="mt-4 text-center">
         <a 
-          href="https://www.booking.com/hotel/gr/meropi-kamares.el.html#tab-reviews" 
+          href="https://www.booking.com/hotel/gr/filadaki-house.en-gb.html" 
           target="_blank"
           rel="noopener noreferrer"
           className="text-sifnos-turquoise hover:text-sifnos-deep-blue inline-flex items-center"
