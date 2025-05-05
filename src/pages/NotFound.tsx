@@ -1,14 +1,55 @@
 
-import { useLocation, Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useLocation, Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import SEO from "../components/SEO";
 
 const NotFound = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { toast } = useToast();
+  const [redirectingToMeropi, setRedirectingToMeropi] = useState(false);
 
   useEffect(() => {
+    // Check if the URL path might be related to Meropi Rooms
+    const path = location.pathname.toLowerCase();
+    
+    if (path.includes('/hotel/') && path.includes('meropi')) {
+      // This looks like it might be a misspelled or old URL format for Meropi
+      setRedirectingToMeropi(true);
+      
+      // Show a toast notification
+      toast({
+        title: "Redirecting...",
+        description: "We're taking you to Meropi Rooms and Apartments.",
+        duration: 3000,
+      });
+      
+      // Redirect after a short delay
+      const timer = setTimeout(() => {
+        navigate('/hotels/meropi-rooms-and-apartments');
+      }, 1500);
+      
+      return () => clearTimeout(timer);
+    } else if (path.includes('meropi')) {
+      // Any URL with 'meropi' that's not found should probably go to the Meropi page
+      setRedirectingToMeropi(true);
+      
+      // Show a toast notification
+      toast({
+        title: "Redirecting...",
+        description: "We're taking you to Meropi Rooms and Apartments.",
+        duration: 3000,
+      });
+      
+      // Redirect after a short delay
+      const timer = setTimeout(() => {
+        navigate('/hotels/meropi-rooms-and-apartments');
+      }, 1500);
+      
+      return () => clearTimeout(timer);
+    }
+    
     // Log the 404 error for analytics
     console.error(
       "404 Error: User attempted to access non-existent route:",
@@ -21,7 +62,7 @@ const NotFound = () => {
       description: `The page "${location.pathname}" doesn't exist.`,
       variant: "destructive",
     });
-  }, [location.pathname, toast]);
+  }, [location.pathname, toast, navigate]);
 
   return (
     <>
@@ -37,7 +78,9 @@ const NotFound = () => {
           <h1 className="font-montserrat text-6xl font-bold mb-4 text-sifnos-deep-blue">404</h1>
           <p className="text-2xl font-montserrat text-gray-700 mb-6">Page not found</p>
           <p className="text-gray-600 mb-8 max-w-md mx-auto">
-            We couldn't find the page you're looking for. It might have been moved or doesn't exist.
+            {redirectingToMeropi 
+              ? "We're redirecting you to Meropi Rooms and Apartments..." 
+              : "We couldn't find the page you're looking for. It might have been moved or doesn't exist."}
           </p>
           <Link to="/" className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-6 py-3 rounded-lg transition-colors duration-300 font-medium">
             Return to Home

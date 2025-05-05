@@ -19,12 +19,19 @@ export function slugify(str: string): string {
  * @returns URL-friendly string of the name
  */
 export function generateHotelUrl(name: string): string {
-  // Handle Meropi Rooms and Apartments case specifically
-  if (name === "Meropi Rooms and Apartments") {
+  // Special case handling for Meropi Rooms and Apartments
+  if (name === "Meropi Rooms and Apartments" || name.toLowerCase().includes("meropi")) {
     return "meropi-rooms-and-apartments";
   }
   return slugify(name);
 }
+
+/**
+ * Known hotel IDs for direct lookup - helps with consistent URL handling
+ */
+const KNOWN_HOTEL_IDS = {
+  "meropi-rooms-and-apartments": "0c9632b6-db5c-4179-8122-0003896e465e"
+};
 
 /**
  * Finds a hotel by its slug in the database
@@ -34,8 +41,12 @@ export function generateHotelUrl(name: string): string {
  */
 export async function getHotelBySlug(slug: string) {
   try {
-    // Special case for known hotel slugs
-    if (slug === "meropi-rooms-and-apartments") {
+    console.log(`Looking for hotel with slug: ${slug}`);
+    
+    // Special case handling with predefined hotel IDs
+    if (slug === "meropi-rooms-and-apartments" && KNOWN_HOTEL_IDS[slug]) {
+      console.log(`Using direct ID lookup for ${slug} with ID: ${KNOWN_HOTEL_IDS[slug]}`);
+      
       const { data, error } = await import('@/integrations/supabase/client').then(module => {
         const supabase = module.supabase;
         return supabase
@@ -46,14 +57,24 @@ export async function getHotelBySlug(slug: string) {
             hotel_photos(id, photo_url, is_main_photo, description),
             hotel_rooms(id, name, description, price, capacity, size_sqm, amenities, photo_url)
           `)
-          .eq('id', '0c9632b6-db5c-4179-8122-0003896e465e');
+          .eq('id', KNOWN_HOTEL_IDS[slug]);
       });
       
-      if (error) throw error;
-      return data && data.length > 0 ? data[0] : null;
+      if (error) {
+        console.error(`Error fetching hotel by ID (${KNOWN_HOTEL_IDS[slug]}):`, error);
+        throw error;
+      }
+      
+      if (data && data.length > 0) {
+        console.log(`Successfully found hotel by ID: ${data[0].name}`);
+        return data[0];
+      } else {
+        console.log(`No hotel found with ID: ${KNOWN_HOTEL_IDS[slug]}`);
+      }
     }
     
-    // Find the hotel where the slugified name matches the slug
+    // Fuzzy search for hotel name if direct ID lookup fails or isn't applicable
+    console.log(`Performing fuzzy search for slug: ${slug}`);
     const { data, error } = await import('@/integrations/supabase/client').then(module => {
       const supabase = module.supabase;
       return supabase
@@ -67,10 +88,26 @@ export async function getHotelBySlug(slug: string) {
         .or(`name.ilike.%${slug.replace(/-/g, ' ')}%`);
     });
     
-    if (error) throw error;
+    if (error) {
+      console.error('Error in fuzzy search:', error);
+      throw error;
+    }
     
     // Find the closest matching hotel
     if (data && data.length > 0) {
+      console.log(`Found ${data.length} potential hotel matches for slug: ${slug}`);
+      
+      // Special override for Meropi if found in results
+      const meropiHotel = data.find(hotel => 
+        hotel.name.toLowerCase().includes("meropi") || 
+        (hotel.id === KNOWN_HOTEL_IDS["meropi-rooms-and-apartments"])
+      );
+      
+      if (meropiHotel && slug.includes("meropi")) {
+        console.log(`Found Meropi hotel in search results: ${meropiHotel.id}`);
+        return meropiHotel;
+      }
+      
       // Sort by name similarity to find the best match
       const sortedData = data.sort((a, b) => {
         const aSlug = slugify(a.name);
@@ -84,9 +121,11 @@ export async function getHotelBySlug(slug: string) {
         return aSlug.localeCompare(bSlug);
       });
       
+      console.log(`Best match: ${sortedData[0].name} (${sortedData[0].id})`);
       return sortedData[0];
     }
     
+    console.log(`No hotels found for slug: ${slug}`);
     return null;
   } catch (error) {
     console.error('Error fetching hotel by slug:', error);
