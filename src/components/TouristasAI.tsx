@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
@@ -286,7 +287,7 @@ export default function TouristasAI() {
       ) : (
         <>
           <div className="mb-6">
-            <h3 className="text-xl font-bold text-black mb-2">{getResultHeading()}</h3>
+            <h3 className="text-xl font-bold text-white mb-2">{getResultHeading()}</h3>
             <div className="flex flex-wrap gap-2 mb-4">
               {preferences.map(pref => (
                 <Badge key={pref} className="bg-sifnos-deep-blue/20 text-sifnos-deep-blue hover:bg-sifnos-deep-blue/20 font-medium">{pref}</Badge>
