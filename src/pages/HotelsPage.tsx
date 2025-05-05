@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import { Search, Filter, Star } from 'lucide-react';
@@ -6,6 +5,7 @@ import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import { useToast } from "@/components/ui/use-toast";
 import HotelCard from '@/components/HotelCard';
 import { hotelTypes } from '@/data/hotelTypes';
+import { getHotelTypeIcon } from '@/components/icons/HotelTypeIcons';
 
 export default function HotelsPage() {
   // Filter state
