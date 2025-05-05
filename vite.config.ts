@@ -36,9 +36,24 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  // Enable SSR features
+  // Enhanced SSR features
   ssr: {
     // SSR specific config
     noExternal: ['react-helmet'],
+    target: 'node',
+    format: 'esm'
+  },
+  // Optimization for better SEO and performance
+  build: {
+    target: 'modules',
+    modulePreload: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-lib': ['@/components/ui'],
+        }
+      }
+    }
   }
 }));

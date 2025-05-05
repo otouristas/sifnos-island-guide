@@ -89,7 +89,7 @@ export default function TouristasAIPage() {
             
             <TabsContent value="search" className="m-0">
               <div className="p-6">
-                <HotelSearch />
+                <HotelFilterSearch />
               </div>
             </TabsContent>
           </CardContent>
@@ -99,8 +99,8 @@ export default function TouristasAIPage() {
   );
 }
 
-// New component for the Filter Search tab
-function HotelSearch() {
+// Component for the Filter Search tab
+function HotelFilterSearch() {
   const [location, setLocation] = useState<string>('');
   const [price, setPrice] = useState<[number, number]>([0, 500]);
   const [hotelType, setHotelType] = useState<string>('');
