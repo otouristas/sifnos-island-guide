@@ -22,6 +22,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [hotelData, setHotelData] = useState<any>(null);
   const { toast } = useToast();
 
   // Function to render star rating
@@ -45,6 +46,23 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
       month: 'short',
       day: 'numeric'
     });
+  };
+
+  // Fetch hotel data to get booking URL
+  const fetchHotelData = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('hotels')
+        .select('*')
+        .eq('id', hotelId)
+        .single();
+        
+      if (error) throw error;
+      
+      setHotelData(data);
+    } catch (error) {
+      console.error('Error fetching hotel data:', error);
+    }
   };
 
   // Fetch Booking.com reviews
@@ -118,6 +136,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
   // Subscribe to realtime changes in the reviews table
   useEffect(() => {
     fetchReviews();
+    fetchHotelData();
     
     // Set up realtime subscription
     const channel = supabase
@@ -149,6 +168,9 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
       </div>
     );
   }
+
+  // Get the booking.com URL from hotel data or use a default
+  const bookingUrl = hotelData?.booking_url || "https://www.booking.com";
 
   return (
     <div className="space-y-4">
@@ -238,7 +260,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
       
       <div className="mt-4 text-center">
         <a 
-          href="https://www.booking.com/hotel/gr/filadaki-house.en-gb.html" 
+          href={bookingUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="text-sifnos-turquoise hover:text-sifnos-deep-blue inline-flex items-center"

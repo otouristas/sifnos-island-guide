@@ -60,12 +60,12 @@ export const handleSupabaseResponse = (action: string, data: any, error: any, sh
 export const getHotelRoomImagePath = (photoUrl: string | null, hotelName?: string) => {
   if (!photoUrl) return '/placeholder.svg';
   
-  // For Filadaki Villas, look in the filadaki-studios folder
+  // For Filadaki Villas, always look in the filadaki-studios folder
   if (hotelName === 'Filadaki Villas') {
     return `/uploads/hotels/filadaki-studios/${photoUrl}`;
   }
   
-  // Check if the image is in the hotels directory
+  // Check if the image is for Meropi Rooms
   if (photoUrl.startsWith('meropirooms-')) {
     return `/uploads/hotels/${photoUrl}`;
   } 
