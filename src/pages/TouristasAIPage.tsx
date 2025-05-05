@@ -60,7 +60,7 @@ export default function TouristasAIPage() {
       <div className="container mx-auto px-4 py-12">
         <Card className="max-w-4xl mx-auto border-none shadow-xl overflow-hidden">
           <div className="bg-gradient-to-r from-sifnos-deep-blue to-sifnos-deep-blue/90 py-4 px-6 border-b border-white/10">
-            <Tabs defaultValue="assistant" value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid grid-cols-2 bg-white/10 backdrop-blur-sm border border-white/10">
                 <TabsTrigger 
                   value="assistant" 
@@ -77,22 +77,22 @@ export default function TouristasAIPage() {
                   Filter Search
                 </TabsTrigger>
               </TabsList>
+            
+              <CardContent className="p-0">
+                <TabsContent value="assistant" className="m-0">
+                  <div className="p-6">
+                    <TouristasAI />
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="search" className="m-0">
+                  <div className="p-6">
+                    <HotelFilterSearch />
+                  </div>
+                </TabsContent>
+              </CardContent>
             </Tabs>
           </div>
-          
-          <CardContent className="p-0">
-            <TabsContent value="assistant" className="m-0">
-              <div className="p-6">
-                <TouristasAI />
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="search" className="m-0">
-              <div className="p-6">
-                <HotelFilterSearch />
-              </div>
-            </TabsContent>
-          </CardContent>
         </Card>
       </div>
     </>
