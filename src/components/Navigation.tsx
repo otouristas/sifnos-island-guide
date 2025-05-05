@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { useMediaQuery } from 'react-responsive';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { Menu, X } from 'lucide-react';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
+  const isMobile = useIsMobile();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -20,7 +20,7 @@ const Navigation = () => {
     if (!isMobile && isMenuOpen) {
       setIsMenuOpen(false);
     }
-  }, [isMobile]);
+  }, [isMobile, isMenuOpen]);
 
   const activeClass = "text-sifnos-deep-blue font-semibold border-b-2 border-sifnos-turquoise pb-1";
   const normalClass = "text-gray-700 hover:text-sifnos-turquoise transition-colors duration-200";
