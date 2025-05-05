@@ -1,13 +1,12 @@
-
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import HotelsPage from './pages/HotelsPage';
-import HotelDetailPage from './pages/HotelDetailPage';
+import HotelDetailsPage from './pages/HotelDetailsPage';
 import CookieConsent from './components/CookieConsent';
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/toaster"
 import NotFound from './pages/NotFound';
 import ContactPage from './pages/ContactPage';
 import RegistrationPage from './pages/RegistrationPage';
@@ -31,7 +30,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/hotels" element={<HotelsPage />} />
-            <Route path="/hotels/:hotelSlug" element={<HotelDetailPage />} />
+            <Route path="/hotels/:hotelSlug" element={<HotelDetailsPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/register" element={<RegistrationPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
