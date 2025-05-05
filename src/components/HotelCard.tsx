@@ -41,6 +41,7 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
             onError={(e) => {
               // Fallback to placeholder if image fails to load
               e.currentTarget.src = '/placeholder.svg';
+              console.error(`Failed to load image for ${hotel.name}: ${imageUrl}`);
             }}
           />
           {/* Display hotel type icon if available */}

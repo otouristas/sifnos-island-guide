@@ -166,7 +166,10 @@ export default function HotelDetailPage() {
 
   // Update the canonical URL and metadata to use the slug
   const hotelSlug = generateHotelUrl(hotel.name);
+  
+  // Check if current hotel is Meropi Rooms or Filadaki Villas
   const isMeropiRooms = hotel.id === '0c9632b6-db5c-4179-8122-0003896e465e';
+  const isFiladakiVillas = hotel.name === 'Filadaki Villas';
   
   // Fixed Google Maps URL for Meropi Rooms
   const meropiMapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3780.3010959320573!2d24.67395307627629!3d36.98818015707993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x149892d141f2e833%3A0x82d07f304d07c20a!2sMeropi%20Rooms%20%26%20Apartments!5e1!3m2!1sen!2sgr!4v1746223266808!5m2!1sen!2sgr";
@@ -466,12 +469,13 @@ export default function HotelDetailPage() {
                 </div>
               </div>
               
-              {/* Reviews - Only Booking.com Reviews */}
+              {/* Reviews - Booking.com Reviews */}
               <div className="cycladic-card p-6 md:p-8">
                 <h2 className="text-2xl font-montserrat font-semibold mb-6">Reviews</h2>
-                {isMeropiRooms && <BookingReviews hotelId={hotel.id} />}
+                {/* Show reviews for either Meropi Rooms or Filadaki Villas */}
+                {(isMeropiRooms || isFiladakiVillas) && <BookingReviews hotelId={hotel.id} />}
                 
-                {!isMeropiRooms && (
+                {!isMeropiRooms && !isFiladakiVillas && (
                   <div className="text-center py-8">
                     <p className="text-gray-600">No reviews available for this hotel.</p>
                   </div>

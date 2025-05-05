@@ -89,6 +89,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
   // Fetch reviews from our database
   const fetchReviews = async () => {
     try {
+      console.log('Fetching reviews for hotel ID:', hotelId);
       const { data, error } = await supabase
         .from('hotel_reviews')
         .select('*')
