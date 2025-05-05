@@ -48,6 +48,11 @@ const NotFound = () => {
       }, 1500);
       
       return () => clearTimeout(timer);
+    } else if (path.endsWith('.jpg') || path.endsWith('.png') || path.endsWith('.webp')) {
+      // Handle missing image resources
+      console.warn(`Missing image resource: ${path}`);
+      // We don't need to do anything else since the browser will show fallback images
+      return;
     }
     
     // Log the 404 error for analytics
@@ -56,7 +61,7 @@ const NotFound = () => {
       location.pathname
     );
     
-    // Show a toast notification
+    // Show a toast notification for non-image 404s
     toast({
       title: "Page not found",
       description: `The page "${location.pathname}" doesn't exist.`,

@@ -47,18 +47,18 @@ export async function getHotelBySlug(slug: string) {
     if (slug === "meropi-rooms-and-apartments" && KNOWN_HOTEL_IDS[slug]) {
       console.log(`Using direct ID lookup for ${slug} with ID: ${KNOWN_HOTEL_IDS[slug]}`);
       
-      const { data, error } = await import('@/integrations/supabase/client').then(module => {
-        const supabase = module.supabase;
-        return supabase
-          .from('hotels')
-          .select(`
-            *,
-            hotel_amenities(amenity),
-            hotel_photos(id, photo_url, is_main_photo, description),
-            hotel_rooms(id, name, description, price, capacity, size_sqm, amenities, photo_url)
-          `)
-          .eq('id', KNOWN_HOTEL_IDS[slug]);
-      });
+      // Import the supabase client directly to avoid the undefined error
+      const { supabase } = await import('@/integrations/supabase/client');
+      
+      const { data, error } = await supabase
+        .from('hotels')
+        .select(`
+          *,
+          hotel_amenities(amenity),
+          hotel_photos(id, photo_url, is_main_photo, description),
+          hotel_rooms(id, name, description, price, capacity, size_sqm, amenities, photo_url)
+        `)
+        .eq('id', KNOWN_HOTEL_IDS[slug]);
       
       if (error) {
         console.error(`Error fetching hotel by ID (${KNOWN_HOTEL_IDS[slug]}):`, error);
@@ -75,18 +75,19 @@ export async function getHotelBySlug(slug: string) {
     
     // Fuzzy search for hotel name if direct ID lookup fails or isn't applicable
     console.log(`Performing fuzzy search for slug: ${slug}`);
-    const { data, error } = await import('@/integrations/supabase/client').then(module => {
-      const supabase = module.supabase;
-      return supabase
-        .from('hotels')
-        .select(`
-          *,
-          hotel_amenities(amenity),
-          hotel_photos(id, photo_url, is_main_photo, description),
-          hotel_rooms(id, name, description, price, capacity, size_sqm, amenities, photo_url)
-        `)
-        .or(`name.ilike.%${slug.replace(/-/g, ' ')}%`);
-    });
+    
+    // Import the supabase client directly
+    const { supabase } = await import('@/integrations/supabase/client');
+    
+    const { data, error } = await supabase
+      .from('hotels')
+      .select(`
+        *,
+        hotel_amenities(amenity),
+        hotel_photos(id, photo_url, is_main_photo, description),
+        hotel_rooms(id, name, description, price, capacity, size_sqm, amenities, photo_url)
+      `)
+      .or(`name.ilike.%${slug.replace(/-/g, ' ')}%`);
     
     if (error) {
       console.error('Error in fuzzy search:', error);
