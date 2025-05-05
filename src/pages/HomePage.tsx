@@ -63,7 +63,7 @@ export default function HomePage() {
         canonical="https://hotelssifnos.com"
       />
       
-      {/* Hero Section with updated background image */}
+      {/* Hero Section */}
       <div className="relative h-[70vh] flex items-center justify-center bg-sifnos-deep-blue overflow-hidden">
         <img 
           src="/uploads/beaches/plats-gialos.webp" 
@@ -99,21 +99,21 @@ export default function HomePage() {
         </div>
       </div>
       
-      {/* Touristas AI Section */}
+      {/* Touristas AI Section - Updated with better design */}
       <div className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap items-center justify-between mb-6">
+          <div className="flex flex-wrap items-center justify-between mb-8">
             <div>
               <h2 className="text-3xl font-montserrat font-bold text-sifnos-deep-blue">
-                Find Your Perfect Hotel with Touristas AI
+                Find Your Perfect Hotel with AI
               </h2>
-              <p className="text-gray-600">
-                Tell us your preferences and we'll recommend the best accommodations for your stay
+              <p className="text-gray-600 mt-1">
+                Tell us your preferences and we'll recommend the best accommodations for your Sifnos stay
               </p>
             </div>
           </div>
           
-          <div className="mt-6">
+          <div className="max-w-4xl mx-auto">
             <TouristasAI />
           </div>
         </div>
@@ -217,7 +217,7 @@ export default function HomePage() {
         </div>
       </div>
       
-      {/* List Your Hotel Section - Updated with better button contrast */}
+      {/* List Your Hotel Section */}
       <div className="py-20 bg-gradient-to-r from-sifnos-deep-blue to-blue-900 text-white">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
