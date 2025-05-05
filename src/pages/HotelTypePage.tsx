@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
 import HotelCard from '../components/HotelCard';
+import { getHotelTypeIcon } from '../components/icons/HotelTypeIcons';
 
 export default function HotelTypePage() {
   const { slug } = useParams<{ slug: string }>();
@@ -73,14 +74,14 @@ export default function HotelTypePage() {
           currentPage={hotelType.title}
         />
         
-        {/* Hero Section */}
+        {/* Hero Section with SVG Icon */}
         <div className="relative h-64 md:h-80 lg:h-96 rounded-xl overflow-hidden mb-8">
-          <img 
-            src={hotelType.imageUrl} 
-            alt={hotelType.title} 
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-sifnos-deep-blue to-sifnos-turquoise"></div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-32 h-32 text-white opacity-20">
+              {slug && getHotelTypeIcon(slug)}
+            </div>
+          </div>
           <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black to-transparent">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
               {hotelType.title} in Sifnos Island

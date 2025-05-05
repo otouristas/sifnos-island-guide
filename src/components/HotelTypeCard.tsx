@@ -1,11 +1,12 @@
 
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { getHotelTypeIcon } from './icons/HotelTypeIcons';
 
 interface HotelTypeCardProps {
   title: string;
   description: string;
-  imageUrl: string;
+  imageUrl?: string; // Made optional
   slug: string;
   className?: string;
 }
@@ -13,7 +14,6 @@ interface HotelTypeCardProps {
 export default function HotelTypeCard({ 
   title, 
   description, 
-  imageUrl, 
   slug,
   className 
 }: HotelTypeCardProps) {
@@ -26,13 +26,12 @@ export default function HotelTypeCard({
       )}
     >
       <div className="relative">
-        <img 
-          src={imageUrl} 
-          alt={`${title} in Sifnos`} 
-          className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-60"></div>
-        <h3 className="absolute bottom-0 left-0 right-0 text-white text-center font-bold text-xl p-4">
+        <div className="w-full h-40 bg-sifnos-turquoise/10 flex items-center justify-center p-6 group-hover:bg-sifnos-turquoise/20 transition-colors duration-500">
+          <div className="w-24 h-24 text-sifnos-turquoise group-hover:scale-110 transition-transform duration-500">
+            {getHotelTypeIcon(slug)}
+          </div>
+        </div>
+        <h3 className="absolute bottom-0 left-0 right-0 text-sifnos-deep-blue text-center font-bold text-xl p-4 bg-white/80 backdrop-blur-sm">
           {title}
         </h3>
       </div>

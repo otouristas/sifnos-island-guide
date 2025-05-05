@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -62,11 +63,11 @@ export default function HomePage() {
         canonical="https://hotelssifnos.com"
       />
       
-      {/* Hero Section */}
+      {/* Hero Section with updated background image */}
       <div className="relative h-[70vh] flex items-center justify-center bg-sifnos-deep-blue overflow-hidden">
         <img 
-          src="/sifnos-hero.jpg" 
-          alt="Sifnos Island coastline" 
+          src="/uploads/beaches/plats-gialos.webp" 
+          alt="Beautiful Platis Gialos beach in Sifnos" 
           className="absolute inset-0 w-full h-full object-cover opacity-60"
         />
         <div className="absolute inset-0 bg-black bg-opacity-40"></div>
