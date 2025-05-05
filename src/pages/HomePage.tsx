@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -98,14 +99,7 @@ export default function HomePage() {
           </form>
         </div>
       </div>
-      
-      {/* Touristas AI Banner CTA Section */}
-      <div className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <TouristasAIBanner />
-        </div>
-      </div>
-      
+
       {/* Featured Hotels Section */}
       <div className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
@@ -136,6 +130,13 @@ export default function HomePage() {
               </div>
             )}
           </div>
+        </div>
+      </div>
+      
+      {/* Touristas AI Banner CTA Section */}
+      <div className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <TouristasAIBanner />
         </div>
       </div>
       
