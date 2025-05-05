@@ -5,6 +5,7 @@ import { Search, Filter, Star } from 'lucide-react';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import { useToast } from "@/components/ui/use-toast";
 import HotelCard from '@/components/HotelCard';
+import { hotelTypes } from '@/data/hotelTypes';
 
 export default function HotelsPage() {
   // Filter state
@@ -19,6 +20,7 @@ export default function HotelsPage() {
       seaView: false,
     },
     starRating: 0,
+    hotelType: '', // Add hotel type filter
   });
 
   const [hotels, setHotels] = useState([]);
@@ -30,13 +32,21 @@ export default function HotelsPage() {
       try {
         console.log("Fetching hotels from Supabase...");
         
-        const { data, error } = await supabase
+        let query = supabase
           .from('hotels')
           .select(`
             *,
             hotel_amenities(amenity),
             hotel_photos(id, photo_url, is_main_photo)
           `);
+          
+        // Apply hotel type filter if selected
+        if (filters.hotelType) {
+          query = query.contains('hotel_types', [filters.hotelType]);
+        }
+
+        // Execute the query
+        const { data, error } = await query;
 
         // Log the response for debugging
         const success = logSupabaseResponse('hotels fetch', data, error);
@@ -70,7 +80,7 @@ export default function HotelsPage() {
     }
 
     fetchHotels();
-  }, [toast]);
+  }, [toast, filters.hotelType]); // Add filters.hotelType to the dependency array
 
   // Function to handle star rating filter
   const handleStarRatingChange = (rating) => {
@@ -88,6 +98,14 @@ export default function HotelsPage() {
         ...filters.amenities,
         [amenity]: !filters.amenities[amenity]
       }
+    });
+  };
+  
+  // Function to handle hotel type filter change
+  const handleHotelTypeChange = (type) => {
+    setFilters({
+      ...filters,
+      hotelType: type === filters.hotelType ? '' : type
     });
   };
 
@@ -174,6 +192,33 @@ export default function HotelsPage() {
             <div className="w-full lg:w-1/4 px-4 mb-8 lg:mb-0">
               <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="font-montserrat font-semibold text-xl mb-6 pb-3 border-b">Filters</h2>
+                
+                {/* Hotel Type */}
+                <div className="mb-6">
+                  <h3 className="font-semibold mb-3">Hotel Type</h3>
+                  <div className="space-y-2">
+                    {hotelTypes.map(type => (
+                      <div 
+                        key={type.slug} 
+                        className="flex items-center cursor-pointer"
+                        onClick={() => handleHotelTypeChange(type.slug)}
+                      >
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          checked={filters.hotelType === type.slug}
+                          readOnly
+                        />
+                        <div className="flex items-center">
+                          <span className="w-4 h-4 mr-2 text-sifnos-turquoise inline-block">
+                            {getHotelTypeIcon(type.slug)}
+                          </span>
+                          {type.title}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
                 
                 {/* Star Rating */}
                 <div className="mb-6">
@@ -317,7 +362,6 @@ export default function HotelsPage() {
                     <div className="text-center py-12 col-span-3">
                       <h3 className="font-medium text-xl text-gray-700">No hotels found matching your criteria</h3>
                       <p className="text-gray-500 mt-2">Try adjusting your filters or search terms</p>
-                      <p className="text-gray-500 mt-2">Admin: Check Supabase console to ensure hotels data is properly inserted and RLS policies are configured correctly</p>
                     </div>
                   )}
                 </div>

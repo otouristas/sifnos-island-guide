@@ -233,6 +233,7 @@ export type Database = {
           description: string
           email: string | null
           google_map_url: string | null
+          hotel_types: string[] | null
           id: string
           location: string
           logo_path: string | null
@@ -255,6 +256,7 @@ export type Database = {
           description: string
           email?: string | null
           google_map_url?: string | null
+          hotel_types?: string[] | null
           id?: string
           location: string
           logo_path?: string | null
@@ -277,6 +279,7 @@ export type Database = {
           description?: string
           email?: string | null
           google_map_url?: string | null
+          hotel_types?: string[] | null
           id?: string
           location?: string
           logo_path?: string | null

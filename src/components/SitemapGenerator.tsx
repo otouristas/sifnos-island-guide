@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { generateHotelUrl } from '@/lib/url-utils';
@@ -131,9 +130,12 @@ export default function SitemapGenerator() {
       // Get dynamic hotel pages from Supabase
       let hotelPages: SitemapURL[] = [];
       try {
-        const { data: hotels, error } = await supabase.from('hotels').select('id, name, updated_at');
+        const { data: hotels, error } = await supabase
+          .from('hotels')
+          .select('id, name, updated_at, hotel_types');
         
         if (!error && hotels) {
+          // Create sitemap entries for each hotel
           hotelPages = hotels.map(hotel => ({
             loc: `${baseURL}/hotels/${generateHotelUrl(hotel.name)}`,
             lastmod: new Date(hotel.updated_at).toISOString().split('T')[0],
@@ -141,7 +143,14 @@ export default function SitemapGenerator() {
             priority: 0.8
           }));
           
-          // Add explicit entry for Meropi Rooms and Apartments to ensure it's included correctly
+          // Ensure all hotels with their types are correctly indexed
+          hotels.forEach(hotel => {
+            if (hotel.hotel_types && hotel.hotel_types.length > 0) {
+              console.log(`Hotel ${hotel.name} has types: ${hotel.hotel_types.join(', ')}`);
+            }
+          });
+          
+          // Add explicit entry for Meropi Rooms and Apartments
           const meropiHotel = hotels.find(hotel => 
             hotel.name === "Meropi Rooms and Apartments" || 
             hotel.id === "0c9632b6-db5c-4179-8122-0003896e465e"
@@ -205,7 +214,6 @@ ${allPages.map(page => `  <url>
 </urlset>`;
 
       // In a browser environment, we can't write to the file system directly
-      // But in SSR/build environment, we might be able to
       if (typeof window === 'undefined') {
         // SSR environment
         console.log('Generated sitemap (would be saved in SSR environment)');

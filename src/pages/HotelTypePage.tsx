@@ -28,8 +28,7 @@ export default function HotelTypePage() {
     
     const fetchHotels = async () => {
       try {
-        // Here we'd ideally filter by hotel type
-        // For now, we'll just get all hotels as a placeholder
+        // Now we filter by the hotel_types array column that contains the slug
         const { data, error } = await supabase
           .from('hotels')
           .select(`
@@ -37,10 +36,12 @@ export default function HotelTypePage() {
             hotel_amenities(amenity),
             hotel_photos(id, photo_url, is_main_photo)
           `)
+          .contains('hotel_types', [slug])
           .limit(9);
           
         if (error) throw error;
         setHotels(data || []);
+        console.log(`Found ${data?.length || 0} hotels for hotel type: ${slug}`);
       } catch (error) {
         console.error('Error fetching hotels:', error);
       } finally {
