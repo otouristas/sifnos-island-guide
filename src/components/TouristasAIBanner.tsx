@@ -1,6 +1,6 @@
 
 import { Link } from 'react-router-dom';
-import { Robot, Search, Sparkles, MapPin, Clock, PanelTop } from 'lucide-react';
+import { Bot, Search, Sparkles, MapPin, Clock, PanelTop } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function TouristasAIBanner() {
@@ -56,7 +56,7 @@ export default function TouristasAIBanner() {
             <div className="absolute inset-0 bg-white/10 rounded-full animate-pulse"></div>
             <div className="absolute inset-4 bg-white/20 rounded-full animate-pulse delay-75"></div>
             <div className="relative bg-white/30 rounded-full p-6 backdrop-blur-sm">
-              <Robot className="h-24 w-24 md:h-32 md:w-32 text-white" />
+              <Bot className="h-24 w-24 md:h-32 md:w-32 text-white" />
             </div>
           </div>
         </div>
