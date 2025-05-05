@@ -182,7 +182,7 @@ export default function TouristasAI() {
                   variant={preferences.includes('beach') ? "default" : "outline"} 
                   className={preferences.includes('beach') 
                     ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 font-medium" 
-                    : "border-gray-400 hover:border-gray-600 text-white hover:bg-gray-50 hover:text-gray-700 font-medium"
+                    : "border-2 border-white/70 bg-white/10 text-white hover:bg-white hover:text-sifnos-deep-blue font-medium transition-all"
                   }
                   onClick={() => togglePreference('beach')}
                 >
@@ -192,7 +192,7 @@ export default function TouristasAI() {
                   variant={preferences.includes('family') ? "default" : "outline"} 
                   className={preferences.includes('family') 
                     ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 font-medium" 
-                    : "border-gray-400 hover:border-gray-600 text-white hover:bg-gray-50 hover:text-gray-700 font-medium"
+                    : "border-2 border-white/70 bg-white/10 text-white hover:bg-white hover:text-sifnos-deep-blue font-medium transition-all"
                   }
                   onClick={() => togglePreference('family')}
                 >
@@ -202,7 +202,7 @@ export default function TouristasAI() {
                   variant={preferences.includes('luxury') ? "default" : "outline"} 
                   className={preferences.includes('luxury') 
                     ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 font-medium" 
-                    : "border-gray-400 hover:border-gray-600 text-white hover:bg-gray-50 hover:text-gray-700 font-medium"
+                    : "border-2 border-white/70 bg-white/10 text-white hover:bg-white hover:text-sifnos-deep-blue font-medium transition-all"
                   }
                   onClick={() => togglePreference('luxury')}
                 >
@@ -212,7 +212,7 @@ export default function TouristasAI() {
                   variant={preferences.includes('budget') ? "default" : "outline"} 
                   className={preferences.includes('budget') 
                     ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 font-medium" 
-                    : "border-gray-400 hover:border-gray-600 text-white hover:bg-gray-50 hover:text-gray-700 font-medium"
+                    : "border-2 border-white/70 bg-white/10 text-white hover:bg-white hover:text-sifnos-deep-blue font-medium transition-all"
                   }
                   onClick={() => togglePreference('budget')}
                 >
@@ -290,12 +290,12 @@ export default function TouristasAI() {
             <h3 className="text-xl font-bold text-white mb-2">{getResultHeading()}</h3>
             <div className="flex flex-wrap gap-2 mb-4">
               {preferences.map(pref => (
-                <Badge key={pref} className="bg-sifnos-deep-blue/20 text-sifnos-deep-blue hover:bg-sifnos-deep-blue/20 font-medium">{pref}</Badge>
+                <Badge key={pref} className="bg-white/30 text-white hover:bg-white/40 font-medium">{pref}</Badge>
               ))}
-              <Badge className="bg-sifnos-deep-blue/20 text-sifnos-deep-blue hover:bg-sifnos-deep-blue/20 font-medium">
+              <Badge className="bg-white/30 text-white hover:bg-white/40 font-medium">
                 {stayDuration === '1-3' ? 'short stay' : stayDuration === '4-7' ? 'week stay' : 'extended stay'}
               </Badge>
-              <Badge className="bg-sifnos-deep-blue/20 text-sifnos-deep-blue hover:bg-sifnos-deep-blue/20 font-medium">{proximity}</Badge>
+              <Badge className="bg-white/30 text-white hover:bg-white/40 font-medium">{proximity}</Badge>
             </div>
           </div>
           
@@ -318,7 +318,7 @@ export default function TouristasAI() {
             <Button 
               variant="outline" 
               onClick={resetSearch} 
-              className="border-gray-400 text-white font-medium hover:bg-gray-50 hover:text-gray-700"
+              className="border-2 border-white/70 bg-white/10 text-white hover:bg-white hover:text-sifnos-deep-blue font-medium transition-all"
             >
               New Search
             </Button>
@@ -341,7 +341,7 @@ function Label({ children, active, className }: { children: React.ReactNode; act
       className={`${
         active 
           ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90" 
-          : "bg-white text-gray-800 border-2 border-gray-400 hover:border-gray-600 hover:bg-gray-50"
+          : "bg-white/10 text-white border-2 border-white/70 hover:bg-white hover:text-sifnos-deep-blue"
       } flex items-center justify-center p-2 rounded-md cursor-pointer transition-all font-medium ${className || ""}`}
     >
       {children}
