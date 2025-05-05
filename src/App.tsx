@@ -7,7 +7,7 @@ import HomePage from './pages/HomePage';
 import HotelsPage from './pages/HotelsPage';
 import HotelDetailPage from './pages/HotelDetailPage';
 import CookieConsent from './components/CookieConsent';
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/toaster";
 import NotFound from './pages/NotFound';
 import ContactPage from './pages/ContactPage';
 import RegistrationPage from './pages/RegistrationPage';
