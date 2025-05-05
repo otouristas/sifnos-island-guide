@@ -5,7 +5,7 @@ import { Search, MapPin, Star, BookOpen, BadgeDollarSign, Hotel } from 'lucide-r
 import HotelCard from '@/components/HotelCard';
 import LocationCard from '@/components/LocationCard';
 import HotelTypeCard from '@/components/HotelTypeCard';
-import TouristasAI from '@/components/TouristasAI';
+import TouristasAIBanner from '@/components/TouristasAIBanner';
 import SEO from '@/components/SEO';
 import { sifnosLocations } from '../data/locations';
 import { hotelTypes } from '../data/hotelTypes';
@@ -99,23 +99,10 @@ export default function HomePage() {
         </div>
       </div>
       
-      {/* Touristas AI Section - Updated with better design */}
+      {/* Touristas AI Banner CTA Section */}
       <div className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap items-center justify-between mb-8">
-            <div>
-              <h2 className="text-3xl font-montserrat font-bold text-sifnos-deep-blue">
-                Find Your Perfect Hotel with AI
-              </h2>
-              <p className="text-gray-600 mt-1">
-                Tell us your preferences and we'll recommend the best accommodations for your Sifnos stay
-              </p>
-            </div>
-          </div>
-          
-          <div className="max-w-4xl mx-auto">
-            <TouristasAI />
-          </div>
+          <TouristasAIBanner />
         </div>
       </div>
       

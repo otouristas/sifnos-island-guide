@@ -28,6 +28,7 @@ import CookiePolicyPage from "./pages/CookiePolicyPage";
 import Index from "./pages/Index";
 import PricingPage from "./pages/PricingPage";
 import ThankYouPage from "./pages/ThankYouPage";
+import TouristasAIPage from "./pages/TouristasAIPage";
 
 // Components
 import Navigation from "./components/Navigation";
@@ -68,6 +69,8 @@ const App = () => (
             {/* Hotel types routes */}
             <Route path="/hotel-types" element={<HotelTypesPage />} />
             <Route path="/hotel-types/:slug" element={<HotelTypePage />} />
+            {/* Touristas AI route */}
+            <Route path="/touristas-ai" element={<TouristasAIPage />} />
             {/* Other routes */}
             <Route path="/beaches" element={<BeachesPage />} />
             <Route path="/travel-guide" element={<TravelGuidePage />} />
