@@ -1,4 +1,3 @@
-
 import { Helmet } from 'react-helmet';
 import { useState } from 'react';
 import { Bot, Search, Filter, Sparkles, MapPin, Hotel } from 'lucide-react';
@@ -26,7 +25,7 @@ export default function TouristasAIPage() {
                   <Bot className="h-6 w-6 text-white" />
                 </div>
                 <div className="inline-flex items-center gap-2">
-                  <h1 className="text-3xl md:text-4xl font-montserrat font-bold">Touristas AI</h1>
+                  <h1 className="text-3xl md:text-4xl font-montserrat font-bold text-white">Touristas AI</h1>
                   <div className="px-2 py-1 text-xs bg-white/30 rounded-full backdrop-blur-sm">BETA</div>
                 </div>
               </div>
@@ -64,14 +63,14 @@ export default function TouristasAIPage() {
               <TabsList className="grid grid-cols-2 bg-white/20 backdrop-blur-sm border border-white/20">
                 <TabsTrigger 
                   value="assistant" 
-                  className="data-[state=active]:bg-white data-[state=active]:text-sifnos-deep-blue data-[state=inactive]:text-white font-medium"
+                  className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-white font-medium"
                 >
                   <Sparkles className="mr-2 h-4 w-4" />
                   AI Recommendations
                 </TabsTrigger>
                 <TabsTrigger 
                   value="search" 
-                  className="data-[state=active]:bg-white data-[state=active]:text-sifnos-deep-blue data-[state=inactive]:text-white font-medium"
+                  className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-white font-medium"
                 >
                   <Filter className="mr-2 h-4 w-4" />
                   Filter Search
@@ -131,12 +130,12 @@ function HotelFilterSearch() {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium mb-3 text-gray-800">Search Hotels</h3>
+        <h3 className="text-lg font-medium mb-3 text-black">Search Hotels</h3>
         <p className="text-gray-700 mb-6">Use the filters below to find your perfect stay in Sifnos</p>
         
         <div className="grid gap-6">
           <div>
-            <label htmlFor="location" className="block text-sm font-medium mb-2 text-gray-800">Location</label>
+            <label htmlFor="location" className="block text-sm font-medium mb-2 text-black">Location</label>
             <select
               id="location"
               className="w-full rounded-md border border-gray-400 p-2 text-gray-800"
@@ -155,7 +154,7 @@ function HotelFilterSearch() {
           </div>
           
           <div>
-            <label htmlFor="price" className="block text-sm font-medium mb-2 text-gray-800">Price Range (€)</label>
+            <label htmlFor="price" className="block text-sm font-medium mb-2 text-black">Price Range (€)</label>
             <div className="flex items-center gap-4">
               <input
                 type="number"
@@ -177,7 +176,7 @@ function HotelFilterSearch() {
           </div>
           
           <div>
-            <label htmlFor="type" className="block text-sm font-medium mb-2 text-gray-800">Hotel Type</label>
+            <label htmlFor="type" className="block text-sm font-medium mb-2 text-black">Hotel Type</label>
             <select
               id="type"
               className="w-full rounded-md border border-gray-400 p-2 text-gray-800"
@@ -195,7 +194,7 @@ function HotelFilterSearch() {
           </div>
           
           <div>
-            <label className="block text-sm font-medium mb-2 text-gray-800">Amenities</label>
+            <label className="block text-sm font-medium mb-2 text-black">Amenities</label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
               {popularAmenities.map((amenity) => (
                 <Button

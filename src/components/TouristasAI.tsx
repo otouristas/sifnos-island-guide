@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
@@ -154,8 +153,8 @@ export default function TouristasAI() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 mb-1">
-        <Bot className="h-5 w-5 text-sifnos-deep-blue" />
-        <h2 className="text-xl font-semibold text-sifnos-deep-blue">AI Hotel Recommendation</h2>
+        <Bot className="h-5 w-5 text-black" />
+        <h2 className="text-xl font-semibold text-black">AI Hotel Recommendation</h2>
       </div>
       <p className="text-gray-700">Tell me your preferences and I'll find your perfect stay in Sifnos</p>
 
@@ -163,20 +162,20 @@ export default function TouristasAI() {
         <div className="space-y-6">
           <Tabs defaultValue="preferences" className="mb-6">
             <TabsList className="bg-gray-100 w-full">
-              <TabsTrigger value="preferences" className="flex-1 data-[state=active]:bg-white data-[state=active]:text-sifnos-deep-blue">
+              <TabsTrigger value="preferences" className="flex-1 data-[state=active]:bg-white data-[state=active]:text-black">
                 <Sparkles className="mr-1.5 h-4 w-4" />
                 Preferences
               </TabsTrigger>
-              <TabsTrigger value="duration" className="flex-1 data-[state=active]:bg-white data-[state=active]:text-sifnos-deep-blue">
+              <TabsTrigger value="duration" className="flex-1 data-[state=active]:bg-white data-[state=active]:text-black">
                 Duration
               </TabsTrigger>
-              <TabsTrigger value="proximity" className="flex-1 data-[state=active]:bg-white data-[state=active]:text-sifnos-deep-blue">
+              <TabsTrigger value="proximity" className="flex-1 data-[state=active]:bg-white data-[state=active]:text-black">
                 Location
               </TabsTrigger>
             </TabsList>
             
             <TabsContent value="preferences" className="mt-4 animate-fade-in">
-              <h3 className="text-lg font-medium mb-4 text-gray-800">What type of stay are you looking for?</h3>
+              <h3 className="text-lg font-medium mb-4 text-black">What type of stay are you looking for?</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Button 
                   variant={preferences.includes('beach') ? "default" : "outline"} 
@@ -222,7 +221,7 @@ export default function TouristasAI() {
             </TabsContent>
             
             <TabsContent value="duration" className="mt-4 animate-fade-in">
-              <h3 className="text-lg font-medium mb-4 text-gray-800">How long will you stay?</h3>
+              <h3 className="text-lg font-medium mb-4 text-black">How long will you stay?</h3>
               <RadioGroup 
                 value={stayDuration} 
                 onValueChange={(value) => setStayDuration(value as AIStayDuration)}
@@ -244,7 +243,7 @@ export default function TouristasAI() {
             </TabsContent>
             
             <TabsContent value="proximity" className="mt-4 animate-fade-in">
-              <h3 className="text-lg font-medium mb-4 text-gray-800">Where do you want to stay?</h3>
+              <h3 className="text-lg font-medium mb-4 text-black">Where do you want to stay?</h3>
               <RadioGroup 
                 value={proximity} 
                 onValueChange={(value) => setProximity(value as AIProximity)}
@@ -287,7 +286,7 @@ export default function TouristasAI() {
       ) : (
         <>
           <div className="mb-6">
-            <h3 className="text-xl font-bold text-sifnos-deep-blue mb-2">{getResultHeading()}</h3>
+            <h3 className="text-xl font-bold text-black mb-2">{getResultHeading()}</h3>
             <div className="flex flex-wrap gap-2 mb-4">
               {preferences.map(pref => (
                 <Badge key={pref} className="bg-sifnos-deep-blue/20 text-sifnos-deep-blue hover:bg-sifnos-deep-blue/20 font-medium">{pref}</Badge>
