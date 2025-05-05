@@ -4,43 +4,43 @@ import { Link } from 'react-router-dom';
 import { MapPin, Calendar, Compass, Utensils, Sun, Anchor, Waves, Umbrella, Ship } from 'lucide-react';
 
 export default function TravelGuidePage() {
-  // Sample travel guide categories
+  // Sample travel guide categories with updated image paths
   const guideCategories = [
     {
       title: "Getting to Sifnos",
       icon: <Ship size={24} />,
       content: "Sifnos is accessible by ferry from Piraeus port in Athens. During the summer months, there are frequent ferry connections to Sifnos from Athens and other Cycladic islands. The journey from Piraeus takes approximately 2.5 to 5 hours depending on the type of ferry (high-speed or conventional). There is no airport on Sifnos, so sea travel is the only option to reach the island.",
-      imageUrl: "/placeholder.svg"
+      imageUrl: "/uploads/beaches/kamares.webp" // Ferry port at Kamares
     },
     {
       title: "Best Time to Visit",
       icon: <Calendar size={24} />,
       content: "The best time to visit Sifnos is from May to October when the weather is warm and ideal for swimming and outdoor activities. July and August are the peak tourist months with higher temperatures and more crowds. For a more peaceful experience with pleasant weather, consider visiting in June or September when the sea is still warm but the crowds have thinned out.",
-      imageUrl: "/placeholder.svg"
+      imageUrl: "/uploads/beaches/plats-gialos.webp" // Platis Gialos beach
     },
     {
       title: "Getting Around",
       icon: <Compass size={24} />,
       content: "The local bus network connects all major villages and beaches on Sifnos. Taxis are available but limited in number. Renting a car, scooter, or ATV is recommended for exploring the island at your own pace. The island also has well-marked hiking trails that connect many of its charming villages and offer spectacular views.",
-      imageUrl: "/placeholder.svg"
+      imageUrl: "/uploads/beaches/kastro.webp" // Kastro for scenic paths
     },
     {
       title: "Beaches",
       icon: <Umbrella size={24} />,
       content: "Sifnos boasts a variety of beautiful beaches catering to different preferences. From organized beaches with facilities like Platis Gialos and Kamares to more secluded coves like Vroulidia and Fassolou. Some beaches offer water sports facilities, while others are ideal for quiet relaxation against stunning backdrops.",
-      imageUrl: "/placeholder.svg"
+      imageUrl: "/uploads/beaches/vathi.webp" // Vathi beach
     },
     {
       title: "Cuisine",
       icon: <Utensils size={24} />,
       content: "Sifnos is renowned for its rich culinary tradition and is considered the gastronomic capital of the Cyclades. Don't miss trying local specialties such as chickpea soup (revithada), mastelo (lamb or goat cooked in red wine), and traditional sweets like honey pie (melopita) and almond cookies (amygdalota). The island is also famous for its pottery, used in traditional slow-cooking methods.",
-      imageUrl: "/placeholder.svg"
+      imageUrl: "/uploads/beaches/apollonia.webp" // Apollonia village with restaurants
     },
     {
       title: "Cultural Highlights",
       icon: <Waves size={24} />,
       content: "Sifnos has a rich cultural heritage with numerous blue-domed churches and monasteries scattered across the island. Visit the Archaeological Museum in Kastro to learn about the island's ancient history. Don't miss the annual cultural festivals, particularly during summer months, where you can experience traditional music, dance, and local celebrations.",
-      imageUrl: "/placeholder.svg"
+      imageUrl: "/uploads/beaches/chrysopigi.webp" // Chrysopigi monastery
     }
   ];
   
@@ -55,7 +55,11 @@ export default function TravelGuidePage() {
       />
       
       {/* Hero Section - Improved vertical padding */}
-      <div className="bg-sifnos-deep-blue py-20 md:py-24">
+      <div className="bg-sifnos-deep-blue py-20 md:py-24" style={{
+        backgroundImage: "linear-gradient(rgba(0, 48, 73, 0.7), rgba(0, 48, 73, 0.85)), url('/uploads/beaches/faros.webp')",
+        backgroundSize: "cover",
+        backgroundPosition: "center"
+      }}>
         <div className="page-container">
           <div className="text-center text-white max-w-3xl mx-auto">
             <h1 className="font-montserrat text-3xl md:text-4xl lg:text-5xl font-bold mb-8">
@@ -129,11 +133,11 @@ export default function TravelGuidePage() {
                   </div>
                 </div>
                 <div className="w-full md:w-1/2 h-72">
-                  <div className="bg-sifnos-teal/20 h-full rounded-lg overflow-hidden">
+                  <div className="h-full rounded-lg overflow-hidden shadow-lg">
                     <img 
                       src={category.imageUrl} 
                       alt={category.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                     />
                   </div>
                 </div>
@@ -143,7 +147,7 @@ export default function TravelGuidePage() {
         </div>
       </div>
 
-      {/* Villages Section - Improved card spacing */}
+      {/* Villages Section - Improved card spacing and updated images */}
       <div className="py-20">
         <div className="page-container">
           <h2 className="font-montserrat text-2xl md:text-3xl font-semibold mb-12 text-center">
@@ -152,11 +156,11 @@ export default function TravelGuidePage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="cycladic-card overflow-hidden h-full">
-              <div className="h-56 bg-sifnos-teal/20">
+              <div className="h-56">
                 <img 
-                  src="/placeholder.svg"
+                  src="/uploads/beaches/apollonia.webp"
                   alt="Apollonia, the capital of Sifnos"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 />
               </div>
               <div className="p-8">
@@ -172,11 +176,11 @@ export default function TravelGuidePage() {
             </div>
             
             <div className="cycladic-card overflow-hidden h-full">
-              <div className="h-56 bg-sifnos-teal/20">
+              <div className="h-56">
                 <img 
-                  src="/placeholder.svg"
+                  src="/uploads/beaches/kastro.webp"
                   alt="Kastro, medieval village in Sifnos"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 />
               </div>
               <div className="p-8">
@@ -192,11 +196,11 @@ export default function TravelGuidePage() {
             </div>
             
             <div className="cycladic-card overflow-hidden h-full">
-              <div className="h-56 bg-sifnos-teal/20">
+              <div className="h-56">
                 <img 
-                  src="/placeholder.svg"
+                  src="/uploads/beaches/artemonas.webp"
                   alt="Artemonas village in Sifnos"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 />
               </div>
               <div className="p-8">
@@ -270,7 +274,11 @@ export default function TravelGuidePage() {
       </div>
 
       {/* Call to Action - Enhanced padding and button */}
-      <div className="py-20 bg-sifnos-deep-blue text-white">
+      <div className="py-20 bg-sifnos-deep-blue text-white" style={{
+        backgroundImage: "linear-gradient(rgba(0, 48, 73, 0.8), rgba(0, 48, 73, 0.9)), url('/uploads/beaches/vathi.webp')",
+        backgroundSize: "cover",
+        backgroundPosition: "center"
+      }}>
         <div className="page-container text-center">
           <h2 className="font-montserrat text-2xl md:text-3xl font-semibold mb-8">
             Ready to Experience Sifnos?
