@@ -51,7 +51,8 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-lib': ['@/components/ui'],
+          // Fix: Instead of importing the directory, reference the index file
+          'ui-lib': ['@/components/ui/index']
         }
       }
     }
