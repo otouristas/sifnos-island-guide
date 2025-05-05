@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 
 export default function TouristasAIBanner() {
   return (
-    <div className="relative overflow-hidden bg-gradient-to-br from-[#9b87f5] to-[#7E69AB] rounded-xl shadow-xl">
+    <div className="relative overflow-hidden bg-gradient-to-br from-sifnos-deep-blue to-sifnos-deep-blue/80 rounded-xl shadow-xl">
       <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
       
@@ -42,7 +42,7 @@ export default function TouristasAIBanner() {
           <Button
             asChild
             size="lg"
-            className="bg-white text-[#7E69AB] hover:bg-white/90 shadow-md"
+            className="bg-white text-sifnos-deep-blue hover:bg-white/90 shadow-md"
           >
             <Link to="/touristas-ai">
               <Search className="mr-2 h-5 w-5" />
@@ -53,8 +53,8 @@ export default function TouristasAIBanner() {
         
         <div className="w-full md:w-auto flex-shrink-0 flex justify-center">
           <div className="relative h-48 w-48 md:h-64 md:w-64 flex items-center justify-center">
-            <div className="absolute inset-0 bg-white/10 rounded-full animate-pulse"></div>
-            <div className="absolute inset-4 bg-white/20 rounded-full animate-pulse delay-75"></div>
+            <div className="absolute inset-0 bg-sifnos-turquoise/20 rounded-full animate-pulse"></div>
+            <div className="absolute inset-4 bg-sifnos-turquoise/30 rounded-full animate-pulse delay-75"></div>
             <div className="relative bg-white/30 rounded-full p-6 backdrop-blur-sm">
               <Bot className="h-24 w-24 md:h-32 md:w-32 text-white" />
             </div>

@@ -2,12 +2,11 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
-import { Hotel, Search, Loader2 } from 'lucide-react';
+import { Hotel, Search, Loader2, Bot, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
 import HotelCard from './HotelCard';
@@ -153,26 +152,27 @@ export default function TouristasAI() {
   };
 
   return (
-    <div className="bg-gradient-to-br from-[#9b87f5] to-[#7E69AB] text-white rounded-xl p-6 md:p-8 shadow-lg border border-white/20">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="bg-white p-2 rounded-lg shadow-inner">
-          <Hotel className="h-6 w-6 text-[#7E69AB]" />
-        </div>
-        <h2 className="text-2xl font-bold tracking-tight">Touristas AI</h2>
-        <span className="text-xs bg-white/20 px-2 py-1 rounded-full backdrop-blur-sm">powered by GreeceCyclades.com</span>
+    <div className="space-y-6">
+      <div className="flex items-center gap-2 mb-1">
+        <Bot className="h-5 w-5 text-sifnos-deep-blue" />
+        <h2 className="text-xl font-semibold text-sifnos-deep-blue">AI Hotel Recommendation</h2>
       </div>
+      <p className="text-gray-600">Tell me your preferences and I'll find your perfect stay in Sifnos</p>
 
       {results.length === 0 ? (
-        <>
-          <p className="mb-6 text-lg opacity-90">
-            Tell us what you're looking for and let our AI recommend the perfect stays in Sifnos.
-          </p>
-          
+        <div className="space-y-6">
           <Tabs defaultValue="preferences" className="mb-6">
-            <TabsList className="bg-white/20 w-full mb-4">
-              <TabsTrigger value="preferences" className="flex-1 data-[state=active]:bg-white data-[state=active]:text-[#7E69AB]">Preferences</TabsTrigger>
-              <TabsTrigger value="duration" className="flex-1 data-[state=active]:bg-white data-[state=active]:text-[#7E69AB]">Duration</TabsTrigger>
-              <TabsTrigger value="proximity" className="flex-1 data-[state=active]:bg-white data-[state=active]:text-[#7E69AB]">Location</TabsTrigger>
+            <TabsList className="bg-gray-100 w-full">
+              <TabsTrigger value="preferences" className="flex-1 data-[state=active]:bg-white data-[state=active]:text-sifnos-deep-blue">
+                <Sparkles className="mr-1.5 h-4 w-4" />
+                Preferences
+              </TabsTrigger>
+              <TabsTrigger value="duration" className="flex-1 data-[state=active]:bg-white data-[state=active]:text-sifnos-deep-blue">
+                Duration
+              </TabsTrigger>
+              <TabsTrigger value="proximity" className="flex-1 data-[state=active]:bg-white data-[state=active]:text-sifnos-deep-blue">
+                Location
+              </TabsTrigger>
             </TabsList>
             
             <TabsContent value="preferences" className="mt-4 animate-fade-in">
@@ -181,8 +181,8 @@ export default function TouristasAI() {
                 <Button 
                   variant={preferences.includes('beach') ? "default" : "outline"} 
                   className={preferences.includes('beach') 
-                    ? "bg-white text-[#7E69AB] border-2 border-white hover:bg-white/90 font-medium" 
-                    : "bg-transparent text-white border-2 border-white hover:bg-white/10 font-medium"
+                    ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 font-medium" 
+                    : "border-gray-300 hover:border-gray-400 text-gray-700 hover:bg-gray-50 font-medium"
                   }
                   onClick={() => togglePreference('beach')}
                 >
@@ -191,8 +191,8 @@ export default function TouristasAI() {
                 <Button 
                   variant={preferences.includes('family') ? "default" : "outline"} 
                   className={preferences.includes('family') 
-                    ? "bg-white text-[#7E69AB] border-2 border-white hover:bg-white/90 font-medium" 
-                    : "bg-transparent text-white border-2 border-white hover:bg-white/10 font-medium"
+                    ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 font-medium" 
+                    : "border-gray-300 hover:border-gray-400 text-gray-700 hover:bg-gray-50 font-medium"
                   }
                   onClick={() => togglePreference('family')}
                 >
@@ -201,8 +201,8 @@ export default function TouristasAI() {
                 <Button 
                   variant={preferences.includes('luxury') ? "default" : "outline"} 
                   className={preferences.includes('luxury') 
-                    ? "bg-white text-[#7E69AB] border-2 border-white hover:bg-white/90 font-medium" 
-                    : "bg-transparent text-white border-2 border-white hover:bg-white/10 font-medium"
+                    ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 font-medium" 
+                    : "border-gray-300 hover:border-gray-400 text-gray-700 hover:bg-gray-50 font-medium"
                   }
                   onClick={() => togglePreference('luxury')}
                 >
@@ -211,8 +211,8 @@ export default function TouristasAI() {
                 <Button 
                   variant={preferences.includes('budget') ? "default" : "outline"} 
                   className={preferences.includes('budget') 
-                    ? "bg-white text-[#7E69AB] border-2 border-white hover:bg-white/90 font-medium" 
-                    : "bg-transparent text-white border-2 border-white hover:bg-white/10 font-medium"
+                    ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 font-medium" 
+                    : "border-gray-300 hover:border-gray-400 text-gray-700 hover:bg-gray-50 font-medium"
                   }
                   onClick={() => togglePreference('budget')}
                 >
@@ -268,7 +268,7 @@ export default function TouristasAI() {
 
           <Button 
             onClick={searchHotels} 
-            className="w-full bg-white text-[#7E69AB] hover:bg-white/90 font-semibold py-6 gap-2 text-base"
+            className="w-full bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 text-white font-semibold py-6 gap-2 text-base"
             disabled={isLoading}
           >
             {isLoading ? (
@@ -283,52 +283,50 @@ export default function TouristasAI() {
               </>
             )}
           </Button>
-        </>
+        </div>
       ) : (
         <>
           <div className="mb-6">
-            <h3 className="text-xl font-bold mb-2">{getResultHeading()}</h3>
+            <h3 className="text-xl font-bold text-sifnos-deep-blue mb-2">{getResultHeading()}</h3>
             <div className="flex flex-wrap gap-2 mb-4">
               {preferences.map(pref => (
-                <Badge key={pref} className="bg-white/20 hover:bg-white/30">{pref}</Badge>
+                <Badge key={pref} className="bg-sifnos-deep-blue/10 text-sifnos-deep-blue hover:bg-sifnos-deep-blue/20">{pref}</Badge>
               ))}
-              <Badge className="bg-white/20 hover:bg-white/30">
+              <Badge className="bg-sifnos-deep-blue/10 text-sifnos-deep-blue hover:bg-sifnos-deep-blue/20">
                 {stayDuration === '1-3' ? 'short stay' : stayDuration === '4-7' ? 'week stay' : 'extended stay'}
               </Badge>
-              <Badge className="bg-white/20 hover:bg-white/30">{proximity}</Badge>
+              <Badge className="bg-sifnos-deep-blue/10 text-sifnos-deep-blue hover:bg-sifnos-deep-blue/20">{proximity}</Badge>
             </div>
           </div>
           
-          <div className="bg-white rounded-lg p-4 shadow-md">
-            <div className="grid grid-cols-1 gap-4">
-              {results.length > 0 ? (
-                results.map(hotel => (
-                  <div key={hotel.id} className="bg-white rounded-lg overflow-hidden">
-                    <HotelCard hotel={hotel} showLogo={false} />
-                  </div>
-                ))
-              ) : (
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-center">
-                  <p className="text-lg font-medium">No hotels found matching your criteria</p>
-                  <p className="text-sm mt-2 opacity-70">Try adjusting your preferences</p>
+          <div className="grid grid-cols-1 gap-6">
+            {results.length > 0 ? (
+              results.map(hotel => (
+                <div key={hotel.id} className="bg-white rounded-lg overflow-hidden shadow-md">
+                  <HotelCard hotel={hotel} showLogo={false} />
                 </div>
-              )}
-            </div>
-            
-            <div className="mt-6 flex flex-col md:flex-row justify-between gap-4">
-              <Button 
-                variant="outline" 
-                onClick={resetSearch} 
-                className="border-[#7E69AB] text-[#7E69AB] hover:bg-[#7E69AB]/10"
-              >
-                New Search
-              </Button>
-              <Button asChild className="bg-[#7E69AB] hover:bg-[#7E69AB]/90">
-                <Link to="/hotels">
-                  View All Hotels
-                </Link>
-              </Button>
-            </div>
+              ))
+            ) : (
+              <div className="bg-gray-50 rounded-lg p-6 text-center">
+                <p className="text-lg font-medium text-gray-700">No hotels found matching your criteria</p>
+                <p className="text-sm mt-2 text-gray-500">Try adjusting your preferences</p>
+              </div>
+            )}
+          </div>
+          
+          <div className="mt-6 flex flex-col sm:flex-row justify-between gap-4">
+            <Button 
+              variant="outline" 
+              onClick={resetSearch} 
+              className="border-gray-300 text-gray-700"
+            >
+              New Search
+            </Button>
+            <Button asChild className="bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90">
+              <Link to="/hotels">
+                View All Hotels
+              </Link>
+            </Button>
           </div>
         </>
       )}
@@ -342,8 +340,8 @@ function Label({ children, active, className }: { children: React.ReactNode; act
     <label 
       className={`${
         active 
-          ? "bg-white text-[#7E69AB] border-2 border-white hover:bg-white/90" 
-          : "bg-transparent text-white border-2 border-white hover:bg-white/10"
+          ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90" 
+          : "bg-white text-gray-700 border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50"
       } flex items-center justify-center p-2 rounded-md cursor-pointer transition-all font-medium ${className || ""}`}
     >
       {children}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { Search, MapPin, Star, BookOpen, BadgeDollarSign, Hotel } from 'lucide-react';
+import { Search, MapPin, Star, BookOpen, BadgeDollarSign, Hotel, Filter } from 'lucide-react';
 import HotelCard from '@/components/HotelCard';
 import LocationCard from '@/components/LocationCard';
 import HotelTypeCard from '@/components/HotelTypeCard';
@@ -11,11 +11,31 @@ import { sifnosLocations } from '../data/locations';
 import { hotelTypes } from '../data/hotelTypes';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export default function HomePage() {
+  const navigate = useNavigate();
   const [featuredHotels, setFeaturedHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+  
+  // Search filters
+  const [selectedLocation, setSelectedLocation] = useState<string>('');
+  const [selectedType, setSelectedType] = useState<string>('');
+  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+  const [priceRange, setPriceRange] = useState<string>('');
+  
+  const amenitiesList = ["Pool", "Wifi", "Breakfast", "Beach Access", "Air Conditioning", "Restaurant"];
+  const priceRanges = [
+    { label: "Any Price", value: "" },
+    { label: "Budget (< €100)", value: "0-100" },
+    { label: "Mid-range (€100-€200)", value: "100-200" },
+    { label: "Luxury (> €200)", value: "200+" }
+  ];
   
   useEffect(() => {
     const fetchFeaturedHotels = async () => {
@@ -42,11 +62,26 @@ export default function HomePage() {
     fetchFeaturedHotels();
   }, []);
   
+  const toggleAmenity = (amenity: string) => {
+    setSelectedAmenities(prevAmenities =>
+      prevAmenities.includes(amenity) 
+        ? prevAmenities.filter(a => a !== amenity)
+        : [...prevAmenities, amenity]
+    );
+  };
+  
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      window.location.href = `/hotels?search=${encodeURIComponent(searchQuery)}`;
-    }
+    
+    const params = new URLSearchParams();
+    
+    if (searchQuery) params.append('search', searchQuery);
+    if (selectedLocation) params.append('location', selectedLocation);
+    if (selectedType) params.append('type', selectedType);
+    if (selectedAmenities.length > 0) params.append('amenities', selectedAmenities.join(','));
+    if (priceRange) params.append('price', priceRange);
+    
+    navigate(`/hotels?${params.toString()}`);
   };
   
   // Showcase locations and hotel types
@@ -81,21 +116,117 @@ export default function HomePage() {
           </p>
           
           {/* Search Form */}
-          <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search for hotels, locations, or amenities"
-                className="w-full py-4 px-6 pl-12 rounded-lg shadow-md text-lg focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <Search className="absolute left-4 top-4 text-gray-400" size={24} />
-              <button type="submit" className="absolute right-2 top-2 bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white font-semibold py-2 px-6 rounded-md transition-colors duration-200">
-                Search
-              </button>
-            </div>
-          </form>
+          <div className="max-w-2xl mx-auto">
+            <form onSubmit={handleSearch} className="relative">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search for hotels, locations, or amenities"
+                  className="w-full py-4 px-6 pl-12 rounded-lg shadow-md text-lg focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <Search className="absolute left-4 top-4 text-gray-400" size={24} />
+                <div className="absolute right-2 top-2 flex gap-2">
+                  <Popover open={showFilters} onOpenChange={setShowFilters}>
+                    <PopoverTrigger asChild>
+                      <Button 
+                        variant="outline"
+                        className="bg-white border-gray-200 hover:bg-gray-100"
+                      >
+                        <Filter className="h-4 w-4 mr-1" /> 
+                        {showFilters ? 'Hide Filters' : 'Filters'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent 
+                      align="end" 
+                      className="w-[300px] p-4" 
+                      sideOffset={5}
+                    >
+                      <div className="space-y-4">
+                        <h3 className="font-medium mb-2">Filter Options</h3>
+                        
+                        <div>
+                          <Label className="block mb-2 text-sm">Location</Label>
+                          <select 
+                            className="w-full p-2 border border-gray-300 rounded-md" 
+                            value={selectedLocation}
+                            onChange={(e) => setSelectedLocation(e.target.value)}
+                          >
+                            <option value="">Any Location</option>
+                            {sifnosLocations.map((location) => (
+                              <option key={location.id} value={location.slug}>
+                                {location.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        
+                        <div>
+                          <Label className="block mb-2 text-sm">Hotel Type</Label>
+                          <select 
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                            value={selectedType}
+                            onChange={(e) => setSelectedType(e.target.value)}
+                          >
+                            <option value="">Any Type</option>
+                            {hotelTypes.map((type) => (
+                              <option key={type.id} value={type.slug}>
+                                {type.title}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        
+                        <div>
+                          <Label className="block mb-2 text-sm">Price Range</Label>
+                          <RadioGroup
+                            value={priceRange}
+                            onValueChange={setPriceRange}
+                          >
+                            {priceRanges.map((range) => (
+                              <div className="flex items-center space-x-2" key={range.value}>
+                                <RadioGroupItem value={range.value} id={`price-${range.value}`} />
+                                <Label htmlFor={`price-${range.value}`}>{range.label}</Label>
+                              </div>
+                            ))}
+                          </RadioGroup>
+                        </div>
+                        
+                        <div>
+                          <Label className="block mb-2 text-sm">Amenities</Label>
+                          <div className="grid grid-cols-2 gap-2">
+                            {amenitiesList.map((amenity) => (
+                              <div className="flex items-center space-x-2" key={amenity}>
+                                <Checkbox 
+                                  id={`amenity-${amenity}`} 
+                                  checked={selectedAmenities.includes(amenity)}
+                                  onCheckedChange={() => toggleAmenity(amenity)}
+                                />
+                                <Label htmlFor={`amenity-${amenity}`}>{amenity}</Label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <Button 
+                          className="w-full"
+                          type="submit"
+                          onClick={() => setShowFilters(false)}
+                        >
+                          Apply Filters
+                        </Button>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                  
+                  <Button type="submit" className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white font-semibold py-2 px-6 rounded-md transition-colors duration-200">
+                    Search
+                  </Button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
 
