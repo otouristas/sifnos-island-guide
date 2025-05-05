@@ -1,9 +1,10 @@
+
 import SEO from '../components/SEO';
 import { Link } from 'react-router-dom';
 import { MapPin, Umbrella, Wind, Coffee, Car, Bus, Anchor, ShieldCheck, Sailboat, Award, TreePalm, Fish, Church } from 'lucide-react';
 
 export default function BeachesPage() {
-  // Updated beaches data with the new information
+  // Updated beaches data with the new information and fixed image paths
   const beaches = [
     {
       name: "Platis Gialos",
@@ -12,7 +13,7 @@ export default function BeachesPage() {
       access: "Bus service from Apollonia or by car with parking available",
       windProtection: "Moderate - protected from north winds",
       bestFor: ["Families", "Swimming", "Food Lovers", "Blue Flag Beach"],
-      imagePath: "/placeholder.svg",
+      imagePath: "/uploads/beaches/plats-gialos.webp",
       location: "Southern Sifnos",
       highlights: [
         "Blue Flag awarded beach",
@@ -28,7 +29,7 @@ export default function BeachesPage() {
       access: "Main port arrival point, walking distance from the port, bus service from Apollonia",
       windProtection: "Good - protected bay",
       bestFor: ["Convenience", "Families", "Port Proximity", "Hiking"],
-      imagePath: "/placeholder.svg",
+      imagePath: "/uploads/beaches/kamares.webp",
       location: "Western Sifnos (Port)",
       highlights: [
         "Main arrival port for ferries",
@@ -44,7 +45,7 @@ export default function BeachesPage() {
       access: "Bus service from Apollonia, road access with parking",
       windProtection: "Excellent - one of the most sheltered beaches",
       bestFor: ["Tranquility", "Scenery", "Swimming", "Archaeology", "Nature"],
-      imagePath: "/placeholder.svg",
+      imagePath: "/uploads/beaches/vathi.webp",
       location: "Western Sifnos",
       highlights: [
         "Prehistoric archaeological site",
@@ -60,7 +61,7 @@ export default function BeachesPage() {
       access: "Bus to Faros then 15-minute walk, or drive with limited parking",
       windProtection: "Moderate - depends on which side of the peninsula",
       bestFor: ["Photography", "Snorkeling", "Natural Beauty", "Religious Interest"],
-      imagePath: "/placeholder.svg",
+      imagePath: "/uploads/beaches/chrysopigi.webp",
       location: "Southeastern Sifnos",
       highlights: [
         "Monastery of Panagia Chrysopigi (1523)",
@@ -76,7 +77,7 @@ export default function BeachesPage() {
       access: "Bus service from Apollonia, road access with parking",
       windProtection: "Good - sheltered bay",
       bestFor: ["Relaxation", "Swimming", "Local Atmosphere", "Coastal Walks"],
-      imagePath: "/placeholder.svg",
+      imagePath: "/uploads/beaches/faros.webp",
       location: "Southeastern Sifnos",
       highlights: [
         "Traditional fishing village",
@@ -92,7 +93,7 @@ export default function BeachesPage() {
       access: "Limited bus service, better accessible by car with parking",
       windProtection: "Moderate - exposed to north winds",
       bestFor: ["Seclusion", "Traditional Charm", "Pottery"],
-      imagePath: "/placeholder.svg",
+      imagePath: "/uploads/beaches/heronissos.webp",
       location: "Northern Sifnos",
       highlights: [
         "Northernmost beach on the island",
@@ -108,7 +109,7 @@ export default function BeachesPage() {
       access: "Dirt road access with limited parking, then 10-minute hike down",
       windProtection: "Poor - exposed to south winds",
       bestFor: ["Seclusion", "Natural Beauty", "Snorkeling", "Peace and Quiet"],
-      imagePath: "/placeholder.svg",
+      imagePath: "/uploads/beaches/vroulidia.webp",
       location: "Northern Sifnos",
       highlights: [
         "Tranquil pebble beach",
@@ -123,7 +124,7 @@ export default function BeachesPage() {
       access: "Only by foot via hiking trails from Platy Gialos or Vathi, or by boat",
       windProtection: "Variable - somewhat exposed",
       bestFor: ["Adventure", "Hiking", "Complete Seclusion"],
-      imagePath: "/placeholder.svg",
+      imagePath: "/uploads/beaches/fykiada.webp",
       location: "Between Platy Gialos and Vathi",
       highlights: [
         "Completely undeveloped beach",
