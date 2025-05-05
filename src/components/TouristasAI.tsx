@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
@@ -156,7 +157,7 @@ export default function TouristasAI() {
         <Bot className="h-5 w-5 text-sifnos-deep-blue" />
         <h2 className="text-xl font-semibold text-sifnos-deep-blue">AI Hotel Recommendation</h2>
       </div>
-      <p className="text-gray-600">Tell me your preferences and I'll find your perfect stay in Sifnos</p>
+      <p className="text-gray-700">Tell me your preferences and I'll find your perfect stay in Sifnos</p>
 
       {results.length === 0 ? (
         <div className="space-y-6">
@@ -175,13 +176,13 @@ export default function TouristasAI() {
             </TabsList>
             
             <TabsContent value="preferences" className="mt-4 animate-fade-in">
-              <h3 className="text-lg font-medium mb-4">What type of stay are you looking for?</h3>
+              <h3 className="text-lg font-medium mb-4 text-gray-800">What type of stay are you looking for?</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Button 
                   variant={preferences.includes('beach') ? "default" : "outline"} 
                   className={preferences.includes('beach') 
                     ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 font-medium" 
-                    : "border-gray-300 hover:border-gray-400 text-gray-700 hover:bg-gray-50 font-medium"
+                    : "border-gray-400 hover:border-gray-600 text-gray-700 hover:bg-gray-50 font-medium"
                   }
                   onClick={() => togglePreference('beach')}
                 >
@@ -191,7 +192,7 @@ export default function TouristasAI() {
                   variant={preferences.includes('family') ? "default" : "outline"} 
                   className={preferences.includes('family') 
                     ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 font-medium" 
-                    : "border-gray-300 hover:border-gray-400 text-gray-700 hover:bg-gray-50 font-medium"
+                    : "border-gray-400 hover:border-gray-600 text-gray-700 hover:bg-gray-50 font-medium"
                   }
                   onClick={() => togglePreference('family')}
                 >
@@ -201,7 +202,7 @@ export default function TouristasAI() {
                   variant={preferences.includes('luxury') ? "default" : "outline"} 
                   className={preferences.includes('luxury') 
                     ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 font-medium" 
-                    : "border-gray-300 hover:border-gray-400 text-gray-700 hover:bg-gray-50 font-medium"
+                    : "border-gray-400 hover:border-gray-600 text-gray-700 hover:bg-gray-50 font-medium"
                   }
                   onClick={() => togglePreference('luxury')}
                 >
@@ -211,7 +212,7 @@ export default function TouristasAI() {
                   variant={preferences.includes('budget') ? "default" : "outline"} 
                   className={preferences.includes('budget') 
                     ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 font-medium" 
-                    : "border-gray-300 hover:border-gray-400 text-gray-700 hover:bg-gray-50 font-medium"
+                    : "border-gray-400 hover:border-gray-600 text-gray-700 hover:bg-gray-50 font-medium"
                   }
                   onClick={() => togglePreference('budget')}
                 >
@@ -221,7 +222,7 @@ export default function TouristasAI() {
             </TabsContent>
             
             <TabsContent value="duration" className="mt-4 animate-fade-in">
-              <h3 className="text-lg font-medium mb-4">How long will you stay?</h3>
+              <h3 className="text-lg font-medium mb-4 text-gray-800">How long will you stay?</h3>
               <RadioGroup 
                 value={stayDuration} 
                 onValueChange={(value) => setStayDuration(value as AIStayDuration)}
@@ -243,7 +244,7 @@ export default function TouristasAI() {
             </TabsContent>
             
             <TabsContent value="proximity" className="mt-4 animate-fade-in">
-              <h3 className="text-lg font-medium mb-4">Where do you want to stay?</h3>
+              <h3 className="text-lg font-medium mb-4 text-gray-800">Where do you want to stay?</h3>
               <RadioGroup 
                 value={proximity} 
                 onValueChange={(value) => setProximity(value as AIProximity)}
@@ -289,12 +290,12 @@ export default function TouristasAI() {
             <h3 className="text-xl font-bold text-sifnos-deep-blue mb-2">{getResultHeading()}</h3>
             <div className="flex flex-wrap gap-2 mb-4">
               {preferences.map(pref => (
-                <Badge key={pref} className="bg-sifnos-deep-blue/10 text-sifnos-deep-blue hover:bg-sifnos-deep-blue/20">{pref}</Badge>
+                <Badge key={pref} className="bg-sifnos-deep-blue/20 text-sifnos-deep-blue hover:bg-sifnos-deep-blue/20 font-medium">{pref}</Badge>
               ))}
-              <Badge className="bg-sifnos-deep-blue/10 text-sifnos-deep-blue hover:bg-sifnos-deep-blue/20">
+              <Badge className="bg-sifnos-deep-blue/20 text-sifnos-deep-blue hover:bg-sifnos-deep-blue/20 font-medium">
                 {stayDuration === '1-3' ? 'short stay' : stayDuration === '4-7' ? 'week stay' : 'extended stay'}
               </Badge>
-              <Badge className="bg-sifnos-deep-blue/10 text-sifnos-deep-blue hover:bg-sifnos-deep-blue/20">{proximity}</Badge>
+              <Badge className="bg-sifnos-deep-blue/20 text-sifnos-deep-blue hover:bg-sifnos-deep-blue/20 font-medium">{proximity}</Badge>
             </div>
           </div>
           
@@ -307,8 +308,8 @@ export default function TouristasAI() {
               ))
             ) : (
               <div className="bg-gray-50 rounded-lg p-6 text-center">
-                <p className="text-lg font-medium text-gray-700">No hotels found matching your criteria</p>
-                <p className="text-sm mt-2 text-gray-500">Try adjusting your preferences</p>
+                <p className="text-lg font-medium text-gray-800">No hotels found matching your criteria</p>
+                <p className="text-base mt-2 text-gray-700">Try adjusting your preferences</p>
               </div>
             )}
           </div>
@@ -317,11 +318,11 @@ export default function TouristasAI() {
             <Button 
               variant="outline" 
               onClick={resetSearch} 
-              className="border-gray-300 text-gray-700"
+              className="border-gray-400 text-gray-800 font-medium"
             >
               New Search
             </Button>
-            <Button asChild className="bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90">
+            <Button asChild className="bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 text-white font-medium">
               <Link to="/hotels">
                 View All Hotels
               </Link>
@@ -340,7 +341,7 @@ function Label({ children, active, className }: { children: React.ReactNode; act
       className={`${
         active 
           ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90" 
-          : "bg-white text-gray-700 border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+          : "bg-white text-gray-800 border-2 border-gray-400 hover:border-gray-600 hover:bg-gray-50"
       } flex items-center justify-center p-2 rounded-md cursor-pointer transition-all font-medium ${className || ""}`}
     >
       {children}

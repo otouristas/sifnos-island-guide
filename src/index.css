@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
 
 @tailwind base;
@@ -36,6 +35,14 @@
     --ring: 220 35% 20%;
 
     --radius: 0.5rem;
+
+    /* Toast Colors with Better Contrast */
+    --toast-success-background: 142 76% 36%;
+    --toast-success-foreground: 0 0% 100%;
+    --toast-error-background: 0 84.2% 60.2%;
+    --toast-error-foreground: 0 0% 100%;
+    --toast-default-background: 220 35% 20%;
+    --toast-default-foreground: 0 0% 100%;
   }
 
   .dark {
@@ -109,4 +116,17 @@
 
 .page-container {
   @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+}
+
+/* Toast styles with better contrast */
+.toast-success {
+  @apply bg-[hsl(var(--toast-success-background))] text-[hsl(var(--toast-success-foreground))];
+}
+
+.toast-error {
+  @apply bg-[hsl(var(--toast-error-background))] text-[hsl(var(--toast-error-foreground))];
+}
+
+.toast-default {
+  @apply bg-[hsl(var(--toast-default-background))] text-[hsl(var(--toast-default-foreground))];
 }

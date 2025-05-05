@@ -22,15 +22,15 @@ export default function TouristasAIPage() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div>
               <div className="flex items-center gap-3">
-                <div className="bg-white/20 backdrop-blur-md p-2 rounded-lg">
+                <div className="bg-white/30 backdrop-blur-md p-2 rounded-lg">
                   <Bot className="h-6 w-6 text-white" />
                 </div>
                 <div className="inline-flex items-center gap-2">
                   <h1 className="text-3xl md:text-4xl font-montserrat font-bold">Touristas AI</h1>
-                  <div className="px-2 py-1 text-xs bg-white/20 rounded-full backdrop-blur-sm">BETA</div>
+                  <div className="px-2 py-1 text-xs bg-white/30 rounded-full backdrop-blur-sm">BETA</div>
                 </div>
               </div>
-              <p className="mt-2 text-white/80 max-w-2xl">
+              <p className="mt-2 text-white/90 max-w-2xl">
                 Your personal AI assistant to discover the perfect accommodations in Sifnos based on your unique preferences and travel style.
               </p>
             </div>
@@ -38,7 +38,7 @@ export default function TouristasAIPage() {
             <div className="flex items-center gap-4">
               <Button
                 variant="outline" 
-                className="border-white/20 text-white hover:bg-white/10 backdrop-blur-sm"
+                className="border-white/40 text-white font-medium hover:bg-white/20 backdrop-blur-sm"
                 onClick={() => setActiveTab('assistant')}
               >
                 <Bot className="mr-2 h-4 w-4" />
@@ -46,7 +46,7 @@ export default function TouristasAIPage() {
               </Button>
               <Button
                 variant="outline"
-                className="border-white/20 text-white hover:bg-white/10 backdrop-blur-sm"
+                className="border-white/40 text-white font-medium hover:bg-white/20 backdrop-blur-sm"
                 onClick={() => setActiveTab('search')}  
               >
                 <Search className="mr-2 h-4 w-4" />
@@ -61,17 +61,17 @@ export default function TouristasAIPage() {
         <Card className="max-w-4xl mx-auto border-none shadow-xl overflow-hidden">
           <div className="bg-gradient-to-r from-sifnos-deep-blue to-sifnos-deep-blue/90 py-4 px-6 border-b border-white/10">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid grid-cols-2 bg-white/10 backdrop-blur-sm border border-white/10">
+              <TabsList className="grid grid-cols-2 bg-white/20 backdrop-blur-sm border border-white/20">
                 <TabsTrigger 
                   value="assistant" 
-                  className="data-[state=active]:bg-white data-[state=active]:text-sifnos-deep-blue data-[state=inactive]:text-white/80 font-medium"
+                  className="data-[state=active]:bg-white data-[state=active]:text-sifnos-deep-blue data-[state=inactive]:text-white font-medium"
                 >
                   <Sparkles className="mr-2 h-4 w-4" />
                   AI Recommendations
                 </TabsTrigger>
                 <TabsTrigger 
                   value="search" 
-                  className="data-[state=active]:bg-white data-[state=active]:text-sifnos-deep-blue data-[state=inactive]:text-white/80 font-medium"
+                  className="data-[state=active]:bg-white data-[state=active]:text-sifnos-deep-blue data-[state=inactive]:text-white font-medium"
                 >
                   <Filter className="mr-2 h-4 w-4" />
                   Filter Search
@@ -131,15 +131,15 @@ function HotelFilterSearch() {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium mb-3">Search Hotels</h3>
-        <p className="text-gray-600 mb-6">Use the filters below to find your perfect stay in Sifnos</p>
+        <h3 className="text-lg font-medium mb-3 text-gray-800">Search Hotels</h3>
+        <p className="text-gray-700 mb-6">Use the filters below to find your perfect stay in Sifnos</p>
         
         <div className="grid gap-6">
           <div>
-            <label htmlFor="location" className="block text-sm font-medium mb-2">Location</label>
+            <label htmlFor="location" className="block text-sm font-medium mb-2 text-gray-800">Location</label>
             <select
               id="location"
-              className="w-full rounded-md border border-gray-300 p-2"
+              className="w-full rounded-md border border-gray-400 p-2 text-gray-800"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
             >
@@ -155,7 +155,7 @@ function HotelFilterSearch() {
           </div>
           
           <div>
-            <label htmlFor="price" className="block text-sm font-medium mb-2">Price Range (€)</label>
+            <label htmlFor="price" className="block text-sm font-medium mb-2 text-gray-800">Price Range (€)</label>
             <div className="flex items-center gap-4">
               <input
                 type="number"
@@ -163,24 +163,24 @@ function HotelFilterSearch() {
                 max={price[1]}
                 value={price[0]}
                 onChange={(e) => setPrice([parseInt(e.target.value), price[1]])}
-                className="w-24 rounded-md border border-gray-300 p-2"
+                className="w-24 rounded-md border border-gray-400 p-2 text-gray-800"
               />
-              <span>to</span>
+              <span className="text-gray-800">to</span>
               <input
                 type="number"
                 min={price[0]}
                 value={price[1]}
                 onChange={(e) => setPrice([price[0], parseInt(e.target.value)])}
-                className="w-24 rounded-md border border-gray-300 p-2"
+                className="w-24 rounded-md border border-gray-400 p-2 text-gray-800"
               />
             </div>
           </div>
           
           <div>
-            <label htmlFor="type" className="block text-sm font-medium mb-2">Hotel Type</label>
+            <label htmlFor="type" className="block text-sm font-medium mb-2 text-gray-800">Hotel Type</label>
             <select
               id="type"
-              className="w-full rounded-md border border-gray-300 p-2"
+              className="w-full rounded-md border border-gray-400 p-2 text-gray-800"
               value={hotelType}
               onChange={(e) => setHotelType(e.target.value)}
             >
@@ -195,7 +195,7 @@ function HotelFilterSearch() {
           </div>
           
           <div>
-            <label className="block text-sm font-medium mb-2">Amenities</label>
+            <label className="block text-sm font-medium mb-2 text-gray-800">Amenities</label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
               {popularAmenities.map((amenity) => (
                 <Button
@@ -203,8 +203,8 @@ function HotelFilterSearch() {
                   type="button"
                   variant={amenities.includes(amenity) ? "default" : "outline"}
                   className={amenities.includes(amenity) 
-                    ? "bg-sifnos-deep-blue text-white" 
-                    : "border-gray-300 text-gray-700"
+                    ? "bg-sifnos-deep-blue text-white font-medium" 
+                    : "border-gray-400 text-gray-800 font-medium"
                   }
                   onClick={() => toggleAmenity(amenity)}
                 >
