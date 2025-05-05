@@ -154,10 +154,10 @@ export default function TouristasAI() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 mb-1">
-        <Bot className="h-5 w-5 text-black" />
-        <h2 className="text-xl font-semibold text-black">AI Hotel Recommendation</h2>
+        <Bot className="h-5 w-5 text-white" />
+        <h2 className="text-xl font-semibold text-white">AI Hotel Recommendation</h2>
       </div>
-      <p className="text-gray-700">Tell me your preferences and I'll find your perfect stay in Sifnos</p>
+      <p className="text-white">Tell me your preferences and I'll find your perfect stay in Sifnos</p>
 
       {results.length === 0 ? (
         <div className="space-y-6">
@@ -176,13 +176,13 @@ export default function TouristasAI() {
             </TabsList>
             
             <TabsContent value="preferences" className="mt-4 animate-fade-in">
-              <h3 className="text-lg font-medium mb-4 text-black">What type of stay are you looking for?</h3>
+              <h3 className="text-lg font-medium mb-4 text-white">What type of stay are you looking for?</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Button 
                   variant={preferences.includes('beach') ? "default" : "outline"} 
                   className={preferences.includes('beach') 
                     ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 font-medium" 
-                    : "border-gray-400 hover:border-gray-600 text-gray-700 hover:bg-gray-50 font-medium"
+                    : "border-gray-400 hover:border-gray-600 text-white hover:bg-gray-50 hover:text-gray-700 font-medium"
                   }
                   onClick={() => togglePreference('beach')}
                 >
@@ -192,7 +192,7 @@ export default function TouristasAI() {
                   variant={preferences.includes('family') ? "default" : "outline"} 
                   className={preferences.includes('family') 
                     ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 font-medium" 
-                    : "border-gray-400 hover:border-gray-600 text-gray-700 hover:bg-gray-50 font-medium"
+                    : "border-gray-400 hover:border-gray-600 text-white hover:bg-gray-50 hover:text-gray-700 font-medium"
                   }
                   onClick={() => togglePreference('family')}
                 >
@@ -202,7 +202,7 @@ export default function TouristasAI() {
                   variant={preferences.includes('luxury') ? "default" : "outline"} 
                   className={preferences.includes('luxury') 
                     ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 font-medium" 
-                    : "border-gray-400 hover:border-gray-600 text-gray-700 hover:bg-gray-50 font-medium"
+                    : "border-gray-400 hover:border-gray-600 text-white hover:bg-gray-50 hover:text-gray-700 font-medium"
                   }
                   onClick={() => togglePreference('luxury')}
                 >
@@ -212,7 +212,7 @@ export default function TouristasAI() {
                   variant={preferences.includes('budget') ? "default" : "outline"} 
                   className={preferences.includes('budget') 
                     ? "bg-sifnos-deep-blue text-white border-2 border-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 font-medium" 
-                    : "border-gray-400 hover:border-gray-600 text-gray-700 hover:bg-gray-50 font-medium"
+                    : "border-gray-400 hover:border-gray-600 text-white hover:bg-gray-50 hover:text-gray-700 font-medium"
                   }
                   onClick={() => togglePreference('budget')}
                 >
@@ -222,7 +222,7 @@ export default function TouristasAI() {
             </TabsContent>
             
             <TabsContent value="duration" className="mt-4 animate-fade-in">
-              <h3 className="text-lg font-medium mb-4 text-black">How long will you stay?</h3>
+              <h3 className="text-lg font-medium mb-4 text-white">How long will you stay?</h3>
               <RadioGroup 
                 value={stayDuration} 
                 onValueChange={(value) => setStayDuration(value as AIStayDuration)}
@@ -244,7 +244,7 @@ export default function TouristasAI() {
             </TabsContent>
             
             <TabsContent value="proximity" className="mt-4 animate-fade-in">
-              <h3 className="text-lg font-medium mb-4 text-black">Where do you want to stay?</h3>
+              <h3 className="text-lg font-medium mb-4 text-white">Where do you want to stay?</h3>
               <RadioGroup 
                 value={proximity} 
                 onValueChange={(value) => setProximity(value as AIProximity)}
@@ -318,7 +318,7 @@ export default function TouristasAI() {
             <Button 
               variant="outline" 
               onClick={resetSearch} 
-              className="border-gray-400 text-gray-800 font-medium"
+              className="border-gray-400 text-white font-medium hover:bg-gray-50 hover:text-gray-700"
             >
               New Search
             </Button>

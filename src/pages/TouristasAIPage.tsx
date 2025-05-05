@@ -1,3 +1,4 @@
+
 import { Helmet } from 'react-helmet';
 import { useState } from 'react';
 import { Bot, Search, Filter, Sparkles, MapPin, Hotel } from 'lucide-react';
@@ -130,12 +131,12 @@ function HotelFilterSearch() {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium mb-3 text-black">Search Hotels</h3>
-        <p className="text-gray-700 mb-6">Use the filters below to find your perfect stay in Sifnos</p>
+        <h3 className="text-lg font-medium mb-3 text-white">Search Hotels</h3>
+        <p className="text-white mb-6">Use the filters below to find your perfect stay in Sifnos</p>
         
         <div className="grid gap-6">
           <div>
-            <label htmlFor="location" className="block text-sm font-medium mb-2 text-black">Location</label>
+            <label htmlFor="location" className="block text-sm font-medium mb-2 text-white">Location</label>
             <select
               id="location"
               className="w-full rounded-md border border-gray-400 p-2 text-gray-800"
@@ -154,7 +155,7 @@ function HotelFilterSearch() {
           </div>
           
           <div>
-            <label htmlFor="price" className="block text-sm font-medium mb-2 text-black">Price Range (€)</label>
+            <label htmlFor="price" className="block text-sm font-medium mb-2 text-white">Price Range (€)</label>
             <div className="flex items-center gap-4">
               <input
                 type="number"
@@ -164,7 +165,7 @@ function HotelFilterSearch() {
                 onChange={(e) => setPrice([parseInt(e.target.value), price[1]])}
                 className="w-24 rounded-md border border-gray-400 p-2 text-gray-800"
               />
-              <span className="text-gray-800">to</span>
+              <span className="text-white">to</span>
               <input
                 type="number"
                 min={price[0]}
@@ -176,7 +177,7 @@ function HotelFilterSearch() {
           </div>
           
           <div>
-            <label htmlFor="type" className="block text-sm font-medium mb-2 text-black">Hotel Type</label>
+            <label htmlFor="type" className="block text-sm font-medium mb-2 text-white">Hotel Type</label>
             <select
               id="type"
               className="w-full rounded-md border border-gray-400 p-2 text-gray-800"
@@ -194,7 +195,7 @@ function HotelFilterSearch() {
           </div>
           
           <div>
-            <label className="block text-sm font-medium mb-2 text-black">Amenities</label>
+            <label className="block text-sm font-medium mb-2 text-white">Amenities</label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
               {popularAmenities.map((amenity) => (
                 <Button
@@ -203,7 +204,7 @@ function HotelFilterSearch() {
                   variant={amenities.includes(amenity) ? "default" : "outline"}
                   className={amenities.includes(amenity) 
                     ? "bg-sifnos-deep-blue text-white font-medium" 
-                    : "border-gray-400 text-gray-800 font-medium"
+                    : "border-gray-400 text-white font-medium hover:bg-gray-50 hover:text-gray-800"
                   }
                   onClick={() => toggleAmenity(amenity)}
                 >
