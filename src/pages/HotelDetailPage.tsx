@@ -13,6 +13,7 @@ import HotelAmenities from '@/components/HotelAmenities';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export default function HotelDetailPage() {
   const { slug } = useParams();
@@ -21,6 +22,7 @@ export default function HotelDetailPage() {
   const [loading, setLoading] = useState(true);
   const [openFaqIndex, setOpenFaqIndex] = useState(-1);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   
   // Define the hotel photos for Meropi
   const meropiPhotos = [
@@ -450,7 +452,8 @@ export default function HotelDetailPage() {
       <div className="bg-white">
         <div className="page-container py-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+            {/* This div now ensures content is always centered on mobile */}
+            <div className={`${isMobile ? 'w-full flex flex-col items-center text-center' : 'flex flex-col sm:flex-row items-center sm:items-start'} gap-4`}>
               {/* Hotel Logo */}
               {hotel?.logo_path && (
                 <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full overflow-hidden border border-gray-200 bg-white flex items-center justify-center flex-shrink-0">
@@ -467,22 +470,22 @@ export default function HotelDetailPage() {
               )}
               
               {/* Hotel name and location */}
-              <div className="text-center sm:text-left">
+              <div className={isMobile ? "text-center" : "text-center sm:text-left"}>
                 <h1 className="font-montserrat text-2xl sm:text-3xl md:text-4xl font-bold mb-2">{hotel?.name}</h1>
-                <div className="flex items-center justify-center sm:justify-start mb-1">
+                <div className={`flex items-center ${isMobile ? 'justify-center' : 'justify-center sm:justify-start'} mb-1`}>
                   <MapPin size={16} className="text-sifnos-turquoise mr-1" />
                   <span className="text-gray-600">{hotel?.location}, Sifnos Island</span>
                 </div>
-                <div className="flex items-center justify-center sm:justify-start">
+                <div className={`flex items-center ${isMobile ? 'justify-center' : 'justify-center sm:justify-start'}`}>
                   {hotel && hotel.rating ? renderStarRating(hotel.rating) : null}
                 </div>
               </div>
             </div>
             
-            {/* Booking Button */}
-            <div className="w-full sm:w-auto mt-4 sm:mt-0">
+            {/* Booking Button - centered on mobile */}
+            <div className={`${isMobile ? 'w-full flex justify-center' : 'w-full sm:w-auto'} mt-4 sm:mt-0`}>
               {hotel?.booking_url && hotel?.booking_platform ? (
-                <Card className="p-2 max-w-xs mx-auto sm:mx-0">
+                <Card className={`p-2 ${isMobile ? 'max-w-xs mx-auto' : 'max-w-xs mx-auto sm:mx-0'}`}>
                   <CardContent className="p-2 flex flex-col items-center">
                     {getBookingPlatformLogo(hotel.booking_platform) && (
                       <div className="mb-2 h-8">
@@ -507,7 +510,7 @@ export default function HotelDetailPage() {
                   </CardContent>
                 </Card>
               ) : (
-                <Button variant="default" className="w-full sm:w-auto bg-sifnos-turquoise hover:bg-sifnos-deep-blue">
+                <Button variant="default" className={`${isMobile ? 'w-full max-w-xs' : 'w-full sm:w-auto'} bg-sifnos-turquoise hover:bg-sifnos-deep-blue`}>
                   Request Availability
                 </Button>
               )}
