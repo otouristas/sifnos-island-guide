@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Star, Flag, RefreshCw } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { Database } from '@/integrations/supabase/types';
 
 interface Review {
   id: string;
@@ -55,7 +56,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
       const { data, error } = await supabase
         .from('hotels')
         .select('*')
-        .eq('id', hotelId)
+        .eq('id', hotelId as string)
         .single();
         
       if (error) throw error;
@@ -76,7 +77,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
       
       // Trigger the edge function to update reviews
       const { data, error } = await supabase.functions.invoke('fetch-booking-reviews', {
-        body: { cacheBuster },
+        body: { cacheBuster, hotelId },
       });
       
       if (error) {
@@ -124,15 +125,18 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
       const { data, error } = await supabase
         .from('hotel_reviews')
         .select('*')
-        .eq('hotel_id', hotelId)
-        .eq('source', 'booking.com')
+        .eq('hotel_id', hotelId as string)
+        .eq('source', 'booking.com' as string)
         .order('date', { ascending: false });
         
       if (error) throw error;
       
       console.log('Fetched reviews for hotel ID:', hotelId);
       console.log('Fetched reviews:', data);
-      setReviews(data || []);
+      
+      // Type assertion to ensure correct typing
+      const typedData = (data || []) as unknown as Review[];
+      setReviews(typedData);
       
     } catch (error) {
       console.error('Error fetching reviews:', error);
@@ -190,7 +194,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-semibold flex items-center">
           <img 
-            src={`/uploads/Booking.com.svg?v=${Date.now()}`}
+            src={`/uploads/Booking.com.svg?v=${Date.now()}-${Math.random().toString(36).substring(2)}`}
             alt="Booking.com" 
             className="h-6 mr-2" 
           />
@@ -262,7 +266,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
                   
                   <div className="mt-2 text-xs text-gray-500 flex items-center">
                     <img 
-                      src={`/uploads/Booking.com.svg?v=${Date.now()}`}
+                      src={`/uploads/Booking.com.svg?v=${Date.now()}-${Math.random().toString(36).substring(2)}`}
                       alt="Booking.com" 
                       className="h-3 mr-1" 
                     />

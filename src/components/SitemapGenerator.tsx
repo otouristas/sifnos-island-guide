@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { generateHotelUrl } from '@/lib/url-utils';
@@ -9,6 +10,13 @@ interface SitemapURL {
   lastmod: string;
   changefreq: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
   priority: number;
+}
+
+interface Hotel {
+  id: string;
+  name: string;
+  updated_at: string;
+  hotel_types: string[];
 }
 
 export default function SitemapGenerator() {
@@ -136,11 +144,14 @@ export default function SitemapGenerator() {
       // Get dynamic hotel pages from Supabase
       let hotelPages: SitemapURL[] = [];
       try {
-        const { data: hotels, error } = await supabase
+        const { data: hotelsData, error } = await supabase
           .from('hotels')
           .select('id, name, updated_at, hotel_types');
         
-        if (!error && hotels) {
+        if (!error && hotelsData) {
+          // Type assertion to ensure correct typing
+          const hotels = hotelsData as unknown as Hotel[];
+          
           // Create sitemap entries for each hotel
           hotelPages = hotels.map(hotel => ({
             loc: `${baseURL}/hotels/${generateHotelUrl(hotel.name)}`,
@@ -226,6 +237,25 @@ ${allPages.map(page => `  <url>
       } else {
         // Browser environment - just log it
         console.log('Generated sitemap with', allPages.length, 'URLs');
+        
+        // Attempt to write to public directory via an edge function for production deployments
+        try {
+          const { data, error } = await supabase.functions.invoke('update-sitemap', {
+            body: { 
+              sitemap: sitemapContent,
+              timestamp: Date.now(),
+              cacheBuster: Math.random().toString(36).substring(2)
+            }
+          });
+          
+          if (error) {
+            console.error('Error writing sitemap via edge function:', error);
+          } else {
+            console.log('Sitemap updated via edge function:', data);
+          }
+        } catch (err) {
+          console.error('Failed to call update-sitemap edge function:', err);
+        }
       }
 
       return sitemapContent;

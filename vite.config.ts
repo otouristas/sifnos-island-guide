@@ -6,75 +6,128 @@ import { componentTagger } from "lovable-tagger";
 import { Plugin } from 'vite';
 import fs from 'fs';
 
-// Create a simple prerender plugin
+// Create a prerender plugin for SEO
 const prerender = (): Plugin => {
   return {
     name: 'prerender',
     apply: 'build',
     async closeBundle() {
-      // This is a simple implementation
       console.log('Prerendering for SEO...');
       // Add more sophisticated prerendering logic here if needed
     }
   };
 };
 
-// Super aggressive cache-busting plugin
+// Ultra aggressive cache-busting plugin for production
 const clearCache = (): Plugin => {
   return {
     name: 'clear-cache',
     apply: 'build',
     enforce: 'pre',
     buildStart() {
-      console.log('Clearing build cache for fresh build...');
-      // Nothing to do on the server side, but logging for visibility
+      console.log('Applying ultra aggressive cache busting for production build...');
     },
     transformIndexHtml(html) {
-      // Generate a more unique timestamp for stronger cache busting
+      // Generate a completely unique identifier for this build
       const timestamp = new Date().toISOString().replace(/[-:.TZ]/g, '');
-      const randomValue = Math.floor(Math.random() * 1000000000).toString(36);
+      const randomValue1 = Math.floor(Math.random() * 1000000000).toString(36);
+      const randomValue2 = Math.random().toString(36).substring(2);
+      const uniqueBuildId = `${timestamp}-${randomValue1}-${randomValue2}`;
       
-      // Add even more aggressive cache control meta tags
+      // Add meta tags that force cache invalidation
       return html.replace(
         '</head>',
         `<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="-1" />
-        <meta name="version" content="${timestamp}-${randomValue}" />
+        <meta name="version" content="${uniqueBuildId}" />
+        <meta name="build-timestamp" content="${Date.now()}" />
         <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
         <script>
-          // Force super aggressive cache refresh on page load
-          window.addEventListener('load', function() {
-            console.log('Page loaded, clearing all caches...');
+          // Ultra aggressive cache busting on page load
+          (function() {
+            console.log('Executing ultra aggressive cache busting...');
+            
+            // Clear all caches immediately
             if ('caches' in window) {
               caches.keys().then(function(names) {
-                for (let name of names) caches.delete(name);
+                for (let name of names) {
+                  console.log('Clearing cache:', name);
+                  caches.delete(name);
+                }
               });
             }
             
-            // Force reload all images by updating src with timestamp
-            document.querySelectorAll('img').forEach(function(img) {
-              if (img.src && !img.src.includes('placeholder.svg')) {
-                const cacheBuster = '${timestamp}-${randomValue}';
-                if (img.src.indexOf('?') !== -1) {
-                  img.src = img.src.split('?')[0] + '?v=' + cacheBuster;
-                } else {
-                  img.src = img.src + '?v=' + cacheBuster;
+            // Force reload service worker
+            if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for (let registration of registrations) {
+                  registration.unregister();
+                  console.log('Service worker unregistered');
                 }
-              }
-            });
+              });
+            }
             
-            // Force reload all CSS resources
-            document.querySelectorAll('link[rel="stylesheet"]').forEach(function(link) {
-              const href = link.getAttribute('href');
-              if (href) {
-                link.href = href.split('?')[0] + '?v=${timestamp}-${randomValue}';
-              }
-            });
-          });
+            function forceRefreshResources() {
+              console.log('Forcing resource refresh...');
+              
+              // Target all <img> elements
+              document.querySelectorAll('img').forEach(function(img) {
+                if (img.src && !img.src.includes('placeholder.svg')) {
+                  const cacheBuster = '${uniqueBuildId}';
+                  const originalSrc = img.src.split('?')[0];
+                  img.src = originalSrc + '?v=' + cacheBuster + '&t=' + Date.now();
+                }
+              });
+              
+              // Target all CSS resources
+              document.querySelectorAll('link[rel="stylesheet"]').forEach(function(link) {
+                const href = link.getAttribute('href');
+                if (href) {
+                  const originalHref = href.split('?')[0];
+                  link.href = originalHref + '?v=${uniqueBuildId}&t=' + Date.now();
+                }
+              });
+              
+              // Target all JS resources
+              document.querySelectorAll('script[src]').forEach(function(script) {
+                const src = script.getAttribute('src');
+                if (src) {
+                  const originalSrc = src.split('?')[0];
+                  const newScript = document.createElement('script');
+                  newScript.src = originalSrc + '?v=${uniqueBuildId}&t=' + Date.now();
+                  script.parentNode.replaceChild(newScript, script);
+                }
+              });
+            }
+            
+            // Execute immediately
+            forceRefreshResources();
+            
+            // And again after a short delay
+            setTimeout(forceRefreshResources, 1000);
+            
+            // Also refresh resources on window focus
+            window.addEventListener('focus', forceRefreshResources);
+            
+            // Force a full page reload every 5 minutes if the tab stays open
+            setTimeout(function() {
+              window.location.reload(true);
+            }, 300000);
+          })();
         </script>
         </head>`
       );
+    },
+    configureServer(server) {
+      // Force aggressive cache busting in development server
+      server.middlewares.use((req, res, next) => {
+        // Add headers to prevent caching in development
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+        next();
+      });
     }
   };
 };
@@ -104,14 +157,14 @@ export default defineConfig(({ mode }) => ({
     target: 'node',
     format: 'esm'
   },
-  // Optimization for better SEO and performance
+  // Ultra aggressive anti-caching optimization for production
   build: {
     target: 'modules',
     modulePreload: true,
-    minify: mode === 'production' ? 'terser' : false, // Only use terser in production
+    minify: mode === 'production' ? 'terser' : false,
     terserOptions: {
       compress: {
-        drop_console: false, // Keep console.logs for now for debugging
+        drop_console: false,
         drop_debugger: true
       }
     },
@@ -122,14 +175,15 @@ export default defineConfig(({ mode }) => ({
           'ui-lib': ['@/components/ui/index'],
           'supabase': ['@supabase/supabase-js']
         },
-        // Use a more aggressive timestamp + random value strategy for cache busting
-        entryFileNames: `assets/[name]-[hash]-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.js`,
-        chunkFileNames: `assets/[name]-[hash]-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.js`,
-        assetFileNames: `assets/[name]-[hash]-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.[ext]`
+        // Use ultra aggressive timestamp + multiple random values for cache busting
+        entryFileNames: `assets/[name]-[hash]-${Date.now()}-${Math.random().toString(36).substring(2)}-${Math.random().toString(36).substring(2)}.js`,
+        chunkFileNames: `assets/[name]-[hash]-${Date.now()}-${Math.random().toString(36).substring(2)}-${Math.random().toString(36).substring(2)}.js`,
+        assetFileNames: `assets/[name]-[hash]-${Date.now()}-${Math.random().toString(36).substring(2)}-${Math.random().toString(36).substring(2)}.[ext]`
       }
     },
-    // Ensure assets are properly hashed for cache busting
     assetsDir: 'assets',
-    sourcemap: mode !== 'production', // Disable sourcemaps in production for performance
+    sourcemap: mode !== 'production',
+    // Force clean builds every time
+    emptyOutDir: true
   }
 }));
