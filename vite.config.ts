@@ -26,6 +26,7 @@ export default defineConfig({
   },
   // Set custom headers for the development server
   server: {
+    port: 8080,
     headers: {
       'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
       'Pragma': 'no-cache',
