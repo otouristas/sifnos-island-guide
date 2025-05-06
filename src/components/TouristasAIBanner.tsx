@@ -39,6 +39,7 @@ export default function TouristasAIBanner() {
                     <SelectValue placeholder="Select location" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="all-locations">All locations</SelectItem>
                     <SelectItem value="apollonia">Apollonia</SelectItem>
                     <SelectItem value="kamares">Kamares</SelectItem>
                     <SelectItem value="platis-gialos">Platis Gialos</SelectItem>

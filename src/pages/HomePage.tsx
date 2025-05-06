@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -134,7 +133,7 @@ export default function HomePage() {
                     <SelectValue placeholder="Where in Sifnos?" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Any location</SelectItem>
+                    <SelectItem value="all-locations">Any location</SelectItem>
                     {sifnosLocations.map((location) => (
                       <SelectItem key={location.id} value={location.slug}>
                         {location.name}

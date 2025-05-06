@@ -19,7 +19,7 @@ export const LocationPlanSection = ({ state, selectedPlan }: LocationPlanSection
           required
           className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
         >
-          <option value="">Select location</option>
+          <option value="select-location">Select location</option>
           <option value="Agios Loukas">Agios Loukas</option>
           <option value="Apollonia">Apollonia</option>
           <option value="Artemonas">Artemonas</option>
@@ -47,10 +47,10 @@ export const LocationPlanSection = ({ state, selectedPlan }: LocationPlanSection
           id="selectedPlan"
           name="selectedPlan"
           required
-          defaultValue={selectedPlan || ""}
+          defaultValue={selectedPlan || "select-plan"}
           className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
         >
-          <option value="">Select a plan</option>
+          <option value="select-plan">Select a plan</option>
           <option value="Basic">Basic Listing (€0)</option>
           <option value="Premium">Premium Listing (€249)</option>
           <option value="Professional">Professional Package (€499)</option>
