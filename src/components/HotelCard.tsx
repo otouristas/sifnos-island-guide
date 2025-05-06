@@ -28,6 +28,10 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
     // For Morpheas Pension, use its featured image
     imageUrl = '/uploads/hotels/morpheas-pension/sifnos-accommodation.jpg.jpeg';
     console.log(`Using Morpheas Pension featured image: ${imageUrl}`);
+  } else if (hotel.name === "Villa Olivia Clara") {
+    // For Villa Olivia Clara, use its featured image
+    imageUrl = '/uploads/hotels/villa-olivia-clara/feature-image.jpeg';
+    console.log(`Using Villa Olivia Clara featured image: ${imageUrl}`);
   } else if (mainPhoto) {
     // For other hotels, use the photos from the database
     imageUrl = `/uploads/hotels/${mainPhoto}`;

@@ -29,6 +29,11 @@ export function generateHotelUrl(name: string): string {
     return "morpheas-pension-apartments";
   }
   
+  // Special case for Villa Olivia Clara
+  if (name === "Villa Olivia Clara") {
+    return "villa-olivia-clara";
+  }
+  
   return slugify(name);
 }
 
@@ -37,7 +42,8 @@ export function generateHotelUrl(name: string): string {
  */
 const KNOWN_HOTEL_IDS = {
   "meropi-rooms-and-apartments": "0c9632b6-db5c-4179-8122-0003896e465e",
-  "morpheas-pension-apartments": null // Will be populated once we have the real ID
+  "morpheas-pension-apartments": null, // Will be populated once we have the real ID
+  "villa-olivia-clara": null // Will be populated once we have the real ID
 };
 
 /**
@@ -52,7 +58,8 @@ export async function getHotelBySlug(slug: string) {
     
     // Special case handling with predefined hotel IDs
     if ((slug === "meropi-rooms-and-apartments" && KNOWN_HOTEL_IDS[slug]) || 
-        (slug === "morpheas-pension-apartments")) {
+        (slug === "morpheas-pension-apartments") ||
+        (slug === "villa-olivia-clara")) {
       
       if (KNOWN_HOTEL_IDS[slug]) {
         console.log(`Using direct ID lookup for ${slug} with ID: ${KNOWN_HOTEL_IDS[slug]}`);
@@ -90,11 +97,13 @@ export async function getHotelBySlug(slug: string) {
     // Import the supabase client directly
     const { supabase } = await import('@/integrations/supabase/client');
     
-    // For Morpheas Pension, add specific search terms
+    // For special hotels, add specific search terms
     let searchQuery = `name.ilike.%${slug.replace(/-/g, ' ')}%`;
     
     if (slug === "morpheas-pension-apartments") {
       searchQuery = "name.ilike.%morpheas%";
+    } else if (slug === "villa-olivia-clara") {
+      searchQuery = "name.ilike.%villa olivia%";
     }
     
     const { data, error } = await supabase
@@ -116,15 +125,19 @@ export async function getHotelBySlug(slug: string) {
     if (data && data.length > 0) {
       console.log(`Found ${data.length} potential hotel matches for slug: ${slug}`);
       
-      // Special override for Meropi if found in results
+      // Special overrides for specific hotels
       const meropiHotel = data.find(hotel => 
         hotel.name.toLowerCase().includes("meropi") || 
         (hotel.id === KNOWN_HOTEL_IDS["meropi-rooms-and-apartments"])
       );
       
-      // Special override for Morpheas if found in results
       const morpheasHotel = data.find(hotel => 
         hotel.name.toLowerCase().includes("morpheas")
+      );
+      
+      const villaOliviaHotel = data.find(hotel => 
+        hotel.name.toLowerCase().includes("villa olivia") ||
+        hotel.name.toLowerCase().includes("olivia clara")
       );
       
       if (meropiHotel && slug.includes("meropi")) {
@@ -135,6 +148,11 @@ export async function getHotelBySlug(slug: string) {
       if (morpheasHotel && slug.includes("morpheas")) {
         console.log(`Found Morpheas hotel in search results: ${morpheasHotel.id}`);
         return morpheasHotel;
+      }
+      
+      if (villaOliviaHotel && slug.includes("villa-olivia")) {
+        console.log(`Found Villa Olivia Clara in search results: ${villaOliviaHotel.id}`);
+        return villaOliviaHotel;
       }
       
       // Sort by name similarity to find the best match

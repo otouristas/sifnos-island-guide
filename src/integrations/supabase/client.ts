@@ -54,6 +54,18 @@ export function getHotelRoomImagePath(photoUrl: string | undefined, hotelName: s
     }
   }
   
+  // For Villa Olivia Clara, handle paths with the subdirectory
+  if (hotelName === 'Villa Olivia Clara') {
+    // Check if the path already includes the villa-olivia-clara subdirectory
+    if (photoUrl.includes('villa-olivia-clara/')) {
+      console.log(`Using path with subdirectory: /uploads/hotels/${photoUrl}`);
+      return `/uploads/hotels/${photoUrl}`;
+    } else {
+      console.log(`Adding subdirectory: /uploads/hotels/villa-olivia-clara/${photoUrl}`);
+      return `/uploads/hotels/villa-olivia-clara/${photoUrl}`;
+    }
+  }
+  
   // For other hotels, use the standard path
   console.log(`Using standard path: /uploads/hotels/${photoUrl}`);
   return `/uploads/hotels/${photoUrl}`;
