@@ -1,7 +1,6 @@
 
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
-import { toast } from 'sonner';
 
 // Default fallback values to prevent errors when env vars are not available
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://wdzlruiekcznbcicjgrz.supabase.co';
@@ -29,17 +28,22 @@ export function getHotelRoomImagePath(photoUrl: string | undefined, hotelName: s
     return '/placeholder.svg';
   }
   
+  console.log(`Getting image path for room: ${photoUrl} in hotel: ${hotelName}`);
+  
   // For Filadaki Villas, handle paths with the subdirectory
   if (hotelName === 'Filadaki Villas') {
     // Check if the path already includes the filadaki-studios subdirectory
     if (photoUrl.includes('filadaki-studios/')) {
+      console.log(`Using path with subdirectory: /uploads/hotels/${photoUrl}`);
       return `/uploads/hotels/${photoUrl}`;
     } else {
+      console.log(`Adding subdirectory: /uploads/hotels/filadaki-studios/${photoUrl}`);
       return `/uploads/hotels/filadaki-studios/${photoUrl}`;
     }
   }
   
   // For other hotels, use the standard path
+  console.log(`Using standard path: /uploads/hotels/${photoUrl}`);
   return `/uploads/hotels/${photoUrl}`;
 }
 

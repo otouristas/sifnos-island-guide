@@ -91,6 +91,14 @@ export default function HotelDetailPage() {
               return room;
             });
           }
+          
+          // Force console log of the updated room image paths for debugging
+          console.log('Updated Filadaki room images:', 
+            hotelData.hotel_rooms.map(room => ({
+              name: room.name,
+              photo_url: room.photo_url
+            }))
+          );
         }
         
         setHotel(hotelData);
