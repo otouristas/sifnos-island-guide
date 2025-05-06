@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, PlusCircle, MinusCircle, ExternalLink, Map } from 'lucide-react';
@@ -55,6 +56,16 @@ export default function HotelDetailPage() {
     { id: '6', photo_url: 'morpheas-pension/sifnos-sunset.jpg.jpeg', is_main_photo: false, description: 'Sunset View' }
   ];
   
+  // Define the hotel photos for Villa Olivia Clara
+  const villaOliviaPhotos = [
+    { id: '1', photo_url: 'villa-olivia-clara/feature-image.jpeg', is_main_photo: true, description: 'Villa Olivia Clara Exterior' },
+    { id: '2', photo_url: 'villa-olivia-clara/Villa-Olivia-Clara_001_pool-side-cabana-min-scaled.jpg.jpeg', is_main_photo: false, description: 'Pool Side Cabana' },
+    { id: '3', photo_url: 'villa-olivia-clara/villa-olivia-clara_002_view-from-the-pool-cabana.jpg.jpeg', is_main_photo: false, description: 'View from Pool' },
+    { id: '4', photo_url: 'villa-olivia-clara/villa-olivia-clara_005_pool-dining-area-at-night.jpg.jpeg', is_main_photo: false, description: 'Pool Dining Area at Night' },
+    { id: '5', photo_url: 'villa-olivia-clara/villa-olivia-clara_042_aerial-view-of-villa.jpg.jpeg', is_main_photo: false, description: 'Aerial View of Villa' },
+    { id: '6', photo_url: 'villa-olivia-clara/villa-olivia-clara-master-bedroo.webp', is_main_photo: false, description: 'Master Bedroom' }
+  ];
+  
   // Define room type images for Filadaki Villas - UPDATED with WebP images
   const filadakiRoomImages = {
     "Gregos": "filadaki-studios/gregos_6406.webp",
@@ -71,6 +82,37 @@ export default function HotelDetailPage() {
     "Apartment (4 People)": "morpheas-pension/apartment-4person.webp",
     "Apartment (5 People)": "morpheas-pension/apartment-5person.webp"
   };
+  
+  // Villa Olivia Clara reviews
+  const villaOliviaReviews = [
+    {
+      id: "vo-1",
+      reviewer_name: "Alexis",
+      rating: 5,
+      comment: "Wonderful stay at the Villa Olivia Clara! The house has a perfect location near Platis Gialos, walking distance, and an amazing view on the bay. The house is clean, big and has a lot of accommodation. Elena made our stay just perfect when we asked for baby equipment and got everything ready for us. Elena is such a great host! It is the 2nd time in 3 years the we book the villa and we should do it again soon for sure.\n\nNo hesitation: the best villa in Sifnos.",
+      country: "France",
+      date: new Date("2023-09-15"),
+      source: "Airbnb"
+    },
+    {
+      id: "vo-2",
+      reviewer_name: "Li-Chuen",
+      rating: 5,
+      comment: "We are family of 5, with three young adult/adolescent children. We have literally had the most magical holiday at Elena's villa. The photos just don't do justice to this incredibly stunning home. The view is breath-taking and it's just 5 min walk to downtown Platis Gialos, where you will find a great beach and many restaurants. Elena's villa is a home, with nothing wanting at all. I actually cannot believe we have had the privilege to stay at this exceptional place.\n\nPlease do not hesitate to book!",
+      country: "Canada",
+      date: new Date("2023-07-22"),
+      source: "Airbnb"
+    },
+    {
+      id: "vo-3",
+      reviewer_name: "Savvas",
+      rating: 5,
+      comment: "We were over the moon with our experience at Villa Olivia Clara in Sifnos Greece. The photos don't even do it justice. When we arrived, we were so surprised to see that it looked even better than the images. There's a high rate sense of style throughout, beautiful design, every corner is a moment. And on top of it all, an incredible view as well! It truly elevated our Sifnos experience.\n\nHighly recommended.",
+      country: "Greece",
+      date: new Date("2023-08-05"),
+      source: "Booking.com"
+    }
+  ];
 
   useEffect(() => {
     const fetchHotelDetails = async () => {
@@ -127,13 +169,34 @@ export default function HotelDetailPage() {
               return room;
             });
           }
+        }
+        
+        // Special handling for Villa Olivia Clara - add photos, logo, and room data
+        if (hotelData.name === 'Villa Olivia Clara') {
+          hotelData.hotel_photos = villaOliviaPhotos;
+          hotelData.logo_path = 'villa-olivia-clara/logo-villa-olivia.png';
           
-          console.log('Updated Morpheas room images:', 
-            hotelData.hotel_rooms?.map(room => ({
-              name: room.name,
-              photo_url: room.photo_url
-            }))
-          );
+          // Add bedroom information if hotel_rooms doesn't exist or is empty
+          if (!hotelData.hotel_rooms || hotelData.hotel_rooms.length === 0) {
+            hotelData.hotel_rooms = [{
+              id: 'vo-bedroom-1',
+              name: 'Bedrooms',
+              description: 'Wake up to views of Platis Gialos, the most popular beach in Sifnos',
+              photo_url: 'villa-olivia-clara/villa-olivia-clara-master-bedroo.webp',
+              capacity: 6,
+              amenities: [
+                'Air conditioning',
+                'King bed',
+                'Single bed',
+                'Baby crib',
+                'Extra pillows and blankets',
+                'Weekly linen changes'
+              ]
+            }];
+          }
+          
+          // Replace Google Maps URL with the provided iframe URL
+          hotelData.google_map_url = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3189.346087785213!2d24.720471076274226!3d36.929896260377085!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1498f3af72130097%3A0x80714f4ef96841f0!2sVilla%20Olivia%20Clara!5e0!3m2!1sen!2sgr!4v1746535854585!5m2!1sen!2sgr";
         }
         
         setHotel(hotelData);
@@ -250,15 +313,104 @@ export default function HotelDetailPage() {
   // Update the canonical URL and metadata to use the slug
   const hotelSlug = generateHotelUrl(hotel.name);
   
-  // Check if current hotel is Meropi Rooms, Filadaki Villas or Morpheas Pension
+  // Check if current hotel is Meropi Rooms, Filadaki Villas, Morpheas Pension, or Villa Olivia Clara
   const isMeropiRooms = hotel.id === '0c9632b6-db5c-4179-8122-0003896e465e';
   const isFiladakiVillas = hotel.name === 'Filadaki Villas';
   const isMorpheasPension = hotel.name === 'Morpheas Pension & Apartments';
+  const isVillaOliviaClara = hotel.name === 'Villa Olivia Clara';
   
   // Fixed Google Maps URLs
   const meropiMapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3780.3010959320573!2d24.67395307627629!3d36.98818015707993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x149892d141f2e833%3A0x82d07f304d07c20a!2sMeropi%20Rooms%20%26%20Apartments!5e1!3m2!1sen!2sgr!4v1746223266808!5m2!1sen!2sgr";
   const filadakiMapUrl = "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12746.806122751592!2d24.66837674455056!3d36.99305700312019!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x149892d3d403b033%3A0x82243ddb15a8b694!2sFiladaki%20Villas!5e0!3m2!1sen!2sgr!4v1746532630259!5m2!1sen!2sgr";
   const morpheasMapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3186.83715183455!2d24.67734841229081!3d36.98982017207772!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x149892d208a2cf15%3A0xf0ca16e2b551aede!2sMorfeas%20Pension!5e0!3m2!1sen!2sgr!4v1746533638366!5m2!1sen!2sgr";
+  const villaOliviaMapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3189.346087785213!2d24.720471076274226!3d36.929896260377085!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1498f3af72130097%3A0x80714f4ef96841f0!2sVilla%20Olivia%20Clara!5e0!3m2!1sen!2sgr!4v1746535854585!5m2!1sen!2sgr";
+
+  // Render custom reviews for Villa Olivia Clara
+  const renderCustomReviews = () => {
+    if (!isVillaOliviaClara) return null;
+    
+    return (
+      <div className="space-y-6">
+        {villaOliviaReviews.map((review) => (
+          <div key={review.id} className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center">
+                <div className="bg-sifnos-turquoise/20 text-sifnos-deep-blue w-10 h-10 rounded-full flex items-center justify-center font-semibold">
+                  {review.reviewer_name.charAt(0)}
+                </div>
+                <div className="ml-3">
+                  <p className="font-medium">{review.reviewer_name}</p>
+                  <p className="text-xs text-gray-500">{review.country}</p>
+                </div>
+              </div>
+              <div>
+                <div className="flex mb-1">
+                  {renderStarRating(review.rating)}
+                </div>
+                <p className="text-xs text-gray-500 text-right">
+                  {new Date(review.date).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short' 
+                  })}
+                </p>
+              </div>
+            </div>
+            <p className="text-gray-600 whitespace-pre-line text-sm mt-2">{review.comment}</p>
+            {review.source && (
+              <div className="flex items-center mt-2 justify-end">
+                <span className="text-xs text-gray-400 mr-1">via</span>
+                <span className="text-xs font-medium">{review.source}</span>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  // Special feature list for Villa Olivia Clara bedroom
+  const renderBedroomFeatures = () => {
+    if (!isVillaOliviaClara) return null;
+    
+    return (
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <h4 className="font-medium mb-2">Bed Configuration</h4>
+          <ul className="space-y-2">
+            <li className="flex items-center">
+              <CheckCircle size={16} className="text-sifnos-turquoise mr-2" />
+              2 king beds (200 x 200)
+            </li>
+            <li className="flex items-center">
+              <CheckCircle size={16} className="text-sifnos-turquoise mr-2" />
+              4 single beds (100 x 200)
+            </li>
+            <li className="flex items-center">
+              <CheckCircle size={16} className="text-sifnos-turquoise mr-2" />
+              1 baby crib (70 x 130)
+            </li>
+          </ul>
+        </div>
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <h4 className="font-medium mb-2">Comfort Features</h4>
+          <ul className="space-y-2">
+            <li className="flex items-center">
+              <CheckCircle size={16} className="text-sifnos-turquoise mr-2" />
+              Air conditioning in all living areas
+            </li>
+            <li className="flex items-center">
+              <CheckCircle size={16} className="text-sifnos-turquoise mr-2" />
+              Extra pillows and blankets
+            </li>
+            <li className="flex items-center">
+              <CheckCircle size={16} className="text-sifnos-turquoise mr-2" />
+              Linen changes weekly
+            </li>
+          </ul>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -453,7 +605,7 @@ export default function HotelDetailPage() {
               
               {/* Rooms */}
               <div className="cycladic-card p-6 md:p-8">
-                <h2 className="text-2xl font-montserrat font-semibold mb-6">Available Rooms</h2>
+                <h2 className="text-2xl font-montserrat font-semibold mb-6">{isVillaOliviaClara ? 'Accommodations' : 'Available Rooms'}</h2>
                 <div className="space-y-10">
                   {hotel?.hotel_rooms?.map((room) => (
                     <div key={room.id} className="border-b pb-8 last:border-b-0 last:pb-0">
@@ -485,8 +637,11 @@ export default function HotelDetailPage() {
                           
                           <p className="mt-3 text-gray-700">{room.description}</p>
                           
+                          {/* Special rendering for Villa Olivia Clara bedroom features */}
+                          {isVillaOliviaClara && room.name === 'Bedrooms' && renderBedroomFeatures()}
+                          
                           {/* Room Amenities - Enhanced with icons */}
-                          {room.amenities && room.amenities.length > 0 && (
+                          {!isVillaOliviaClara && room.amenities && room.amenities.length > 0 && (
                             <div className="mt-4">
                               <p className="text-sm font-medium mb-2">Room Features:</p>
                               <HotelAmenities amenities={room.amenities} />
@@ -548,13 +703,16 @@ export default function HotelDetailPage() {
                 </div>
               </div>
               
-              {/* Reviews - Booking.com Reviews */}
+              {/* Reviews - Booking.com Reviews or Custom Reviews */}
               <div className="cycladic-card p-6 md:p-8">
                 <h2 className="text-2xl font-montserrat font-semibold mb-6">Reviews</h2>
-                {/* Show reviews for either Meropi Rooms, Filadaki Villas, or Morpheas Pension */}
+                {/* Show custom reviews for Villa Olivia Clara */}
+                {isVillaOliviaClara && renderCustomReviews()}
+                
+                {/* Show reviews from BookingReviews component for other hotels */}
                 {(isMeropiRooms || isFiladakiVillas || isMorpheasPension) && <BookingReviews hotelId={hotel.id} />}
                 
-                {!isMeropiRooms && !isFiladakiVillas && !isMorpheasPension && (
+                {!isMeropiRooms && !isFiladakiVillas && !isMorpheasPension && !isVillaOliviaClara && (
                   <div className="text-center py-8">
                     <p className="text-gray-600">No reviews available for this hotel.</p>
                   </div>
@@ -721,6 +879,7 @@ export default function HotelDetailPage() {
                 <div className="h-64 bg-gray-100 rounded-md overflow-hidden shadow-md">
                   <iframe
                     src={
+                      isVillaOliviaClara ? villaOliviaMapUrl :
                       isMorpheasPension ? morpheasMapUrl : 
                       isFiladakiVillas ? filadakiMapUrl : 
                       isMeropiRooms ? meropiMapUrl : 
@@ -778,3 +937,4 @@ export default function HotelDetailPage() {
     </>
   );
 }
+
