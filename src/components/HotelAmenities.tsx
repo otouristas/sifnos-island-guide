@@ -1,24 +1,29 @@
 
-import { Wifi, Coffee, Tv, CircleParking, AirVent, Waves, Home, Bath, Refrigerator, Bed, UtensilsCrossed, Power, Shirt, Cigarette, Droplets, TreePine, Utensils } from 'lucide-react';
+import { 
+  Wifi, Coffee, Tv, CircleParking, AirVent, Waves, Home, Bath, 
+  Refrigerator, Bed, UtensilsCrossed, Power, Shirt, Cigarette, 
+  Droplets, TreePine, Utensils 
+} from 'lucide-react';
+import { useMemo } from 'react';
 
 interface HotelAmenitiesProps {
   amenities: string[];
 }
 
 const HotelAmenities = ({ amenities }: HotelAmenitiesProps) => {
-  // Enhanced amenity icons mapping with more options
-  const amenityIcons: Record<string, JSX.Element> = {
+  // Enhanced amenity icons mapping with more options - memoized to improve rendering performance
+  const amenityIcons = useMemo(() => ({
     wifi: <Wifi size={14} className="mr-1" />,
     breakfast: <Coffee size={14} className="mr-1" />,
     tv: <Tv size={14} className="mr-1" />,
     parking: <CircleParking size={14} className="mr-1" />,
     airconditioning: <AirVent size={14} className="mr-1" />,
     seaview: <Waves size={14} className="mr-1" />,
-    balcony: <Home size={14} className="mr-1" />, // Using Home icon instead of Balcony
+    balcony: <Home size={14} className="mr-1" />,
     bath: <Bath size={14} className="mr-1" />,
     'air conditioning': <AirVent size={14} className="mr-1" />,
     refrigerator: <Refrigerator size={14} className="mr-1" />,
-    shower: <Bath size={14} className="mr-1" />, // Using Bath instead of Shower
+    shower: <Bath size={14} className="mr-1" />,
     'sea view': <Waves size={14} className="mr-1" />,
     'flat-screen tv': <Tv size={14} className="mr-1" />,
     'free wifi': <Wifi size={14} className="mr-1" />,
@@ -27,23 +32,26 @@ const HotelAmenities = ({ amenities }: HotelAmenitiesProps) => {
     kitchenware: <UtensilsCrossed size={14} className="mr-1" />,
     'private bathroom': <Bath size={14} className="mr-1" />,
     'socket near the bed': <Power size={14} className="mr-1" />,
-    'wardrobe or closet': <Shirt size={14} className="mr-1" />, // Using Shirt instead of ShirtFolded
+    'wardrobe or closet': <Shirt size={14} className="mr-1" />,
     'no smoking': <Cigarette size={14} className="mr-1 line-through" />,
-    'private pool': <Droplets size={14} className="mr-1" />, // Changed from Pool to Droplets
+    'private pool': <Droplets size={14} className="mr-1" />,
     'bbq': <Utensils size={14} className="mr-1" />,
-    'private garden': <TreePine size={14} className="mr-1" />, // Changed from Garden to TreePine
-    'garden': <TreePine size={14} className="mr-1" />, // Changed from Garden to TreePine
+    'private garden': <TreePine size={14} className="mr-1" />,
+    'garden': <TreePine size={14} className="mr-1" />,
     'outdoor dining area': <TreePine size={14} className="mr-1" />,
-    'pool bar': <Droplets size={14} className="mr-1" />, // Changed from Pool to Droplets
+    'pool bar': <Droplets size={14} className="mr-1" />,
     'fireplace': <Home size={14} className="mr-1" />,
     'free parking': <CircleParking size={14} className="mr-1" />,
     'fully equipped kitchen': <UtensilsCrossed size={14} className="mr-1" />,
     'smart tv': <Tv size={14} className="mr-1" />,
     'laundry facilities': <Shirt size={14} className="mr-1" />,
-  };
+  }), []);
 
-  // Filter out 'restaurant' from amenities
-  const filteredAmenities = amenities.filter(amenity => amenity.toLowerCase() !== 'restaurant');
+  // Filter out 'restaurant' from amenities and memoize the filtered list
+  const filteredAmenities = useMemo(() => 
+    amenities.filter(amenity => amenity.toLowerCase() !== 'restaurant'),
+    [amenities]
+  );
 
   return (
     <div className="flex flex-wrap gap-1.5">
@@ -54,7 +62,7 @@ const HotelAmenities = ({ amenities }: HotelAmenitiesProps) => {
         
         return (
           <span 
-            key={index} 
+            key={`${normalizedAmenity}-${index}`}
             className="flex items-center text-xs bg-gray-100 px-1.5 py-0.5 rounded"
             title={amenity}
           >
