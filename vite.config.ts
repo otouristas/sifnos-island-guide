@@ -19,7 +19,7 @@ const prerender = (): Plugin => {
   };
 };
 
-// Enhanced cache-busting plugin
+// Super aggressive cache-busting plugin
 const clearCache = (): Plugin => {
   return {
     name: 'clear-cache',
@@ -30,28 +30,47 @@ const clearCache = (): Plugin => {
       // Nothing to do on the server side, but logging for visibility
     },
     transformIndexHtml(html) {
-      // Add strong cache control meta tags and timestamp for cache busting
-      const timestamp = Date.now();
+      // Generate a more unique timestamp for stronger cache busting
+      const timestamp = new Date().toISOString().replace(/[-:.TZ]/g, '');
+      const randomValue = Math.floor(Math.random() * 1000000000).toString(36);
+      
+      // Add even more aggressive cache control meta tags
       return html.replace(
         '</head>',
-        `<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        `<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
         <meta http-equiv="Pragma" content="no-cache" />
-        <meta http-equiv="Expires" content="0" />
-        <meta name="version" content="${timestamp}" />
+        <meta http-equiv="Expires" content="-1" />
+        <meta name="version" content="${timestamp}-${randomValue}" />
         <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
         <script>
-          // Force cache refresh on page load
+          // Force super aggressive cache refresh on page load
           window.addEventListener('load', function() {
-            if (!window.location.hash) {
-              if (window.performance && window.performance.navigation.type === 1) {
-                console.log('Page was reloaded, clearing cache...');
-                if ('caches' in window) {
-                  caches.keys().then(function(names) {
-                    for (let name of names) caches.delete(name);
-                  });
+            console.log('Page loaded, clearing all caches...');
+            if ('caches' in window) {
+              caches.keys().then(function(names) {
+                for (let name of names) caches.delete(name);
+              });
+            }
+            
+            // Force reload all images by updating src with timestamp
+            document.querySelectorAll('img').forEach(function(img) {
+              if (img.src && !img.src.includes('placeholder.svg')) {
+                const cacheBuster = '${timestamp}-${randomValue}';
+                if (img.src.indexOf('?') !== -1) {
+                  img.src = img.src.split('?')[0] + '?v=' + cacheBuster;
+                } else {
+                  img.src = img.src + '?v=' + cacheBuster;
                 }
               }
-            }
+            });
+            
+            // Force reload all CSS resources
+            document.querySelectorAll('link[rel="stylesheet"]').forEach(function(link) {
+              const href = link.getAttribute('href');
+              if (href) {
+                link.href = href.split('?')[0] + '?v=${timestamp}-${randomValue}';
+              }
+            });
           });
         </script>
         </head>`
@@ -103,10 +122,10 @@ export default defineConfig(({ mode }) => ({
           'ui-lib': ['@/components/ui/index'],
           'supabase': ['@supabase/supabase-js']
         },
-        // Add asset hashing with timestamp for aggressive cache busting
-        entryFileNames: mode === 'production' ? 'assets/[name]-[hash]-[time].js' : 'assets/[name].js',
-        chunkFileNames: mode === 'production' ? 'assets/[name]-[hash]-[time].js' : 'assets/[name].js',
-        assetFileNames: mode === 'production' ? 'assets/[name]-[hash]-[time].[ext]' : 'assets/[name].[ext]'
+        // Use a more aggressive timestamp + random value strategy for cache busting
+        entryFileNames: `assets/[name]-[hash]-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.js`,
+        chunkFileNames: `assets/[name]-[hash]-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.js`,
+        assetFileNames: `assets/[name]-[hash]-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.[ext]`
       }
     },
     // Ensure assets are properly hashed for cache busting

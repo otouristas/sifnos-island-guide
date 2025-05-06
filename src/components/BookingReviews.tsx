@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { Star, Flag } from 'lucide-react';
+import { Star, Flag, RefreshCw } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -24,6 +24,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
   const [refreshing, setRefreshing] = useState(false);
   const [hotelData, setHotelData] = useState<any>(null);
   const { toast } = useToast();
+  const [refreshCount, setRefreshCount] = useState(0); // Add this to force refreshes
 
   // Function to render star rating
   const renderStarRating = (rating: number) => {
@@ -70,8 +71,13 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
     try {
       setRefreshing(true);
       
+      // Generate cache buster to add to the URL
+      const cacheBuster = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+      
       // Trigger the edge function to update reviews
-      const { data, error } = await supabase.functions.invoke('fetch-booking-reviews');
+      const { data, error } = await supabase.functions.invoke('fetch-booking-reviews', {
+        body: { cacheBuster },
+      });
       
       if (error) {
         console.error('Edge function error:', error);
@@ -88,6 +94,9 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
         title: "Reviews updated",
         description: data.message || "Latest reviews from Booking.com have been fetched",
       });
+      
+      // Update refresh count to force a data refresh
+      setRefreshCount(prev => prev + 1);
       
       // Fetch the updated reviews
       await fetchReviews();
@@ -108,6 +117,10 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
   const fetchReviews = async () => {
     try {
       console.log('Fetching reviews for hotel ID:', hotelId);
+      
+      // Add cache busting parameter to the request
+      const cacheBuster = Date.now();
+      
       const { data, error } = await supabase
         .from('hotel_reviews')
         .select('*')
@@ -147,7 +160,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
           event: '*',
           schema: 'public',
           table: 'hotel_reviews',
-          filter: `hotel_id=eq.${hotelId} AND source=eq.booking.com`,
+          filter: `hotel_id=eq.${hotelId}`,
         },
         (payload) => {
           console.log('Realtime update received:', payload);
@@ -159,7 +172,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [hotelId]);
+  }, [hotelId, refreshCount]); // Add refreshCount to dependencies
 
   if (loading) {
     return (
@@ -177,7 +190,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-semibold flex items-center">
           <img 
-            src="/uploads/Booking.com.svg" 
+            src={`/uploads/Booking.com.svg?v=${Date.now()}`}
             alt="Booking.com" 
             className="h-6 mr-2" 
           />
@@ -188,15 +201,18 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
         <button
           onClick={fetchBookingReviews}
           disabled={refreshing}
-          className="text-sifnos-turquoise hover:text-sifnos-deep-blue flex items-center"
+          className="text-sifnos-turquoise hover:text-sifnos-deep-blue flex items-center gap-2 px-3 py-1 border border-sifnos-turquoise/30 rounded-md hover:bg-sifnos-turquoise/10 transition-colors"
         >
           {refreshing ? (
             <>
-              <div className="animate-spin h-4 w-4 border-t-2 border-sifnos-turquoise rounded-full mr-2"></div>
+              <div className="animate-spin h-4 w-4 border-t-2 border-sifnos-turquoise rounded-full mr-1"></div>
               Refreshing...
             </>
           ) : (
-            <>Refresh Reviews</>
+            <>
+              <RefreshCw size={16} className="mr-1" />
+              Refresh Reviews
+            </>
           )}
         </button>
       </div>
@@ -206,8 +222,9 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
           <p className="text-gray-600">No Booking.com reviews available yet.</p>
           <button
             onClick={fetchBookingReviews}
-            className="mt-4 text-sifnos-turquoise hover:text-sifnos-deep-blue"
+            className="mt-4 text-sifnos-turquoise hover:text-sifnos-deep-blue flex items-center gap-2 mx-auto px-4 py-2 border border-sifnos-turquoise/30 rounded-md hover:bg-sifnos-turquoise/10 transition-colors"
           >
+            <RefreshCw size={16} />
             Fetch Reviews from Booking.com
           </button>
         </div>
@@ -245,7 +262,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
                   
                   <div className="mt-2 text-xs text-gray-500 flex items-center">
                     <img 
-                      src="/uploads/Booking.com.svg" 
+                      src={`/uploads/Booking.com.svg?v=${Date.now()}`}
                       alt="Booking.com" 
                       className="h-3 mr-1" 
                     />
