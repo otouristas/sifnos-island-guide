@@ -33,11 +33,37 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <meta name="version" content="<?php echo time(); ?>" />
+    <meta name="build-version" content="<%= Date.now() %>" />
 
     <!-- Favicon -->
     <link rel="icon" href="/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png" type="image/png">
     <link rel="shortcut icon" href="/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png" type="image/png">
     <link rel="apple-touch-icon" href="/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png">
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js')
+          .then(function(registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          })
+          .catch(function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
+      
+      // Force refresh if the page is older than 1 hour
+      const lastRefresh = localStorage.getItem('lastPageRefresh');
+      const now = Date.now();
+      if (!lastRefresh || (now - parseInt(lastRefresh) > 3600000)) {
+        localStorage.setItem('lastPageRefresh', now.toString());
+        if (!window.location.href.includes('refresh=true')) {
+          window.location.href = window.location.href + (window.location.href.includes('?') ? '&' : '?') + 'refresh=true&t=' + now;
+        }
+      }
+    </script>
   </head>
 
   <body>
@@ -45,5 +71,36 @@
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Additional cache-busting script -->
+    <script>
+      (function() {
+        // Try to clear any browser caches
+        try {
+          // Clear localStorage items older than 1 day
+          Object.keys(localStorage).forEach(key => {
+            if (key.startsWith('cache-')) {
+              localStorage.removeItem(key);
+            }
+          });
+          
+          // Mark current page version
+          localStorage.setItem('pageVersion', Date.now().toString());
+          
+          // Set no-cache headers for fetch requests
+          const originalFetch = window.fetch;
+          window.fetch = function(url, options) {
+            options = options || {};
+            options.headers = options.headers || {};
+            options.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+            options.headers['Pragma'] = 'no-cache';
+            options.headers['Expires'] = '0';
+            return originalFetch(url, options);
+          };
+        } catch (e) {
+          console.error('Cache clearing error:', e);
+        }
+      })();
+    </script>
   </body>
 </html>
