@@ -31,6 +31,32 @@ const addCachePreventionMeta = () => {
   metaBuildVersion.content = buildVersion;
   document.head.appendChild(metaBuildVersion);
   
+  // Force reload cached resources
+  const forceReload = document.createElement('script');
+  forceReload.textContent = `
+    // Force cache refresh
+    if ('caches' in window) {
+      caches.keys().then(function(names) {
+        for (let name of names) caches.delete(name);
+      });
+    }
+    // Add timestamp to all image URLs to bypass cache
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        document.querySelectorAll('img').forEach(function(img) {
+          const timestamp = new Date().getTime();
+          const randomVal = Math.floor(Math.random() * 1000);
+          if (img.src.indexOf('?') === -1) {
+            img.src = img.src + '?v=' + timestamp + '-' + randomVal;
+          } else {
+            img.src = img.src.split('?')[0] + '?v=' + timestamp + '-' + randomVal;
+          }
+        });
+      }, 300);
+    });
+  `;
+  document.head.appendChild(forceReload);
+  
   console.log('Added cache prevention meta tags with build version:', buildVersion);
 };
 

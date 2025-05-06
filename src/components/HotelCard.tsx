@@ -49,6 +49,23 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
     
     // Set the image source with cache busting
     setImageSrc(imageUrl);
+    
+    // Force reload the image by creating a new Image object
+    const img = new Image();
+    img.onload = () => {
+      setImageLoaded(true);
+      setImageError(false);
+    };
+    img.onerror = () => {
+      console.error(`Failed to load image for ${hotel.name}: ${imageUrl}`);
+      setImageError(true);
+      // If Villa Olivia Clara image fails, try with alternative path
+      if (hotel.name === "Villa Olivia Clara") {
+        const altPath = `/uploads/hotels/villa-olivia-clara/Villa-Olivia-Clara_001_pool-side-cabana-min-scaled.jpg.jpeg?v=${Date.now()}-${Math.random() * 1000}`;
+        setImageSrc(altPath);
+      }
+    };
+    img.src = imageUrl;
   }, [hotel.name, mainPhoto]);
   
   // Get the first hotel type for icon display (if any)
