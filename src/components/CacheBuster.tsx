@@ -32,7 +32,8 @@ const CacheBuster = () => {
     // Force a hard reload of the page
     const forceRefresh = () => {
       console.log('Forcing page refresh');
-      window.location.reload(true);
+      // Fixed: Removed the argument here - window.location.reload() takes no arguments in strict TypeScript
+      window.location.reload();
     };
 
     // Clear caches and force reload
