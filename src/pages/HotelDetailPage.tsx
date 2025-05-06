@@ -220,24 +220,25 @@ export default function HotelDetailPage() {
   const isMeropiRooms = hotel.id === '0c9632b6-db5c-4179-8122-0003896e465e';
   const isFiladakiVillas = hotel.name === 'Filadaki Villas';
   
-  // Fixed Google Maps URL for Meropi Rooms
+  // Fixed Google Maps URLs
   const meropiMapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3780.3010959320573!2d24.67395307627629!3d36.98818015707993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x149892d141f2e833%3A0x82d07f304d07c20a!2sMeropi%20Rooms%20%26%20Apartments!5e1!3m2!1sen!2sgr!4v1746223266808!5m2!1sen!2sgr";
+  const filadakiMapUrl = "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12746.806122751592!2d24.66837674455056!3d36.99305700312019!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x149892d3d403b033%3A0x82243ddb15a8b694!2sFiladaki%20Villas!5e0!3m2!1sen!2sgr!4v1746532630259!5m2!1sen!2sgr";
 
   return (
     <>
       <SEO 
-        title={`${hotel.name} - Hotel in ${hotel.location}, Sifnos Island`}
-        description={hotel.short_description || `Discover ${hotel.name} located in ${hotel.location}, Sifnos. Enjoy luxurious accommodations with modern amenities and stunning views of the Aegean Sea.`}
+        title={`${hotel?.name} - Hotel in ${hotel?.location}, Sifnos Island`}
+        description={hotel?.short_description || `Discover ${hotel?.name} located in ${hotel?.location}, Sifnos. Enjoy luxurious accommodations with modern amenities and stunning views of the Aegean Sea.`}
         keywords={[
           'sifnos hotels', 
-          hotel.name.toLowerCase(), 
-          `${hotel.location.toLowerCase()} accommodation`, 
+          hotel?.name.toLowerCase(), 
+          `${hotel?.location.toLowerCase()} accommodation`, 
           'sifnos island hotel', 
           'aegean sea view',
           'greek cyclades hotel'
         ]}
         schemaType="Hotel"
-        canonical={`https://hotelssifnos.com/hotels/${hotelSlug}`}
+        canonical={`https://hotelssifnos.com/hotels/${hotel ? generateHotelUrl(hotel.name) : ''}`}
         imageUrl={activeImage ? `https://hotelssifnos.com${activeImage}` : undefined}
       />
       
@@ -250,19 +251,19 @@ export default function HotelDetailPage() {
               <li className="text-gray-400">/</li>
               <li><Link to="/hotels" className="text-sifnos-deep-blue hover:text-sifnos-turquoise">Hotels</Link></li>
               <li className="text-gray-400">/</li>
-              <li className="text-gray-600 truncate max-w-[200px]">{hotel.name}</li>
+              <li className="text-gray-600 truncate max-w-[200px]">{hotel?.name}</li>
             </ul>
           </nav>
         </div>
       </div>
       
-      {/* Hotel Title Section with Logo - UPDATED FOR BETTER RESPONSIVENESS */}
+      {/* Hotel Title Section with Logo */}
       <div className="bg-white">
         <div className="page-container py-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-              {/* Hotel Logo - Updated with better responsive sizing */}
-              {hotel.logo_path && (
+              {/* Hotel Logo */}
+              {hotel?.logo_path && (
                 <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full overflow-hidden border border-gray-200 bg-white flex items-center justify-center flex-shrink-0">
                   <img 
                     src={`/uploads/hotels/${hotel.logo_path}`} 
@@ -276,22 +277,22 @@ export default function HotelDetailPage() {
                 </div>
               )}
               
-              {/* Hotel name and location - centered on mobile, left-aligned on larger screens */}
+              {/* Hotel name and location */}
               <div className="text-center sm:text-left">
-                <h1 className="font-montserrat text-2xl sm:text-3xl md:text-4xl font-bold mb-2">{hotel.name}</h1>
+                <h1 className="font-montserrat text-2xl sm:text-3xl md:text-4xl font-bold mb-2">{hotel?.name}</h1>
                 <div className="flex items-center justify-center sm:justify-start mb-1">
                   <MapPin size={16} className="text-sifnos-turquoise mr-1" />
-                  <span className="text-gray-600">{hotel.location}, Sifnos Island</span>
+                  <span className="text-gray-600">{hotel?.location}, Sifnos Island</span>
                 </div>
                 <div className="flex items-center justify-center sm:justify-start">
-                  {renderStarRating(hotel.rating)}
+                  {hotel && hotel.rating ? renderStarRating(hotel.rating) : null}
                 </div>
               </div>
             </div>
             
             {/* Booking Button */}
             <div className="w-full sm:w-auto mt-4 sm:mt-0">
-              {hotel.booking_url && hotel.booking_platform ? (
+              {hotel?.booking_url && hotel?.booking_platform ? (
                 <Card className="p-2 max-w-xs mx-auto sm:mx-0">
                   <CardContent className="p-2 flex flex-col items-center">
                     {getBookingPlatformLogo(hotel.booking_platform) && (
@@ -326,88 +327,44 @@ export default function HotelDetailPage() {
         </div>
       </div>
       
-      {/* Photo Gallery - ENHANCED WITH CAROUSEL FOR FILADAKI */}
+      {/* Photo Gallery - ENHANCED WITH CAROUSEL */}
       <div className="bg-gray-50 py-8">
         <div className="page-container">
-          {isFiladakiVillas ? (
-            <div className="space-y-4">
-              {/* Main large image */}
-              <div className="rounded-lg overflow-hidden aspect-video shadow-md">
-                <img 
-                  src={activeImage || '/placeholder.svg'} 
-                  alt={hotel.name} 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              
-              {/* Carousel for thumbnails */}
-              <Carousel className="w-full">
-                <CarouselContent>
-                  {hotel.hotel_photos?.map((photo, index) => (
-                    <CarouselItem key={photo.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
-                      <div 
-                        className="rounded-lg overflow-hidden aspect-square cursor-pointer border-2 h-full
-                          transition-all hover:opacity-90 hover:shadow-md
-                          ${activeImage === `/uploads/hotels/${photo.photo_url}` ? 'border-sifnos-turquoise' : 'border-transparent'}"
-                        onClick={() => setActiveImage(`/uploads/hotels/${photo.photo_url}`)}
-                      >
-                        <img 
-                          src={`/uploads/hotels/${photo.photo_url}`} 
-                          alt={photo.description || `${hotel.name} - Photo ${index + 1}`} 
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="hidden sm:flex -left-4 lg:-left-6 bg-white/70" />
-                <CarouselNext className="hidden sm:flex -right-4 lg:-right-6 bg-white/70" />
-              </Carousel>
+          {/* Using Carousel for both Filadaki and Meropi hotels */}
+          <div className="space-y-4">
+            {/* Main large image */}
+            <div className="rounded-lg overflow-hidden aspect-video shadow-md">
+              <img 
+                src={activeImage || '/placeholder.svg'} 
+                alt={hotel?.name} 
+                className="w-full h-full object-cover"
+              />
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Main large image */}
-              <div className="md:col-span-2 rounded-lg overflow-hidden aspect-video">
-                <img 
-                  src={activeImage || '/placeholder.svg'} 
-                  alt={hotel.name} 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              
-              {/* Thumbnails */}
-              <div className="grid grid-cols-3 md:grid-cols-2 gap-2 h-full">
-                {hotel.hotel_photos?.slice(0, 4).map((photo, index) => (
-                  <div 
-                    key={photo.id} 
-                    className={`rounded-lg overflow-hidden aspect-square cursor-pointer border-2 ${activeImage === `/uploads/hotels/${photo.photo_url}` ? 'border-sifnos-turquoise' : 'border-transparent'}`}
-                    onClick={() => setActiveImage(`/uploads/hotels/${photo.photo_url}`)}
-                  >
-                    <img 
-                      src={`/uploads/hotels/${photo.photo_url}`} 
-                      alt={photo.description || `${hotel.name} - Photo ${index + 1}`} 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ))}
-                {hotel.hotel_photos?.length > 4 && (
-                  <div 
-                    className="rounded-lg overflow-hidden aspect-square relative cursor-pointer bg-gray-800"
-                    onClick={() => setActiveImage(`/uploads/hotels/${hotel.hotel_photos[4].photo_url}`)}
-                  >
-                    <img 
-                      src={`/uploads/hotels/${hotel.hotel_photos[4].photo_url}`}
-                      alt={`${hotel.name} - More Photos`}
-                      className="w-full h-full object-cover opacity-60"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center text-white font-medium">
-                      +{hotel.hotel_photos.length - 4} more
+            
+            {/* Carousel for thumbnails */}
+            <Carousel className="w-full">
+              <CarouselContent>
+                {hotel?.hotel_photos?.map((photo, index) => (
+                  <CarouselItem key={photo.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
+                    <div 
+                      className={`rounded-lg overflow-hidden aspect-square cursor-pointer border-2 h-full
+                        transition-all hover:opacity-90 hover:shadow-md
+                        ${activeImage === `/uploads/hotels/${photo.photo_url}` ? 'border-sifnos-turquoise' : 'border-transparent'}`}
+                      onClick={() => setActiveImage(`/uploads/hotels/${photo.photo_url}`)}
+                    >
+                      <img 
+                        src={`/uploads/hotels/${photo.photo_url}`} 
+                        alt={photo.description || `${hotel.name} - Photo ${index + 1}`} 
+                        className="w-full h-full object-cover"
+                      />
                     </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="hidden sm:flex -left-4 lg:-left-6 bg-white/70" />
+              <CarouselNext className="hidden sm:flex -right-4 lg:-right-6 bg-white/70" />
+            </Carousel>
+          </div>
         </div>
       </div>
       
@@ -421,9 +378,9 @@ export default function HotelDetailPage() {
               
               {/* Description */}
               <div className="cycladic-card p-6 md:p-8">
-                <h2 className="text-2xl font-montserrat font-semibold mb-5">About {hotel.name}</h2>
+                <h2 className="text-2xl font-montserrat font-semibold mb-5">About {hotel?.name}</h2>
                 <p className="text-gray-700 whitespace-pre-line leading-relaxed mb-6">
-                  {hotel.description}
+                  {hotel?.description}
                 </p>
               </div>
               
@@ -433,14 +390,14 @@ export default function HotelDetailPage() {
                 
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                   {/* Hotel amenities */}
-                  {hotel.hotel_amenities?.map((item) => (
+                  {hotel?.hotel_amenities?.map((item) => (
                     <div key={item.amenity} className="flex items-center">
                       <HotelAmenities amenities={[item.amenity]} />
                     </div>
                   ))}
                   
                   {/* Show unique room amenities that aren't already in hotel_amenities */}
-                  {hotel.hotel_rooms?.flatMap(room => room.amenities || [])
+                  {hotel?.hotel_rooms?.flatMap(room => room.amenities || [])
                     .filter((amenity, index, self) => 
                       // Filter unique amenities
                       self.indexOf(amenity) === index && 
@@ -458,11 +415,11 @@ export default function HotelDetailPage() {
                 </div>
               </div>
               
-              {/* Rooms - Updated with larger images and enhanced amenities display */}
+              {/* Rooms */}
               <div className="cycladic-card p-6 md:p-8">
                 <h2 className="text-2xl font-montserrat font-semibold mb-6">Available Rooms</h2>
                 <div className="space-y-10">
-                  {hotel.hotel_rooms?.map((room) => (
+                  {hotel?.hotel_rooms?.map((room) => (
                     <div key={room.id} className="border-b pb-8 last:border-b-0 last:pb-0">
                       <div className="flex flex-col gap-6">
                         {/* Larger Room Image */}
@@ -614,7 +571,7 @@ export default function HotelDetailPage() {
                     </div>
                   </div>
                   
-                  {hotel.booking_url ? (
+                  {hotel?.booking_url ? (
                     <a 
                       href={hotel.booking_url} 
                       target="_blank"
@@ -632,7 +589,7 @@ export default function HotelDetailPage() {
                   )}
 
                   {/* Sponsored badge if booking is available */}
-                  {hotel.booking_url && hotel.booking_platform && (
+                  {hotel?.booking_url && hotel?.booking_platform && (
                     <div className="flex items-center justify-center space-x-2 pt-2">
                       <Separator className="flex-1" />
                       <span className="text-xs text-gray-400">Sponsored by</span>
@@ -653,28 +610,28 @@ export default function HotelDetailPage() {
               <div className="cycladic-card p-6">
                 <h3 className="text-xl font-semibold mb-4">Contact Information</h3>
                 <div className="space-y-3">
-                  {hotel.address && (
+                  {hotel?.address && (
                     <div className="flex items-start">
                       <MapPin size={18} className="text-sifnos-turquoise mr-2 mt-1 flex-shrink-0" />
                       <span>{hotel.address}</span>
                     </div>
                   )}
                   
-                  {hotel.phone && (
+                  {hotel?.phone && (
                     <div className="flex items-center">
                       <Phone size={18} className="text-sifnos-turquoise mr-2 flex-shrink-0" />
                       <a href={`tel:${hotel.phone}`} className="hover:text-sifnos-turquoise">{hotel.phone}</a>
                     </div>
                   )}
                   
-                  {hotel.email && (
+                  {hotel?.email && (
                     <div className="flex items-center">
                       <Mail size={18} className="text-sifnos-turquoise mr-2 flex-shrink-0" />
                       <a href={`mailto:${hotel.email}`} className="hover:text-sifnos-turquoise">{hotel.email}</a>
                     </div>
                   )}
                   
-                  {hotel.website && (
+                  {hotel?.website && (
                     <div className="flex items-center">
                       <GlobeIcon size={18} className="text-sifnos-turquoise mr-2 flex-shrink-0" />
                       <a href={hotel.website} target="_blank" rel="noopener noreferrer" className="hover:text-sifnos-turquoise">Website</a>
@@ -684,7 +641,7 @@ export default function HotelDetailPage() {
                 
                 {/* Social Media Links */}
                 <div className="mt-4 flex space-x-3">
-                  {hotel.social_facebook && (
+                  {hotel?.social_facebook && (
                     <a 
                       href={hotel.social_facebook} 
                       target="_blank"
@@ -695,7 +652,7 @@ export default function HotelDetailPage() {
                     </a>
                   )}
                   
-                  {hotel.social_instagram && (
+                  {hotel?.social_instagram && (
                     <a 
                       href={hotel.social_instagram} 
                       target="_blank"
@@ -706,7 +663,7 @@ export default function HotelDetailPage() {
                     </a>
                   )}
                   
-                  {hotel.social_twitter && (
+                  {hotel?.social_twitter && (
                     <a 
                       href={hotel.social_twitter} 
                       target="_blank"
@@ -719,7 +676,7 @@ export default function HotelDetailPage() {
                 </div>
               </div>
               
-              {/* Map section */}
+              {/* Map section - Updated with the new Filadaki map URL */}
               <div className="cycladic-card p-6">
                 <h3 className="text-xl font-semibold mb-4 flex items-center">
                   <Map size={18} className="mr-2 text-sifnos-turquoise" />
@@ -727,13 +684,13 @@ export default function HotelDetailPage() {
                 </h3>
                 <div className="h-64 bg-gray-100 rounded-md overflow-hidden shadow-md">
                   <iframe
-                    src={isMeropiRooms ? meropiMapUrl : hotel.google_map_url}
+                    src={isFiladakiVillas ? filadakiMapUrl : (isMeropiRooms ? meropiMapUrl : hotel?.google_map_url)}
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
-                    title={`${hotel.name} Location Map`}
+                    title={`${hotel?.name} Location Map`}
                     className="w-full h-full"
                     allowFullScreen
                   ></iframe>
@@ -741,7 +698,7 @@ export default function HotelDetailPage() {
                 <div className="text-xs text-gray-500 mt-2 flex items-center">
                   <MapPin size={12} className="mr-1" />
                   <a 
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${hotel.name} ${hotel.location} Sifnos Greece`)}`}
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${hotel?.name} ${hotel?.location} Sifnos Greece`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sifnos-turquoise hover:underline"
