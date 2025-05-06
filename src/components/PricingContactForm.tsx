@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { z } from "zod";
 import { useForm as useReactHookForm } from "react-hook-form";
 import { useForm as useFormspreeForm, ValidationError } from "@formspree/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
-import { supabase, handleSupabaseResponse } from "@/integrations/supabase/client";
+import { supabase, logSupabaseResponse } from "@/integrations/supabase/client";
 
 // Import our new components
 import { BasicInformationSection } from "./pricing/BasicInformationSection";

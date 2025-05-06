@@ -3,18 +3,23 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 import { toast } from 'sonner';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Default fallback values to prevent errors when env vars are not available
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://wdzlruiekcznbcicjgrz.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkemxydWlla2N6bmJjaWNqZ3J6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQyODAyNzYsImV4cCI6MjA1OTg1NjI3Nn0.NaoVf3tU3Xz08CWCHpQtq7_9H6G6ES9EjtCvPHa0aRk';
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
 
 // Function to log Supabase response for debugging purposes
-export function logSupabaseResponse(data: any, error: any) {
+export function logSupabaseResponse(operation: string, data: any, error: any) {
   if (error) {
-    console.error('Supabase error:', error);
+    console.error(`Supabase ${operation} error:`, error);
+    return false;
   } else {
-    console.log('Supabase data:', data);
+    console.log(`Supabase ${operation} data:`, data);
+    return true;
   }
+  
+  // For backward compatibility, still return the data and error
   return { data, error };
 }
 
