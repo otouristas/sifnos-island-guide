@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { z } from "zod";
 import { useForm as useReactHookForm } from "react-hook-form";
@@ -28,25 +27,6 @@ interface RegistrationData {
   [key: string]: any; // Allow other properties
 }
 
-// Explicitly define the insert type for hotel_registrations
-interface HotelRegistrationInsert {
-  hotel_name: string;
-  contact_name: string;
-  email: string;
-  phone: string;
-  location: string;
-  selected_plan: string;
-  message?: string | null;
-  website?: string | null;
-  google_maps_url?: string | null;
-  booking_url?: string | null;
-  airbnb_url?: string | null;
-  social_facebook?: string | null;
-  social_instagram?: string | null;
-  social_twitter?: string | null;
-  address?: string | null;
-}
-
 const PricingContactForm = ({ selectedPlan }: PricingContactFormProps) => {
   const [state, handleSubmit] = useFormspreeForm("mvgakjzd");
   const navigate = useNavigate();
@@ -62,30 +42,24 @@ const PricingContactForm = ({ selectedPlan }: PricingContactFormProps) => {
       const formData = new FormData(event.currentTarget);
       
       try {
-        // Prepare data object with correct typing
-        const registrationData: HotelRegistrationInsert = {
+        // Insert into Supabase
+        const { data, error } = await supabase.from('hotel_registrations').insert({
           hotel_name: formData.get('hotelName') as string,
           contact_name: formData.get('contactName') as string,
           email: formData.get('email') as string,
           phone: formData.get('phone') as string,
           location: formData.get('location') as string,
           selected_plan: formData.get('selectedPlan') as string,
-          message: (formData.get('message') as string) || null,
-          website: (formData.get('website') as string) || null,
-          google_maps_url: (formData.get('googleMaps') as string) || null,
-          booking_url: (formData.get('bookingUrl') as string) || null,
-          airbnb_url: (formData.get('airbnbUrl') as string) || null,
-          social_facebook: (formData.get('socialFacebook') as string) || null,
-          social_instagram: (formData.get('socialInstagram') as string) || null,
-          social_twitter: (formData.get('socialTwitter') as string) || null,
-          address: (formData.get('address') as string) || null
-        };
-        
-        // Insert into Supabase with proper typing
-        const { data, error } = await supabase
-          .from('hotel_registrations')
-          .insert(registrationData)
-          .select();
+          message: formData.get('message') as string || null,
+          website: formData.get('website') as string || null,
+          google_maps_url: formData.get('googleMaps') as string || null,
+          booking_url: formData.get('bookingUrl') as string || null,
+          airbnb_url: formData.get('airbnbUrl') as string || null,
+          social_facebook: formData.get('socialFacebook') as string || null,
+          social_instagram: formData.get('socialInstagram') as string || null,
+          social_twitter: formData.get('socialTwitter') as string || null,
+          address: formData.get('address') as string || null
+        }).select();
         
         if (!error) {
           // Send email notification via edge function
@@ -93,7 +67,7 @@ const PricingContactForm = ({ selectedPlan }: PricingContactFormProps) => {
             // Safely extract registration ID with proper type checking
             let registrationId = 'unknown';
             if (data && Array.isArray(data) && data.length > 0) {
-              const registration = data[0] as unknown as RegistrationData;
+              const registration = data[0] as RegistrationData;
               registrationId = registration.id;
             }
             

@@ -1,315 +1,181 @@
 
 /**
- * URL utility functions
- * 
- * This file contains functions for generating URL-friendly slugs and paths for hotels and other entities.
- */
-
-import { supabase } from '@/integrations/supabase/client';
-
-/**
- * Generate a URL-friendly slug from a name
- * 
- * @param name The name to convert to a slug
+ * Creates a URL-friendly slug from a string
+ * @param str The string to convert to a slug
  * @returns A URL-friendly slug
  */
-export function generateSlug(name: string): string {
-  if (!name) return '';
-  
-  return name
+export function slugify(str: string): string {
+  return str
     .toLowerCase()
-    // Replace spaces, dots, and underscores with hyphens
-    .replace(/[\s._]+/g, '-')
-    // Remove non-alphanumeric characters (except hyphens)
-    .replace(/[^a-z0-9-]+/g, '')
-    // Replace multiple consecutive hyphens with a single hyphen
-    .replace(/-+/g, '-')
-    // Remove hyphens from the beginning and end
-    .replace(/^-|-$/g, '');
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 /**
- * Generate a URL-friendly path for a hotel
- * 
+ * Generates a hotel URL from its name
  * @param name Hotel name
- * @returns URL-friendly path string
+ * @returns URL-friendly string of the name
  */
-export function generateHotelUrl(name: string | null | undefined): string {
-  if (!name) {
-    console.error('Hotel name is null or undefined');
-    return '';
+export function generateHotelUrl(name: string): string {
+  // Special case handling for specific hotels
+  if (name === "Meropi Rooms and Apartments" || name.toLowerCase().includes("meropi")) {
+    return "meropi-rooms-and-apartments";
   }
   
-  // Apply a series of transformations to create a URL-friendly slug
-  return generateSlug(name);
-}
-
-/**
- * Retrieves a hotel from the database using its URL-friendly slug
- * 
- * @param slug URL-friendly slug of the hotel
- * @returns Promise resolving to the hotel data or null if not found
- */
-export async function getHotelBySlug(slug: string): Promise<any | null> {
-  try {
-    console.log('Getting hotel by slug:', slug);
-    
-    // Get all hotels from the database
-    const { data: hotels, error } = await supabase
-      .from('hotels')
-      .select(`
-        *,
-        hotel_amenities(amenity),
-        hotel_photos(id, photo_url, is_main_photo)
-      `);
-    
-    if (error) {
-      console.error('Error fetching hotels:', error);
-      return null;
-    }
-    
-    if (!hotels || hotels.length === 0) {
-      console.log('No hotels found');
-      return null;
-    }
-    
-    // Find the hotel where the slug matches the generated URL from the hotel name
-    const hotel = hotels.find((h: any) => {
-      const hotelSlug = generateHotelUrl(h.name);
-      return hotelSlug === slug;
-    });
-    
-    if (hotel) {
-      console.log(`Found ${hotel.name} hotel in database, ID: ${hotel.id}`);
-      console.log(`${hotel.name} hotel URL slug: ${generateHotelUrl(hotel.name)}`);
-      return hotel;
-    } else {
-      console.log(`Hotel with slug "${slug}" not found`);
-      return null;
-    }
-  } catch (error) {
-    console.error('Error in getHotelBySlug:', error);
-    return null;
+  // Special case for Morpheas Pension
+  if (name === "Morpheas Pension & Apartments" || name.toLowerCase().includes("morpheas")) {
+    return "morpheas-pension-apartments";
   }
-}
-
-/**
- * Retrieves a hotel from the database using its unique ID
- * 
- * @param id Unique identifier of the hotel
- * @returns Promise resolving to the hotel data or null if not found
- */
-export async function getHotelById(id: string): Promise<any | null> {
-  try {
-    console.log('Getting hotel by ID:', id);
-    
-    // Query the database for a specific hotel by ID
-    const { data: hotel, error } = await supabase
-      .from('hotels')
-      .select(`
-        *,
-        hotel_amenities(amenity),
-        hotel_photos(id, photo_url, is_main_photo),
-        hotel_rooms(*)
-      `)
-      .eq('id', id as string)
-      .single();
-    
-    if (error) {
-      console.error('Error fetching hotel by ID:', error);
-      return null;
-    }
-    
-    if (hotel) {
-      console.log(`Found hotel: ${hotel.name}`);
-      return hotel;
-    } else {
-      console.log(`Hotel with ID "${id}" not found`);
-      return null;
-    }
-  } catch (error) {
-    console.error('Error in getHotelById:', error);
-    return null;
+  
+  // Special case for Villa Olivia Clara
+  if (name === "Villa Olivia Clara") {
+    return "villa-olivia-clara";
   }
+  
+  return slugify(name);
 }
 
 /**
- * Generates a URL for a hotel type
- * 
- * @param type Hotel type (e.g. 'beach-hotels')
- * @returns URL-friendly string
+ * Known hotel IDs for direct lookup - helps with consistent URL handling
  */
-export function generateHotelTypeUrl(type: string): string {
-  return generateSlug(type);
-}
+const KNOWN_HOTEL_IDS = {
+  "meropi-rooms-and-apartments": "0c9632b6-db5c-4179-8122-0003896e465e",
+  "morpheas-pension-apartments": null, // Will be populated once we have the real ID
+  "villa-olivia-clara": null // Will be populated once we have the real ID
+};
 
 /**
- * Retrieves a sitemap containing URLs for all site entities
- * 
- * @returns Collection of URLs for the sitemap
+ * Finds a hotel by its slug in the database
+ * This function will be used to look up hotels by their slugified name
+ * @param slug The hotel slug from the URL
+ * @returns The hotel data or null if not found
  */
-export async function generateSitemapUrls(): Promise<string[]> {
-  const baseUrl = 'https://hotelssifnos.com';
-  
-  // Static paths
-  const staticPaths = [
-    '',
-    '/hotels',
-    '/beaches',
-    '/locations',
-    '/hotel-types',
-    '/contact',
-    '/about',
-    '/pricing',
-    '/travel-guide',
-  ];
-  
-  let urls = staticPaths.map(path => `${baseUrl}${path}`);
-  
+export async function getHotelBySlug(slug: string) {
   try {
-    // Get all hotels
-    const { data: hotels, error: hotelsError } = await supabase
-      .from('hotels')
-      .select('id, name');
+    console.log(`Looking for hotel with slug: ${slug}`);
     
-    if (hotelsError) {
-      console.error('Error fetching hotels for sitemap:', hotelsError);
-    } else if (hotels && hotels.length > 0) {
-      const hotelUrls = hotels.map((hotel: any) => {
-        const slug = generateHotelUrl(hotel.name);
-        return `${baseUrl}/hotels/${slug}`;
-      });
-      urls = urls.concat(hotelUrls);
-    }
-    
-    // Get all hotel types (from constant)
-    const hotelTypes = [
-      'beach-hotels',
-      'luxury-hotels',
-      'boutique-hotels',
-      'family-friendly-hotels',
-      'traditional-hotels',
-      'luxury-villas',
-    ];
-    
-    const hotelTypeUrls = hotelTypes.map(type => `${baseUrl}/hotel-types/${type}`);
-    urls = urls.concat(hotelTypeUrls);
-    
-    // Get all locations
-    const locations = [
-      'apollonia', 
-      'artemonas', 
-      'kamares', 
-      'kastro', 
-      'platis-gialos', 
-      'vathi',
-      'faros',
-      'cheronissos',
-      'exampela',
-    ];
-    
-    const locationUrls = locations.map(location => `${baseUrl}/locations/${location}`);
-    urls = urls.concat(locationUrls);
-    
-    // Get all beaches
-    const beaches = [
-      'vathi',
-      'platis-gialos',
-      'kamares',
-      'faros',
-      'chrysopigi',
-      'vroulidia',
-      'fykiada',
-      'cheronissos',
-      'apokofto',
-      'gialos',
-    ];
-    
-    const beachUrls = beaches.map(beach => `${baseUrl}/beaches/${beach}`);
-    urls = urls.concat(beachUrls);
-    
-    console.log('Generated sitemap with', urls.length, 'URLs');
-    return urls;
-  } catch (error) {
-    console.error('Error generating sitemap URLs:', error);
-    return urls;
-  }
-}
-
-/**
- * Generates an XML sitemap from an array of URLs
- * 
- * @param urls Array of URLs to include in the sitemap
- * @returns XML sitemap as string
- */
-export function generateXmlSitemap(urls: string[]): string {
-  const today = new Date().toISOString().split('T')[0];
-  
-  let xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-`;
-  
-  urls.forEach(url => {
-    xml += `  <url>
-    <loc>${url}</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-`;
-  });
-  
-  xml += `</urlset>`;
-  
-  return xml;
-}
-
-/**
- * Updates the sitemap in Supabase storage
- * 
- * @param sitemap XML sitemap string to store
- * @returns Promise resolving to success status and URL of the saved sitemap
- */
-export async function updateSitemap(sitemap: string): Promise<{success: boolean, url?: string, message?: string}> {
-  try {
-    const timestamp = Date.now();
-    const cacheBuster = Math.random().toString(36).substring(2, 10);
-    
-    // Call the edge function to update the sitemap
-    const { data, error } = await supabase.functions.invoke('update-sitemap', {
-      body: { 
-        sitemap, 
-        timestamp, 
-        cacheBuster 
+    // Special case handling with predefined hotel IDs
+    if ((slug === "meropi-rooms-and-apartments" && KNOWN_HOTEL_IDS[slug]) || 
+        (slug === "morpheas-pension-apartments") ||
+        (slug === "villa-olivia-clara")) {
+      
+      if (KNOWN_HOTEL_IDS[slug]) {
+        console.log(`Using direct ID lookup for ${slug} with ID: ${KNOWN_HOTEL_IDS[slug]}`);
+        
+        // Import the supabase client directly to avoid the undefined error
+        const { supabase } = await import('@/integrations/supabase/client');
+        
+        const { data, error } = await supabase
+          .from('hotels')
+          .select(`
+            *,
+            hotel_amenities(amenity),
+            hotel_photos(id, photo_url, is_main_photo, description),
+            hotel_rooms(id, name, description, price, capacity, size_sqm, amenities, photo_url)
+          `)
+          .eq('id', KNOWN_HOTEL_IDS[slug]);
+        
+        if (error) {
+          console.error(`Error fetching hotel by ID (${KNOWN_HOTEL_IDS[slug]}):`, error);
+          throw error;
+        }
+        
+        if (data && data.length > 0) {
+          console.log(`Successfully found hotel by ID: ${data[0].name}`);
+          return data[0];
+        } else {
+          console.log(`No hotel found with ID: ${KNOWN_HOTEL_IDS[slug]}`);
+        }
       }
-    });
+    }
+    
+    // Fuzzy search for hotel name if direct ID lookup fails or isn't applicable
+    console.log(`Performing fuzzy search for slug: ${slug}`);
+    
+    // Import the supabase client directly
+    const { supabase } = await import('@/integrations/supabase/client');
+    
+    // For special hotels, add specific search terms
+    let searchQuery = `name.ilike.%${slug.replace(/-/g, ' ')}%`;
+    
+    if (slug === "morpheas-pension-apartments") {
+      searchQuery = "name.ilike.%morpheas%";
+    } else if (slug === "villa-olivia-clara") {
+      searchQuery = "name.ilike.%villa olivia%";
+    }
+    
+    const { data, error } = await supabase
+      .from('hotels')
+      .select(`
+        *,
+        hotel_amenities(amenity),
+        hotel_photos(id, photo_url, is_main_photo, description),
+        hotel_rooms(id, name, description, price, capacity, size_sqm, amenities, photo_url)
+      `)
+      .or(searchQuery);
     
     if (error) {
-      console.error('Error updating sitemap:', error);
-      return { 
-        success: false, 
-        message: `Failed to update sitemap: ${error.message || 'Unknown error'}`
-      };
+      console.error('Error in fuzzy search:', error);
+      throw error;
     }
     
-    if (!data || !data.success) {
-      return { 
-        success: false, 
-        message: data?.message || 'Failed to update sitemap'
-      };
+    // Find the closest matching hotel
+    if (data && data.length > 0) {
+      console.log(`Found ${data.length} potential hotel matches for slug: ${slug}`);
+      
+      // Special overrides for specific hotels
+      const meropiHotel = data.find(hotel => 
+        hotel.name.toLowerCase().includes("meropi") || 
+        (hotel.id === KNOWN_HOTEL_IDS["meropi-rooms-and-apartments"])
+      );
+      
+      const morpheasHotel = data.find(hotel => 
+        hotel.name.toLowerCase().includes("morpheas")
+      );
+      
+      const villaOliviaHotel = data.find(hotel => 
+        hotel.name.toLowerCase().includes("villa olivia") ||
+        hotel.name.toLowerCase().includes("olivia clara")
+      );
+      
+      if (meropiHotel && slug.includes("meropi")) {
+        console.log(`Found Meropi hotel in search results: ${meropiHotel.id}`);
+        return meropiHotel;
+      }
+      
+      if (morpheasHotel && slug.includes("morpheas")) {
+        console.log(`Found Morpheas hotel in search results: ${morpheasHotel.id}`);
+        return morpheasHotel;
+      }
+      
+      if (villaOliviaHotel && slug.includes("villa-olivia")) {
+        console.log(`Found Villa Olivia Clara in search results: ${villaOliviaHotel.id}`);
+        return villaOliviaHotel;
+      }
+      
+      // Sort by name similarity to find the best match
+      const sortedData = data.sort((a, b) => {
+        const aSlug = slugify(a.name);
+        const bSlug = slugify(b.name);
+        
+        // Exact match gets highest priority
+        if (aSlug === slug) return -1;
+        if (bSlug === slug) return 1;
+        
+        // Otherwise compare by similarity
+        return aSlug.localeCompare(bSlug);
+      });
+      
+      console.log(`Best match: ${sortedData[0].name} (${sortedData[0].id})`);
+      return sortedData[0];
     }
     
-    return { 
-      success: true, 
-      url: data.url,
-      message: data.message
-    };
-    
+    console.log(`No hotels found for slug: ${slug}`);
+    return null;
   } catch (error) {
-    console.error('Error updating sitemap:', error);
-    return { 
-      success: false, 
-      message: `Exception updating sitemap: ${(error as Error).message}` 
-    };
+    console.error('Error fetching hotel by slug:', error);
+    return null;
   }
 }
