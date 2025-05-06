@@ -47,10 +47,10 @@ export default function HotelDetailPage() {
   
   // Define room type images for Filadaki Villas - UPDATED with WebP images
   const filadakiRoomImages = {
-    "Gregos Studio": "filadaki-studios/gregos_6406.webp",
-    "Maistros Studio": "filadaki-studios/maistros_3967.webp",
-    "Levantes Apartment": "filadaki-studios/levantes_3351.webp",
-    "Ostria Studio": "filadaki-studios/ostria_4857.webp"
+    "Gregos": "filadaki-studios/gregos_6406.webp",
+    "Maistros": "filadaki-studios/maistros_3967.webp",
+    "Levantes": "filadaki-studios/levantes_3351.webp", 
+    "Ostria": "filadaki-studios/ostria_4857.webp"
   };
 
   useEffect(() => {
@@ -84,9 +84,10 @@ export default function HotelDetailPage() {
           // Add image paths to room types if they exist
           if (hotelData.hotel_rooms && hotelData.hotel_rooms.length > 0) {
             hotelData.hotel_rooms = hotelData.hotel_rooms.map(room => {
-              const roomName = room.name;
-              if (filadakiRoomImages[roomName]) {
-                room.photo_url = filadakiRoomImages[roomName];
+              // Match room by name without "Studio" or "Apartment" suffix
+              const roomNameBase = room.name.split(' ')[0];
+              if (filadakiRoomImages[roomNameBase]) {
+                room.photo_url = filadakiRoomImages[roomNameBase];
               }
               return room;
             });
