@@ -2,8 +2,14 @@
 import { Link } from 'react-router-dom';
 import { Bot, Search, Sparkles, MapPin, Clock, PanelTop } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useState } from 'react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function TouristasAIBanner() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [destination, setDestination] = useState('');
+  
   return (
     <div className="relative overflow-hidden bg-gradient-to-br from-sifnos-deep-blue to-sifnos-deep-blue/80 rounded-xl shadow-xl">
       <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
@@ -20,9 +26,42 @@ export default function TouristasAIBanner() {
             Find Your Perfect Stay in Sifnos with AI
           </h3>
           
-          <p className="text-white/90 text-lg mb-8 max-w-xl">
+          <p className="text-white/90 text-lg mb-6 max-w-xl">
             Tell us your preferences and our AI will recommend the best accommodations tailored to your dream vacation in Sifnos.
           </p>
+          
+          {/* Minimal Search Form */}
+          <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="col-span-1 md:col-span-1">
+                <Select value={destination} onValueChange={setDestination}>
+                  <SelectTrigger className="w-full bg-white/90 border-0">
+                    <SelectValue placeholder="Select location" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="apollonia">Apollonia</SelectItem>
+                    <SelectItem value="kamares">Kamares</SelectItem>
+                    <SelectItem value="platis-gialos">Platis Gialos</SelectItem>
+                    <SelectItem value="kastro">Kastro</SelectItem>
+                    <SelectItem value="vathi">Vathi</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="col-span-1 md:col-span-2">
+                <div className="relative">
+                  <Input 
+                    type="text"
+                    placeholder="What are you looking for?"
+                    className="pl-10 bg-white/90 border-0 w-full"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                </div>
+              </div>
+            </div>
+          </div>
           
           <div className="flex flex-wrap gap-4 mb-6 justify-center md:justify-start">
             <div className="flex items-center gap-2 bg-white/20 px-3 py-1.5 rounded-full backdrop-blur-sm">

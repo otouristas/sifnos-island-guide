@@ -15,6 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, Input } from '@radix-ui/react-select';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -111,7 +112,7 @@ export default function HomePage() {
         />
         <div className="absolute inset-0 bg-black bg-opacity-40"></div>
         
-        <div className="relative z-10 text-center px-4 max-w-4xl">
+        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
           <h1 className="font-montserrat text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
             Find Your Perfect Stay in Sifnos Island
           </h1>
@@ -119,115 +120,62 @@ export default function HomePage() {
             Discover the best hotels, villas, and accommodations in the beautiful Cycladic island of Sifnos
           </p>
           
-          {/* Search Form */}
-          <div className="max-w-2xl mx-auto">
-            <form onSubmit={handleSearch} className="relative">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search for hotels, locations, or amenities"
-                  className="w-full py-4 px-6 pl-12 rounded-lg shadow-md text-lg focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <Search className="absolute left-4 top-4 text-gray-400" size={24} />
-                <div className="absolute right-2 top-2 flex gap-2">
-                  <Popover open={showFilters} onOpenChange={setShowFilters}>
-                    <PopoverTrigger asChild>
-                      <Button 
-                        variant="outline"
-                        className="bg-white border-gray-200 hover:bg-gray-100"
-                      >
-                        <Filter className="h-4 w-4 mr-1" /> 
-                        {showFilters ? 'Hide Filters' : 'Filters'}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent 
-                      align="end" 
-                      className="w-[300px] p-4" 
-                      sideOffset={5}
-                    >
-                      <div className="space-y-4">
-                        <h3 className="font-medium mb-2">Filter Options</h3>
-                        
-                        <div>
-                          <Label className="block mb-2 text-sm">Location</Label>
-                          <select 
-                            className="w-full p-2 border border-gray-300 rounded-md" 
-                            value={selectedLocation}
-                            onChange={(e) => setSelectedLocation(e.target.value)}
-                          >
-                            <option value="">Any Location</option>
-                            {sifnosLocations.map((location) => (
-                              <option key={location.id} value={location.slug}>
-                                {location.name}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        
-                        <div>
-                          <Label className="block mb-2 text-sm">Hotel Type</Label>
-                          <select 
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            value={selectedType}
-                            onChange={(e) => setSelectedType(e.target.value)}
-                          >
-                            <option value="">Any Type</option>
-                            {hotelTypes.map((type) => (
-                              <option key={type.id} value={type.slug}>
-                                {type.title}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        
-                        <div>
-                          <Label className="block mb-2 text-sm">Price Range</Label>
-                          <RadioGroup
-                            value={priceRange}
-                            onValueChange={setPriceRange}
-                          >
-                            {priceRanges.map((range) => (
-                              <div className="flex items-center space-x-2" key={range.value}>
-                                <RadioGroupItem value={range.value} id={`price-${range.value}`} />
-                                <Label htmlFor={`price-${range.value}`}>{range.label}</Label>
-                              </div>
-                            ))}
-                          </RadioGroup>
-                        </div>
-                        
-                        <div>
-                          <Label className="block mb-2 text-sm">Amenities</Label>
-                          <div className="grid grid-cols-2 gap-2">
-                            {amenitiesList.map((amenity) => (
-                              <div className="flex items-center space-x-2" key={amenity}>
-                                <Checkbox 
-                                  id={`amenity-${amenity}`} 
-                                  checked={selectedAmenities.includes(amenity)}
-                                  onCheckedChange={() => toggleAmenity(amenity)}
-                                />
-                                <Label htmlFor={`amenity-${amenity}`}>{amenity}</Label>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        
-                        <Button 
-                          className="w-full"
-                          type="submit"
-                          onClick={() => setShowFilters(false)}
-                        >
-                          Apply Filters
-                        </Button>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-                  
-                  <Button type="submit" className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white font-semibold py-2 px-6 rounded-md transition-colors duration-200">
-                    Search
-                  </Button>
+          {/* Minimal Search Form */}
+          <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-md p-5 rounded-lg shadow-lg">
+            <form onSubmit={handleSearch} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Select 
+                  value={selectedLocation} 
+                  onValueChange={setSelectedLocation}
+                >
+                  <SelectTrigger className="w-full bg-white/90 border-0">
+                    <SelectValue placeholder="Where in Sifnos?" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Any location</SelectItem>
+                    {sifnosLocations.map((location) => (
+                      <SelectItem key={location.id} value={location.slug}>
+                        {location.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                
+                <div className="relative col-span-1 md:col-span-2">
+                  <Input
+                    type="text"
+                    placeholder="Search hotels, amenities, or keywords..."
+                    className="pl-10 bg-white/90 border-0 w-full"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 </div>
+              </div>
+              
+              <div className="flex gap-2 flex-wrap justify-center md:justify-between items-center">
+                <div className="flex gap-2 flex-wrap">
+                  {selectedAmenities.length > 0 && selectedAmenities.map(amenity => (
+                    <span key={amenity} className="bg-white/20 text-white text-xs px-3 py-1 rounded-full flex items-center">
+                      {amenity}
+                      <button 
+                        type="button" 
+                        onClick={() => toggleAmenity(amenity)} 
+                        className="ml-1 text-white hover:text-white/70"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+                
+                <Button 
+                  type="submit" 
+                  className="bg-white hover:bg-white/90 text-sifnos-deep-blue"
+                >
+                  <Search className="mr-2 h-4 w-4" />
+                  Search Hotels
+                </Button>
               </div>
             </form>
           </div>
