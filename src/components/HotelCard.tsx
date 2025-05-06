@@ -17,6 +17,9 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
   // Find the main photo for the hotel
   const mainPhoto = hotel.hotel_photos?.find(photo => photo.is_main_photo)?.photo_url || '';
   
+  // Debug log for identifying the hotel and its main photo
+  console.log(`HotelCard: Hotel name: ${hotel.name}, mainPhoto: ${mainPhoto}`);
+  
   useEffect(() => {
     // Generate cache-busting timestamp for all images
     const timestamp = Date.now();
@@ -29,13 +32,15 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
     if (hotel.name === "Meropi Rooms and Apartments") {
       imageUrl = `/uploads/hotels/meropirooms-hero.webp?v=${timestamp}-${randomValue}`;
     } else if (hotel.name === "Filadaki Villas") {
-      // For Filadaki Villas, use the new featured image with cache-busting
+      // For Filadaki Villas, use one of the known images from the public directory
       imageUrl = `/uploads/hotels/filadaki-studios/home-page_9151.jpg.jpeg?v=${timestamp}-${randomValue}`;
+      console.log(`Using Filadaki custom image path: ${imageUrl}`);
     } else if (hotel.name === "Morpheas Pension & Apartments") {
       // For Morpheas Pension, use its featured image with cache-busting
       imageUrl = `/uploads/hotels/morpheas-pension/sifnos-accommodation.jpg.jpeg?v=${timestamp}-${randomValue}`;
     } else if (hotel.name === "Villa Olivia Clara") {
       // For Villa Olivia Clara, use its featured image with cache-busting
+      // Using the correct file path that exists in public/uploads/hotels/villa-olivia-clara/
       imageUrl = `/uploads/hotels/villa-olivia-clara/feature-image.jpeg?v=${timestamp}-${randomValue}`;
     } else if (mainPhoto) {
       // For other hotels, use the photos from the database with cache-busting
