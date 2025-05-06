@@ -19,10 +19,16 @@ export function slugify(str: string): string {
  * @returns URL-friendly string of the name
  */
 export function generateHotelUrl(name: string): string {
-  // Special case handling for Meropi Rooms and Apartments
+  // Special case handling for specific hotels
   if (name === "Meropi Rooms and Apartments" || name.toLowerCase().includes("meropi")) {
     return "meropi-rooms-and-apartments";
   }
+  
+  // Special case for Morpheas Pension
+  if (name === "Morpheas Pension & Apartments" || name.toLowerCase().includes("morpheas")) {
+    return "morpheas-pension-apartments";
+  }
+  
   return slugify(name);
 }
 
@@ -30,7 +36,8 @@ export function generateHotelUrl(name: string): string {
  * Known hotel IDs for direct lookup - helps with consistent URL handling
  */
 const KNOWN_HOTEL_IDS = {
-  "meropi-rooms-and-apartments": "0c9632b6-db5c-4179-8122-0003896e465e"
+  "meropi-rooms-and-apartments": "0c9632b6-db5c-4179-8122-0003896e465e",
+  "morpheas-pension-apartments": null // Will be populated once we have the real ID
 };
 
 /**
@@ -44,32 +51,36 @@ export async function getHotelBySlug(slug: string) {
     console.log(`Looking for hotel with slug: ${slug}`);
     
     // Special case handling with predefined hotel IDs
-    if (slug === "meropi-rooms-and-apartments" && KNOWN_HOTEL_IDS[slug]) {
-      console.log(`Using direct ID lookup for ${slug} with ID: ${KNOWN_HOTEL_IDS[slug]}`);
+    if ((slug === "meropi-rooms-and-apartments" && KNOWN_HOTEL_IDS[slug]) || 
+        (slug === "morpheas-pension-apartments")) {
       
-      // Import the supabase client directly to avoid the undefined error
-      const { supabase } = await import('@/integrations/supabase/client');
-      
-      const { data, error } = await supabase
-        .from('hotels')
-        .select(`
-          *,
-          hotel_amenities(amenity),
-          hotel_photos(id, photo_url, is_main_photo, description),
-          hotel_rooms(id, name, description, price, capacity, size_sqm, amenities, photo_url)
-        `)
-        .eq('id', KNOWN_HOTEL_IDS[slug]);
-      
-      if (error) {
-        console.error(`Error fetching hotel by ID (${KNOWN_HOTEL_IDS[slug]}):`, error);
-        throw error;
-      }
-      
-      if (data && data.length > 0) {
-        console.log(`Successfully found hotel by ID: ${data[0].name}`);
-        return data[0];
-      } else {
-        console.log(`No hotel found with ID: ${KNOWN_HOTEL_IDS[slug]}`);
+      if (KNOWN_HOTEL_IDS[slug]) {
+        console.log(`Using direct ID lookup for ${slug} with ID: ${KNOWN_HOTEL_IDS[slug]}`);
+        
+        // Import the supabase client directly to avoid the undefined error
+        const { supabase } = await import('@/integrations/supabase/client');
+        
+        const { data, error } = await supabase
+          .from('hotels')
+          .select(`
+            *,
+            hotel_amenities(amenity),
+            hotel_photos(id, photo_url, is_main_photo, description),
+            hotel_rooms(id, name, description, price, capacity, size_sqm, amenities, photo_url)
+          `)
+          .eq('id', KNOWN_HOTEL_IDS[slug]);
+        
+        if (error) {
+          console.error(`Error fetching hotel by ID (${KNOWN_HOTEL_IDS[slug]}):`, error);
+          throw error;
+        }
+        
+        if (data && data.length > 0) {
+          console.log(`Successfully found hotel by ID: ${data[0].name}`);
+          return data[0];
+        } else {
+          console.log(`No hotel found with ID: ${KNOWN_HOTEL_IDS[slug]}`);
+        }
       }
     }
     
@@ -79,6 +90,13 @@ export async function getHotelBySlug(slug: string) {
     // Import the supabase client directly
     const { supabase } = await import('@/integrations/supabase/client');
     
+    // For Morpheas Pension, add specific search terms
+    let searchQuery = `name.ilike.%${slug.replace(/-/g, ' ')}%`;
+    
+    if (slug === "morpheas-pension-apartments") {
+      searchQuery = "name.ilike.%morpheas%";
+    }
+    
     const { data, error } = await supabase
       .from('hotels')
       .select(`
@@ -87,7 +105,7 @@ export async function getHotelBySlug(slug: string) {
         hotel_photos(id, photo_url, is_main_photo, description),
         hotel_rooms(id, name, description, price, capacity, size_sqm, amenities, photo_url)
       `)
-      .or(`name.ilike.%${slug.replace(/-/g, ' ')}%`);
+      .or(searchQuery);
     
     if (error) {
       console.error('Error in fuzzy search:', error);
@@ -104,9 +122,19 @@ export async function getHotelBySlug(slug: string) {
         (hotel.id === KNOWN_HOTEL_IDS["meropi-rooms-and-apartments"])
       );
       
+      // Special override for Morpheas if found in results
+      const morpheasHotel = data.find(hotel => 
+        hotel.name.toLowerCase().includes("morpheas")
+      );
+      
       if (meropiHotel && slug.includes("meropi")) {
         console.log(`Found Meropi hotel in search results: ${meropiHotel.id}`);
         return meropiHotel;
+      }
+      
+      if (morpheasHotel && slug.includes("morpheas")) {
+        console.log(`Found Morpheas hotel in search results: ${morpheasHotel.id}`);
+        return morpheasHotel;
       }
       
       // Sort by name similarity to find the best match

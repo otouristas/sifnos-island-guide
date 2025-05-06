@@ -17,7 +17,7 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
   
   console.log(`HotelCard: Hotel name: ${hotel.name}, mainPhoto: ${mainPhoto}`);
   
-  // Special case for Meropi hotel which has local images saved
+  // Special case for hotels with local images saved in specific directories
   if (hotel.name === "Meropi Rooms and Apartments") {
     imageUrl = '/uploads/hotels/meropirooms-hero.webp';
   } else if (hotel.name === "Filadaki Villas") {
