@@ -10,6 +10,7 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [imageSrc, setImageSrc] = useState('/placeholder.svg');
+  const [logoLoaded, setLogoLoaded] = useState(false);
   
   // Create the URL-friendly slug for the hotel
   const hotelSlug = generateHotelUrl(hotel.name);
@@ -84,6 +85,10 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
     const randomValue = Math.floor(Math.random() * 1000);
     e.currentTarget.src = `/placeholder.svg?v=${timestamp}-${randomValue}`;
   };
+
+  const handleLogoLoad = () => {
+    setLogoLoaded(true);
+  };
   
   // Force reload the image after mount to bypass cache
   useEffect(() => {
@@ -147,7 +152,24 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
         
         {/* Hotel details */}
         <div className="p-4">
-          <h3 className="text-lg font-semibold text-gray-800 mb-1">{hotel.name}</h3>
+          <div className="flex items-center mb-1">
+            {/* Display logo next to hotel name if showLogo is true */}
+            {showLogo && hotel.logo_url && (
+              <div className="mr-2 flex-shrink-0 w-6 h-6 overflow-hidden">
+                <img 
+                  src={`/uploads/hotels/${hotel.logo_url}?v=${Date.now()}-${Math.floor(Math.random() * 1000)}`} 
+                  alt={`${hotel.name} logo`}
+                  className="w-full h-full object-contain"
+                  onLoad={handleLogoLoad}
+                  onError={(e) => {
+                    console.error(`Failed to load small logo for ${hotel.name}`);
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              </div>
+            )}
+            <h3 className="text-lg font-semibold text-gray-800">{hotel.name}</h3>
+          </div>
           <p className="text-sm text-gray-600 mb-2">{hotel.location}</p>
           
           {/* Hotel Types */}
