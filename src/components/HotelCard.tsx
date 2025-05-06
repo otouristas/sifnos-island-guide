@@ -1,11 +1,15 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { generateHotelUrl } from '@/lib/url-utils';
 import { getHotelTypeIcon } from './icons/HotelTypeIcons';
+import { Skeleton } from '@/components/ui/skeleton';
 
 // Define the HotelCard component that creates proper URLs
 const HotelCard = ({ hotel, showLogo = false, ...props }) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  
   // Create the URL-friendly slug for the hotel
   const hotelSlug = generateHotelUrl(hotel.name);
   
@@ -15,45 +19,52 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
   // Construct image URL based on hotel name and available photos
   let imageUrl = '/placeholder.svg';
   
-  console.log(`HotelCard: Hotel name: ${hotel.name}, mainPhoto: ${mainPhoto}`);
-  
   // Special case for hotels with local images saved in specific directories
   if (hotel.name === "Meropi Rooms and Apartments") {
     imageUrl = '/uploads/hotels/meropirooms-hero.webp';
   } else if (hotel.name === "Filadaki Villas") {
-    // For Filadaki Villas, use the new featured image
-    imageUrl = '/uploads/hotels/filadaki-studios/home-page_9151.jpg.jpeg';
-    console.log(`Using Filadaki featured image: ${imageUrl}`);
+    // For Filadaki Villas, use the new featured image with cache-busting
+    imageUrl = `/uploads/hotels/filadaki-studios/home-page_9151.jpg.jpeg?v=${new Date().getTime().toString().slice(0, -4)}`;
   } else if (hotel.name === "Morpheas Pension & Apartments") {
-    // For Morpheas Pension, use its featured image with absolute path for reliability
-    imageUrl = '/uploads/hotels/morpheas-pension/sifnos-accommodation.jpg.jpeg';
-    console.log(`Using Morpheas Pension featured image: ${imageUrl}`);
+    // For Morpheas Pension, use its featured image with cache-busting
+    imageUrl = `/uploads/hotels/morpheas-pension/sifnos-accommodation.jpg.jpeg?v=${new Date().getTime().toString().slice(0, -4)}`;
   } else if (hotel.name === "Villa Olivia Clara") {
-    // For Villa Olivia Clara, use its featured image with absolute path for reliability
-    imageUrl = '/uploads/hotels/villa-olivia-clara/feature-image.jpeg';
-    console.log(`Using Villa Olivia Clara featured image: ${imageUrl}`);
+    // For Villa Olivia Clara, use its featured image with cache-busting
+    imageUrl = `/uploads/hotels/villa-olivia-clara/feature-image.jpeg?v=${new Date().getTime().toString().slice(0, -4)}`;
   } else if (mainPhoto) {
-    // For other hotels, use the photos from the database
-    imageUrl = `/uploads/hotels/${mainPhoto}`;
+    // For other hotels, use the photos from the database with cache-busting
+    imageUrl = `/uploads/hotels/${mainPhoto}?v=${new Date().getTime().toString().slice(0, -4)}`;
   }
   
   // Get the first hotel type for icon display (if any)
   const primaryType = hotel.hotel_types && hotel.hotel_types.length > 0 ? hotel.hotel_types[0] : null;
   
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+  };
+  
+  const handleImageError = (e) => {
+    console.error(`Failed to load image for ${hotel.name}: ${imageUrl}`);
+    setImageError(true);
+    e.currentTarget.src = '/placeholder.svg';
+  };
+  
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1">
       <Link to={`/hotels/${hotelSlug}`} className="block">
-        {/* Hotel image with error handling and logging */}
+        {/* Hotel image with error handling and loading state */}
         <div className="relative h-48 overflow-hidden">
+          {!imageLoaded && !imageError && (
+            <Skeleton className="absolute inset-0 w-full h-full" />
+          )}
           <img 
             src={imageUrl} 
             alt={hotel.name} 
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              // More verbose error logging for debugging
-              console.error(`Failed to load image for ${hotel.name}: ${imageUrl}`);
-              e.currentTarget.src = '/placeholder.svg';
-            }}
+            className={`w-full h-full object-cover ${!imageLoaded && !imageError ? 'opacity-0' : 'opacity-100'}`}
+            onLoad={handleImageLoad}
+            onError={handleImageError}
+            loading="eager" // Prioritize loading for better perceived performance
+            fetchPriority="high" // Modern browsers will prioritize these images
           />
           {/* Display hotel type icon if available */}
           {primaryType && (
@@ -66,7 +77,7 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
           {showLogo && hotel.logo_url && (
             <div className="absolute bottom-2 right-2 bg-white p-1 rounded-md">
               <img 
-                src={`/uploads/hotels/${hotel.logo_url}`} 
+                src={`/uploads/hotels/${hotel.logo_url}?v=${new Date().getTime().toString().slice(0, -4)}`} 
                 alt={`${hotel.name} logo`} 
                 className="h-8"
                 onError={(e) => {

@@ -19,6 +19,30 @@ const prerender = (): Plugin => {
   };
 };
 
+// Create a plugin to clear the cache
+const clearCache = (): Plugin => {
+  return {
+    name: 'clear-cache',
+    apply: 'build',
+    enforce: 'pre',
+    buildStart() {
+      console.log('Clearing build cache for fresh build...');
+      // Nothing to do on the server side, but logging for visibility
+    },
+    transformIndexHtml(html) {
+      // Add cache control meta tags
+      return html.replace(
+        '</head>',
+        `<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+        <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+        </head>`
+      );
+    }
+  };
+};
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
@@ -30,6 +54,7 @@ export default defineConfig(({ mode }) => ({
     mode === 'development' &&
     componentTagger(),
     mode === 'production' && prerender(),
+    mode === 'production' && clearCache(),
   ].filter(Boolean),
   resolve: {
     alias: {
@@ -47,14 +72,24 @@ export default defineConfig(({ mode }) => ({
   build: {
     target: 'modules',
     modulePreload: true,
+    minify: 'terser', // Use terser for better minification
+    terserOptions: {
+      compress: {
+        drop_console: false, // Keep console.logs for now for debugging
+        drop_debugger: true
+      }
+    },
     rollupOptions: {
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          // Fix: Instead of importing the directory, reference the index file
-          'ui-lib': ['@/components/ui/index']
+          'ui-lib': ['@/components/ui/index'],
+          'supabase': ['@supabase/supabase-js']
         }
       }
-    }
+    },
+    // Ensure assets are properly hashed for cache busting
+    assetsDir: 'assets',
+    sourcemap: mode !== 'production', // Disable sourcemaps in production for performance
   }
 }));

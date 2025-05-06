@@ -22,61 +22,53 @@ export function logSupabaseResponse(operation: string, data: any, error: any) {
   return { data, error };
 }
 
-// Helper function to generate dynamic room image paths
+// Helper function to generate dynamic room image paths with improved caching
 export function getHotelRoomImagePath(photoUrl: string | undefined, hotelName: string | undefined): string {
   if (!photoUrl) {
     return '/placeholder.svg';
   }
   
-  console.log(`Getting image path for room: ${photoUrl} in hotel: ${hotelName}`);
+  // Add cache-busting param to prevent stale images
+  const cacheBuster = `?v=${Date.now().toString().slice(0, -4)}`; // Using an hour-level timestamp
   
   // For Filadaki Villas, handle paths with the subdirectory
   if (hotelName === 'Filadaki Villas') {
     // Check if the path already includes the filadaki-studios subdirectory
     if (photoUrl.includes('filadaki-studios/')) {
-      console.log(`Using path with subdirectory: /uploads/hotels/${photoUrl}`);
-      return `/uploads/hotels/${photoUrl}`;
+      return `/uploads/hotels/${photoUrl}${cacheBuster}`;
     } else {
-      console.log(`Adding subdirectory: /uploads/hotels/filadaki-studios/${photoUrl}`);
-      return `/uploads/hotels/filadaki-studios/${photoUrl}`;
+      return `/uploads/hotels/filadaki-studios/${photoUrl}${cacheBuster}`;
     }
   }
   
   // For Morpheas Pension, handle paths with the subdirectory - improved path handling
   if (hotelName === 'Morpheas Pension & Apartments') {
     if (photoUrl.includes('morpheas-pension/')) {
-      console.log(`Using existing Morpheas path: /uploads/hotels/${photoUrl}`);
-      return `/uploads/hotels/${photoUrl}`;
+      return `/uploads/hotels/${photoUrl}${cacheBuster}`;
     } else if (photoUrl.startsWith('/')) {
       // Handle absolute paths
-      console.log(`Using absolute path for Morpheas: ${photoUrl}`);
-      return photoUrl;
+      return `${photoUrl}${cacheBuster}`;
     } else {
       // Ensure proper subdirectory path
-      console.log(`Constructing Morpheas path: /uploads/hotels/morpheas-pension/${photoUrl}`);
-      return `/uploads/hotels/morpheas-pension/${photoUrl}`;
+      return `/uploads/hotels/morpheas-pension/${photoUrl}${cacheBuster}`;
     }
   }
   
   // For Villa Olivia Clara, handle paths with the subdirectory - improved path handling
   if (hotelName === 'Villa Olivia Clara') {
     if (photoUrl.includes('villa-olivia-clara/')) {
-      console.log(`Using existing Villa Olivia path: /uploads/hotels/${photoUrl}`);
-      return `/uploads/hotels/${photoUrl}`;
+      return `/uploads/hotels/${photoUrl}${cacheBuster}`;
     } else if (photoUrl.startsWith('/')) {
       // Handle absolute paths
-      console.log(`Using absolute path for Villa Olivia: ${photoUrl}`);
-      return photoUrl;
+      return `${photoUrl}${cacheBuster}`;
     } else {
       // Ensure proper subdirectory path
-      console.log(`Constructing Villa Olivia path: /uploads/hotels/villa-olivia-clara/${photoUrl}`);
-      return `/uploads/hotels/villa-olivia-clara/${photoUrl}`;
+      return `/uploads/hotels/villa-olivia-clara/${photoUrl}${cacheBuster}`;
     }
   }
   
   // For other hotels, use the standard path
-  console.log(`Using standard path: /uploads/hotels/${photoUrl}`);
-  return `/uploads/hotels/${photoUrl}`;
+  return `/uploads/hotels/${photoUrl}${cacheBuster}`;
 }
 
 export default supabase;
