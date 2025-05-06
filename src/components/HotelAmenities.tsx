@@ -1,5 +1,5 @@
 
-import { Wifi, Coffee, Tv, CircleParking, AirVent, Waves, Home, Bath, Refrigerator, Bed, UtensilsCrossed, Power, Shirt, Cigarette, Pool, Garden, TreePine, Utensils } from 'lucide-react';
+import { Wifi, Coffee, Tv, CircleParking, AirVent, Waves, Home, Bath, Refrigerator, Bed, UtensilsCrossed, Power, Shirt, Cigarette, Droplets, TreePine, Utensils } from 'lucide-react';
 
 interface HotelAmenitiesProps {
   amenities: string[];
@@ -29,12 +29,12 @@ const HotelAmenities = ({ amenities }: HotelAmenitiesProps) => {
     'socket near the bed': <Power size={14} className="mr-1" />,
     'wardrobe or closet': <Shirt size={14} className="mr-1" />, // Using Shirt instead of ShirtFolded
     'no smoking': <Cigarette size={14} className="mr-1 line-through" />,
-    'private pool': <Pool size={14} className="mr-1" />,
+    'private pool': <Droplets size={14} className="mr-1" />, // Changed from Pool to Droplets
     'bbq': <Utensils size={14} className="mr-1" />,
-    'private garden': <Garden size={14} className="mr-1" />,
-    'garden': <Garden size={14} className="mr-1" />,
+    'private garden': <TreePine size={14} className="mr-1" />, // Changed from Garden to TreePine
+    'garden': <TreePine size={14} className="mr-1" />, // Changed from Garden to TreePine
     'outdoor dining area': <TreePine size={14} className="mr-1" />,
-    'pool bar': <Pool size={14} className="mr-1" />,
+    'pool bar': <Droplets size={14} className="mr-1" />, // Changed from Pool to Droplets
     'fireplace': <Home size={14} className="mr-1" />,
     'free parking': <CircleParking size={14} className="mr-1" />,
     'fully equipped kitchen': <UtensilsCrossed size={14} className="mr-1" />,
