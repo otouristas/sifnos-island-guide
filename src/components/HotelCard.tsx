@@ -21,6 +21,10 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
   // Debug log for identifying the hotel and its main photo
   console.log(`HotelCard: Hotel name: ${hotel.name}, mainPhoto: ${mainPhoto}`);
   
+  // Check if the hotel has a logo
+  const hasLogo = Boolean(hotel.logo_url);
+  console.log(`HotelCard: Hotel ${hotel.name} has logo: ${hasLogo ? 'Yes' : 'No'}, logo URL: ${hotel.logo_url || 'None'}`);
+  
   useEffect(() => {
     // Generate cache-busting timestamp for all images
     const timestamp = Date.now();
@@ -67,7 +71,21 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
       }
     };
     img.src = imageUrl;
-  }, [hotel.name, mainPhoto]);
+    
+    // If the hotel has a logo, preload it too
+    if (hotel.logo_url) {
+      const logoImg = new Image();
+      const logoUrl = `/uploads/hotels/${hotel.logo_url}?v=${timestamp}-${randomValue}`;
+      logoImg.onload = () => {
+        setLogoLoaded(true);
+        console.log(`Logo loaded successfully for ${hotel.name}: ${logoUrl}`);
+      };
+      logoImg.onerror = () => {
+        console.error(`Failed to load logo for ${hotel.name}: ${logoUrl}`);
+      };
+      logoImg.src = logoUrl;
+    }
+  }, [hotel.name, mainPhoto, hotel.logo_url]);
   
   // Get the first hotel type for icon display (if any)
   const primaryType = hotel.hotel_types && hotel.hotel_types.length > 0 ? hotel.hotel_types[0] : null;
@@ -88,6 +106,7 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
 
   const handleLogoLoad = () => {
     setLogoLoaded(true);
+    console.log(`Logo display confirmed for ${hotel.name}`);
   };
   
   // Force reload the image after mount to bypass cache
@@ -107,6 +126,15 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
     
     return () => clearTimeout(timer);
   }, [imageSrc]);
+  
+  // Debug: Log logo information when the component renders
+  useEffect(() => {
+    if (showLogo && hotel.logo_url) {
+      console.log(`HotelCard rendering with logo for ${hotel.name}: ${hotel.logo_url}`);
+    }
+  }, [showLogo, hotel.name, hotel.logo_url]);
+
+  const logoUrl = hotel.logo_url ? `/uploads/hotels/${hotel.logo_url}?v=${Date.now()}-${Math.floor(Math.random() * 1000)}` : null;
   
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1">
@@ -134,15 +162,18 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
               </div>
             </div>
           )}
-          {showLogo && hotel.logo_url && (
-            <div className="absolute bottom-2 right-2 bg-white p-1 rounded-md">
+          
+          {/* Show prominent hotel logo in top-right if available */}
+          {showLogo && logoUrl && (
+            <div className="absolute top-2 right-2 bg-white/90 p-1 rounded-md shadow-sm">
               <img 
-                key={`hotel-logo-${hotel.id}-${Date.now()}`} // Force React to render a new image element
-                src={`/uploads/hotels/${hotel.logo_url}?v=${Date.now()}-${Math.floor(Math.random() * 1000)}`} 
+                key={`hotel-big-logo-${hotel.id}-${Date.now()}`}
+                src={logoUrl}
                 alt={`${hotel.name} logo`} 
-                className="h-8"
+                className="h-8 w-auto max-w-[80px] object-contain"
+                onLoad={handleLogoLoad}
                 onError={(e) => {
-                  console.error(`Failed to load logo for ${hotel.name}`);
+                  console.error(`Failed to load prominent logo for ${hotel.name}`);
                   e.currentTarget.style.display = 'none';
                 }}
               />
@@ -152,15 +183,15 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
         
         {/* Hotel details */}
         <div className="p-4">
-          <div className="flex items-center mb-1">
+          <div className="flex items-center mb-2">
             {/* Display logo next to hotel name if showLogo is true */}
-            {showLogo && hotel.logo_url && (
-              <div className="mr-2 flex-shrink-0 w-6 h-6 overflow-hidden">
+            {showLogo && logoUrl && (
+              <div className="mr-3 flex-shrink-0 w-8 h-8 bg-white rounded-full p-0.5 shadow-sm border border-gray-100 overflow-hidden">
                 <img 
-                  src={`/uploads/hotels/${hotel.logo_url}?v=${Date.now()}-${Math.floor(Math.random() * 1000)}`} 
+                  src={logoUrl}
                   alt={`${hotel.name} logo`}
                   className="w-full h-full object-contain"
-                  onLoad={handleLogoLoad}
+                  onLoad={() => console.log(`Small logo loaded for ${hotel.name}`)}
                   onError={(e) => {
                     console.error(`Failed to load small logo for ${hotel.name}`);
                     e.currentTarget.style.display = 'none';
