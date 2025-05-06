@@ -103,10 +103,10 @@ export default defineConfig(({ mode }) => ({
           'ui-lib': ['@/components/ui/index'],
           'supabase': ['@supabase/supabase-js']
         },
-        // Add asset hashing with timestamp for aggressive cache busting
-        entryFileNames: mode === 'production' ? 'assets/[name]-[hash]-[time].js' : 'assets/[name].js',
-        chunkFileNames: mode === 'production' ? 'assets/[name]-[hash]-[time].js' : 'assets/[name].js',
-        assetFileNames: mode === 'production' ? 'assets/[name]-[hash]-[time].[ext]' : 'assets/[name].[ext]'
+        // Fixed file naming pattern by removing the [time] placeholder
+        entryFileNames: mode === 'production' ? 'assets/[name]-[hash].js' : 'assets/[name].js',
+        chunkFileNames: mode === 'production' ? 'assets/[name]-[hash].js' : 'assets/[name].js',
+        assetFileNames: mode === 'production' ? 'assets/[name]-[hash].[ext]' : 'assets/[name].[ext]'
       }
     },
     // Ensure assets are properly hashed for cache busting
