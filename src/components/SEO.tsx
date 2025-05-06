@@ -41,6 +41,11 @@ export default function SEO({
     (canonical.startsWith('http') ? canonical : `https://hotelssifnos.com${canonical.startsWith('/') ? canonical : `/${canonical}`}`) 
     : "https://hotelssifnos.com";
   
+  // Generate a timestamp for cache busting
+  const timestamp = Date.now();
+  const randomValue = Math.floor(Math.random() * 1000);
+  const cacheBuster = `${timestamp}-${randomValue}`;
+  
   let schemaData: SchemaData = {
     "@context": "https://schema.org",
     "@type": schemaType,
@@ -113,6 +118,14 @@ export default function SEO({
       {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
       <meta name="author" content={author} />
       
+      {/* Version control and cache busting */}
+      <meta name="version" content={cacheBuster} />
+      
+      {/* Strong cache control headers */}
+      <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+      <meta http-equiv="Pragma" content="no-cache" />
+      <meta http-equiv="Expires" content="0" />
+      
       {/* Robots meta tag for indexing control */}
       {noIndex ? (
         <meta name="robots" content="noindex, nofollow" />
@@ -126,7 +139,7 @@ export default function SEO({
       <meta property="og:description" content={description} />
       <meta property="og:type" content="website" />
       <meta property="og:url" content={formattedCanonical} />
-      <meta property="og:image" content={ogImage} />
+      <meta property="og:image" content={`${ogImage}?v=${cacheBuster}`} />
       <meta property="og:site_name" content="Hotels Sifnos" />
       <meta property="og:locale" content="en_US" />
 
@@ -135,7 +148,7 @@ export default function SEO({
       <meta name="twitter:site" content="@hotelssifnos" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={ogImage} />
+      <meta name="twitter:image" content={`${ogImage}?v=${cacheBuster}`} />
 
       {/* Additional SEO tags */}
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -145,6 +158,37 @@ export default function SEO({
       <link rel="preconnect" href="https://www.googletagmanager.com" />
       <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
       <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
+      
+      {/* Force reload script to bypass cache */}
+      <script>
+        {`
+          // Force cache refresh on page load
+          window.addEventListener('load', function() {
+            if (!window.location.hash) {
+              console.log('Checking for fresh content...');
+              if ('caches' in window) {
+                caches.keys().then(function(names) {
+                  for (let name of names) caches.delete(name);
+                });
+              }
+              
+              // Force image reload by appending timestamp to src
+              setTimeout(function() {
+                document.querySelectorAll('img').forEach(function(img) {
+                  if (img.src.indexOf('placeholder.svg') === -1) {
+                    const cacheBuster = ${JSON.stringify(cacheBuster)};
+                    if (img.src.indexOf('?') !== -1) {
+                      img.src = img.src.split('?')[0] + '?v=' + cacheBuster;
+                    } else {
+                      img.src = img.src + '?v=' + cacheBuster;
+                    }
+                  }
+                });
+              }, 300);
+            }
+          });
+        `}
+      </script>
       
       {/* JSON-LD structured data */}
       <script type="application/ld+json">

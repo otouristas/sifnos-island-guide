@@ -28,8 +28,10 @@ export function getHotelRoomImagePath(photoUrl: string | undefined, hotelName: s
     return '/placeholder.svg';
   }
   
-  // Add cache-busting param to prevent stale images
-  const cacheBuster = `?v=${Date.now().toString().slice(0, -4)}`; // Using an hour-level timestamp
+  // Generate a strong cache buster with both timestamp and random value
+  const timestamp = Date.now();
+  const randomValue = Math.floor(Math.random() * 1000);
+  const cacheBuster = `?v=${timestamp}-${randomValue}`; 
   
   // For Filadaki Villas, handle paths with the subdirectory
   if (hotelName === 'Filadaki Villas') {

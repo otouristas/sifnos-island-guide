@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { generateHotelUrl } from '@/lib/url-utils';
 import { getHotelTypeIcon } from './icons/HotelTypeIcons';
@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 const HotelCard = ({ hotel, showLogo = false, ...props }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [imageSrc, setImageSrc] = useState('/placeholder.svg');
   
   // Create the URL-friendly slug for the hotel
   const hotelSlug = generateHotelUrl(hotel.name);
@@ -16,25 +17,34 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
   // Find the main photo for the hotel
   const mainPhoto = hotel.hotel_photos?.find(photo => photo.is_main_photo)?.photo_url || '';
   
-  // Construct image URL based on hotel name and available photos
-  let imageUrl = '/placeholder.svg';
-  
-  // Special case for hotels with local images saved in specific directories
-  if (hotel.name === "Meropi Rooms and Apartments") {
-    imageUrl = '/uploads/hotels/meropirooms-hero.webp';
-  } else if (hotel.name === "Filadaki Villas") {
-    // For Filadaki Villas, use the new featured image with cache-busting
-    imageUrl = `/uploads/hotels/filadaki-studios/home-page_9151.jpg.jpeg?v=${new Date().getTime().toString().slice(0, -4)}`;
-  } else if (hotel.name === "Morpheas Pension & Apartments") {
-    // For Morpheas Pension, use its featured image with cache-busting
-    imageUrl = `/uploads/hotels/morpheas-pension/sifnos-accommodation.jpg.jpeg?v=${new Date().getTime().toString().slice(0, -4)}`;
-  } else if (hotel.name === "Villa Olivia Clara") {
-    // For Villa Olivia Clara, use its featured image with cache-busting
-    imageUrl = `/uploads/hotels/villa-olivia-clara/feature-image.jpeg?v=${new Date().getTime().toString().slice(0, -4)}`;
-  } else if (mainPhoto) {
-    // For other hotels, use the photos from the database with cache-busting
-    imageUrl = `/uploads/hotels/${mainPhoto}?v=${new Date().getTime().toString().slice(0, -4)}`;
-  }
+  useEffect(() => {
+    // Generate cache-busting timestamp for all images
+    const timestamp = Date.now();
+    const randomValue = Math.floor(Math.random() * 1000);
+    
+    // Construct image URL based on hotel name and available photos with strong cache busting
+    let imageUrl = `/placeholder.svg?v=${timestamp}-${randomValue}`;
+    
+    // Special case for hotels with local images saved in specific directories
+    if (hotel.name === "Meropi Rooms and Apartments") {
+      imageUrl = `/uploads/hotels/meropirooms-hero.webp?v=${timestamp}-${randomValue}`;
+    } else if (hotel.name === "Filadaki Villas") {
+      // For Filadaki Villas, use the new featured image with cache-busting
+      imageUrl = `/uploads/hotels/filadaki-studios/home-page_9151.jpg.jpeg?v=${timestamp}-${randomValue}`;
+    } else if (hotel.name === "Morpheas Pension & Apartments") {
+      // For Morpheas Pension, use its featured image with cache-busting
+      imageUrl = `/uploads/hotels/morpheas-pension/sifnos-accommodation.jpg.jpeg?v=${timestamp}-${randomValue}`;
+    } else if (hotel.name === "Villa Olivia Clara") {
+      // For Villa Olivia Clara, use its featured image with cache-busting
+      imageUrl = `/uploads/hotels/villa-olivia-clara/feature-image.jpeg?v=${timestamp}-${randomValue}`;
+    } else if (mainPhoto) {
+      // For other hotels, use the photos from the database with cache-busting
+      imageUrl = `/uploads/hotels/${mainPhoto}?v=${timestamp}-${randomValue}`;
+    }
+    
+    // Set the image source with cache busting
+    setImageSrc(imageUrl);
+  }, [hotel.name, mainPhoto]);
   
   // Get the first hotel type for icon display (if any)
   const primaryType = hotel.hotel_types && hotel.hotel_types.length > 0 ? hotel.hotel_types[0] : null;
@@ -44,10 +54,32 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
   };
   
   const handleImageError = (e) => {
-    console.error(`Failed to load image for ${hotel.name}: ${imageUrl}`);
+    console.error(`Failed to load image for ${hotel.name}: ${e.currentTarget.src}`);
     setImageError(true);
-    e.currentTarget.src = '/placeholder.svg';
+    
+    // Try to reload the image with a different cache-buster
+    const timestamp = Date.now();
+    const randomValue = Math.floor(Math.random() * 1000);
+    e.currentTarget.src = `/placeholder.svg?v=${timestamp}-${randomValue}`;
   };
+  
+  // Force reload the image after mount to bypass cache
+  useEffect(() => {
+    // Small delay to allow React to stabilize
+    const timer = setTimeout(() => {
+      const img = new Image();
+      img.onload = () => {
+        setImageSrc(img.src);
+        setImageLoaded(true);
+      };
+      img.onerror = () => {
+        setImageError(true);
+      };
+      img.src = imageSrc;
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, [imageSrc]);
   
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1">
@@ -58,7 +90,8 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
             <Skeleton className="absolute inset-0 w-full h-full" />
           )}
           <img 
-            src={imageUrl} 
+            key={`hotel-image-${hotel.id}-${Date.now()}`} // Force React to render a new image element
+            src={imageSrc} 
             alt={hotel.name} 
             className={`w-full h-full object-cover ${!imageLoaded && !imageError ? 'opacity-0' : 'opacity-100'}`}
             onLoad={handleImageLoad}
@@ -77,7 +110,8 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
           {showLogo && hotel.logo_url && (
             <div className="absolute bottom-2 right-2 bg-white p-1 rounded-md">
               <img 
-                src={`/uploads/hotels/${hotel.logo_url}?v=${new Date().getTime().toString().slice(0, -4)}`} 
+                key={`hotel-logo-${hotel.id}-${Date.now()}`} // Force React to render a new image element
+                src={`/uploads/hotels/${hotel.logo_url}?v=${Date.now()}-${Math.floor(Math.random() * 1000)}`} 
                 alt={`${hotel.name} logo`} 
                 className="h-8"
                 onError={(e) => {
