@@ -45,12 +45,31 @@ export default function HotelDetailPage() {
     { id: '9', photo_url: 'filadaki-studios/1103_R4335.jpg.jpeg', is_main_photo: false, description: 'Kitchen' }
   ];
   
+  // Define the hotel photos for Morpheas Pension
+  const morpheasPhotos = [
+    { id: '1', photo_url: 'morpheas-pension/sifnos-accommodation.jpg.jpeg', is_main_photo: true, description: 'Morpheas Pension Exterior' },
+    { id: '2', photo_url: 'morpheas-pension/sifnos-morpheas-pension3.jpg.jpeg', is_main_photo: false, description: 'Garden View' },
+    { id: '3', photo_url: 'morpheas-pension/sifnos-morpheas-pension4.jpg.jpeg', is_main_photo: false, description: 'Room Interior' },
+    { id: '4', photo_url: 'morpheas-pension/sifnos-morpheas-pension5.jpg.jpeg', is_main_photo: false, description: 'Reception Area' },
+    { id: '5', photo_url: 'morpheas-pension/sifnos-pension-morfeas.jpg.jpeg', is_main_photo: false, description: 'Building Exterior' },
+    { id: '6', photo_url: 'morpheas-pension/sifnos-sunset.jpg.jpeg', is_main_photo: false, description: 'Sunset View' }
+  ];
+  
   // Define room type images for Filadaki Villas - UPDATED with WebP images
   const filadakiRoomImages = {
     "Gregos": "filadaki-studios/gregos_6406.webp",
     "Maistros": "filadaki-studios/maistros_3967.webp",
     "Levantes": "filadaki-studios/levantes_3351.webp", 
     "Ostria": "filadaki-studios/ostria_4857.webp"
+  };
+  
+  // Define room type images for Morpheas Pension
+  const morpheasRoomImages = {
+    "Studio": "morpheas-pension/studio.webp",
+    "Double Room": "morpheas-pension/double-roomwebp.webp",
+    "Triple Room": "morpheas-pension/triple.webp",
+    "Apartment (4 People)": "morpheas-pension/apartment-4person.webp",
+    "Apartment (5 People)": "morpheas-pension/apartment-5person.webp"
   };
 
   useEffect(() => {
@@ -92,10 +111,25 @@ export default function HotelDetailPage() {
               return room;
             });
           }
+        }
+        
+        // Special handling for Morpheas Pension - add photos and room images
+        if (hotelData.name === 'Morpheas Pension & Apartments') {
+          hotelData.hotel_photos = morpheasPhotos;
+          hotelData.logo_path = 'morpheas-pension/logo.png';
           
-          // Force console log of the updated room image paths for debugging
-          console.log('Updated Filadaki room images:', 
-            hotelData.hotel_rooms.map(room => ({
+          // Add image paths to room types if they exist
+          if (hotelData.hotel_rooms && hotelData.hotel_rooms.length > 0) {
+            hotelData.hotel_rooms = hotelData.hotel_rooms.map(room => {
+              if (morpheasRoomImages[room.name]) {
+                room.photo_url = morpheasRoomImages[room.name];
+              }
+              return room;
+            });
+          }
+          
+          console.log('Updated Morpheas room images:', 
+            hotelData.hotel_rooms?.map(room => ({
               name: room.name,
               photo_url: room.photo_url
             }))
@@ -216,13 +250,15 @@ export default function HotelDetailPage() {
   // Update the canonical URL and metadata to use the slug
   const hotelSlug = generateHotelUrl(hotel.name);
   
-  // Check if current hotel is Meropi Rooms or Filadaki Villas
+  // Check if current hotel is Meropi Rooms, Filadaki Villas or Morpheas Pension
   const isMeropiRooms = hotel.id === '0c9632b6-db5c-4179-8122-0003896e465e';
   const isFiladakiVillas = hotel.name === 'Filadaki Villas';
+  const isMorpheasPension = hotel.name === 'Morpheas Pension & Apartments';
   
   // Fixed Google Maps URLs
   const meropiMapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3780.3010959320573!2d24.67395307627629!3d36.98818015707993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x149892d141f2e833%3A0x82d07f304d07c20a!2sMeropi%20Rooms%20%26%20Apartments!5e1!3m2!1sen!2sgr!4v1746223266808!5m2!1sen!2sgr";
   const filadakiMapUrl = "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12746.806122751592!2d24.66837674455056!3d36.99305700312019!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x149892d3d403b033%3A0x82243ddb15a8b694!2sFiladaki%20Villas!5e0!3m2!1sen!2sgr!4v1746532630259!5m2!1sen!2sgr";
+  const morpheasMapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3186.83715183455!2d24.67734841229081!3d36.98982017207772!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x149892d208a2cf15%3A0xf0ca16e2b551aede!2sMorfeas%20Pension!5e0!3m2!1sen!2sgr!4v1746533638366!5m2!1sen!2sgr";
 
   return (
     <>
@@ -327,10 +363,10 @@ export default function HotelDetailPage() {
         </div>
       </div>
       
-      {/* Photo Gallery - ENHANCED WITH CAROUSEL */}
+      {/* Photo Gallery with Carousel for all hotels */}
       <div className="bg-gray-50 py-8">
         <div className="page-container">
-          {/* Using Carousel for both Filadaki and Meropi hotels */}
+          {/* Using Carousel for all hotels */}
           <div className="space-y-4">
             {/* Main large image */}
             <div className="rounded-lg overflow-hidden aspect-video shadow-md">
@@ -676,7 +712,7 @@ export default function HotelDetailPage() {
                 </div>
               </div>
               
-              {/* Map section - Updated with the new Filadaki map URL */}
+              {/* Map section - Updated with hotel-specific map URLs */}
               <div className="cycladic-card p-6">
                 <h3 className="text-xl font-semibold mb-4 flex items-center">
                   <Map size={18} className="mr-2 text-sifnos-turquoise" />
@@ -684,7 +720,12 @@ export default function HotelDetailPage() {
                 </h3>
                 <div className="h-64 bg-gray-100 rounded-md overflow-hidden shadow-md">
                   <iframe
-                    src={isFiladakiVillas ? filadakiMapUrl : (isMeropiRooms ? meropiMapUrl : hotel?.google_map_url)}
+                    src={
+                      isMorpheasPension ? morpheasMapUrl : 
+                      isFiladakiVillas ? filadakiMapUrl : 
+                      isMeropiRooms ? meropiMapUrl : 
+                      hotel?.google_map_url
+                    }
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}

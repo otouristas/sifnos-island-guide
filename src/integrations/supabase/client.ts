@@ -42,6 +42,18 @@ export function getHotelRoomImagePath(photoUrl: string | undefined, hotelName: s
     }
   }
   
+  // For Morpheas Pension, handle paths with the subdirectory
+  if (hotelName === 'Morpheas Pension & Apartments') {
+    // Check if the path already includes the morpheas-pension subdirectory
+    if (photoUrl.includes('morpheas-pension/')) {
+      console.log(`Using path with subdirectory: /uploads/hotels/${photoUrl}`);
+      return `/uploads/hotels/${photoUrl}`;
+    } else {
+      console.log(`Adding subdirectory: /uploads/hotels/morpheas-pension/${photoUrl}`);
+      return `/uploads/hotels/morpheas-pension/${photoUrl}`;
+    }
+  }
+  
   // For other hotels, use the standard path
   console.log(`Using standard path: /uploads/hotels/${photoUrl}`);
   return `/uploads/hotels/${photoUrl}`;

@@ -24,6 +24,10 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
     // For Filadaki Villas, use the new featured image
     imageUrl = '/uploads/hotels/filadaki-studios/home-page_9151.jpg.jpeg';
     console.log(`Using new Filadaki featured image: ${imageUrl}`);
+  } else if (hotel.name === "Morpheas Pension & Apartments") {
+    // For Morpheas Pension, use its featured image
+    imageUrl = '/uploads/hotels/morpheas-pension/sifnos-accommodation.jpg.jpeg';
+    console.log(`Using Morpheas Pension featured image: ${imageUrl}`);
   } else if (mainPhoto) {
     // For other hotels, use the photos from the database
     imageUrl = `/uploads/hotels/${mainPhoto}`;
