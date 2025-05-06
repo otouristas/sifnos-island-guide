@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, PlusCircle, MinusCircle, ExternalLink, Map } from 'lucide-react';
@@ -11,6 +12,8 @@ import { getHotelBySlug, generateHotelUrl } from '@/lib/url-utils';
 import BookingReviews from '@/components/BookingReviews';
 import HotelAmenities from '@/components/HotelAmenities';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function HotelDetailPage() {
   const { slug } = useParams();
@@ -29,6 +32,27 @@ export default function HotelDetailPage() {
     { id: '5', photo_url: 'meropirooms-four.webp', is_main_photo: false, description: 'Room Detail' },
     { id: '6', photo_url: 'meropirooms-bath.webp', is_main_photo: false, description: 'Bathroom' }
   ];
+  
+  // Define the hotel photos for Filadaki Villas
+  const filadakiPhotos = [
+    { id: '1', photo_url: 'filadaki-studios/home-page_9151.jpg.jpeg', is_main_photo: true, description: 'Filadaki Villas Exterior' },
+    { id: '2', photo_url: 'filadaki-studios/home-page_1441.jpg.jpeg', is_main_photo: false, description: 'Filadaki Villa View' },
+    { id: '3', photo_url: 'filadaki-studios/home-page_3125.jpg.jpeg', is_main_photo: false, description: 'Villa Interior' },
+    { id: '4', photo_url: 'filadaki-studios/1092_R6414.jpg.jpeg', is_main_photo: false, description: 'Pool Area' },
+    { id: '5', photo_url: 'filadaki-studios/home-page_5248.jpg.jpeg', is_main_photo: false, description: 'Villa Exterior' },
+    { id: '6', photo_url: 'filadaki-studios/1091_R3305.jpg.jpeg', is_main_photo: false, description: 'Villa Detail' },
+    { id: '7', photo_url: 'filadaki-studios/1100_R6185.jpg.jpeg', is_main_photo: false, description: 'Bedroom' },
+    { id: '8', photo_url: 'filadaki-studios/1102_R5879.jpg.jpeg', is_main_photo: false, description: 'Bathroom' },
+    { id: '9', photo_url: 'filadaki-studios/1103_R4335.jpg.jpeg', is_main_photo: false, description: 'Kitchen' }
+  ];
+  
+  // Define room type images for Filadaki Villas
+  const filadakiRoomImages = {
+    "Gregos Studio": "filadaki-studios/1100_R6185.jpg.jpeg",
+    "Maistros Studio": "filadaki-studios/1092_R6414.jpg.jpeg",
+    "Levantes Apartment": "filadaki-studios/home-page_1441.jpg.jpeg",
+    "Ostria Studio": "filadaki-studios/home-page_3125.jpg.jpeg"
+  };
 
   useEffect(() => {
     const fetchHotelDetails = async () => {
@@ -51,6 +75,23 @@ export default function HotelDetailPage() {
         if (hotelData.id === '0c9632b6-db5c-4179-8122-0003896e465e') {
           hotelData.hotel_photos = meropiPhotos;
           hotelData.logo_path = 'meropi-logo.svg';
+        }
+        
+        // Special handling for Filadaki Villas - add photos
+        if (hotelData.name === 'Filadaki Villas') {
+          hotelData.hotel_photos = filadakiPhotos;
+          hotelData.logo_path = 'filadaki-studios/filadaki-logo.png';
+          
+          // Add image paths to room types if they exist
+          if (hotelData.hotel_rooms && hotelData.hotel_rooms.length > 0) {
+            hotelData.hotel_rooms = hotelData.hotel_rooms.map(room => {
+              const roomName = room.name;
+              if (filadakiRoomImages[roomName]) {
+                room.photo_url = filadakiRoomImages[roomName];
+              }
+              return room;
+            });
+          }
         }
         
         setHotel(hotelData);
@@ -277,51 +318,88 @@ export default function HotelDetailPage() {
         </div>
       </div>
       
-      {/* Photo Gallery */}
+      {/* Photo Gallery - ENHANCED WITH CAROUSEL FOR FILADAKI */}
       <div className="bg-gray-50 py-8">
         <div className="page-container">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Main large image */}
-            <div className="md:col-span-2 rounded-lg overflow-hidden aspect-video">
-              <img 
-                src={activeImage || '/placeholder.svg'} 
-                alt={hotel.name} 
-                className="w-full h-full object-cover"
-              />
+          {isFiladakiVillas ? (
+            <div className="space-y-4">
+              {/* Main large image */}
+              <div className="rounded-lg overflow-hidden aspect-video shadow-md">
+                <img 
+                  src={activeImage || '/placeholder.svg'} 
+                  alt={hotel.name} 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              
+              {/* Carousel for thumbnails */}
+              <Carousel className="w-full">
+                <CarouselContent>
+                  {hotel.hotel_photos?.map((photo, index) => (
+                    <CarouselItem key={photo.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
+                      <div 
+                        className="rounded-lg overflow-hidden aspect-square cursor-pointer border-2 h-full
+                          transition-all hover:opacity-90 hover:shadow-md
+                          ${activeImage === `/uploads/hotels/${photo.photo_url}` ? 'border-sifnos-turquoise' : 'border-transparent'}"
+                        onClick={() => setActiveImage(`/uploads/hotels/${photo.photo_url}`)}
+                      >
+                        <img 
+                          src={`/uploads/hotels/${photo.photo_url}`} 
+                          alt={photo.description || `${hotel.name} - Photo ${index + 1}`} 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="hidden sm:flex -left-4 lg:-left-6 bg-white/70" />
+                <CarouselNext className="hidden sm:flex -right-4 lg:-right-6 bg-white/70" />
+              </Carousel>
             </div>
-            
-            {/* Thumbnails */}
-            <div className="grid grid-cols-3 md:grid-cols-2 gap-2 h-full">
-              {hotel.hotel_photos?.slice(0, 4).map((photo, index) => (
-                <div 
-                  key={photo.id} 
-                  className={`rounded-lg overflow-hidden aspect-square cursor-pointer border-2 ${activeImage === `/uploads/hotels/${photo.photo_url}` ? 'border-sifnos-turquoise' : 'border-transparent'}`}
-                  onClick={() => setActiveImage(`/uploads/hotels/${photo.photo_url}`)}
-                >
-                  <img 
-                    src={`/uploads/hotels/${photo.photo_url}`} 
-                    alt={photo.description || `${hotel.name} - Photo ${index + 1}`} 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              ))}
-              {hotel.hotel_photos?.length > 4 && (
-                <div 
-                  className="rounded-lg overflow-hidden aspect-square relative cursor-pointer bg-gray-800"
-                  onClick={() => setActiveImage(`/uploads/hotels/${hotel.hotel_photos[4].photo_url}`)}
-                >
-                  <img 
-                    src={`/uploads/hotels/${hotel.hotel_photos[4].photo_url}`}
-                    alt={`${hotel.name} - More Photos`}
-                    className="w-full h-full object-cover opacity-60"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center text-white font-medium">
-                    +{hotel.hotel_photos.length - 4} more
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Main large image */}
+              <div className="md:col-span-2 rounded-lg overflow-hidden aspect-video">
+                <img 
+                  src={activeImage || '/placeholder.svg'} 
+                  alt={hotel.name} 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              
+              {/* Thumbnails */}
+              <div className="grid grid-cols-3 md:grid-cols-2 gap-2 h-full">
+                {hotel.hotel_photos?.slice(0, 4).map((photo, index) => (
+                  <div 
+                    key={photo.id} 
+                    className={`rounded-lg overflow-hidden aspect-square cursor-pointer border-2 ${activeImage === `/uploads/hotels/${photo.photo_url}` ? 'border-sifnos-turquoise' : 'border-transparent'}`}
+                    onClick={() => setActiveImage(`/uploads/hotels/${photo.photo_url}`)}
+                  >
+                    <img 
+                      src={`/uploads/hotels/${photo.photo_url}`} 
+                      alt={photo.description || `${hotel.name} - Photo ${index + 1}`} 
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                </div>
-              )}
+                ))}
+                {hotel.hotel_photos?.length > 4 && (
+                  <div 
+                    className="rounded-lg overflow-hidden aspect-square relative cursor-pointer bg-gray-800"
+                    onClick={() => setActiveImage(`/uploads/hotels/${hotel.hotel_photos[4].photo_url}`)}
+                  >
+                    <img 
+                      src={`/uploads/hotels/${hotel.hotel_photos[4].photo_url}`}
+                      alt={`${hotel.name} - More Photos`}
+                      className="w-full h-full object-cover opacity-60"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center text-white font-medium">
+                      +{hotel.hotel_photos.length - 4} more
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
       
