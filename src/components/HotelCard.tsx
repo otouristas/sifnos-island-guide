@@ -6,7 +6,7 @@ import { getHotelTypeIcon } from './icons/HotelTypeIcons';
 import { Skeleton } from '@/components/ui/skeleton';
 
 // Define the HotelCard component that creates proper URLs
-const HotelCard = ({ hotel, showLogo = false, ...props }) => {
+const HotelCard = ({ hotel, showLogo = true, ...props }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [imageSrc, setImageSrc] = useState('/placeholder.svg');
@@ -134,7 +134,23 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
     }
   }, [showLogo, hotel.name, hotel.logo_url]);
 
+  // Generate a logo URL with cache busting if there is a logo
   const logoUrl = hotel.logo_url ? `/uploads/hotels/${hotel.logo_url}?v=${Date.now()}-${Math.floor(Math.random() * 1000)}` : null;
+  
+  // Add hardcoded logos for known hotels if they don't have a logo in the database
+  let hotelLogoUrl = logoUrl;
+  
+  if (!hotelLogoUrl) {
+    if (hotel.name === "Meropi Rooms and Apartments") {
+      hotelLogoUrl = `/uploads/hotels/meropi-logo.svg?v=${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    } else if (hotel.name === "Villa Olivia Clara") {
+      hotelLogoUrl = `/uploads/hotels/villa-olivia-clara/logo-villa-olivia.png?v=${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    } else if (hotel.name === "Filadaki Villas") {
+      hotelLogoUrl = `/uploads/hotels/filadaki-studios/filadaki-logo.png?v=${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    } else if (hotel.name === "Morpheas Pension & Apartments") {
+      hotelLogoUrl = `/uploads/hotels/morpheas-pension/logo.png?v=${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    }
+  }
   
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1">
@@ -164,11 +180,11 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
           )}
           
           {/* Show prominent hotel logo in top-right if available */}
-          {showLogo && logoUrl && (
+          {showLogo && hotelLogoUrl && (
             <div className="absolute top-2 right-2 bg-white/90 p-1 rounded-md shadow-sm">
               <img 
                 key={`hotel-big-logo-${hotel.id}-${Date.now()}`}
-                src={logoUrl}
+                src={hotelLogoUrl}
                 alt={`${hotel.name} logo`} 
                 className="h-8 w-auto max-w-[80px] object-contain"
                 onLoad={handleLogoLoad}
@@ -183,12 +199,13 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
         
         {/* Hotel details */}
         <div className="p-4">
-          <div className="flex items-center mb-2">
-            {/* Display logo next to hotel name if showLogo is true */}
-            {showLogo && logoUrl && (
-              <div className="mr-3 flex-shrink-0 w-8 h-8 bg-white rounded-full p-0.5 shadow-sm border border-gray-100 overflow-hidden">
+          <div className="flex items-center justify-start gap-2 mb-2">
+            {/* Display logo to the LEFT of hotel name - this is the key change */}
+            {showLogo && hotelLogoUrl && (
+              <div className="flex-shrink-0 w-7 h-7 bg-white rounded-full p-0.5 shadow-sm border border-gray-100 overflow-hidden">
                 <img 
-                  src={logoUrl}
+                  key={`hotel-small-logo-${hotel.id}-${Date.now()}`}
+                  src={hotelLogoUrl}
                   alt={`${hotel.name} logo`}
                   className="w-full h-full object-contain"
                   onLoad={() => console.log(`Small logo loaded for ${hotel.name}`)}
