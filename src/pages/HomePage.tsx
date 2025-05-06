@@ -91,11 +91,15 @@ export default function HomePage() {
   return (
     <>
       <SEO 
-        title="Find Your Perfect Stay in Sifnos - Best Hotels & Accommodation" 
+        title="Find Your Perfect Stay in Sifnos - Best Hotels & Accommodation"
         description="Discover handpicked hotels and luxury accommodations in Sifnos Island, Greece. Compare prices, read reviews, and book your perfect beach vacation in the Cyclades."
-        keywords={['sifnos hotels', 'greek islands hotels', 'sifnos accommodation', 'luxury hotels sifnos', 'beach hotels sifnos', 'boutique hotels cyclades', 'where to stay in sifnos']}
+        keywords={[
+          'sifnos hotels', 'greek islands hotels', 'sifnos accommodation', 
+          'luxury hotels sifnos', 'beach hotels sifnos', 'boutique hotels cyclades'
+        ]}
         schemaType="Organization"
         canonical="https://hotelssifnos.com"
+        imageUrl="/uploads/sifnos-hero.jpg"
       />
       
       {/* Hero Section */}

@@ -28,12 +28,15 @@ export default function SEO({
   keywords = [], 
   schemaType = 'Organization',
   canonical,
-  imageUrl = 'https://hotelssifnos.com/opengraph-image-p98pqg.png',
+  imageUrl,
   datePublished,
   dateModified,
   author = 'Hotels Sifnos',
   noIndex = false
 }: SEOProps) {
+  // Use the provided image or fall back to the default one
+  const ogImage = imageUrl || 'https://hotelssifnos.com/uploads/sifnos-og-image.jpg';
+  
   const formattedCanonical = canonical ? 
     (canonical.startsWith('http') ? canonical : `https://hotelssifnos.com${canonical.startsWith('/') ? canonical : `/${canonical}`}`) 
     : "https://hotelssifnos.com";
@@ -62,7 +65,7 @@ export default function SEO({
       ...schemaData,
       "headline": title,
       "description": description,
-      "image": imageUrl,
+      "image": ogImage,
       "datePublished": datePublished || new Date().toISOString(),
       "dateModified": dateModified || new Date().toISOString(),
       "author": {
@@ -85,7 +88,7 @@ export default function SEO({
     schemaData = {
       ...schemaData,
       "description": description,
-      "image": imageUrl,
+      "image": ogImage,
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Sifnos",
@@ -123,7 +126,7 @@ export default function SEO({
       <meta property="og:description" content={description} />
       <meta property="og:type" content="website" />
       <meta property="og:url" content={formattedCanonical} />
-      <meta property="og:image" content={imageUrl} />
+      <meta property="og:image" content={ogImage} />
       <meta property="og:site_name" content="Hotels Sifnos" />
       <meta property="og:locale" content="en_US" />
 
@@ -132,7 +135,7 @@ export default function SEO({
       <meta name="twitter:site" content="@hotelssifnos" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={imageUrl} />
+      <meta name="twitter:image" content={ogImage} />
 
       {/* Additional SEO tags */}
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />

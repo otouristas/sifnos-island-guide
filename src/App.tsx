@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -49,7 +50,7 @@ const App = () => (
         ]}
         schemaType="Organization"
         canonical="https://hotelssifnos.com"
-        imageUrl="https://hotelssifnos.com/opengraph-image-p98pqg.png"
+        imageUrl="/uploads/sifnos-og-image.jpg"
       />
       <SitemapGenerator />
       <Toaster />

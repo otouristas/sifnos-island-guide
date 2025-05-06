@@ -275,7 +275,7 @@ export default function HotelDetailPage() {
         ]}
         schemaType="Hotel"
         canonical={`https://hotelssifnos.com/hotels/${hotel ? generateHotelUrl(hotel.name) : ''}`}
-        imageUrl={activeImage ? `https://hotelssifnos.com${activeImage}` : undefined}
+        imageUrl={activeImage ? `https://hotelssifnos.com${activeImage}` : '/uploads/sifnos-og-image.jpg'}
       />
       
       {/* Breadcrumb navigation */}

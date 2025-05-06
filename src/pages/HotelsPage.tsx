@@ -104,11 +104,12 @@ export default function HotelsPage() {
   return (
     <>
       <SEO 
-        title="Hotels in Sifnos - Find Your Perfect Accommodation" 
-        description="Browse our curated selection of luxury hotels, boutique guesthouses, and traditional Cycladic accommodations on Sifnos Island. Find the perfect place for your Greek island holiday with the best rates guaranteed."
-        keywords={['sifnos hotels', 'hotels in sifnos', 'best hotels sifnos', 'sifnos accommodation', 'luxury hotels sifnos', 'boutique hotels sifnos', 'greece hotels', 'cyclades accommodation']}
-        schemaType="Hotel"
+        title="Hotels in Sifnos - Find and Compare Best Accommodations"
+        description="Browse and compare the best hotels in Sifnos Island. Discover luxury accommodations, boutique hotels, and budget-friendly options for your perfect Greek island vacation."
+        keywords={['sifnos hotels', 'best hotels sifnos', 'sifnos accommodation', 'where to stay sifnos']}
+        schemaType="TravelAgency"
         canonical="https://hotelssifnos.com/hotels"
+        imageUrl="/uploads/beaches/kamares.webp"
       />
       
       {/* Hero Section - Fixed padding */}

@@ -1,4 +1,3 @@
-
 import SEO from '../components/SEO';
 import { Link } from 'react-router-dom';
 import { MapPin, Umbrella, Wind, Coffee, Car, Bus, Anchor, ShieldCheck, Sailboat, Award, TreePalm, Fish, Church } from 'lucide-react';
@@ -138,11 +137,12 @@ export default function BeachesPage() {
   return (
     <>
       <SEO 
-        title="Beaches in Sifnos - Discover the Best Sifnos Beaches" 
-        description="Explore the stunning beaches of Sifnos Island. From golden sandy shores to secluded coves, find the perfect beach for swimming, relaxation, water sports, and family activities."
-        keywords={['sifnos beaches', 'best beaches sifnos', 'platis gialos sifnos', 'vathi beach', 'kamares beach', 'chrysopigi sifnos', 'greek island beaches']}
-        schemaType="TravelAgency"
+        title="Best Beaches in Sifnos - Complete Beach Guide"
+        description="Discover the most beautiful beaches in Sifnos Island, Greece. From sandy shores to secluded coves, find the perfect beach for swimming, sunbathing, and water sports."
+        keywords={['sifnos beaches', 'best beaches sifnos', 'platis gialos beach', 'vathi beach sifnos']}
+        schemaType="TouristDestination"
         canonical="https://hotelssifnos.com/beaches"
+        imageUrl="/uploads/beaches/plats-gialos.webp"
       />
       
       {/* Hero Section */}
