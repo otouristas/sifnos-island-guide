@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, PlusCircle, MinusCircle, ExternalLink, Map } from 'lucide-react';
@@ -191,7 +190,9 @@ export default function HotelDetailPage() {
                 'Baby crib',
                 'Extra pillows and blankets',
                 'Weekly linen changes'
-              ]
+              ],
+              price: 0, // Adding a default price (can be updated later if needed)
+              size_sqm: 120 // Adding an approximate size in square meters
             }];
           }
           
@@ -937,4 +938,3 @@ export default function HotelDetailPage() {
     </>
   );
 }
-
