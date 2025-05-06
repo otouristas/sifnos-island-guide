@@ -72,7 +72,7 @@ export default defineConfig(({ mode }) => ({
   build: {
     target: 'modules',
     modulePreload: true,
-    minify: 'terser', // Use terser for better minification
+    minify: mode === 'production' ? 'terser' : false, // Only use terser in production
     terserOptions: {
       compress: {
         drop_console: false, // Keep console.logs for now for debugging
