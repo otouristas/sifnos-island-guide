@@ -1,3 +1,4 @@
+
 import SEO from '../components/SEO';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -47,7 +48,7 @@ export default function FAQPage() {
         title="Sifnos Travel FAQs - Answers to Your Most Common Questions" 
         description="Find answers to frequently asked questions about traveling to Sifnos, booking accommodations, transportation options, best times to visit, local customs, and practical tips for making the most of your stay on this beautiful Cycladic island."
         keywords={['sifnos faq', 'sifnos travel questions', 'sifnos accommodation faq', 'how to get to sifnos', 'best time to visit sifnos', 'sifnos travel tips']}
-        schemaType="FAQPage"
+        schemaType="Organization"
         canonical="https://hotelssifnos.com/faq"
       />
       
