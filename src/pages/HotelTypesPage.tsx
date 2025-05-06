@@ -13,8 +13,8 @@ export default function HotelTypesPage() {
   return (
     <>
       <SEO 
-        title="Hotel Types in Sifnos - Find Your Perfect Accommodation" 
-        description="Discover all types of hotels available in Sifnos - from luxury resorts and boutique hotels to traditional accommodations, beach hotels, and family-friendly options for your perfect Greek island stay."
+        title="Hotel Types in Sifnos - Find Your Perfect Accommodation Style" 
+        description="Explore Sifnos' diverse accommodation styles from luxurious cliff-top villas and intimate boutique hotels to family-friendly resorts and traditional Cycladic guesthouses. Find the perfect setting for your island escape with our expert accommodation guide."
         keywords={['sifnos hotel types', 'luxury hotels sifnos', 'boutique hotels sifnos', 'beach hotels sifnos', 'family friendly hotels sifnos', 'traditional hotels sifnos', 'types of accommodation sifnos']}
         schemaType="Hotel"
         canonical="https://hotelssifnos.com/hotel-types"

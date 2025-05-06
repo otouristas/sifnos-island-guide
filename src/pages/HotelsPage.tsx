@@ -1,6 +1,6 @@
-
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
+import Breadcrumbs from '../components/Breadcrumbs';
 import { Search, Filter, Star } from 'lucide-react';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import { useToast } from "@/components/ui/use-toast";
@@ -27,6 +27,10 @@ export default function HotelsPage() {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     async function fetchHotels() {
@@ -104,12 +108,11 @@ export default function HotelsPage() {
   return (
     <>
       <SEO 
-        title="Hotels in Sifnos - Find and Compare Best Accommodations"
-        description="Browse and compare the best hotels in Sifnos Island. Discover luxury accommodations, boutique hotels, and budget-friendly options for your perfect Greek island vacation."
-        keywords={['sifnos hotels', 'best hotels sifnos', 'sifnos accommodation', 'where to stay sifnos']}
-        schemaType="TravelAgency"
+        title="Compare & Book Hotels in Sifnos - Best Rates & Exclusive Deals" 
+        description="Browse our comprehensive collection of Sifnos hotels, from budget-friendly options to 5-star luxury resorts. Filter by amenities, location, and price to find your ideal stay with our price match guarantee and exclusive direct booking discounts."
+        keywords={['sifnos hotels', 'book hotels sifnos', 'sifnos accommodation', 'luxury hotels sifnos', 'beach hotels sifnos', 'boutique hotels sifnos', 'hotel comparison sifnos']}
+        schemaType="Hotel"
         canonical="https://hotelssifnos.com/hotels"
-        imageUrl="/uploads/beaches/kamares.webp"
       />
       
       {/* Hero Section - Fixed padding */}

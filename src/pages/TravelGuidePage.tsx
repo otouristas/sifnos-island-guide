@@ -1,4 +1,3 @@
-
 import SEO from '../components/SEO';
 import { Link } from 'react-router-dom';
 import { MapPin, Calendar, Compass, Utensils, Sun, Anchor, Waves, Umbrella, Ship } from 'lucide-react';
@@ -47,10 +46,10 @@ export default function TravelGuidePage() {
   return (
     <>
       <SEO 
-        title="Sifnos Island Travel Guide - Essential Information For Visitors" 
-        description="Plan your perfect trip to Sifnos with our comprehensive travel guide. Discover the best beaches, villages, restaurants, activities, and local tips for an authentic Cycladic experience."
-        keywords={['sifnos travel guide', 'sifnos island guide', 'sifnos attractions', 'sifnos beaches', 'sifnos restaurants', 'things to do in sifnos', 'sifnos greek island']}
-        schemaType="TravelAgency"
+        title="Complete Sifnos Travel Guide - Insider Tips & Local Knowledge"
+        description="Plan your perfect Sifnos vacation with our comprehensive travel guide. Discover hidden beaches, authentic restaurants, transportation options, cultural events, and local experiences recommended by island experts and long-time residents."
+        keywords={['sifnos travel guide', 'sifnos tourism', 'things to do sifnos', 'sifnos beaches', 'sifnos restaurants', 'sifnos local tips', 'best time to visit sifnos']}
+        schemaType="TouristDestination"
         canonical="https://hotelssifnos.com/travel-guide"
       />
       

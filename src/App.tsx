@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -41,7 +42,7 @@ const App = () => (
     <TooltipProvider>
       <SEO 
         title="Find Your Perfect Stay in Sifnos - Best Hotels & Accommodation"
-        description="Discover handpicked hotels and luxury accommodations in Sifnos Island, Greece. Compare prices, read reviews, and book your perfect beach vacation in the Cyclades."
+        description="Discover Sifnos' premier hotel booking platform with exclusive deals, verified reviews, and local expertise. Compare accommodations across all island locations and find your perfect Greek island getaway with our best price guarantee."
         keywords={[
           'sifnos hotels', 'greek islands hotels', 'sifnos accommodation', 
           'luxury hotels sifnos', 'beach hotels sifnos', 'boutique hotels cyclades',

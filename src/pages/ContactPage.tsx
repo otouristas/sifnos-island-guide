@@ -15,10 +15,11 @@ export default function ContactPage() {
   return (
     <>
       <SEO 
-        title="Contact Us - Hotels Sifnos" 
-        description="Get in touch with Hotels Sifnos for inquiries about accommodations, special requests, or general information about staying in Sifnos."
-        keywords={['contact hotels sifnos', 'sifnos accommodation contact', 'sifnos hotel inquiry', 'contact us']}
+        title="Contact Hotels Sifnos - Get in Touch with Our Local Experts" 
+        description="Have questions about accommodations in Sifnos? Need personalized recommendations? Our local island experts are ready to assist with your booking needs, travel advice, and special requests to make your Sifnos stay perfect."
+        keywords={['contact hotels sifnos', 'sifnos accommodation help', 'sifnos travel advice', 'sifnos hotel booking assistance']}
         schemaType="Organization"
+        canonical="https://hotelssifnos.com/contact"
       />
       
       {/* Hero Section */}

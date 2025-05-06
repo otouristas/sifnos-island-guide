@@ -13,8 +13,8 @@ export default function LocationsPage() {
   return (
     <>
       <SEO 
-        title="Sifnos Locations - Where to Stay on the Island" 
-        description="Discover the best areas to stay in Sifnos island - from the vibrant capital of Apollonia to beautiful beachfront villages like Kamares and Platis Gialos. Find your perfect location for an unforgettable Greek island holiday."
+        title="Sifnos Locations Guide - Where to Stay on the Island" 
+        description="Insider's guide to Sifnos' distinct areas - from lively Apollonia and beachside Kamares to tranquil Vathi and historic Kastro. Compare neighborhoods by amenities, atmosphere, and accessibility to find your perfect base for exploring this Cycladic gem."
         keywords={['sifnos locations', 'where to stay sifnos', 'best areas sifnos', 'sifnos villages', 'sifnos accommodation locations', 'apollonia sifnos', 'kamares sifnos', 'platis gialos sifnos']}
         schemaType="TouristDestination"
         canonical="https://hotelssifnos.com/locations"

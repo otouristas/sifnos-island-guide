@@ -56,13 +56,16 @@ export default function HotelTypePage() {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
   
+  // Create a dynamic SEO description based on hotel type
+  const seoDescription = `Discover ${hotelType.title.toLowerCase()} in Sifnos - hand-selected accommodations offering ${hotelType.shortDescription.toLowerCase()}. Compare amenities, read verified guest reviews, and secure the best rates with our price-match guarantee.`;
+  
   const pageTitle = `${hotelType.title} in Sifnos - Best Places to Stay`;
   
   return (
     <>
       <SEO 
         title={pageTitle}
-        description={hotelType.meta.description}
+        description={seoDescription}
         keywords={hotelType.keywords}
         schemaType="Hotel"
         canonical={`https://hotelssifnos.com/hotel-types/${slug}`}

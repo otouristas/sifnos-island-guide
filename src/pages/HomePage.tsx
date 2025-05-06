@@ -17,7 +17,7 @@ export default function HomePage() {
     <>
       <SEO 
         title="Find Your Perfect Stay in Sifnos - Best Hotels & Accommodation"
-        description="Discover handpicked hotels and luxury accommodations in Sifnos Island, Greece. Compare prices, read reviews, and book your perfect beach vacation in the Cyclades."
+        description="Discover Sifnos' finest hotels with our curated selection of luxury resorts, boutique stays, and beachfront villas. Compare facilities, view photos, read verified reviews, and book directly with exclusive online rates. Your perfect Cycladic island getaway starts here."
         keywords={[
           'sifnos hotels', 'greek islands hotels', 'sifnos accommodation', 
           'luxury hotels sifnos', 'beach hotels sifnos', 'boutique hotels cyclades'

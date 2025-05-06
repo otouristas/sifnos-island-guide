@@ -53,13 +53,16 @@ export default function LocationPage() {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
   
+  // Create a dynamic SEO description based on location
+  const seoDescription = `Explore hotels in ${location.name}, Sifnos - ${location.shortDescription.toLowerCase()}. Find exclusive accommodations with sea views, local charm, and authentic Cycladic experiences. Compare prices and book with our best-rate guarantee.`;
+  
   const pageTitle = `Hotels in ${location.name}, Sifnos - Best Places to Stay`;
   
   return (
     <>
       <SEO 
         title={pageTitle}
-        description={location.meta.description}
+        description={seoDescription}
         keywords={location.keywords}
         schemaType="TouristDestination"
         canonical={`https://hotelssifnos.com/locations/${slug}`}

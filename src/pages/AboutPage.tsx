@@ -5,10 +5,11 @@ export default function AboutPage() {
   return (
     <>
       <SEO 
-        title="About Us - Hotels Sifnos" 
-        description="Learn about Hotels Sifnos, the premier accommodation booking service for Sifnos Island, Greece."
-        keywords={['about hotels sifnos', 'sifnos accommodation service', 'sifnos travel experts', 'hotels in sifnos']}
+        title="About Hotels Sifnos - Our Story & Mission" 
+        description="Meet the team behind Hotels Sifnos - local experts and travel enthusiasts dedicated to helping you discover authentic Sifnos experiences. Learn about our mission to provide personalized recommendations and support the island's sustainable tourism development."
+        keywords={['about hotels sifnos', 'sifnos accommodation service', 'sifnos travel experts', 'hotels in sifnos', 'sifnos local recommendations']}
         schemaType="Organization"
+        canonical="https://hotelssifnos.com/about"
       />
       
       {/* Hero Section */}
