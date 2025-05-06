@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, PlusCircle, MinusCircle, ExternalLink, Map } from 'lucide-react';
@@ -46,12 +45,12 @@ export default function HotelDetailPage() {
     { id: '9', photo_url: 'filadaki-studios/1103_R4335.jpg.jpeg', is_main_photo: false, description: 'Kitchen' }
   ];
   
-  // Define room type images for Filadaki Villas
+  // Define room type images for Filadaki Villas - UPDATED with WebP images
   const filadakiRoomImages = {
-    "Gregos Studio": "filadaki-studios/1100_R6185.jpg.jpeg",
-    "Maistros Studio": "filadaki-studios/1092_R6414.jpg.jpeg",
-    "Levantes Apartment": "filadaki-studios/home-page_1441.jpg.jpeg",
-    "Ostria Studio": "filadaki-studios/home-page_3125.jpg.jpeg"
+    "Gregos Studio": "filadaki-studios/gregos_6406.webp",
+    "Maistros Studio": "filadaki-studios/maistros_3967.webp",
+    "Levantes Apartment": "filadaki-studios/levantes_3351.webp",
+    "Ostria Studio": "filadaki-studios/ostria_4857.webp"
   };
 
   useEffect(() => {
