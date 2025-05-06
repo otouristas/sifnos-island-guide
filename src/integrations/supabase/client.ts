@@ -42,26 +42,34 @@ export function getHotelRoomImagePath(photoUrl: string | undefined, hotelName: s
     }
   }
   
-  // For Morpheas Pension, handle paths with the subdirectory
+  // For Morpheas Pension, handle paths with the subdirectory - improved path handling
   if (hotelName === 'Morpheas Pension & Apartments') {
-    // Check if the path already includes the morpheas-pension subdirectory
     if (photoUrl.includes('morpheas-pension/')) {
-      console.log(`Using path with subdirectory: /uploads/hotels/${photoUrl}`);
+      console.log(`Using existing Morpheas path: /uploads/hotels/${photoUrl}`);
       return `/uploads/hotels/${photoUrl}`;
+    } else if (photoUrl.startsWith('/')) {
+      // Handle absolute paths
+      console.log(`Using absolute path for Morpheas: ${photoUrl}`);
+      return photoUrl;
     } else {
-      console.log(`Adding subdirectory: /uploads/hotels/morpheas-pension/${photoUrl}`);
+      // Ensure proper subdirectory path
+      console.log(`Constructing Morpheas path: /uploads/hotels/morpheas-pension/${photoUrl}`);
       return `/uploads/hotels/morpheas-pension/${photoUrl}`;
     }
   }
   
-  // For Villa Olivia Clara, handle paths with the subdirectory
+  // For Villa Olivia Clara, handle paths with the subdirectory - improved path handling
   if (hotelName === 'Villa Olivia Clara') {
-    // Check if the path already includes the villa-olivia-clara subdirectory
     if (photoUrl.includes('villa-olivia-clara/')) {
-      console.log(`Using path with subdirectory: /uploads/hotels/${photoUrl}`);
+      console.log(`Using existing Villa Olivia path: /uploads/hotels/${photoUrl}`);
       return `/uploads/hotels/${photoUrl}`;
+    } else if (photoUrl.startsWith('/')) {
+      // Handle absolute paths
+      console.log(`Using absolute path for Villa Olivia: ${photoUrl}`);
+      return photoUrl;
     } else {
-      console.log(`Adding subdirectory: /uploads/hotels/villa-olivia-clara/${photoUrl}`);
+      // Ensure proper subdirectory path
+      console.log(`Constructing Villa Olivia path: /uploads/hotels/villa-olivia-clara/${photoUrl}`);
       return `/uploads/hotels/villa-olivia-clara/${photoUrl}`;
     }
   }

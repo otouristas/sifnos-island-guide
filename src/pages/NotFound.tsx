@@ -11,7 +11,7 @@ const NotFound = () => {
   const [redirectingToHotel, setRedirectingToHotel] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check if the URL path might be related to Meropi Rooms
+    // Check if the URL path might be related to specific hotels
     const path = location.pathname.toLowerCase();
     
     if (path.includes('/hotel/') && path.includes('meropi')) {
@@ -49,8 +49,10 @@ const NotFound = () => {
       
       return () => clearTimeout(timer);
     } else if (path.includes('/hotel/') && path.includes('morpheas')) {
-      // Handle Morpheas Pension URLs
+      // Improved handling for Morpheas Pension URLs
       setRedirectingToHotel('Morpheas Pension & Apartments');
+      
+      console.log("Redirecting to Morpheas Pension & Apartments");
       
       // Show a toast notification
       toast({
@@ -59,15 +61,17 @@ const NotFound = () => {
         duration: 3000,
       });
       
-      // Redirect after a short delay
+      // Redirect after a short delay with a more reliable path
       const timer = setTimeout(() => {
-        navigate('/hotels/morpheas-pension-apartments');
-      }, 1500);
+        navigate('/hotels/morpheas-pension-apartments', { replace: true });
+      }, 1000);
       
       return () => clearTimeout(timer);
     } else if (path.includes('morpheas')) {
-      // Any URL with 'morpheas' that's not found should go to the Morpheas page
+      // Enhanced handling for any URL with 'morpheas'
       setRedirectingToHotel('Morpheas Pension & Apartments');
+      
+      console.log("Redirecting to Morpheas Pension & Apartments (from any morpheas URL)");
       
       // Show a toast notification
       toast({
@@ -76,10 +80,48 @@ const NotFound = () => {
         duration: 3000,
       });
       
-      // Redirect after a short delay
+      // Redirect after a short delay with a replace action
       const timer = setTimeout(() => {
-        navigate('/hotels/morpheas-pension-apartments');
-      }, 1500);
+        navigate('/hotels/morpheas-pension-apartments', { replace: true });
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    } else if (path.includes('/hotel/') && path.includes('villa-olivia')) {
+      // Enhanced handling for Villa Olivia Clara URLs
+      setRedirectingToHotel('Villa Olivia Clara');
+      
+      console.log("Redirecting to Villa Olivia Clara");
+      
+      // Show a toast notification
+      toast({
+        title: "Redirecting...",
+        description: "We're taking you to Villa Olivia Clara.",
+        duration: 3000,
+      });
+      
+      // Redirect after a short delay with a more reliable path
+      const timer = setTimeout(() => {
+        navigate('/hotels/villa-olivia-clara', { replace: true });
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    } else if (path.includes('villa-olivia') || path.includes('villa_olivia')) {
+      // Enhanced handling for any URL with 'villa-olivia' or 'villa_olivia'
+      setRedirectingToHotel('Villa Olivia Clara');
+      
+      console.log("Redirecting to Villa Olivia Clara (from any villa olivia URL)");
+      
+      // Show a toast notification
+      toast({
+        title: "Redirecting...",
+        description: "We're taking you to Villa Olivia Clara.",
+        duration: 3000,
+      });
+      
+      // Redirect after a short delay with a replace action
+      const timer = setTimeout(() => {
+        navigate('/hotels/villa-olivia-clara', { replace: true });
+      }, 1000);
       
       return () => clearTimeout(timer);
     } else if (path.endsWith('.jpg') || path.endsWith('.png') || path.endsWith('.webp')) {
@@ -131,4 +173,3 @@ const NotFound = () => {
 };
 
 export default NotFound;
-

@@ -23,13 +23,13 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
   } else if (hotel.name === "Filadaki Villas") {
     // For Filadaki Villas, use the new featured image
     imageUrl = '/uploads/hotels/filadaki-studios/home-page_9151.jpg.jpeg';
-    console.log(`Using new Filadaki featured image: ${imageUrl}`);
+    console.log(`Using Filadaki featured image: ${imageUrl}`);
   } else if (hotel.name === "Morpheas Pension & Apartments") {
-    // For Morpheas Pension, use its featured image
+    // For Morpheas Pension, use its featured image with absolute path for reliability
     imageUrl = '/uploads/hotels/morpheas-pension/sifnos-accommodation.jpg.jpeg';
     console.log(`Using Morpheas Pension featured image: ${imageUrl}`);
   } else if (hotel.name === "Villa Olivia Clara") {
-    // For Villa Olivia Clara, use its featured image
+    // For Villa Olivia Clara, use its featured image with absolute path for reliability
     imageUrl = '/uploads/hotels/villa-olivia-clara/feature-image.jpeg';
     console.log(`Using Villa Olivia Clara featured image: ${imageUrl}`);
   } else if (mainPhoto) {
@@ -43,14 +43,14 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1">
       <Link to={`/hotels/${hotelSlug}`} className="block">
-        {/* Hotel image */}
+        {/* Hotel image with error handling and logging */}
         <div className="relative h-48 overflow-hidden">
           <img 
             src={imageUrl} 
             alt={hotel.name} 
             className="w-full h-full object-cover"
             onError={(e) => {
-              // Fallback to placeholder if image fails to load
+              // More verbose error logging for debugging
               console.error(`Failed to load image for ${hotel.name}: ${imageUrl}`);
               e.currentTarget.src = '/placeholder.svg';
             }}
@@ -68,7 +68,11 @@ const HotelCard = ({ hotel, showLogo = false, ...props }) => {
               <img 
                 src={`/uploads/hotels/${hotel.logo_url}`} 
                 alt={`${hotel.name} logo`} 
-                className="h-8" 
+                className="h-8"
+                onError={(e) => {
+                  console.error(`Failed to load logo for ${hotel.name}`);
+                  e.currentTarget.style.display = 'none';
+                }}
               />
             </div>
           )}
