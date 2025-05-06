@@ -11,11 +11,6 @@ export const supabase = createClient<Database>(
   supabaseUrl, 
   supabaseAnonKey,
   {
-    headers: {
-      'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
-      'Pragma': 'no-cache',
-      'Expires': '0'
-    },
     auth: {
       persistSession: true,
       // Generate a completely unique storage key on every page load

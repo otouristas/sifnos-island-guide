@@ -56,7 +56,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
       const { data, error } = await supabase
         .from('hotels')
         .select('*')
-        .eq('id', hotelId as string)
+        .eq('id', hotelId)
         .single();
         
       if (error) throw error;
@@ -125,8 +125,8 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
       const { data, error } = await supabase
         .from('hotel_reviews')
         .select('*')
-        .eq('hotel_id', hotelId as string)
-        .eq('source', 'booking.com' as string)
+        .eq('hotel_id', hotelId)
+        .eq('source', 'booking.com')
         .order('date', { ascending: false });
         
       if (error) throw error;

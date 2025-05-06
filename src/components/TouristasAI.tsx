@@ -88,13 +88,17 @@ export default function TouristasAI() {
       
       // If we're looking specifically for beach hotels, prioritize them
       let filteredResults = data || [];
-      if (preferences.includes('beach')) {
-        filteredResults = filteredResults.filter((hotel) => 
-          hotel.description?.toLowerCase().includes('beach') || 
-          hotel.location === 'Platis Gialos' ||
-          hotel.location === 'Vathi' ||
-          hotel.location === 'Kamares'
-        );
+      if (preferences.includes('beach') && Array.isArray(filteredResults)) {
+        filteredResults = filteredResults.filter((hotel) => {
+          if (!hotel) return false;
+          
+          return (
+            (hotel.description && hotel.description.toLowerCase().includes('beach')) || 
+            hotel.location === 'Platis Gialos' ||
+            hotel.location === 'Vathi' ||
+            hotel.location === 'Kamares'
+          );
+        });
       }
 
       if (filteredResults.length === 0) {

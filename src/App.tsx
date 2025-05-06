@@ -1,99 +1,106 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import SEO from "./components/SEO";
-import SitemapGenerator from "./components/SitemapGenerator";
-import CookieConsent from "./components/CookieConsent";
+import { useState, useEffect } from 'react';
+import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Navigation from './components/Navigation';
+import Footer from './components/Footer';
+import AboutPage from './pages/AboutPage';
+import FAQPage from './pages/FAQPage';
+import HomePage from './pages/HomePage';
+import ContactPage from './pages/ContactPage';
+import LocationsPage from './pages/LocationsPage';
+import LocationPage from './pages/LocationPage';
+import HotelsPage from './pages/HotelsPage';
+import HotelDetailPage from './pages/HotelDetailPage';
+import HotelTypesPage from './pages/HotelTypesPage';
+import HotelTypePage from './pages/HotelTypePage';
+import BeachesPage from './pages/BeachesPage';
+import TouristasAIPage from './pages/TouristasAIPage';
+import PricingPage from './pages/PricingPage';
+import TravelGuidePage from './pages/TravelGuidePage';
+import AboutUsPage from './pages/AboutUsPage';
+import TermsOfServicePage from './pages/TermsOfServicePage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import CookiePolicyPage from './pages/CookiePolicyPage';
+import ThankYouPage from './pages/ThankYouPage';
+import NotFound from './pages/NotFound';
+import CookieConsent from './components/CookieConsent';
+import { Toaster } from '@/components/ui/toaster';
+import SitemapGenerator from './components/SitemapGenerator';
+import CacheBuster from './components/CacheBuster';
 
-// Pages
-import HomePage from "./pages/HomePage";
-import HotelsPage from "./pages/HotelsPage";
-import HotelDetailPage from "./pages/HotelDetailPage";
-import ContactPage from "./pages/ContactPage";
-import AboutPage from "./pages/AboutPage";
-import FAQPage from "./pages/FAQPage";
-import NotFound from "./pages/NotFound";
-import TravelGuidePage from "./pages/TravelGuidePage";
-import BeachesPage from "./pages/BeachesPage";
-import AboutUsPage from "./pages/AboutUsPage";
-import LocationsPage from "./pages/LocationsPage";
-import LocationPage from "./pages/LocationPage";
-import HotelTypesPage from "./pages/HotelTypesPage";
-import HotelTypePage from "./pages/HotelTypePage";
-import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
-import TermsOfServicePage from "./pages/TermsOfServicePage";
-import CookiePolicyPage from "./pages/CookiePolicyPage";
-import Index from "./pages/Index";
-import PricingPage from "./pages/PricingPage";
-import ThankYouPage from "./pages/ThankYouPage";
-import TouristasAIPage from "./pages/TouristasAIPage";
+function App() {
+  // State to track if the page has fully loaded, forcing a fresh render
+  const [loaded, setLoaded] = useState(false);
+  
+  // Force component to re-render on load with current timestamp
+  useEffect(() => {
+    // Set a unique timestamp to force re-render
+    const timestamp = Date.now();
+    console.log(`App initialized at ${new Date(timestamp).toISOString()}`);
+    
+    // This timeout ensures a complete page load before setting loaded state
+    const timeoutId = setTimeout(() => {
+      setLoaded(true);
+      console.log("App fully loaded");
+    }, 100);
+    
+    return () => clearTimeout(timeoutId);
+  }, []);
+  
+  // Additional timestamp to force hydration to be fresh
+  const renderTimestamp = Date.now();
 
-// Components
-import Navigation from "./components/Navigation";
-import Footer from "./components/Footer";
-
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <SEO 
-        title="Find Your Perfect Stay in Sifnos - Best Hotels & Accommodation"
-        description="Discover handpicked hotels and luxury accommodations in Sifnos Island, Greece. Compare prices, read reviews, and book your perfect beach vacation in the Cyclades."
-        keywords={[
-          'sifnos hotels', 'greek islands hotels', 'sifnos accommodation', 
-          'luxury hotels sifnos', 'beach hotels sifnos', 'boutique hotels cyclades',
-          'where to stay in sifnos', 'best hotels sifnos greece'
-        ]}
-        schemaType="Organization"
-        canonical="https://hotelssifnos.com"
-        imageUrl="/uploads/sifnos-og-image.jpg"
-      />
-      <SitemapGenerator />
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
+  return (
+    <BrowserRouter key={`app-${renderTimestamp}`}>
+      <div className="flex flex-col min-h-screen">
+        {/* Include the CacheBuster component for real-time updates */}
+        <CacheBuster />
+        
+        {/* Generate sitemap on page load */}
+        <SitemapGenerator />
+        
+        {/* Navigation */}
         <Navigation />
-        <main>
+        
+        {/* Main content */}
+        <main className="flex-grow">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/index" element={<Index />} />
-            <Route path="/hotels" element={<HotelsPage />} />
-            {/* Hotel detail route */}
-            <Route path="/hotels/:slug" element={<HotelDetailPage />} />
-            {/* Location routes */}
-            <Route path="/locations" element={<LocationsPage />} />
-            <Route path="/locations/:slug" element={<LocationPage />} />
-            {/* Hotel types routes */}
-            <Route path="/hotel-types" element={<HotelTypesPage />} />
-            <Route path="/hotel-types/:slug" element={<HotelTypePage />} />
-            {/* Touristas AI route */}
-            <Route path="/touristas-ai" element={<TouristasAIPage />} />
-            {/* Other routes */}
-            <Route path="/beaches" element={<BeachesPage />} />
-            <Route path="/travel-guide" element={<TravelGuidePage />} />
             <Route path="/about" element={<AboutPage />} />
-            <Route path="/about-us" element={<AboutUsPage />} />
-            <Route path="/contact" element={<ContactPage />} />
             <Route path="/faq" element={<FAQPage />} />
-            {/* Pricing and registration */}
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/locations" element={<LocationsPage />} />
+            <Route path="/locations/:locationSlug" element={<LocationPage />} />
+            <Route path="/hotels" element={<HotelsPage />} />
+            <Route path="/hotels/:hotelSlug" element={<HotelDetailPage />} />
+            <Route path="/hotel-types" element={<HotelTypesPage />} />
+            <Route path="/hotel-types/:typeSlug" element={<HotelTypePage />} />
+            <Route path="/beaches" element={<BeachesPage />} />
+            <Route path="/beaches/:beachSlug" element={<LocationPage />} />
+            <Route path="/touristas-ai" element={<TouristasAIPage />} />
             <Route path="/pricing" element={<PricingPage />} />
-            <Route path="/thank-you" element={<ThankYouPage />} />
-            {/* Legal pages */}
-            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="/travel-guide" element={<TravelGuidePage />} />
+            <Route path="/about-us" element={<AboutUsPage />} />
             <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/cookie-policy" element={<CookiePolicyPage />} />
+            <Route path="/thank-you" element={<ThankYouPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
+        
+        {/* Footer */}
         <Footer />
+        
+        {/* Cookie consent banner */}
         <CookieConsent />
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+        
+        {/* Toast notifications */}
+        <Toaster />
+      </div>
+    </BrowserRouter>
+  );
+}
 
 export default App;
