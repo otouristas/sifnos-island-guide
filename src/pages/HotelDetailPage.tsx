@@ -551,10 +551,10 @@ export default function HotelDetailPage() {
               {/* Reviews - Booking.com Reviews */}
               <div className="cycladic-card p-6 md:p-8">
                 <h2 className="text-2xl font-montserrat font-semibold mb-6">Reviews</h2>
-                {/* Show reviews for either Meropi Rooms or Filadaki Villas */}
-                {(isMeropiRooms || isFiladakiVillas) && <BookingReviews hotelId={hotel.id} />}
+                {/* Show reviews for either Meropi Rooms, Filadaki Villas, or Morpheas Pension */}
+                {(isMeropiRooms || isFiladakiVillas || isMorpheasPension) && <BookingReviews hotelId={hotel.id} />}
                 
-                {!isMeropiRooms && !isFiladakiVillas && (
+                {!isMeropiRooms && !isFiladakiVillas && !isMorpheasPension && (
                   <div className="text-center py-8">
                     <p className="text-gray-600">No reviews available for this hotel.</p>
                   </div>

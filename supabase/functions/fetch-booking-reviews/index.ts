@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.1';
@@ -12,7 +11,8 @@ const corsHeaders = {
 // Define the Booking.com URL for hotels
 const hotelUrls = {
   "0c9632b6-db5c-4179-8122-0003896e465e": "https://www.booking.com/hotel/gr/meropi-kamares.el.html", // Meropi Rooms
-  "fdc93748-c38d-48b0-8ca4-9634bf1b6df1": "https://www.booking.com/hotel/gr/filadaki-house.en-gb.html" // Filadaki Villas
+  "fdc93748-c38d-48b0-8ca4-9634bf1b6df1": "https://www.booking.com/hotel/gr/filadaki-house.en-gb.html", // Filadaki Villas
+  "ea18e35d-aba7-41b9-b0e5-1c827761cf81": "https://www.booking.com/hotel/gr/morpheas-pension-rooms-amp-apartments.en-gb.html" // Morpheas Pension
 };
 
 serve(async (req) => {
@@ -281,6 +281,45 @@ async function scrapeBookingReviews(hotelId, bookingUrl) {
             rating: 10,
             comment: "Simply stunning! The villa exceeded all our expectations. Beautiful design, wonderful pool area, and amazing sea views.",
             date: new Date(2024, 7, 10)
+          }
+        ];
+      } else if (hotelId === "ea18e35d-aba7-41b9-b0e5-1c827761cf81") {
+        // Morpheas Pension mock data
+        return [
+          {
+            name: "Maria K.",
+            country: "Greece",
+            rating: 9,
+            comment: "Perfect location! Just a short walk to the beach and restaurants. Lovely garden setting and the hosts were extremely helpful. Great value for Sifnos.",
+            date: new Date(2023, 6, 15)
+          },
+          {
+            name: "David T.",
+            country: "United Kingdom",
+            rating: 8.5,
+            comment: "Spacious apartment with a nice balcony. The garden is beautiful and shady. Very convenient location near the port and beach, yet quiet.",
+            date: new Date(2023, 7, 22)
+          },
+          {
+            name: "Anna P.",
+            country: "Italy",
+            rating: 9.2,
+            comment: "Very comfortable beds and spotlessly clean rooms. The owners were so friendly and helpful. Loved the location close to everything!",
+            date: new Date(2023, 5, 10)
+          },
+          {
+            name: "Michael S.",
+            country: "Germany",
+            rating: 9.0,
+            comment: "Excellent value for money. The apartment was well-equipped with a nice kitchenette. The garden is a lovely place to relax in the shade.",
+            date: new Date(2023, 8, 5)
+          },
+          {
+            name: "Sophie L.",
+            country: "France",
+            rating: 8.7,
+            comment: "Very convenient location near the port. The room was simple but comfortable and clean. The host was very accommodating.",
+            date: new Date(2023, 9, 1)
           }
         ];
       } else {
