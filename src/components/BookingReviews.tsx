@@ -15,11 +15,10 @@ interface Review {
 }
 
 interface BookingReviewsProps {
-  hotelId?: string;
-  hotelName?: string; // Added hotelName as an optional prop
+  hotelId: string;
 }
 
-const BookingReviews = ({ hotelId, hotelName }: BookingReviewsProps) => {
+const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -52,11 +51,6 @@ const BookingReviews = ({ hotelId, hotelName }: BookingReviewsProps) => {
   // Fetch hotel data to get booking URL
   const fetchHotelData = async () => {
     try {
-      if (!hotelId) {
-        console.log('No hotelId provided, skipping hotel data fetch');
-        return;
-      }
-
       console.log('Fetching hotel data for ID:', hotelId);
       const { data, error } = await supabase
         .from('hotels')
@@ -78,16 +72,6 @@ const BookingReviews = ({ hotelId, hotelName }: BookingReviewsProps) => {
     try {
       setRefreshing(true);
       
-      if (!hotelId) {
-        console.error('Cannot fetch reviews: No hotelId provided');
-        toast({
-          title: "Error refreshing reviews",
-          description: "Hotel ID is missing",
-          variant: "destructive"
-        });
-        return;
-      }
-
       // Trigger the edge function to update reviews
       console.log('Invoking edge function to fetch Booking reviews for hotel ID:', hotelId);
       const { data, error } = await supabase.functions.invoke('fetch-booking-reviews', {
@@ -128,12 +112,6 @@ const BookingReviews = ({ hotelId, hotelName }: BookingReviewsProps) => {
   // Fetch reviews from our database
   const fetchReviews = async () => {
     try {
-      if (!hotelId) {
-        console.log('No hotelId provided, skipping reviews fetch');
-        setLoading(false);
-        return;
-      }
-
       console.log('Fetching reviews for hotel ID:', hotelId);
       const { data, error } = await supabase
         .from('hotel_reviews')
@@ -169,38 +147,32 @@ const BookingReviews = ({ hotelId, hotelName }: BookingReviewsProps) => {
 
   // Subscribe to realtime changes in the reviews table and fetch initial data
   useEffect(() => {
-    console.log('BookingReviews component mounted with hotelId:', hotelId, 'and hotelName:', hotelName);
+    console.log('BookingReviews component mounted for hotel ID:', hotelId);
+    fetchReviews();
+    fetchHotelData();
     
-    // Only proceed with fetching if we have a hotelId
-    if (hotelId) {
-      fetchReviews();
-      fetchHotelData();
+    // Set up realtime subscription
+    const channel = supabase
+      .channel('schema-db-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'hotel_reviews',
+          filter: `hotel_id=eq.${hotelId} AND source=eq.booking.com`,
+        },
+        (payload) => {
+          console.log('Realtime update received:', payload);
+          fetchReviews();
+        }
+      )
+      .subscribe();
       
-      // Set up realtime subscription
-      const channel = supabase
-        .channel('schema-db-changes')
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'hotel_reviews',
-            filter: `hotel_id=eq.${hotelId} AND source=eq.booking.com`,
-          },
-          (payload) => {
-            console.log('Realtime update received:', payload);
-            fetchReviews();
-          }
-        )
-        .subscribe();
-        
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    } else {
-      setLoading(false);
-    }
-  }, [hotelId, hotelName]);
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [hotelId]);
 
   if (loading) {
     return (
@@ -215,7 +187,7 @@ const BookingReviews = ({ hotelId, hotelName }: BookingReviewsProps) => {
     if (hotelData?.booking_url) return hotelData.booking_url;
     
     // Special case for ALK HOTEL
-    if (hotelData?.name === "ALK HOTEL™" || hotelName === "ALK HOTEL™") {
+    if (hotelData?.name === "ALK HOTEL™") {
       return "https://www.booking.com/hotel/gr/alk.el.html";
     }
     
@@ -226,7 +198,6 @@ const BookingReviews = ({ hotelId, hotelName }: BookingReviewsProps) => {
   
   console.log('Rendering BookingReviews with:', {
     hotelId,
-    hotelName,
     reviewsCount: reviews.length,
     bookingUrl
   });
@@ -246,7 +217,7 @@ const BookingReviews = ({ hotelId, hotelName }: BookingReviewsProps) => {
         
         <button
           onClick={fetchBookingReviews}
-          disabled={refreshing || !hotelId}
+          disabled={refreshing}
           className="text-sifnos-turquoise hover:text-sifnos-deep-blue flex items-center"
         >
           {refreshing ? (
@@ -260,11 +231,7 @@ const BookingReviews = ({ hotelId, hotelName }: BookingReviewsProps) => {
         </button>
       </div>
       
-      {!hotelId ? (
-        <div className="text-center py-8">
-          <p className="text-gray-600">No hotel ID provided. Reviews cannot be loaded.</p>
-        </div>
-      ) : reviews.length === 0 ? (
+      {reviews.length === 0 ? (
         <div className="text-center py-8">
           <p className="text-gray-600">No Booking.com reviews available yet.</p>
           <button
