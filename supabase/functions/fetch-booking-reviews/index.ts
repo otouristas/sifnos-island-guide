@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.1';
@@ -30,15 +31,16 @@ serve(async (req) => {
     
     console.log("Starting review scraping process from Booking.com");
     
-    // Get hotel ID from request if available, or use a default
-    const url = new URL(req.url);
-    const hotelId = url.searchParams.get('hotelId') || null;
+    // Parse request body if provided
+    const requestBody = req.method === 'POST' ? await req.json() : null;
+    const hotelId = requestBody?.hotelId || null;
     
-    console.log("Processing hotel ID:", hotelId);
+    console.log("Processing hotel ID from request body:", hotelId);
     
     // Process all hotels or just the requested one
     if (hotelId && hotelUrls[hotelId]) {
       // Extract reviews for specific hotel
+      console.log(`Processing hotel ${hotelId} with URL ${hotelUrls[hotelId]}`);
       const reviews = await scrapeBookingReviews(hotelId, hotelUrls[hotelId]);
       console.log(`Scraped ${reviews.length} reviews for hotel ${hotelId} from Booking.com`);
       
@@ -325,6 +327,7 @@ async function scrapeBookingReviews(hotelId, bookingUrl) {
         ];
       } else if (hotelId === "24b83c2f-4ba3-4665-a676-e95b3c3be3b1") {
         // ALK HOTEL mock data
+        console.log('Returning mock data for ALK HOTEL');
         return [
           {
             name: "Dimitris M.",

@@ -51,6 +51,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
   // Fetch hotel data to get booking URL
   const fetchHotelData = async () => {
     try {
+      console.log('Fetching hotel data for ID:', hotelId);
       const { data, error } = await supabase
         .from('hotels')
         .select('*')
@@ -59,6 +60,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
         
       if (error) throw error;
       
+      console.log('Fetched hotel data:', data);
       setHotelData(data);
     } catch (error) {
       console.error('Error fetching hotel data:', error);
@@ -71,6 +73,7 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
       setRefreshing(true);
       
       // Trigger the edge function to update reviews
+      console.log('Invoking edge function to fetch Booking reviews for hotel ID:', hotelId);
       const { data, error } = await supabase.functions.invoke('fetch-booking-reviews', {
         body: { hotelId: hotelId }
       });
@@ -119,8 +122,8 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
         
       if (error) throw error;
       
-      console.log('Fetched reviews for hotel ID:', hotelId);
       console.log('Fetched reviews:', data);
+      console.log('Reviews length:', data?.length || 0);
       setReviews(data || []);
       
     } catch (error) {
@@ -135,8 +138,9 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
     }
   };
 
-  // Subscribe to realtime changes in the reviews table
+  // Subscribe to realtime changes in the reviews table and fetch initial data
   useEffect(() => {
+    console.log('BookingReviews component mounted for hotel ID:', hotelId);
     fetchReviews();
     fetchHotelData();
     
@@ -184,6 +188,12 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
   };
 
   const bookingUrl = getBookingUrl();
+  
+  console.log('Rendering BookingReviews with:', {
+    hotelId,
+    reviewsCount: reviews.length,
+    bookingUrl
+  });
 
   return (
     <div className="space-y-4">
