@@ -4,14 +4,24 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 interface HotelImageProps {
   hotel: any;
-  imageSrc: string;
-  primaryType: string | null;
-  getHotelTypeIcon: (type: string) => React.ReactNode;
+  imageUrl?: string; // Make imageUrl optional
+  imageSrc?: string; // Keep the existing prop
+  primaryType?: string | null;
+  getHotelTypeIcon?: (type: string) => React.ReactNode;
 }
 
-const HotelImage = ({ hotel, imageSrc, primaryType, getHotelTypeIcon }: HotelImageProps) => {
+const HotelImage = ({ 
+  hotel, 
+  imageSrc, 
+  imageUrl, 
+  primaryType, 
+  getHotelTypeIcon 
+}: HotelImageProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  
+  // Use imageUrl if provided, otherwise use imageSrc
+  const actualImageSrc = imageUrl || imageSrc;
 
   const handleImageLoad = () => {
     setImageLoaded(true);
@@ -34,7 +44,7 @@ const HotelImage = ({ hotel, imageSrc, primaryType, getHotelTypeIcon }: HotelIma
       )}
       <img 
         key={`hotel-image-${hotel.id}-${Date.now()}`}
-        src={imageSrc} 
+        src={actualImageSrc} 
         alt={hotel.name} 
         className={`w-full h-full object-cover ${!imageLoaded && !imageError ? 'opacity-0' : 'opacity-100'}`}
         onLoad={handleImageLoad}
@@ -43,7 +53,7 @@ const HotelImage = ({ hotel, imageSrc, primaryType, getHotelTypeIcon }: HotelIma
         fetchPriority="high"
       />
       {/* Display hotel type icon if available */}
-      {primaryType && (
+      {primaryType && getHotelTypeIcon && (
         <div className="absolute top-2 left-2 bg-white/80 backdrop-blur-sm p-1 rounded-full">
           <div className="w-6 h-6 text-sifnos-turquoise">
             {getHotelTypeIcon(primaryType)}

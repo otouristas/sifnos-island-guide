@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
@@ -7,7 +6,7 @@ import Breadcrumbs from '@/components/Breadcrumbs';
 import HotelImage from '@/components/hotel/HotelImage';
 import HotelAmenities from '@/components/HotelAmenities';
 import HotelFAQs from '@/components/hotel/HotelFAQs';
-import { BookingReviews } from '@/components/BookingReviews';
+import BookingReviews from '@/components/BookingReviews';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, MapPin, Phone, Mail, Globe, CheckCircle } from 'lucide-react';
 
@@ -222,7 +221,7 @@ export default function HotelDetailPage() {
             {/* Booking.com reviews if available */}
             <section className="mb-8">
               <h2 className="text-xl font-semibold mb-4 text-gray-800">More Guest Reviews</h2>
-              <BookingReviews hotelName={hotel.name} />
+              <BookingReviews hotelId={hotel.id} />
             </section>
           </div>
           

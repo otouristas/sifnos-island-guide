@@ -28,7 +28,7 @@ export default function HotelTypesSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
           {featuredHotelTypes.map(type => (
             <HotelTypeCard
-              key={type.id}
+              key={type.slug}
               title={type.title}
               description={type.shortDescription}
               slug={type.slug}
