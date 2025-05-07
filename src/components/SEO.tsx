@@ -82,7 +82,7 @@ export default function SEO({
     schemaData = {
       ...schemaData,
       "description": description,
-      "touristType": ["Beach tourism", "Cultural tourism", "Culinary tourism"],
+      "touristType": ["Villa", "Luxury Rental", "Beach vacation"],
       "geo": {
         "@type": "GeoCoordinates",
         "latitude": "36.9777",

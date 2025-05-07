@@ -16,6 +16,7 @@ const mainNavItems = [
       { name: 'Beach Hotels', path: '/hotel-types/beach-hotels' },
       { name: 'Family-Friendly Hotels', path: '/hotel-types/family-friendly-hotels' },
       { name: 'Traditional Hotels', path: '/hotel-types/traditional-hotels' },
+      { name: 'Villas', path: '/hotel-types/villas' }, // Added villas here
     ]
   },
   { 
