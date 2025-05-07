@@ -85,7 +85,7 @@ export const determineRoomImageUrl = (hotel: any, roomType: string): string => {
   
   if (hotel.name === "ALK HOTEL™") {
     if (roomType.toLowerCase().includes('comfort')) {
-      // Updated ALK HOTEL comfort room image
+      // Updated ALK HOTEL comfort room image path to use the specified image
       return `/uploads/hotels/alk-hotel-sifnos/comfort-room.webp?v=${timestamp}-${randomValue}`;
     } else if (roomType.toLowerCase().includes('superior') && roomType.toLowerCase().includes('sea')) {
       return `/uploads/hotels/alk-hotel-sifnos/superior-sea-view.jpeg?v=${timestamp}-${randomValue}`;
