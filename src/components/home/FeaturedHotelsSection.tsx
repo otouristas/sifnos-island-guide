@@ -3,11 +3,12 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import HotelCard from '@/components/HotelCard';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 export default function FeaturedHotelsSection() {
   const [featuredHotels, setFeaturedHotels] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchFeaturedHotels = async () => {
@@ -52,7 +53,7 @@ export default function FeaturedHotelsSection() {
     };
     
     fetchFeaturedHotels();
-  }, []);
+  }, [toast]);
 
   return (
     <div className="py-16 bg-gray-50">
