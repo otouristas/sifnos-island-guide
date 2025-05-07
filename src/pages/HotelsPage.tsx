@@ -1,13 +1,16 @@
+
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
-import { Search, Filter, Star } from 'lucide-react';
+import { Search, Filter } from 'lucide-react';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
 import HotelCard from '@/components/HotelCard';
 import SponsoredHotelCard from '@/components/SponsoredHotelCard';
 import { hotelTypes } from '@/data/hotelTypes';
 import { getHotelTypeIcon } from '@/components/icons/HotelTypeIcons';
+import FilterSidebar from '@/components/hotel/FilterSidebar';
+import { useMobile } from '@/hooks/use-mobile';
 
 export default function HotelsPage() {
   // Filter state
@@ -22,13 +25,18 @@ export default function HotelsPage() {
       seaView: false,
     },
     starRating: 0,
-    hotelType: '', // Add hotel type filter
+    hotelType: '',
+    priceRange: null as [number, number] | null,
+    location: '',
   });
 
+  const [searchQuery, setSearchQuery] = useState('');
   const [hotels, setHotels] = useState([]);
+  const [filteredHotels, setFilteredHotels] = useState([]);
   const [sponsoredHotel, setSponsoredHotel] = useState(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const isMobile = useMobile();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -47,11 +55,6 @@ export default function HotelsPage() {
             hotel_photos(id, photo_url, is_main_photo)
           `);
           
-        // Apply hotel type filter if selected
-        if (filters.hotelType) {
-          query = query.contains('hotel_types', [filters.hotelType]);
-        }
-
         // Execute the query
         const { data, error } = await query;
 
@@ -87,6 +90,7 @@ export default function HotelsPage() {
         
         setSponsoredHotel(alkHotel);
         setHotels(otherHotels || []);
+        setFilteredHotels(otherHotels || []);
         
         // If we didn't find ALK HOTEL in the data, create it manually
         if (!alkHotel) {
@@ -124,34 +128,78 @@ export default function HotelsPage() {
     }
 
     fetchHotels();
-  }, [toast, filters.hotelType]); 
-
-  // Function to handle star rating filter
-  const handleStarRatingChange = (rating) => {
-    setFilters({
-      ...filters,
-      starRating: rating === filters.starRating ? 0 : rating
-    });
-  };
-
-  // Function to handle filter changes
-  const handleAmenityChange = (amenity) => {
-    setFilters({
-      ...filters,
-      amenities: {
-        ...filters.amenities,
-        [amenity]: !filters.amenities[amenity]
-      }
-    });
-  };
+  }, [toast]); 
   
-  // Function to handle hotel type filter change
-  const handleHotelTypeChange = (type) => {
-    setFilters({
-      ...filters,
-      hotelType: type === filters.hotelType ? '' : type
-    });
-  };
+  // Apply filters whenever hotels or filters change
+  useEffect(() => {
+    if (hotels.length === 0) return;
+    
+    let results = [...hotels];
+    
+    // Filter by hotel type
+    if (filters.hotelType) {
+      results = results.filter(hotel => 
+        hotel.hotel_types && hotel.hotel_types.includes(filters.hotelType)
+      );
+    }
+    
+    // Filter by star rating
+    if (filters.starRating > 0) {
+      results = results.filter(hotel => hotel.rating === filters.starRating);
+    }
+    
+    // Filter by location
+    if (filters.location) {
+      results = results.filter(hotel => 
+        hotel.location && hotel.location.includes(filters.location)
+      );
+    }
+    
+    // Filter by amenities
+    const activeAmenities = Object.entries(filters.amenities)
+      .filter(([_, isActive]) => isActive)
+      .map(([key]) => key);
+    
+    if (activeAmenities.length > 0) {
+      results = results.filter(hotel => {
+        const hotelAmenities = hotel.hotel_amenities?.map(a => a.amenity.toLowerCase()) || [];
+        
+        return activeAmenities.every(amenity => {
+          switch(amenity) {
+            case 'wifi':
+              return hotelAmenities.some(a => a.includes('wifi') || a.includes('internet'));
+            case 'breakfast':
+              return hotelAmenities.some(a => a.includes('breakfast'));
+            case 'pool':
+              return hotelAmenities.some(a => a.includes('pool') || a.includes('swimming'));
+            case 'parking':
+              return hotelAmenities.some(a => a.includes('parking'));
+            case 'airConditioning':
+              return hotelAmenities.some(a => a.includes('air') || a.includes('conditioning') || a.includes('ac'));
+            case 'restaurant':
+              return hotelAmenities.some(a => a.includes('restaurant') || a.includes('dining'));
+            case 'seaView':
+              return hotelAmenities.some(a => a.includes('view') && a.includes('sea'));
+            default:
+              return false;
+          }
+        });
+      });
+    }
+    
+    // Filter by search query
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      results = results.filter(hotel => 
+        hotel.name.toLowerCase().includes(query) ||
+        hotel.location.toLowerCase().includes(query) ||
+        (hotel.description && hotel.description.toLowerCase().includes(query)) ||
+        hotel.hotel_amenities?.some(a => a.amenity.toLowerCase().includes(query))
+      );
+    }
+    
+    setFilteredHotels(results);
+  }, [hotels, filters, searchQuery]);
 
   return (
     <>
@@ -200,8 +248,8 @@ export default function HotelsPage() {
       </div>
       
       {/* Search and Filter Section */}
-      <div className="bg-white shadow-md">
-        <div className="page-container py-6">
+      <div className="bg-white shadow-md sticky top-0 z-10">
+        <div className="page-container py-4">
           <div className="flex flex-wrap items-center -mx-2">
             <div className="w-full md:w-1/2 px-2 mb-4 md:mb-0">
               <div className="relative">
@@ -209,18 +257,19 @@ export default function HotelsPage() {
                   type="text"
                   placeholder="Search for hotels, locations, or amenities"
                   className="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 <Search size={20} className="absolute left-3 top-3.5 text-gray-400" />
               </div>
             </div>
             <div className="w-full md:w-1/2 px-2 flex justify-end">
-              <button 
-                className="flex items-center bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 rounded-lg mr-2 transition-colors duration-200"
-              >
-                <Filter size={18} className="mr-2" />
-                Filter
-              </button>
-              <button className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-6 py-3 rounded-lg transition-colors duration-300">
+              {isMobile && <FilterSidebar 
+                filters={filters} 
+                onFiltersChange={setFilters}
+                isMobile={true}
+              />}
+              <button className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-6 py-3 rounded-lg transition-colors duration-300 ml-2">
                 Search
               </button>
             </div>
@@ -233,151 +282,20 @@ export default function HotelsPage() {
         <div className="page-container py-8">
           <div className="flex flex-wrap -mx-4">
             {/* Filters Sidebar */}
-            <div className="w-full lg:w-1/4 px-4 mb-8 lg:mb-0">
-              <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="font-montserrat font-semibold text-xl mb-6 pb-3 border-b">Filters</h2>
-                
-                {/* Hotel Type */}
-                <div className="mb-6">
-                  <h3 className="font-semibold mb-3">Hotel Type</h3>
-                  <div className="space-y-2">
-                    {hotelTypes.map(type => (
-                      <div 
-                        key={type.slug} 
-                        className="flex items-center cursor-pointer"
-                        onClick={() => handleHotelTypeChange(type.slug)}
-                      >
-                        <input
-                          type="checkbox"
-                          className="mr-2"
-                          checked={filters.hotelType === type.slug}
-                          readOnly
-                        />
-                        <div className="flex items-center">
-                          <span className="w-4 h-4 mr-2 text-sifnos-turquoise inline-block">
-                            {getHotelTypeIcon(type.slug)}
-                          </span>
-                          {type.title}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Star Rating */}
-                <div className="mb-6">
-                  <h3 className="font-semibold mb-3">Star Rating</h3>
-                  <div className="space-y-2">
-                    {[5, 4, 3, 2, 1].map(rating => (
-                      <div 
-                        key={rating} 
-                        className="flex items-center cursor-pointer"
-                        onClick={() => handleStarRatingChange(rating)}
-                      >
-                        <input
-                          type="checkbox"
-                          className="mr-2"
-                          checked={filters.starRating === rating}
-                          readOnly
-                        />
-                        <div className="flex">
-                          {Array(5).fill(0).map((_, i) => (
-                            <Star 
-                              key={i} 
-                              size={16}
-                              className={i < rating ? "text-yellow-400 fill-yellow-400 w-4 h-4" : "text-gray-300 w-4 h-4"} 
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Amenities */}
-                <div>
-                  <h3 className="font-semibold mb-3">Amenities</h3>
-                  <div className="space-y-2">
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="wifi"
-                        checked={filters.amenities.wifi}
-                        onChange={() => handleAmenityChange('wifi')}
-                        className="mr-2"
-                      />
-                      <label htmlFor="wifi">Free WiFi</label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="breakfast"
-                        checked={filters.amenities.breakfast}
-                        onChange={() => handleAmenityChange('breakfast')}
-                        className="mr-2"
-                      />
-                      <label htmlFor="breakfast">Breakfast Included</label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="pool"
-                        checked={filters.amenities.pool}
-                        onChange={() => handleAmenityChange('pool')}
-                        className="mr-2"
-                      />
-                      <label htmlFor="pool">Swimming Pool</label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="parking"
-                        checked={filters.amenities.parking}
-                        onChange={() => handleAmenityChange('parking')}
-                        className="mr-2"
-                      />
-                      <label htmlFor="parking">Free Parking</label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="airConditioning"
-                        checked={filters.amenities.airConditioning}
-                        onChange={() => handleAmenityChange('airConditioning')}
-                        className="mr-2"
-                      />
-                      <label htmlFor="airConditioning">Air Conditioning</label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="restaurant"
-                        checked={filters.amenities.restaurant}
-                        onChange={() => handleAmenityChange('restaurant')}
-                        className="mr-2"
-                      />
-                      <label htmlFor="restaurant">Restaurant</label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="seaView"
-                        checked={filters.amenities.seaView}
-                        onChange={() => handleAmenityChange('seaView')}
-                        className="mr-2"
-                      />
-                      <label htmlFor="seaView">Sea View</label>
-                    </div>
-                  </div>
-                </div>
+            {!isMobile && (
+              <div className="w-full lg:w-1/4 px-4 mb-8 lg:mb-0">
+                <FilterSidebar 
+                  filters={filters} 
+                  onFiltersChange={setFilters}
+                />
               </div>
-            </div>
+            )}
             
             {/* Hotels Listing */}
             <div className="w-full lg:w-3/4 px-4">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="font-montserrat font-semibold text-xl">
-                  {loading ? "Loading hotels..." : `${hotels.length + (sponsoredHotel ? 1 : 0)} hotels found`}
+                  {loading ? "Loading hotels..." : `${filteredHotels.length + (sponsoredHotel ? 1 : 0)} hotels found`}
                 </h2>
                 <div className="flex items-center">
                   <span className="mr-2 text-sm">Sort by:</span>
@@ -404,8 +322,8 @@ export default function HotelsPage() {
               {/* Hotels Grid */}
               {!loading && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {hotels.length > 0 ? (
-                    hotels.map(hotel => (
+                  {filteredHotels.length > 0 ? (
+                    filteredHotels.map(hotel => (
                       <HotelCard key={hotel.id} hotel={hotel} showLogo={true} />
                     ))
                   ) : !sponsoredHotel && (
@@ -418,7 +336,7 @@ export default function HotelsPage() {
               )}
               
               {/* Pagination */}
-              {!loading && hotels.length > 0 && (
+              {!loading && filteredHotels.length > 0 && (
                 <div className="flex justify-center mt-8">
                   <div className="flex space-x-1">
                     <button className="px-4 py-2 border rounded-lg bg-white hover:bg-gray-50 transition-colors">
