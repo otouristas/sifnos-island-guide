@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
@@ -10,7 +9,7 @@ import SponsoredHotelCard from '@/components/SponsoredHotelCard';
 import { hotelTypes } from '@/data/hotelTypes';
 import { getHotelTypeIcon } from '@/components/icons/HotelTypeIcons';
 import FilterSidebar from '@/components/hotel/FilterSidebar';
-import { useMobile } from '@/hooks/use-mobile';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export default function HotelsPage() {
   // Filter state
@@ -36,7 +35,7 @@ export default function HotelsPage() {
   const [sponsoredHotel, setSponsoredHotel] = useState(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     window.scrollTo(0, 0);
