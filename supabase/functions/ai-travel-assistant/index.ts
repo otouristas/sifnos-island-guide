@@ -46,7 +46,7 @@ serve(async (req) => {
     
     console.log("Calling OpenRouter API with messages:", JSON.stringify(allMessages));
     
-    // Call OpenRouter API
+    // Call OpenRouter API with a valid model - changed from "anthropic/claude-3-5-sonnet" to "openai/gpt-4o"
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -56,7 +56,7 @@ serve(async (req) => {
         "X-Title": "Hotels Sifnos"
       },
       body: JSON.stringify({
-        model: "anthropic/claude-3-5-sonnet",
+        model: "openai/gpt-4o", // Changed to a valid model
         messages: allMessages,
         temperature: 0.7,
         max_tokens: 1000,
