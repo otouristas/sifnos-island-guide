@@ -32,6 +32,9 @@ export const determineHotelImageUrl = (hotel: any, mainPhoto?: string): string =
   } else if (hotel.name === "Villa Olivia Clara") {
     // For Villa Olivia Clara, use its featured image with cache-busting
     return `/uploads/hotels/villa-olivia-clara/feature-image.jpeg?v=${timestamp}-${randomValue}`;
+  } else if (hotel.name === "ALK HOTEL™") {
+    // Updated ALK HOTEL feature image path
+    return `/uploads/hotels/alk-hotel-sifnos/alk-hotel-feature.jpeg?v=${timestamp}-${randomValue}`;
   } else if (mainPhoto) {
     // For other hotels, use the photos from the database with cache-busting
     return `/uploads/hotels/${mainPhoto}?v=${timestamp}-${randomValue}`;
@@ -68,4 +71,32 @@ export const determineHotelLogoUrl = (hotel: any): string | null => {
   }
   
   return null;
+};
+
+/**
+ * Determines the appropriate room image URL
+ * @param hotel Hotel object
+ * @param roomType Room type/name
+ * @returns Room image URL to use
+ */
+export const determineRoomImageUrl = (hotel: any, roomType: string): string => {
+  const timestamp = Date.now();
+  const randomValue = Math.floor(Math.random() * 1000);
+  
+  if (hotel.name === "ALK HOTEL™") {
+    if (roomType.toLowerCase().includes('comfort')) {
+      // Updated ALK HOTEL comfort room image
+      return `/uploads/hotels/alk-hotel-sifnos/comfort-room.webp?v=${timestamp}-${randomValue}`;
+    } else if (roomType.toLowerCase().includes('superior') && roomType.toLowerCase().includes('sea')) {
+      return `/uploads/hotels/alk-hotel-sifnos/superior-sea-view.jpeg?v=${timestamp}-${randomValue}`;
+    } else if (roomType.toLowerCase().includes('superior')) {
+      return `/uploads/hotels/alk-hotel-sifnos/superior-plus.jpeg?v=${timestamp}-${randomValue}`;
+    } else if (roomType.toLowerCase().includes('triple')) {
+      return `/uploads/hotels/alk-hotel-sifnos/triple-room.jpeg?v=${timestamp}-${randomValue}`;
+    }
+    return `/uploads/hotels/alk-hotel-sifnos/comfort-room.webp?v=${timestamp}-${randomValue}`;
+  }
+  
+  // Default placeholder
+  return `/placeholder.svg?v=${timestamp}-${randomValue}`;
 };

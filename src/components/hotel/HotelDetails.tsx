@@ -1,5 +1,6 @@
 
 import React from 'react';
+import HotelLogo from './HotelLogo';
 
 interface HotelDetailsProps {
   hotel: any;
@@ -11,21 +12,13 @@ const HotelDetails = ({ hotel, hotelLogoUrl, showLogo }: HotelDetailsProps) => {
   return (
     <div className="p-4">
       <div className="flex items-center justify-start gap-2 mb-2">
-        {/* Display logo to the LEFT of hotel name */}
+        {/* Display logo to the LEFT of hotel name using the HotelLogo component */}
         {showLogo && hotelLogoUrl && (
-          <div className="flex-shrink-0 w-7 h-7 bg-white rounded-full p-0.5 shadow-sm border border-gray-100 overflow-hidden">
-            <img 
-              key={`hotel-small-logo-${hotel.id}-${Date.now()}`}
-              src={hotelLogoUrl}
-              alt={`${hotel.name} logo`}
-              className="w-full h-full object-contain"
-              onLoad={() => console.log(`Small logo loaded for ${hotel.name}`)}
-              onError={(e) => {
-                console.error(`Failed to load small logo for ${hotel.name}`);
-                e.currentTarget.style.display = 'none';
-              }}
-            />
-          </div>
+          <HotelLogo
+            hotel={hotel}
+            hotelLogoUrl={hotelLogoUrl}
+            position="inline"
+          />
         )}
         <h3 className="text-lg font-semibold text-gray-800">{hotel.name}</h3>
       </div>

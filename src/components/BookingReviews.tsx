@@ -170,7 +170,18 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
   }
 
   // Get the booking.com URL from hotel data or use a default
-  const bookingUrl = hotelData?.booking_url || "https://www.booking.com";
+  const getBookingUrl = () => {
+    if (hotelData?.booking_url) return hotelData.booking_url;
+    
+    // Special case for ALK HOTEL
+    if (hotelData?.name === "ALK HOTEL™") {
+      return "https://www.booking.com/hotel/gr/alk.el.html";
+    }
+    
+    return "https://www.booking.com";
+  };
+
+  const bookingUrl = getBookingUrl();
 
   return (
     <div className="space-y-4">
