@@ -128,75 +128,78 @@ export default function CycladicChatUI() {
       // Search for hotels based on user query
       const relevantHotels = await searchHotels(input);
 
-      // Start streaming response from OpenRouter via edge function
+      // Add temporary assistant message
+      const assistantId = (Date.now() + 1).toString();
+      setMessages((prev) => [...prev, { 
+        id: assistantId, 
+        role: 'assistant', 
+        content: '', 
+        hotels: relevantHotels 
+      }]);
+
+      // Create a reader to handle the streaming response
       const response = await supabase.functions.invoke('ai-travel-assistant', {
         body: {
           messages: messages.map(msg => ({ role: msg.role, content: msg.content })).concat([userMessage]),
           hotelQuery: input
-        }
+        },
+        responseType: 'stream'  // Use streaming response
       });
       
       if (!response.data) {
         throw new Error('Failed to get response from AI assistant');
       }
-      
-      // Create a new response message
-      const aiMessageId = (Date.now() + 1).toString();
-      setMessages((prev) => [
-        ...prev, 
-        { id: aiMessageId, role: 'assistant', content: '', hotels: relevantHotels }
-      ]);
 
-      // The response from supabase.functions.invoke is not a stream, so we need to convert it
-      if (typeof response.data === 'string') {
-        // For string responses, process as plain text
-        setMessages((prev) => 
-          prev.map(msg => 
-            msg.id === aiMessageId 
-              ? { ...msg, content: response.data as string } 
-              : msg
-          )
-        );
-      } else {
-        // For structured responses that might contain EventSource data
-        const responseText = response.data ? JSON.stringify(response.data) : '';
-        const lines = responseText.split('\n');
-        let assistantResponse = '';
+      // Process the streaming response
+      const reader = response.data.getReader();
+      const decoder = new TextDecoder();
+      let fullContent = '';
+      
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        // Decode and process the chunk
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n');
         
         for (const line of lines) {
           if (line.startsWith('data:')) {
-            const jsonStr = line.slice(5).trim();
+            const content = line.slice(5).trim();
             
-            if (jsonStr === '[DONE]') continue;
+            // Check if it's the end of stream
+            if (content === '[DONE]') continue;
             
             try {
-              const data = JSON.parse(jsonStr);
-              if (data.choices && data.choices[0]?.delta?.content) {
-                assistantResponse += data.choices[0].delta.content;
+              const parsedData = JSON.parse(content);
+              if (parsedData.choices && parsedData.choices[0]?.delta?.content) {
+                fullContent += parsedData.choices[0].delta.content;
+                
+                // Update the message with accumulated content
                 setMessages((prev) => 
                   prev.map(msg => 
-                    msg.id === aiMessageId 
-                      ? { ...msg, content: assistantResponse } 
+                    msg.id === assistantId 
+                      ? { ...msg, content: fullContent } 
                       : msg
                   )
                 );
               }
-            } catch (e) {
-              console.error('Error parsing JSON:', e);
+            } catch (err) {
+              console.error('Error parsing chunk:', err);
             }
           }
         }
-        
-        // If no response was built through streaming, use the whole response as content
-        if (!assistantResponse && responseText) {
-          setMessages((prev) => 
-            prev.map(msg => 
-              msg.id === aiMessageId 
-                ? { ...msg, content: "I encountered an issue processing your request, but I've found some hotel options that might interest you. Feel free to ask me more about them!" } 
-                : msg
-            )
-          );
-        }
+      }
+      
+      // If no content was received, show fallback message
+      if (!fullContent) {
+        setMessages((prev) => 
+          prev.map(msg => 
+            msg.id === assistantId 
+              ? { ...msg, content: "I found some hotel options that might interest you. Feel free to ask me more about them!" } 
+              : msg
+          )
+        );
       }
       
     } catch (error) {
@@ -262,14 +265,14 @@ export default function CycladicChatUI() {
                     <div className="font-medium text-center px-2 py-1 bg-white/20 backdrop-blur-sm rounded-md">
                       Recommended Hotels
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 gap-3">
                       {message.hotels.map((hotel) => (
                         <div 
                           key={hotel.id} 
                           className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
                         >
                           {/* Hotel Image */}
-                          <div className="w-full h-36 overflow-hidden bg-gray-100">
+                          <div className="w-full h-48 overflow-hidden bg-gray-100">
                             {hotel.hotel_photos?.find((photo: any) => photo.is_main_photo)?.photo_url ? (
                               <img 
                                 src={`/uploads/hotels/${hotel.hotel_photos.find((photo: any) => photo.is_main_photo).photo_url}`}
@@ -286,13 +289,13 @@ export default function CycladicChatUI() {
                           {/* Hotel Info */}
                           <div className="p-3">
                             <div className="font-semibold text-base truncate">{hotel.name}</div>
-                            <div className="flex items-center text-xs text-gray-600 space-x-2 mt-1">
+                            <div className="flex items-center text-sm text-gray-600 space-x-2 mt-1">
                               <div className="flex items-center">
-                                <MapPin className="h-3 w-3 mr-1" />
+                                <MapPin className="h-4 w-4 mr-1" />
                                 <span>{hotel.location}</span>
                               </div>
                               <div className="flex items-center">
-                                <Star className="h-3 w-3 mr-1 text-amber-500" />
+                                <Star className="h-4 w-4 mr-1 text-amber-500" />
                                 <span>{hotel.rating}</span>
                               </div>
                             </div>
