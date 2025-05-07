@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
