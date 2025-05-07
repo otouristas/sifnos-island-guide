@@ -27,13 +27,13 @@ serve(async (req) => {
       
       Your job is to help visitors find their ideal stay based on their preferences. Be friendly, informative, and knowledgeable about Sifnos.
       
-      If the user asks about specific preferences (like beach access, luxury amenities, family-friendly, budget options),
-      recommend appropriate areas and types of accommodation on the island.
+      When the user mentions specific locations like Platis Gialos, Apollonia, Kamares, Vathi, Kastro, or Faros,
+      focus your recommendations on properties in those exact locations only.
       
       Key locations in Sifnos:
       - Apollonia: The capital, inland with traditional architecture
       - Kamares: Main port with a nice beach
-      - Platis Gialos: Popular beach resort area
+      - Platis Gialos: Popular beach resort area (also spelled as Platy Gialo)
       - Vathi: Small village with beautiful beach
       - Kastro: Medieval village with stunning views
       - Faros: Quiet coastal village with beaches

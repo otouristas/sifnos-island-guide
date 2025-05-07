@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { useMediaQuery } from 'react-responsive';
+import { determineHotelImageUrl } from '@/utils/image-utils';
 
 type Message = {
   id: string;
@@ -41,18 +42,25 @@ export default function CycladicChatUI() {
   const searchHotels = async (query: string) => {
     try {
       // Extract key terms for hotel search
-      const locationTerms = ['apollonia', 'kamares', 'platis gialos', 'vathi', 'kastro', 'faros', 'artemonas'];
+      const locationTerms = ['apollonia', 'kamares', 'platis gialos', 'platy gialo', 'vathi', 'kastro', 'faros', 'artemonas'];
       const amenityTerms = ['pool', 'beach', 'wifi', 'breakfast', 'air condition', 'restaurant', 'sea view'];
       const typeTerms = ['luxury', 'boutique', 'family-friendly', 'budget', 'beachfront', 'villa'];
       
       // Determine search parameters
       const lowercaseQuery = query.toLowerCase();
       let location = '';
+      
+      // Check for location terms including partial matches
       locationTerms.forEach(term => {
         if (lowercaseQuery.includes(term)) {
           location = term;
         }
       });
+      
+      // Special case for "Platy Gialo" which is the same as "Platis Gialos"
+      if (lowercaseQuery.includes('platy gialo')) {
+        location = 'platis gialos';
+      }
       
       let type = '';
       typeTerms.forEach(term => {
@@ -75,11 +83,16 @@ export default function CycladicChatUI() {
       
       if (!hotels) return [];
       
+      console.log("Found hotels before filtering:", hotels.length);
+      console.log("Searching for location:", location);
+      
       // Filter by location if specified
       if (location) {
-        hotels = hotels.filter(hotel => 
-          hotel.location.toLowerCase().includes(location)
-        );
+        hotels = hotels.filter(hotel => {
+          const hotelLocation = hotel.location.toLowerCase();
+          return hotelLocation.includes(location);
+        });
+        console.log(`After location filter (${location}):`, hotels.length);
       }
       
       // Filter by hotel type if specified
@@ -90,16 +103,19 @@ export default function CycladicChatUI() {
             hotelType.toLowerCase().includes(type.toLowerCase().replace('-', ''))
           );
         });
+        console.log(`After type filter (${type}):`, hotels.length);
       }
       
       // Filter by budget keyword
       if (lowercaseQuery.includes('budget') || lowercaseQuery.includes('affordable')) {
         hotels = hotels.filter(hotel => hotel.price < 150);
+        console.log("After budget filter:", hotels.length);
       }
       
       // Filter by luxury keyword
       if (lowercaseQuery.includes('luxury') || lowercaseQuery.includes('high-end')) {
         hotels = hotels.filter(hotel => hotel.price > 200 || hotel.rating >= 4);
+        console.log("After luxury filter:", hotels.length);
       }
       
       return hotels.slice(0, 3); // Return top 3 matches
@@ -127,6 +143,7 @@ export default function CycladicChatUI() {
     try {
       // Search for hotels based on user query
       const relevantHotels = await searchHotels(input);
+      console.log("Found relevant hotels:", relevantHotels);
 
       // Add temporary assistant message
       const assistantId = (Date.now() + 1).toString();
@@ -142,7 +159,6 @@ export default function CycladicChatUI() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY || ''}`,
         },
         body: JSON.stringify({
           messages: messages.map(msg => ({ role: msg.role, content: msg.content })).concat([userMessage]),
@@ -231,6 +247,20 @@ export default function CycladicChatUI() {
     }
   };
 
+  // Function to generate proper hotel image URL
+  const getHotelImageUrl = (hotel: any) => {
+    if (!hotel || !hotel.hotel_photos) {
+      return '/placeholder.svg';
+    }
+    
+    const mainPhoto = hotel.hotel_photos.find((photo: any) => photo.is_main_photo);
+    if (!mainPhoto || !mainPhoto.photo_url) {
+      return '/placeholder.svg';
+    }
+    
+    return determineHotelImageUrl(hotel, mainPhoto.photo_url);
+  };
+
   return (
     <div className="flex flex-col h-[calc(100vh-200px)] min-h-[600px] rounded-xl overflow-hidden bg-gradient-to-b from-white to-gray-50 border border-white/30 shadow-xl">
       {/* Chat Messages */}
@@ -272,7 +302,7 @@ export default function CycladicChatUI() {
                 {message.hotels && message.hotels.length > 0 && (
                   <div className="mt-4 space-y-4">
                     <div className="font-medium text-center px-2 py-1 bg-white/20 backdrop-blur-sm rounded-md">
-                      Recommended Hotels
+                      Recommended Hotels in {message.hotels[0]?.location || "Sifnos"}
                     </div>
                     <div className="grid grid-cols-1 gap-3">
                       {message.hotels.map((hotel) => (
@@ -282,17 +312,15 @@ export default function CycladicChatUI() {
                         >
                           {/* Hotel Image */}
                           <div className="w-full h-48 overflow-hidden bg-gray-100">
-                            {hotel.hotel_photos?.find((photo: any) => photo.is_main_photo)?.photo_url ? (
-                              <img 
-                                src={`/uploads/hotels/${hotel.hotel_photos.find((photo: any) => photo.is_main_photo).photo_url}`}
-                                alt={hotel.name}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                                <Hotel className="text-gray-400 h-10 w-10" />
-                              </div>
-                            )}
+                            <img 
+                              src={getHotelImageUrl(hotel)}
+                              alt={hotel.name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                console.error(`Failed to load image for ${hotel.name}`);
+                                (e.target as HTMLImageElement).src = '/placeholder.svg';
+                              }}
+                            />
                           </div>
                           
                           {/* Hotel Info */}
@@ -327,17 +355,14 @@ export default function CycladicChatUI() {
                                   <div className="space-y-4">
                                     {/* Large Hotel Image */}
                                     <div className="w-full h-52 overflow-hidden rounded-lg">
-                                      {hotel.hotel_photos?.find((photo: any) => photo.is_main_photo)?.photo_url ? (
-                                        <img 
-                                          src={`/uploads/hotels/${hotel.hotel_photos.find((photo: any) => photo.is_main_photo).photo_url}`}
-                                          alt={hotel.name}
-                                          className="w-full h-full object-cover"
-                                        />
-                                      ) : (
-                                        <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                                          <Hotel className="text-gray-400 h-16 w-16" />
-                                        </div>
-                                      )}
+                                      <img 
+                                        src={getHotelImageUrl(hotel)}
+                                        alt={hotel.name}
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                          (e.target as HTMLImageElement).src = '/placeholder.svg';
+                                        }}
+                                      />
                                     </div>
                                     
                                     {/* Hotel Details */}
@@ -390,17 +415,14 @@ export default function CycladicChatUI() {
                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {/* Large Hotel Image */}
                                     <div className="w-full h-64 overflow-hidden rounded-lg">
-                                      {hotel.hotel_photos?.find((photo: any) => photo.is_main_photo)?.photo_url ? (
-                                        <img 
-                                          src={`/uploads/hotels/${hotel.hotel_photos.find((photo: any) => photo.is_main_photo).photo_url}`}
-                                          alt={hotel.name}
-                                          className="w-full h-full object-cover"
-                                        />
-                                      ) : (
-                                        <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                                          <Hotel className="text-gray-400 h-16 w-16" />
-                                        </div>
-                                      )}
+                                      <img 
+                                        src={getHotelImageUrl(hotel)}
+                                        alt={hotel.name}
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                          (e.target as HTMLImageElement).src = '/placeholder.svg';
+                                        }}
+                                      />
                                     </div>
                                     
                                     <div>
