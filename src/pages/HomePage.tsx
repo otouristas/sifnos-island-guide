@@ -30,7 +30,7 @@ export default function HomePage() {
       {/* Hero Section with Search */}
       <HeroSection />
 
-      {/* Featured Hotels Section */}
+      {/* Featured Hotels Section - Enhanced to show ALK HOTEL and others */}
       <FeaturedHotelsSection />
       
       {/* Touristas AI Banner CTA Section */}

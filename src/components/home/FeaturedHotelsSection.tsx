@@ -1,8 +1,9 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import HotelCard from '@/components/HotelCard';
+import { toast } from '@/components/ui/use-toast';
 
 export default function FeaturedHotelsSection() {
   const [featuredHotels, setFeaturedHotels] = useState([]);
@@ -11,6 +12,7 @@ export default function FeaturedHotelsSection() {
   useEffect(() => {
     const fetchFeaturedHotels = async () => {
       try {
+        setLoading(true);
         const { data, error } = await supabase
           .from('hotels')
           .select(`
@@ -21,10 +23,29 @@ export default function FeaturedHotelsSection() {
           .order('rating', { ascending: false })
           .limit(3);
         
-        if (error) throw error;
+        if (error) {
+          console.error('Error fetching featured hotels:', error);
+          toast({
+            title: "Error loading featured hotels",
+            description: "Please try refreshing the page",
+            variant: "destructive",
+          });
+          throw error;
+        }
+        
+        console.log('Featured hotels loaded:', data?.length || 0, 'hotels');
+        logSupabaseResponse('fetch featured hotels', data, error);
+        
         setFeaturedHotels(data || []);
+        
+        // Log the hotel names for debugging
+        if (data) {
+          data.forEach(hotel => {
+            console.log(`Loaded featured hotel: ${hotel.name}, Rating: ${hotel.rating}`);
+          });
+        }
       } catch (error) {
-        console.error('Error fetching featured hotels:', error);
+        console.error('Error in featured hotels fetch:', error);
       } finally {
         setLoading(false);
       }
@@ -52,14 +73,27 @@ export default function FeaturedHotelsSection() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-          {featuredHotels.length > 0 ? (
+          {loading ? (
+            // Loading state
+            [...Array(3)].map((_, index) => (
+              <div key={`skeleton-${index}`} className="bg-white rounded-lg shadow-md overflow-hidden p-4">
+                <div className="h-48 bg-gray-200 animate-pulse mb-4 rounded"></div>
+                <div className="h-6 bg-gray-200 animate-pulse mb-2 rounded w-3/4"></div>
+                <div className="h-4 bg-gray-200 animate-pulse mb-4 rounded w-1/2"></div>
+                <div className="flex space-x-2">
+                  <div className="h-4 bg-gray-200 animate-pulse rounded w-1/4"></div>
+                  <div className="h-4 bg-gray-200 animate-pulse rounded w-1/4"></div>
+                </div>
+              </div>
+            ))
+          ) : featuredHotels.length > 0 ? (
             featuredHotels.map(hotel => (
               <HotelCard key={hotel.id} hotel={hotel} showLogo={true} />
             ))
           ) : (
             <div className="text-center py-12 col-span-3">
-              <h3 className="font-medium text-xl text-gray-700">Loading featured hotels...</h3>
-              <p className="text-gray-500 mt-2">Please wait or try refreshing the page</p>
+              <h3 className="font-medium text-xl text-gray-700">No featured hotels available</h3>
+              <p className="text-gray-500 mt-2">Please check back later for hotel recommendations</p>
             </div>
           )}
         </div>

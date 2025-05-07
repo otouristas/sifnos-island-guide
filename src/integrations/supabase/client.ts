@@ -69,6 +69,19 @@ export function getHotelRoomImagePath(photoUrl: string | undefined, hotelName: s
     }
   }
   
+  // For ALK HOTEL, handle paths with the subdirectory
+  if (hotelName === 'ALK HOTEL™') {
+    if (photoUrl.includes('alk-hotel-sifnos/')) {
+      return `/uploads/hotels/${photoUrl}${cacheBuster}`;
+    } else if (photoUrl.startsWith('/')) {
+      // Handle absolute paths
+      return `${photoUrl}${cacheBuster}`;
+    } else {
+      // Ensure proper subdirectory path
+      return `/uploads/hotels/alk-hotel-sifnos/${photoUrl}${cacheBuster}`;
+    }
+  }
+  
   // For other hotels, use the standard path
   return `/uploads/hotels/${photoUrl}${cacheBuster}`;
 }
