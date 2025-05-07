@@ -30,9 +30,9 @@ const SponsoredHotelCard = ({ hotel }: SponsoredHotelCardProps) => {
 
   return (
     <div className="relative col-span-full mb-4">
-      <div className="bg-gradient-to-r from-[#1A1F2C] to-[#6E59A5] rounded-lg shadow-xl overflow-hidden transition-transform hover:shadow-2xl transform hover:-translate-y-1">
+      <div className="bg-gradient-to-r from-[#1A1F2C] to-[#E3D7C3] rounded-lg shadow-xl overflow-hidden transition-transform hover:shadow-2xl transform hover:-translate-y-1">
         <div className="absolute top-4 left-4 z-10">
-          <Badge className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white font-semibold px-3 py-1 flex items-center gap-1">
+          <Badge className="bg-[#E3D7C3] hover:bg-[#d0c5b2] text-[#1A1F2C] font-semibold px-3 py-1 flex items-center gap-1">
             <Award size={14} className="mr-1" /> SPONSORED
           </Badge>
         </div>
@@ -63,7 +63,7 @@ const SponsoredHotelCard = ({ hotel }: SponsoredHotelCardProps) => {
                   )}
                   <h3 className="text-2xl font-bold">{hotel.name}</h3>
                 </div>
-                <div className="flex items-center bg-[#9b87f5] px-3 py-1 rounded-full">
+                <div className="flex items-center bg-[#E3D7C3] px-3 py-1 rounded-full text-[#1A1F2C]">
                   <span className="font-bold text-lg mr-1">{hotel.rating?.toFixed(1) || "5.0"}</span>
                   <span className="text-xs opacity-90">/ 5</span>
                 </div>
@@ -74,28 +74,28 @@ const SponsoredHotelCard = ({ hotel }: SponsoredHotelCardProps) => {
                 <span className="ml-2 text-sm text-gray-300">{hotel.review_count || "Exceptional"}</span>
               </div>
               
-              <p className="text-gray-300 mb-4">{hotel.location || "Located at the heart of Platis Gialos, Sifnos"}</p>
+              <p className="text-gray-300 mb-4">{hotel.location || "Located at Kamares, Sifnos"}</p>
               
               <div className="mb-4">
-                <h4 className="text-[#D6BCFA] font-semibold mb-2">Amenities:</h4>
+                <h4 className="text-[#E3D7C3] font-semibold mb-2">Amenities:</h4>
                 <div className="flex flex-wrap gap-2">
                   {hotel.hotel_amenities?.slice(0, 4).map((amenity, i) => (
-                    <span key={i} className="text-xs bg-[#6E59A5]/50 px-2 py-1 rounded-full">
+                    <span key={i} className="text-xs bg-[#E3D7C3]/30 px-2 py-1 rounded-full text-[#E3D7C3]">
                       {amenity.amenity}
                     </span>
                   )) || (
                     <>
-                      <span className="text-xs bg-[#6E59A5]/50 px-2 py-1 rounded-full">Free WiFi</span>
-                      <span className="text-xs bg-[#6E59A5]/50 px-2 py-1 rounded-full">Breakfast Included</span>
-                      <span className="text-xs bg-[#6E59A5]/50 px-2 py-1 rounded-full">Sea View</span>
-                      <span className="text-xs bg-[#6E59A5]/50 px-2 py-1 rounded-full">Pool Access</span>
+                      <span className="text-xs bg-[#E3D7C3]/30 px-2 py-1 rounded-full text-[#E3D7C3]">Free WiFi</span>
+                      <span className="text-xs bg-[#E3D7C3]/30 px-2 py-1 rounded-full text-[#E3D7C3]">Breakfast Included</span>
+                      <span className="text-xs bg-[#E3D7C3]/30 px-2 py-1 rounded-full text-[#E3D7C3]">Sea View</span>
+                      <span className="text-xs bg-[#E3D7C3]/30 px-2 py-1 rounded-full text-[#E3D7C3]">Pool Access</span>
                     </>
                   )}
                 </div>
               </div>
               
               <div className="mt-auto">
-                <div className="inline-block bg-[#9b87f5] hover:bg-[#7E69AB] transition-colors text-white font-semibold px-6 py-2 rounded-full">
+                <div className="inline-block bg-[#E3D7C3] hover:bg-[#d0c5b2] transition-colors text-[#1A1F2C] font-semibold px-6 py-2 rounded-full">
                   View Details
                 </div>
               </div>

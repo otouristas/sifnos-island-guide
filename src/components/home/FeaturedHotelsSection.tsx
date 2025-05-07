@@ -73,7 +73,7 @@ export default function FeaturedHotelsSection() {
           const defaultAlkHotel = {
             id: 'alk-hotel-id',
             name: 'ALK HOTEL™',
-            location: 'Platis Gialos, Sifnos',
+            location: 'Kamares, Sifnos',
             rating: 5,
             hotel_types: ['luxury-hotels', 'beach-hotels'],
             logo_url: 'alk-hotel-sifnos/logo.png',
