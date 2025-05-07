@@ -62,7 +62,7 @@ serve(async (req) => {
       }),
     });
 
-    // Return the streaming response
+    // Return the streaming response directly without modifying it
     return new Response(response.body, {
       headers: {
         ...corsHeaders,

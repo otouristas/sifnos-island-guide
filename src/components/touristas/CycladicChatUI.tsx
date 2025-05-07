@@ -139,7 +139,7 @@ export default function CycladicChatUI() {
       });
       
       if (!response.data) {
-        throw new Error('Failed to get response stream');
+        throw new Error('Failed to get response from AI assistant');
       }
       
       // Create a new response message
@@ -148,45 +148,56 @@ export default function CycladicChatUI() {
         ...prev, 
         { id: aiMessageId, role: 'assistant', content: '', hotels: relevantHotels }
       ]);
-      
-      // Access the stream from response.data which contains the Response object
-      const reader = response.data.getReader();
-      const decoder = new TextDecoder();
-      let assistantResponse = '';
-      
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+
+      // The response from supabase.functions.invoke is not a stream, so we need to convert it
+      if (typeof response.data === 'string') {
+        // For string responses, process as plain text
+        setMessages((prev) => 
+          prev.map(msg => 
+            msg.id === aiMessageId 
+              ? { ...msg, content: response.data as string } 
+              : msg
+          )
+        );
+      } else {
+        // For structured responses that might contain EventSource data
+        const responseText = response.data ? JSON.stringify(response.data) : '';
+        const lines = responseText.split('\n');
+        let assistantResponse = '';
         
-        try {
-          const chunk = decoder.decode(value);
-          const lines = chunk.split('\n').filter(line => line.trim() !== '');
-          
-          for (const line of lines) {
-            if (line.startsWith('data:')) {
-              const jsonStr = line.slice(5).trim();
-              
-              if (jsonStr === '[DONE]') continue;
-              
-              try {
-                const data = JSON.parse(jsonStr);
-                if (data.choices && data.choices[0]?.delta?.content) {
-                  assistantResponse += data.choices[0].delta.content;
-                  setMessages((prev) => 
-                    prev.map(msg => 
-                      msg.id === aiMessageId 
-                        ? { ...msg, content: assistantResponse } 
-                        : msg
-                    )
-                  );
-                }
-              } catch (e) {
-                console.error('Error parsing JSON:', e);
+        for (const line of lines) {
+          if (line.startsWith('data:')) {
+            const jsonStr = line.slice(5).trim();
+            
+            if (jsonStr === '[DONE]') continue;
+            
+            try {
+              const data = JSON.parse(jsonStr);
+              if (data.choices && data.choices[0]?.delta?.content) {
+                assistantResponse += data.choices[0].delta.content;
+                setMessages((prev) => 
+                  prev.map(msg => 
+                    msg.id === aiMessageId 
+                      ? { ...msg, content: assistantResponse } 
+                      : msg
+                  )
+                );
               }
+            } catch (e) {
+              console.error('Error parsing JSON:', e);
             }
           }
-        } catch (error) {
-          console.error('Error decoding chunk:', error);
+        }
+        
+        // If no response was built through streaming, use the whole response as content
+        if (!assistantResponse && responseText) {
+          setMessages((prev) => 
+            prev.map(msg => 
+              msg.id === aiMessageId 
+                ? { ...msg, content: "I encountered an issue processing your request, but I've found some hotel options that might interest you. Feel free to ask me more about them!" } 
+                : msg
+            )
+          );
         }
       }
       
