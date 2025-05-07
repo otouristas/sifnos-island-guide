@@ -64,13 +64,13 @@ const SponsoredHotelCard = ({ hotel }: SponsoredHotelCardProps) => {
                   <h3 className="text-2xl font-bold">{hotel.name}</h3>
                 </div>
                 <div className="flex items-center bg-[#E3D7C3] px-3 py-1 rounded-full text-[#1A1F2C]">
-                  <span className="font-bold text-lg mr-1">{hotel.rating?.toFixed(1) || "5.0"}</span>
+                  <span className="font-bold text-lg mr-1">5.0</span>
                   <span className="text-xs opacity-90">/ 5</span>
                 </div>
               </div>
               
               <div className="flex items-center mb-4">
-                {renderStars(hotel.rating || 5)}
+                {renderStars(5)}
                 <span className="ml-2 text-sm text-gray-300">{hotel.review_count || "Exceptional"}</span>
               </div>
               
