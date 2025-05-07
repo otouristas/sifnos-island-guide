@@ -1,6 +1,7 @@
 
 import React from 'react';
 import HotelLogo from './HotelLogo';
+import { Badge } from '../ui/badge';
 
 interface HotelDetailsProps {
   hotel: any;
@@ -43,9 +44,13 @@ const HotelDetails = ({ hotel, hotelLogoUrl, showLogo }: HotelDetailsProps) => {
             }
             
             return (
-              <span key={index} className="text-xs bg-sifnos-turquoise/10 text-sifnos-deep-blue px-2 py-1 rounded-full">
+              <Badge 
+                key={index} 
+                variant="outline" 
+                className="text-xs bg-sifnos-turquoise/10 text-sifnos-deep-blue"
+              >
                 {displayType}
-              </span>
+              </Badge>
             );
           })}
         </div>

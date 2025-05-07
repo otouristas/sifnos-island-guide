@@ -57,7 +57,15 @@ export default function HotelTypePage() {
   }
   
   // Create a dynamic SEO description based on hotel type
-  const seoDescription = `Discover ${hotelType.title.toLowerCase()} in Sifnos - hand-selected accommodations offering ${hotelType.shortDescription.toLowerCase()}. Compare amenities, read verified guest reviews, and secure the best rates with our price-match guarantee.`;
+  let seoDescription = `Discover ${hotelType.title.toLowerCase()} in Sifnos - hand-selected accommodations offering ${hotelType.shortDescription.toLowerCase()}. Compare amenities, read verified guest reviews, and secure the best rates with our price-match guarantee.`;
+  
+  // Special handling for villas to enhance SEO
+  if (slug === 'villas') {
+    seoDescription = `Experience the ultimate luxury in Sifnos with exclusive private villas featuring stunning sea views, private pools, and premium amenities. Our hand-picked selection of luxury villas offers the perfect retreat for discerning travelers seeking privacy, space, and exceptional comfort.`;
+  }
+  
+  // Use the appropriate schema type for villas
+  const schemaType = slug === 'villas' ? 'Villa' : 'Hotel';
   
   const pageTitle = `${hotelType.title} in Sifnos - Best Places to Stay`;
   
@@ -67,14 +75,17 @@ export default function HotelTypePage() {
         title={pageTitle}
         description={seoDescription}
         keywords={hotelType.keywords}
-        schemaType="Hotel"
+        schemaType={schemaType}
         canonical={`https://hotelssifnos.com/hotel-types/${slug}`}
         imageUrl={hotelType.imageUrl}
       />
       
       <div className="container mx-auto px-4">
         <Breadcrumbs 
-          items={[{ label: 'Hotels', href: '/hotels' }]}
+          items={[
+            { label: 'Hotels', href: '/hotels' },
+            { label: 'Hotel Types', href: '/hotel-types' }
+          ]}
           currentPage={hotelType.title}
         />
         
@@ -123,7 +134,8 @@ export default function HotelTypePage() {
                 ))
               ) : (
                 <div className="col-span-3 text-center py-12">
-                  <h3 className="font-medium text-xl text-gray-700">No hotels found in this category</h3>
+                  <h3 className="font-medium text-xl text-gray-700">No properties found in this category</h3>
+                  <p className="mt-2 text-gray-600">Check back soon as we add more {hotelType.title.toLowerCase()} to our collection.</p>
                 </div>
               )}
             </div>
