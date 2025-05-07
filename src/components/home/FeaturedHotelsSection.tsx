@@ -37,11 +37,32 @@ export default function FeaturedHotelsSection() {
         console.log('Featured hotels loaded:', data?.length || 0, 'hotels');
         logSupabaseResponse('fetch featured hotels', data, error);
         
-        setFeaturedHotels(data || []);
+        // Process the data to add special handling for ALK HOTEL
+        const processedData = data?.map(hotel => {
+          if (hotel.name === 'ALK HOTEL™') {
+            // Add logo path and photos for ALK HOTEL
+            return {
+              ...hotel,
+              logo_url: 'alk-hotel-sifnos/logo.png',
+              hotel_photos: [
+                { id: 'alk-1', photo_url: 'alk-hotel-sifnos/alk-hotel-feature.jpeg', is_main_photo: true },
+                { id: 'alk-2', photo_url: 'alk-hotel-sifnos/1.jpg_1.jpeg', is_main_photo: false },
+                { id: 'alk-3', photo_url: 'alk-hotel-sifnos/3.jpg.jpeg', is_main_photo: false },
+                { id: 'alk-4', photo_url: 'alk-hotel-sifnos/148.jpg.jpeg', is_main_photo: false },
+                { id: 'alk-5', photo_url: 'alk-hotel-sifnos/211.jpg.jpeg', is_main_photo: false },
+                { id: 'alk-6', photo_url: 'alk-hotel-sifnos/image.php_1.jpeg', is_main_photo: false },
+                { id: 'alk-7', photo_url: 'alk-hotel-sifnos/image.php_6.jpeg', is_main_photo: false },
+              ]
+            };
+          }
+          return hotel;
+        });
+        
+        setFeaturedHotels(processedData || []);
         
         // Log the hotel names for debugging
-        if (data) {
-          data.forEach(hotel => {
+        if (processedData) {
+          processedData.forEach(hotel => {
             console.log(`Loaded featured hotel: ${hotel.name}, Rating: ${hotel.rating}`);
           });
         }

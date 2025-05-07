@@ -115,6 +115,25 @@ export default function HotelDetailPage() {
     }
   ];
 
+  // Define the hotel photos for ALK HOTEL
+  const alkHotelPhotos = [
+    { id: 'alk-1', photo_url: 'alk-hotel-sifnos/alk-hotel-feature.jpeg', is_main_photo: true, description: 'ALK HOTEL Exterior' },
+    { id: 'alk-2', photo_url: 'alk-hotel-sifnos/1.jpg_1.jpeg', is_main_photo: false, description: 'Hotel View' },
+    { id: 'alk-3', photo_url: 'alk-hotel-sifnos/3.jpg.jpeg', is_main_photo: false, description: 'Reception Area' },
+    { id: 'alk-4', photo_url: 'alk-hotel-sifnos/148.jpg.jpeg', is_main_photo: false, description: 'Room Interior' },
+    { id: 'alk-5', photo_url: 'alk-hotel-sifnos/211.jpg.jpeg', is_main_photo: false, description: 'Hotel Grounds' },
+    { id: 'alk-6', photo_url: 'alk-hotel-sifnos/image.php_1.jpeg', is_main_photo: false, description: 'Outdoor Area' },
+    { id: 'alk-7', photo_url: 'alk-hotel-sifnos/image.php_6.jpeg', is_main_photo: false, description: 'Hotel Detail' }
+  ];
+  
+  // Define room type images for ALK HOTEL
+  const alkHotelRoomImages = {
+    "Comfort Double Room": "alk-hotel-sifnos/148.jpg.jpeg",
+    "Comfort Triple Room": "alk-hotel-sifnos/triple-room.jpeg",
+    "Superior Room with Sea View": "alk-hotel-sifnos/superior-sea-view.jpeg",
+    "Superior Plus": "alk-hotel-sifnos/superior-plus.jpeg"
+  };
+
   useEffect(() => {
     const fetchHotelDetails = async () => {
       try {
@@ -200,6 +219,25 @@ export default function HotelDetailPage() {
           
           // Replace Google Maps URL with the provided iframe URL
           hotelData.google_map_url = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3189.346087785213!2d24.720471076274226!3d36.929896260377085!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1498f3af72130097%3A0x80714f4ef96841f0!2sVilla%20Olivia%20Clara!5e0!3m2!1sen!2sgr!4v1746535854585!5m2!1sen!2sgr";
+        }
+        
+        // Special handling for ALK HOTEL - add photos and room images
+        if (hotelData.name === 'ALK HOTEL™') {
+          hotelData.hotel_photos = alkHotelPhotos;
+          hotelData.logo_path = 'alk-hotel-sifnos/logo.png';
+          
+          // Add image paths to room types if they exist
+          if (hotelData.hotel_rooms && hotelData.hotel_rooms.length > 0) {
+            hotelData.hotel_rooms = hotelData.hotel_rooms.map(room => {
+              if (alkHotelRoomImages[room.name]) {
+                room.photo_url = alkHotelRoomImages[room.name];
+              }
+              return room;
+            });
+          }
+          
+          // Replace Google Maps URL with the provided iframe URL
+          hotelData.google_map_url = "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d50987.850653825975!2d24.682137!3d36.992123!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x149892d0063e93f3%3A0x6ec732a582e2692!2zQUxLIEhPVEVM4oSi!5e0!3m2!1sel!2sus!4v1746620293627!5m2!1sel!2sus";
         }
         
         setHotel(hotelData);
@@ -316,17 +354,19 @@ export default function HotelDetailPage() {
   // Update the canonical URL and metadata to use the slug
   const hotelSlug = generateHotelUrl(hotel.name);
   
-  // Check if current hotel is Meropi Rooms, Filadaki Villas, Morpheas Pension, or Villa Olivia Clara
+  // Check if current hotel is Meropi Rooms, Filadaki Villas, Morpheas Pension, Villa Olivia Clara, or ALK HOTEL
   const isMeropiRooms = hotel.id === '0c9632b6-db5c-4179-8122-0003896e465e';
   const isFiladakiVillas = hotel.name === 'Filadaki Villas';
   const isMorpheasPension = hotel.name === 'Morpheas Pension & Apartments';
   const isVillaOliviaClara = hotel.name === 'Villa Olivia Clara';
+  const isAlkHotel = hotel.name === 'ALK HOTEL™';
   
   // Fixed Google Maps URLs
   const meropiMapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3780.3010959320573!2d24.67395307627629!3d36.98818015707993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x149892d141f2e833%3A0x82d07f304d07c20a!2sMeropi%20Rooms%20%26%20Apartments!5e1!3m2!1sen!2sgr!4v1746223266808!5m2!1sen!2sgr";
   const filadakiMapUrl = "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12746.806122751592!2d24.66837674455056!3d36.99305700312019!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x149892d3d403b033%3A0x82243ddb15a8b694!2sFiladaki%20Villas!5e0!3m2!1sen!2sgr!4v1746532630259!5m2!1sen!2sgr";
   const morpheasMapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3186.83715183455!2d24.67734841229081!3d36.98982017207772!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x149892d208a2cf15%3A0xf0ca16e2b551aede!2sMorfeas%20Pension!5e0!3m2!1sen!2sgr!4v1746533638366!5m2!1sen!2sgr";
   const villaOliviaMapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3189.346087785213!2d24.720471076274226!3d36.929896260377085!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1498f3af72130097%3A0x80714f4ef96841f0!2sVilla%20Olivia%20Clara!5e0!3m2!1sen!2sgr!4v1746535854585!5m2!1sen!2sgr";
+  const alkHotelMapUrl = "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d50987.850653825975!2d24.682137!3d36.992123!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x149892d0063e93f3%3A0x6ec732a582e2692!2zQUxLIEhPVEVM4oSi!5e0!3m2!1sel!2sus!4v1746620293627!5m2!1sel!2sus";
 
   // Render custom reviews for Villa Olivia Clara
   const renderCustomReviews = () => {
@@ -887,6 +927,7 @@ export default function HotelDetailPage() {
                       isMorpheasPension ? morpheasMapUrl : 
                       isFiladakiVillas ? filadakiMapUrl : 
                       isMeropiRooms ? meropiMapUrl : 
+                      isAlkHotel ? alkHotelMapUrl : 
                       hotel?.google_map_url
                     }
                     width="100%"
