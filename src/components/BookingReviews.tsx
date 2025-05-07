@@ -71,7 +71,9 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
       setRefreshing(true);
       
       // Trigger the edge function to update reviews
-      const { data, error } = await supabase.functions.invoke('fetch-booking-reviews');
+      const { data, error } = await supabase.functions.invoke('fetch-booking-reviews', {
+        body: { hotelId: hotelId }
+      });
       
       if (error) {
         console.error('Edge function error:', error);

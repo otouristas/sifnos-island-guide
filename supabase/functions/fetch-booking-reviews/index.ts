@@ -12,7 +12,8 @@ const corsHeaders = {
 const hotelUrls = {
   "0c9632b6-db5c-4179-8122-0003896e465e": "https://www.booking.com/hotel/gr/meropi-kamares.el.html", // Meropi Rooms
   "fdc93748-c38d-48b0-8ca4-9634bf1b6df1": "https://www.booking.com/hotel/gr/filadaki-house.en-gb.html", // Filadaki Villas
-  "ea18e35d-aba7-41b9-b0e5-1c827761cf81": "https://www.booking.com/hotel/gr/morpheas-pension-rooms-amp-apartments.en-gb.html" // Morpheas Pension
+  "ea18e35d-aba7-41b9-b0e5-1c827761cf81": "https://www.booking.com/hotel/gr/morpheas-pension-rooms-amp-apartments.en-gb.html", // Morpheas Pension
+  "24b83c2f-4ba3-4665-a676-e95b3c3be3b1": "https://www.booking.com/hotel/gr/alk.el.html" // ALK HOTEL
 };
 
 serve(async (req) => {
@@ -320,6 +321,38 @@ async function scrapeBookingReviews(hotelId, bookingUrl) {
             rating: 8.7,
             comment: "Very convenient location near the port. The room was simple but comfortable and clean. The host was very accommodating.",
             date: new Date(2023, 9, 1)
+          }
+        ];
+      } else if (hotelId === "24b83c2f-4ba3-4665-a676-e95b3c3be3b1") {
+        // ALK HOTEL mock data
+        return [
+          {
+            name: "Dimitris M.",
+            country: "Greece",
+            rating: 9.5,
+            comment: "Amazing location just steps from Kamares beach. Exceptional staff and very comfortable, modern rooms. The rooftop terrace has stunning views of the bay.",
+            date: new Date(2025, 4, 2)
+          },
+          {
+            name: "Laura S.",
+            country: "Germany",
+            rating: 9.0,
+            comment: "Beautiful Cycladic style hotel with all modern amenities. The staff was very helpful with restaurant recommendations and transportation arrangements.",
+            date: new Date(2025, 3, 15)
+          },
+          {
+            name: "James P.",
+            country: "United Kingdom",
+            rating: 8.5,
+            comment: "Great value for money. Clean, comfortable rooms and excellent breakfast selection with local products. Perfect location for exploring Sifnos.",
+            date: new Date(2025, 4, 5)
+          },
+          {
+            name: "Sofia K.",
+            country: "Italy",
+            rating: 9.2,
+            comment: "Loved the minimalist design and attention to detail. The hotel is perfectly situated near restaurants, shops, and the port while still being peaceful.",
+            date: new Date(2025, 3, 28)
           }
         ];
       } else {
