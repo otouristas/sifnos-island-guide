@@ -5,7 +5,7 @@ import { Send, Loader2, Hotel, Star, MapPin, X, User, Bot, Heart, Search } from 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { HotelCard } from '@/components/HotelCard';
+import HotelCard from '@/components/HotelCard';
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { useMediaQuery } from 'react-responsive';
@@ -138,7 +138,7 @@ export default function CycladicChatUI() {
         }
       });
       
-      if (!response.body) {
+      if (!response.data) {
         throw new Error('Failed to get response stream');
       }
       
@@ -149,8 +149,8 @@ export default function CycladicChatUI() {
         { id: aiMessageId, role: 'assistant', content: '', hotels: relevantHotels }
       ]);
       
-      // Read the stream
-      const reader = response.body.getReader();
+      // Access the stream from response.data which contains the Response object
+      const reader = response.data.getReader();
       const decoder = new TextDecoder();
       let assistantResponse = '';
       
