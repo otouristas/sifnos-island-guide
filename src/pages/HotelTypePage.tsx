@@ -28,17 +28,34 @@ export default function HotelTypePage() {
     
     const fetchHotels = async () => {
       try {
-        // Now we filter by the hotel_types array column that contains the slug
-        const { data, error } = await supabase
-          .from('hotels')
-          .select(`
-            *,
-            hotel_amenities(amenity),
-            hotel_photos(id, photo_url, is_main_photo)
-          `)
-          .contains('hotel_types', [slug])
-          .limit(9);
-          
+        let query;
+        
+        // Special handling for villas page - specifically fetch Filadaki Villas and Villa Olivia Clara
+        if (slug === 'villas') {
+          query = supabase
+            .from('hotels')
+            .select(`
+              *,
+              hotel_amenities(amenity),
+              hotel_photos(id, photo_url, is_main_photo)
+            `)
+            .or('name.ilike.%Filadaki%,name.ilike.%Villa Olivia Clara%')
+            .limit(9);
+        } else {
+          // Standard filtering for other hotel types
+          query = supabase
+            .from('hotels')
+            .select(`
+              *,
+              hotel_amenities(amenity),
+              hotel_photos(id, photo_url, is_main_photo)
+            `)
+            .contains('hotel_types', [slug])
+            .limit(9);
+        }
+        
+        const { data, error } = await query;
+            
         if (error) throw error;
         setHotels(data || []);
         console.log(`Found ${data?.length || 0} hotels for hotel type: ${slug}`);
