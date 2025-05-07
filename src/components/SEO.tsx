@@ -5,7 +5,7 @@ interface SEOProps {
   title: string;
   description: string;
   keywords?: string[];
-  schemaType?: 'Hotel' | 'Villa' | 'TravelAgency' | 'Organization' | 'Article' | 'TouristDestination' | 'FAQPage' | 'LocalBusiness';
+  schemaType?: 'Hotel' | 'Villa' | 'TravelAgency' | 'Organization' | 'Article' | 'TouristDestination';
   canonical?: string;
   imageUrl?: string;
   datePublished?: string;
@@ -21,21 +21,6 @@ interface SEOProps {
     amenities?: string[];
     imageUrl?: string;
     telephone?: string;
-    coordinates?: { latitude: string; longitude: string };
-    checkInTime?: string;
-    checkOutTime?: string;
-    roomCount?: number;
-    reviewCount?: number;
-  };
-  faqData?: {
-    questions: Array<{ question: string; answer: string }>;
-  };
-  locationData?: {
-    name: string;
-    description?: string;
-    attractions?: string[];
-    coordinates?: { latitude: string; longitude: string };
-    images?: string[];
   };
 }
 
@@ -58,9 +43,7 @@ export default function SEO({
   dateModified,
   author = 'Hotels Sifnos',
   noIndex = false,
-  hotelData,
-  faqData,
-  locationData
+  hotelData
 }: SEOProps) {
   // Use the provided image or fall back to the default one
   const ogImage = imageUrl || (hotelData?.imageUrl || 'https://hotelssifnos.com/uploads/sifnos-og-image.jpg');
@@ -111,8 +94,7 @@ export default function SEO({
   
   // Get the unique description
   const uniqueDescription = getUniqueDescription();
-
-  // Base schema for any page
+  
   let schemaData: SchemaData = {
     "@context": "https://schema.org",
     "@type": schemaType,
@@ -132,7 +114,6 @@ export default function SEO({
     }
   };
 
-  // Enhanced Article schema
   if (schemaType === 'Article') {
     schemaData = {
       ...schemaData,
@@ -144,41 +125,20 @@ export default function SEO({
       "author": {
         "@type": "Person",
         "name": author
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "Hotels Sifnos",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://hotelssifnos.com/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png"
-        }
-      },
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": formattedCanonical
       }
     };
-  } 
-  // Enhanced TouristDestination schema
-  else if (schemaType === 'TouristDestination') {
+  } else if (schemaType === 'TouristDestination') {
     schemaData = {
       ...schemaData,
       "description": uniqueDescription,
       "touristType": ["Beach tourism", "Cultural tourism", "Culinary tourism"],
       "geo": {
         "@type": "GeoCoordinates",
-        "latitude": locationData?.coordinates?.latitude || "36.9777",
-        "longitude": locationData?.coordinates?.longitude || "24.7458"
-      },
-      "image": locationData?.images || [ogImage],
-      "includesAttraction": locationData?.attractions?.map(attraction => ({
-        "@type": "TouristAttraction",
-        "name": attraction
-      })) || []
+        "latitude": "36.9777",
+        "longitude": "24.7458"
+      }
     };
-  } 
-  // Enhanced Hotel/Villa schema
-  else if (schemaType === 'Hotel' || schemaType === 'Villa') {
+  } else if (schemaType === 'Hotel' || schemaType === 'Villa') {
     // Enhanced schema for hotels and villas with more detailed information
     schemaData = {
       ...schemaData,
@@ -191,28 +151,15 @@ export default function SEO({
         "addressCountry": "Greece"
       },
       "priceRange": hotelData?.priceRange || "€€€",
-      "telephone": hotelData?.telephone || "+30 2284031370",
-      "checkinTime": hotelData?.checkInTime || "14:00",
-      "checkoutTime": hotelData?.checkOutTime || "12:00",
-      "numberOfRooms": hotelData?.roomCount || "10"
+      "telephone": hotelData?.telephone || "+30 2284031370"
     };
-    
-    // Add geo coordinates if available
-    if (hotelData?.coordinates) {
-      schemaData.geo = {
-        "@type": "GeoCoordinates",
-        "latitude": hotelData.coordinates.latitude,
-        "longitude": hotelData.coordinates.longitude
-      };
-    }
     
     // Add rating if available
     if (hotelData?.rating) {
       schemaData.aggregateRating = {
         "@type": "AggregateRating",
         "ratingValue": hotelData.rating.toString(),
-        "reviewCount": hotelData.reviewCount?.toString() || "42",
-        "bestRating": "5"
+        "reviewCount": "42" // This should ideally be dynamic
       };
     }
     
@@ -223,33 +170,6 @@ export default function SEO({
         "name": amenity
       }));
     }
-  }
-  // FAQ Page schema
-  else if (schemaType === 'FAQPage' && faqData) {
-    schemaData = {
-      ...schemaData,
-      "mainEntity": faqData.questions.map(item => ({
-        "@type": "Question",
-        "name": item.question,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": item.answer
-        }
-      }))
-    };
-  }
-  // LocalBusiness enhanced schema
-  else if (schemaType === 'LocalBusiness') {
-    schemaData = {
-      ...schemaData,
-      "description": uniqueDescription,
-      "image": ogImage,
-      "telephone": "+30 2284031370",
-      "email": "info@hotelssifnos.com",
-      "openingHours": "Mo-Su 09:00-21:00",
-      "priceRange": "€€-€€€",
-      "servesCuisine": "Greek"
-    };
   }
 
   // Create SEO-optimized title

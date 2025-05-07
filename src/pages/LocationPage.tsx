@@ -1,152 +1,156 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import SEO from '@/components/SEO';
-import NotFound from './NotFound';
-import Breadcrumbs from '@/components/Breadcrumbs';
 
-// Dummy location data (replace with your actual data source)
-const locations = [
-  {
-    slug: "apollonia",
-    name: "Apollonia",
-    description: "Apollonia, the capital of Sifnos, is known for its vibrant nightlife, traditional architecture, and central location.",
-    imageUrl: "/uploads/locations/apollonia.jpg",
-    attractions: ["Agios Sostis Church", "Folklore Museum", "Steno Beach"],
-    coordinates: { latitude: "37.0011", longitude: "24.7314" }
-  },
-  {
-    slug: "kamares",
-    name: "Kamares",
-    description: "Kamares is the main port of Sifnos, offering a beautiful beach, waterfront restaurants, and easy access to other parts of the island.",
-    imageUrl: "/uploads/locations/kamares.jpg",
-    attractions: ["Kamares Beach", "Church of Agia Varvara", "Ferry Terminal"],
-    coordinates: { latitude: "36.9833", longitude: "24.6700" }
-  },
-  {
-    slug: "platis-gialos",
-    name: "Platis Gialos",
-    description: "Platis Gialos boasts one of the longest and most beautiful beaches in Sifnos, lined with tavernas and offering various water sports.",
-    imageUrl: "/uploads/locations/platis-gialos.jpg",
-    attractions: ["Platis Gialos Beach", "Windsurfing", "Beachfront Dining"],
-    coordinates: { latitude: "36.9486", longitude: "24.7231" }
-  },
-  {
-    slug: "kastro",
-    name: "Kastro",
-    description: "Kastro, the old capital of Sifnos, is a historic village built on a cliff, offering stunning sea views and medieval architecture.",
-    imageUrl: "/uploads/locations/kastro.jpg",
-    attractions: ["Church of the Seven Martyrs", "Kastro Village", "Archaeological Museum"],
-    coordinates: { latitude: "37.0083", longitude: "24.7486" }
-  },
-  {
-    slug: "vathi",
-    name: "Vathi",
-    description: "Vathi is a peaceful coastal village known for its sheltered bay, sandy beach, and traditional pottery workshops.",
-    imageUrl: "/uploads/locations/vathi.jpg",
-    attractions: ["Vathi Beach", "Pottery Workshops", "Monastery of Taxiarchis"],
-    coordinates: { latitude: "36.9333", longitude: "24.6917" }
-  },
-  {
-    slug: "faros",
-    name: "Faros",
-    description: "Faros is a charming fishing village with three sandy beaches, a picturesque harbor, and a relaxed atmosphere.",
-    imageUrl: "/uploads/locations/faros.jpg",
-    attractions: ["Faros Beach", "Glyfo Beach", "Fasolou Beach"],
-    coordinates: { latitude: "36.9667", longitude: "24.7667" }
-  }
-];
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { getLocationBySlug, Location } from '../data/locations';
+import { supabase } from '@/integrations/supabase/client';
+import SEO from '../components/SEO';
+import Breadcrumbs from '../components/Breadcrumbs';
+import HotelCard from '../components/HotelCard';
+import { MapPin } from 'lucide-react';
 
 export default function LocationPage() {
   const { slug } = useParams<{ slug: string }>();
-  const location = locations.find(loc => loc.slug === slug);
+  const [location, setLocation] = useState<Location | null>(null);
+  const [hotels, setHotels] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   
-  // Breadcrumb items
-  const breadcrumbItems = [
-    { label: 'Home', link: '/' },
-    { label: 'Locations', link: '/locations' },
-    { label: location ? location.name : 'Location', active: true },
-  ];
-  
-  // Prepare location data for schema
-  const locationSchema = location ? {
-    name: location.name,
-    description: location.description,
-    attractions: location.attractions || ["Beautiful beaches", "Local restaurants", "Historic sites"],
-    coordinates: location.coordinates || { latitude: "36.9777", longitude: "24.7458" },
-    images: [location.imageUrl]
-  } : undefined;
+  useEffect(() => {
+    if (!slug) return;
+    
+    const locationData = getLocationBySlug(slug);
+    if (!locationData) {
+      navigate('/not-found');
+      return;
+    }
+    
+    setLocation(locationData);
+    
+    const fetchHotels = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('hotels')
+          .select(`
+            *,
+            hotel_amenities(amenity),
+            hotel_photos(id, photo_url, is_main_photo)
+          `)
+          .eq('location', locationData.name);
+          
+        if (error) throw error;
+        setHotels(data || []);
+      } catch (error) {
+        console.error('Error fetching hotels:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchHotels();
+  }, [slug, navigate]);
   
   if (!location) {
-    return <NotFound />;
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
+  
+  // Create a dynamic SEO description based on location
+  const seoDescription = `Explore hotels in ${location.name}, Sifnos - ${location.shortDescription.toLowerCase()}. Find exclusive accommodations with sea views, local charm, and authentic Cycladic experiences. Compare prices and book with our best-rate guarantee.`;
+  
+  const pageTitle = `Hotels in ${location.name}, Sifnos - Best Places to Stay`;
   
   return (
     <>
       <SEO 
-        title={`${location.name}, Sifnos - Area Guide & Top Hotels`}
-        description={`Discover ${location.name} in Sifnos: local highlights, nearby attractions, beaches, and find the best accommodations in ${location.name} for your perfect Sifnos vacation.`}
-        keywords={[`${location.name} Sifnos`, `hotels in ${location.name}`, `${location.name} accommodation`, `${location.name} area guide`, 'sifnos villages']}
-        schemaType="TouristDestination" 
-        canonical={`/locations/${slug}`}
+        title={pageTitle}
+        description={seoDescription}
+        keywords={location.keywords}
+        schemaType="TouristDestination"
+        canonical={`https://hotelssifnos.com/locations/${slug}`}
         imageUrl={location.imageUrl}
-        locationData={locationSchema}
       />
       
-      <div className="bg-gray-50 py-12">
-        <div className="container mx-auto px-4">
-          {/* Breadcrumbs */}
-          <Breadcrumbs items={breadcrumbItems} />
-          
-          <div className="flex flex-col md:flex-row items-start">
-            {/* Location Image */}
-            <div className="md:w-1/2 mb-6 md:mb-0">
-              <img 
-                src={location.imageUrl} 
-                alt={location.name} 
-                className="w-full rounded-lg shadow-md" 
-              />
+      <div className="container mx-auto px-4">
+        <Breadcrumbs 
+          items={[{ label: 'Locations', href: '/locations' }]}
+          currentPage={location.name}
+        />
+        
+        {/* Hero Section */}
+        <div className="relative h-64 md:h-80 lg:h-96 rounded-xl overflow-hidden mb-8">
+          <img 
+            src={location.imageUrl} 
+            alt={`${location.name}, Sifnos`} 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black to-transparent">
+            <div className="flex items-center text-white text-sm mb-2">
+              <MapPin size={16} className="mr-1" />
+              <span>{location.name}, Sifnos Island</span>
             </div>
-            
-            {/* Location Details */}
-            <div className="md:w-1/2 md:pl-8">
-              <h1 className="text-3xl font-semibold text-gray-800 mb-4">{location.name}</h1>
-              <p className="text-gray-600 leading-relaxed mb-6">{location.description}</p>
-              
-              {/* Attractions */}
-              {location.attractions && location.attractions.length > 0 && (
-                <div>
-                  <h2 className="text-xl font-semibold text-gray-700 mb-2">Top Attractions</h2>
-                  <ul className="list-disc list-inside text-gray-600">
-                    {location.attractions.map((attraction, index) => (
-                      <li key={index}>{attraction}</li>
-                    ))}
-                  </ul>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
+              Hotels in {location.name}, Sifnos
+            </h1>
+          </div>
+        </div>
+        
+        {/* Introduction */}
+        <div className="max-w-4xl mx-auto mb-12">
+          <div className="prose prose-lg">
+            <p className="lead text-xl text-gray-700">{location.shortDescription}</p>
+            <p>{location.description}</p>
+          </div>
+        </div>
+        
+        {/* Hotels Section */}
+        <section className="my-12">
+          <h2 className="text-2xl font-bold text-sifnos-deep-blue mb-6">
+            Available Hotels in {location.name}, Sifnos
+          </h2>
+          
+          {/* Loading State */}
+          {loading && (
+            <div className="flex justify-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-sifnos-turquoise"></div>
+            </div>
+          )}
+          
+          {/* Hotels Grid */}
+          {!loading && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {hotels.length > 0 ? (
+                hotels.map(hotel => (
+                  <HotelCard key={hotel.id} hotel={hotel} showLogo={true} />
+                ))
+              ) : (
+                <div className="col-span-3 text-center py-12">
+                  <h3 className="font-medium text-xl text-gray-700">No hotels found in this location</h3>
+                  <p className="text-gray-500 mt-2">Try browsing all hotels in Sifnos</p>
+                  <Link to="/hotels" className="mt-4 inline-block px-6 py-2 bg-sifnos-turquoise text-white rounded-md hover:bg-sifnos-deep-blue transition-colors">
+                    Browse All Hotels
+                  </Link>
                 </div>
               )}
             </div>
-          </div>
-          
-          {/* Hotels in {Location} Section (Replace with actual hotel listings) */}
-          <div className="mt-10">
-            <h2 className="text-2xl font-semibold text-gray-700 mb-4">Hotels in {location.name}</h2>
-            <p className="text-gray-600">Explore our selection of hotels in {location.name} for a memorable stay.</p>
-            {/* Replace this with your actual hotel listing component */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-              <div className="bg-white rounded-lg shadow-md p-4">
-                <h3 className="text-lg font-semibold text-gray-800">Sample Hotel 1</h3>
-                <p className="text-gray-600">Description of Sample Hotel 1.</p>
-              </div>
-              <div className="bg-white rounded-lg shadow-md p-4">
-                <h3 className="text-lg font-semibold text-gray-800">Sample Hotel 2</h3>
-                <p className="text-gray-600">Description of Sample Hotel 2.</p>
-              </div>
-              <div className="bg-white rounded-lg shadow-md p-4">
-                <h3 className="text-lg font-semibold text-gray-800">Sample Hotel 3</h3>
-                <p className="text-gray-600">Description of Sample Hotel 3.</p>
-              </div>
-            </div>
-          </div>
-        </div>
+          )}
+        </section>
+        
+        {/* Nearby Attractions */}
+        <section className="my-12 bg-gray-50 p-6 rounded-lg">
+          <h2 className="text-2xl font-bold text-sifnos-deep-blue mb-4">
+            Attractions near {location.name}, Sifnos
+          </h2>
+          <p className="text-gray-700 mb-4">
+            Explore the beautiful surroundings and popular attractions near {location.name}, Sifnos.
+            Find the perfect place to stay and enjoy everything this area has to offer.
+          </p>
+          <Link 
+            to="/travel-guide" 
+            className="text-sifnos-turquoise font-medium hover:text-sifnos-deep-blue transition-colors"
+          >
+            View Travel Guide →
+          </Link>
+        </section>
       </div>
     </>
   );

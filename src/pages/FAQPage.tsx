@@ -1,66 +1,55 @@
+
 import SEO from '../components/SEO';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
-interface FAQItem {
-  question: string;
-  answer: React.ReactNode;
-}
-
 export default function FAQPage() {
-  // Define an array of FAQ items
-  const faqItems: FAQItem[] = [
-    {
-      question: "What is the best time to visit Sifnos?",
-      answer: "The best time to visit Sifnos is from late May to early October. During these months, the weather is warm and pleasant, perfect for swimming and enjoying outdoor activities. July and August are the busiest months with higher prices, while June and September offer a nice balance of good weather and fewer crowds."
-    },
-    {
-      question: "How do I get to Sifnos?",
-      answer: "Sifnos does not have an airport, so the only way to reach the island is by ferry from Athens. Ferries to Sifnos depart from the ports of Piraeus and Lavrion. The journey takes between 2.5 to 5 hours depending on the type of ferry (high-speed or conventional). During the summer season, there are also connections from other Cycladic islands."
-    },
+  const faqs = [
     {
       question: "Where should I stay in Sifnos?",
-      answer: "The best place to stay in Sifnos depends on your preferences. Apollonia is the island's capital and offers a vibrant atmosphere with many restaurants and shops. Kamares, the main port, has a nice beach and is convenient for arrivals and departures. Platis Gialos has one of the best beaches, while Kastro offers a more authentic experience in a medieval setting."
+      answer: "The best places to stay in Sifnos depend on your preferences. Apollonia is the island's capital and offers a central location with easy access to restaurants and shops. Kamares is near the main port with beautiful beaches. Platis Gialos and Vathi offer beachfront accommodations. For a more traditional feel, consider Kastro or Artemonas for their authentic Cycladic charm."
     },
     {
-      question: "What are the must-see attractions in Sifnos?",
-      answer: "Must-see attractions in Sifnos include the Church of the Seven Martyrs in Kastro, the ancient acropolis at Agios Andreas, the Monastery of Chrysopigi, the traditional pottery workshops, and the picturesque villages of Kastro, Apollonia, and Artemonas. Don't miss hiking the ancient stone paths that connect the villages."
+      question: "How do I get from Athens to Sifnos?",
+      answer: "The most common way to reach Sifnos from Athens is by ferry from the port of Piraeus. High-speed ferries take approximately 2.5-3 hours, while conventional ferries take 5-6 hours. Ferries run daily during the summer season and less frequently during winter. It's advisable to book tickets in advance, especially during the peak summer months."
     },
     {
-      question: "What is Sifnos known for?",
-      answer: "Sifnos is known for its exceptional cuisine, traditional pottery, well-preserved Cycladic architecture, and beautiful hiking trails. The island has a rich culinary tradition and is considered one of the gastronomic capitals of Greece. It's also famous for its numerous blue-domed churches and monasteries."
+      question: "What's the weather like in Sifnos?",
+      answer: "Sifnos enjoys a typical Mediterranean climate with hot, dry summers and mild winters. From June to September, temperatures typically range from 25-30°C (77-86°F) with very little rainfall. Spring (April-May) and autumn (September-October) offer pleasant temperatures around 20-25°C (68-77°F). Winter months (November-March) are mild with temperatures rarely dropping below 10°C (50°F), though this is the rainy season."
+    },
+    {
+      question: "Which is better, Serifos or Sifnos?",
+      answer: "Both islands offer unique experiences. Sifnos is known for its gastronomy, well-developed tourist infrastructure, picturesque villages, and pottery tradition. It offers more dining options and a slightly more cosmopolitan atmosphere. Serifos is more rugged and less developed, offering a more laid-back experience with beautiful beaches and fewer tourists. Sifnos might be better for first-time visitors or those seeking more amenities, while Serifos appeals to travelers looking for a quieter, more authentic experience."
     },
     {
       question: "What are the best beaches in Sifnos?",
-      answer: "Some of the best beaches in Sifnos include Platis Gialos (a long sandy beach with amenities), Vathi (a sheltered bay with calm waters), Kamares (the main port beach with facilities), Chrissopigi (a picturesque small beach near the monastery), and Faros (a family-friendly beach). For more seclusion, try Vroulidia or Apokofto."
+      answer: "Sifnos has several stunning beaches: Platis Gialos is a long, sandy beach with shallow waters, perfect for families. Vathi is a sheltered bay with calm waters and beachfront tavernas. Kamares is the main port beach with facilities and restaurants nearby. Chrysopigi offers crystal-clear waters near the iconic monastery. Faros and Glyfo are smaller, more secluded options for those seeking tranquility."
     },
     {
-      question: "Is Sifnos suitable for families?",
-      answer: "Yes, Sifnos is very suitable for families. The island has several safe, shallow beaches like Vathi and Kamares. The relaxed pace of life, friendly locals, and lack of intense nightlife make it perfect for family vacations. There are also plenty of family-friendly accommodations and restaurants across the island."
+      question: "What is Sifnos known for?",
+      answer: "Sifnos is renowned for its exceptional cuisine and is considered one of Greece's gastronomic capitals. The island is famous for its pottery tradition, with many workshops producing distinctive ceramics. Sifnos is also known for its beautiful Cycladic architecture featuring whitewashed buildings with blue details, its well-maintained hiking trails, and the iconic Chrysopigi Monastery built on a rocky promontory."
     },
     {
-      question: "How can I book a hotel in Sifnos?",
-      answer: "You can book hotels in Sifnos through our website HotelsSifnos.com, which offers a comprehensive selection of accommodations across the island. We provide detailed information, photos, and reviews to help you make an informed choice. You can also book directly through hotel websites or global booking platforms."
+      question: "Do I need a car in Sifnos?",
+      answer: "While not absolutely necessary, having a car or scooter in Sifnos is recommended to fully explore the island. The public bus service connects major villages and beaches but runs on a limited schedule. Taxis are available but can be expensive and hard to find during peak season. Renting a vehicle gives you the freedom to discover secluded beaches, mountain villages, and scenic viewpoints at your own pace."
+    },
+    {
+      question: "What are the must-try foods in Sifnos?",
+      answer: "Don't miss mastelo (lamb or goat slow-cooked in a special clay pot), revithada (chickpea stew baked in a wood-fired oven overnight), manoura (local cheese aged in wine dregs), melopita (honey cheese pie), and amygdalota (almond cookies). Sifnos is known for its slow-cooked dishes in ceramic pots, reflecting the island's pottery tradition. Many restaurants serve these traditional dishes with a modern twist."
+    },
+    {
+      question: "When is the best time to visit Sifnos?",
+      answer: "The best times to visit Sifnos are late May to June and September to early October. During these periods, you'll enjoy warm temperatures ideal for swimming, fewer crowds than in peak summer, and more reasonable accommodation prices. July and August are the hottest and busiest months with higher prices. Winter visits (November-March) offer an authentic glimpse of island life, but many tourist facilities are closed and ferry connections are limited."
     }
   ];
 
-  // Convert FAQ items to the format needed for structured data
-  const faqSchemaQuestions = faqItems.map(item => ({
-    question: item.question,
-    answer: typeof item.answer === 'string' 
-      ? item.answer 
-      : 'Please visit our FAQ page for a detailed answer.'
-  }));
-
   return (
-    <div className="bg-white min-h-screen py-16">
-      {/* SEO with FAQ Schema */}
+    <>
       <SEO 
-        title="Frequently Asked Questions About Sifnos - Hotels Sifnos"
-        description="Find answers to the most common questions about visiting Sifnos, booking accommodations, island attractions, beaches, and travel tips on our comprehensive FAQ page."
-        keywords={['sifnos faq', 'sifnos questions', 'sifnos travel guide', 'sifnos hotels faq', 'how to visit sifnos']}
-        schemaType="FAQPage"
-        canonical="/faq"
-        faqData={{ questions: faqSchemaQuestions }}
+        title="Sifnos Travel FAQs - Answers to Your Most Common Questions" 
+        description="Find answers to frequently asked questions about traveling to Sifnos, booking accommodations, transportation options, best times to visit, local customs, and practical tips for making the most of your stay on this beautiful Cycladic island."
+        keywords={['sifnos faq', 'sifnos travel questions', 'sifnos accommodation faq', 'how to get to sifnos', 'best time to visit sifnos', 'sifnos travel tips']}
+        schemaType="Organization"
+        canonical="https://hotelssifnos.com/faq"
       />
       
       {/* Hero Section */}
@@ -82,7 +71,7 @@ export default function FAQPage() {
         <div className="page-container max-w-4xl mx-auto">
           <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
             <Accordion type="single" collapsible className="space-y-4">
-              {faqItems.map((faq, index) => (
+              {faqs.map((faq, index) => (
                 <AccordionItem key={index} value={`faq-${index}`}>
                   <AccordionTrigger className="text-left font-montserrat font-semibold text-sifnos-deep-blue hover:text-sifnos-turquoise text-lg py-4">
                     {faq.question}
@@ -143,6 +132,6 @@ export default function FAQPage() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
