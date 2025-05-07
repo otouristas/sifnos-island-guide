@@ -23,7 +23,7 @@ export default function TouristasAIBanner() {
           </div>
           
           <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Find Your Perfect Stay in Sifnos with AI
+            Find Your Perfect Stay in Sifnos with Touristas AI
           </h3>
           
           <p className="text-white/90 text-lg mb-6 max-w-xl">
