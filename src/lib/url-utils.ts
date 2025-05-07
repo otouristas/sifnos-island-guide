@@ -39,6 +39,11 @@ export function generateHotelUrl(name: string): string {
     return "filadaki-villas";
   }
   
+  // Special case for ALK HOTEL
+  if (name === "ALK HOTEL™" || name.toLowerCase().includes("alk hotel")) {
+    return "alk-hotel";
+  }
+  
   return slugify(name);
 }
 
@@ -49,7 +54,8 @@ const KNOWN_HOTEL_IDS = {
   "meropi-rooms-and-apartments": "0c9632b6-db5c-4179-8122-0003896e465e",
   "morpheas-pension-apartments": null, // Will be populated once we have the real ID
   "villa-olivia-clara": null, // Will be populated once we have the real ID
-  "filadaki-villas": null // Will be populated once we have the real ID
+  "filadaki-villas": null, // Will be populated once we have the real ID
+  "alk-hotel": null // Will be populated once we have the real ID
 };
 
 /**
@@ -65,7 +71,9 @@ export async function getHotelBySlug(slug: string) {
     // Special case handling with predefined hotel IDs
     if ((slug === "meropi-rooms-and-apartments" && KNOWN_HOTEL_IDS[slug]) || 
         (slug === "morpheas-pension-apartments") ||
-        (slug === "villa-olivia-clara")) {
+        (slug === "villa-olivia-clara") ||
+        (slug === "filadaki-villas") ||
+        (slug === "alk-hotel")) {
       
       if (KNOWN_HOTEL_IDS[slug]) {
         console.log(`Using direct ID lookup for ${slug} with ID: ${KNOWN_HOTEL_IDS[slug]}`);
@@ -110,6 +118,10 @@ export async function getHotelBySlug(slug: string) {
       searchQuery = "name.ilike.%morpheas%";
     } else if (slug === "villa-olivia-clara") {
       searchQuery = "name.ilike.%villa olivia%";
+    } else if (slug === "filadaki-villas") {
+      searchQuery = "name.ilike.%filadaki%";
+    } else if (slug === "alk-hotel") {
+      searchQuery = "name.ilike.%alk hotel%";
     }
     
     const { data, error } = await supabase
@@ -146,6 +158,14 @@ export async function getHotelBySlug(slug: string) {
         hotel.name.toLowerCase().includes("olivia clara")
       );
       
+      const filadakiHotel = data.find(hotel =>
+        hotel.name.toLowerCase().includes("filadaki")
+      );
+      
+      const alkHotel = data.find(hotel =>
+        hotel.name.toLowerCase().includes("alk hotel")
+      );
+      
       if (meropiHotel && slug.includes("meropi")) {
         console.log(`Found Meropi hotel in search results: ${meropiHotel.id}`);
         return meropiHotel;
@@ -159,6 +179,16 @@ export async function getHotelBySlug(slug: string) {
       if (villaOliviaHotel && slug.includes("villa-olivia")) {
         console.log(`Found Villa Olivia Clara in search results: ${villaOliviaHotel.id}`);
         return villaOliviaHotel;
+      }
+      
+      if (filadakiHotel && slug.includes("filadaki")) {
+        console.log(`Found Filadaki Villas in search results: ${filadakiHotel.id}`);
+        return filadakiHotel;
+      }
+      
+      if (alkHotel && slug.includes("alk-hotel")) {
+        console.log(`Found ALK HOTEL in search results: ${alkHotel.id}`);
+        return alkHotel;
       }
       
       // Sort by name similarity to find the best match

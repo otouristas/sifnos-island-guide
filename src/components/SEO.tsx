@@ -1,3 +1,4 @@
+
 import { Helmet } from 'react-helmet';
 
 interface SEOProps {
@@ -64,6 +65,36 @@ export default function SEO({
     noIndex = false;
   }
   
+  // Generate unique meta descriptions for hotel pages based on their data
+  const getUniqueDescription = (): string => {
+    if (isHotelPage && hotelData) {
+      const locationPhrase = hotelData.location ? `in ${hotelData.location}, Sifnos` : 'on Sifnos Island';
+      const ratingPhrase = hotelData.rating 
+        ? `Rated ${hotelData.rating}/5 stars` 
+        : '';
+      const typePhrase = hotelData.type === 'Villa' 
+        ? 'luxury villa' 
+        : 'boutique accommodation';
+      
+      // Create unique amenities string if available
+      let amenitiesPhrase = '';
+      if (hotelData.amenities && hotelData.amenities.length > 0) {
+        // Get up to 3 notable amenities
+        const topAmenities = hotelData.amenities.slice(0, 3);
+        amenitiesPhrase = topAmenities.length > 0 
+          ? `Featuring ${topAmenities.join(', ')}` 
+          : '';
+      }
+
+      // Construct a unique description based on available data
+      return `Experience ${hotelData.name}, a ${typePhrase} ${locationPhrase}. ${ratingPhrase}. ${amenitiesPhrase}. Book your perfect Sifnos getaway today.`.replace(/\s\s+/g, ' ').trim();
+    }
+    return description;
+  };
+  
+  // Get the unique description
+  const uniqueDescription = getUniqueDescription();
+  
   let schemaData: SchemaData = {
     "@context": "https://schema.org",
     "@type": schemaType,
@@ -87,7 +118,7 @@ export default function SEO({
     schemaData = {
       ...schemaData,
       "headline": title,
-      "description": description,
+      "description": uniqueDescription,
       "image": ogImage,
       "datePublished": datePublished || new Date().toISOString(),
       "dateModified": dateModified || new Date().toISOString(),
@@ -99,7 +130,7 @@ export default function SEO({
   } else if (schemaType === 'TouristDestination') {
     schemaData = {
       ...schemaData,
-      "description": description,
+      "description": uniqueDescription,
       "touristType": ["Beach tourism", "Cultural tourism", "Culinary tourism"],
       "geo": {
         "@type": "GeoCoordinates",
@@ -111,7 +142,7 @@ export default function SEO({
     // Enhanced schema for hotels and villas with more detailed information
     schemaData = {
       ...schemaData,
-      "description": description,
+      "description": uniqueDescription,
       "image": ogImage,
       "address": {
         "@type": "PostalAddress",
@@ -161,7 +192,7 @@ export default function SEO({
     <Helmet>
       <html lang="en" />
       <title>{fullTitle}</title>
-      <meta name="description" content={description} />
+      <meta name="description" content={uniqueDescription} />
       {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
       <meta name="author" content={author} />
       
@@ -183,7 +214,7 @@ export default function SEO({
       
       {/* Open Graph tags */}
       <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
+      <meta property="og:description" content={uniqueDescription} />
       <meta property="og:type" content="website" />
       <meta property="og:url" content={formattedCanonical} />
       <meta property="og:image" content={`${ogImage}?v=${cacheBuster}`} />
@@ -194,7 +225,7 @@ export default function SEO({
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@hotelssifnos" />
       <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
+      <meta name="twitter:description" content={uniqueDescription} />
       <meta name="twitter:image" content={`${ogImage}?v=${cacheBuster}`} />
 
       {/* Additional SEO tags */}
