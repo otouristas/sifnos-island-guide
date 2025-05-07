@@ -44,6 +44,8 @@ serve(async (req) => {
     // Combine system message with user messages
     const allMessages = [systemMessage, ...messages];
     
+    console.log("Calling OpenRouter API with messages:", JSON.stringify(allMessages));
+    
     // Call OpenRouter API
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
@@ -62,6 +64,12 @@ serve(async (req) => {
       }),
     });
 
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("OpenRouter API error:", response.status, errorText);
+      throw new Error(`OpenRouter API error: ${response.status} ${errorText}`);
+    }
+    
     // Return the streaming response directly without modifying it
     return new Response(response.body, {
       headers: {

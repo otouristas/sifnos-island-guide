@@ -1,11 +1,10 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Send, Loader2, Hotel, Star, MapPin, X, User, Bot, Heart, Search } from 'lucide-react';
+import { Send, Loader2, Hotel, Star, MapPin, X, User, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import HotelCard from '@/components/HotelCard';
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { useMediaQuery } from 'react-responsive';
@@ -27,7 +26,6 @@ export default function CycladicChatUI() {
       content: 'Γεια σου! 👋 I\'m your Sifnos travel assistant. Tell me what you\'re looking for in your perfect stay - beach access, luxury amenities, family-friendly options, or budget accommodations?'
     }
   ]);
-  const [searchedHotels, setSearchedHotels] = useState<any[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const isMobile = useMediaQuery({ maxWidth: 768 });
@@ -264,41 +262,43 @@ export default function CycladicChatUI() {
                     <div className="font-medium text-center px-2 py-1 bg-white/20 backdrop-blur-sm rounded-md">
                       Recommended Hotels
                     </div>
-                    <div className="grid grid-cols-1 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                       {message.hotels.map((hotel) => (
                         <div 
                           key={hotel.id} 
                           className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
                         >
-                          <div className="flex items-center">
-                            <div className="w-16 h-16 overflow-hidden bg-gray-100 flex-shrink-0">
-                              {hotel.hotel_photos?.find((photo: any) => photo.is_main_photo)?.photo_url ? (
-                                <img 
-                                  src={`/uploads/hotels/${hotel.hotel_photos.find((photo: any) => photo.is_main_photo).photo_url}`}
-                                  alt={hotel.name}
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                                  <Hotel className="text-gray-400" />
-                                </div>
-                              )}
-                            </div>
-                            <div className="p-3 flex-1">
-                              <div className="font-semibold text-sm truncate">{hotel.name}</div>
-                              <div className="flex items-center text-xs text-gray-600 space-x-2">
-                                <div className="flex items-center">
-                                  <MapPin className="h-3 w-3 mr-1" />
-                                  <span>{hotel.location}</span>
-                                </div>
-                                <div className="flex items-center">
-                                  <Star className="h-3 w-3 mr-1 text-amber-500" />
-                                  <span>{hotel.rating}</span>
-                                </div>
+                          {/* Hotel Image */}
+                          <div className="w-full h-36 overflow-hidden bg-gray-100">
+                            {hotel.hotel_photos?.find((photo: any) => photo.is_main_photo)?.photo_url ? (
+                              <img 
+                                src={`/uploads/hotels/${hotel.hotel_photos.find((photo: any) => photo.is_main_photo).photo_url}`}
+                                alt={hotel.name}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                                <Hotel className="text-gray-400 h-10 w-10" />
                               </div>
-                              <div className="text-xs font-medium mt-1">€{hotel.price} per night</div>
+                            )}
+                          </div>
+                          
+                          {/* Hotel Info */}
+                          <div className="p-3">
+                            <div className="font-semibold text-base truncate">{hotel.name}</div>
+                            <div className="flex items-center text-xs text-gray-600 space-x-2 mt-1">
+                              <div className="flex items-center">
+                                <MapPin className="h-3 w-3 mr-1" />
+                                <span>{hotel.location}</span>
+                              </div>
+                              <div className="flex items-center">
+                                <Star className="h-3 w-3 mr-1 text-amber-500" />
+                                <span>{hotel.rating}</span>
+                              </div>
                             </div>
                           </div>
+                          
+                          {/* Hotel Details Button */}
                           {isMobile ? (
                             <Drawer>
                               <DrawerTrigger asChild>
@@ -312,7 +312,56 @@ export default function CycladicChatUI() {
                                     <h3 className="text-xl font-bold">{hotel.name}</h3>
                                     <DrawerClose><X className="h-4 w-4" /></DrawerClose>
                                   </div>
-                                  <HotelCard hotel={hotel} />
+                                  <div className="space-y-4">
+                                    {/* Large Hotel Image */}
+                                    <div className="w-full h-52 overflow-hidden rounded-lg">
+                                      {hotel.hotel_photos?.find((photo: any) => photo.is_main_photo)?.photo_url ? (
+                                        <img 
+                                          src={`/uploads/hotels/${hotel.hotel_photos.find((photo: any) => photo.is_main_photo).photo_url}`}
+                                          alt={hotel.name}
+                                          className="w-full h-full object-cover"
+                                        />
+                                      ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                                          <Hotel className="text-gray-400 h-16 w-16" />
+                                        </div>
+                                      )}
+                                    </div>
+                                    
+                                    {/* Hotel Details */}
+                                    <div>
+                                      <div className="flex items-center space-x-2">
+                                        <MapPin className="h-4 w-4 text-sifnos-deep-blue" />
+                                        <span className="text-gray-700">{hotel.location}</span>
+                                      </div>
+                                      <div className="flex items-center space-x-2 mt-1">
+                                        <Star className="h-4 w-4 text-amber-500" />
+                                        <span className="text-gray-700">Rating: {hotel.rating}</span>
+                                      </div>
+                                    </div>
+                                    
+                                    {/* Amenities */}
+                                    {hotel.hotel_amenities && hotel.hotel_amenities.length > 0 && (
+                                      <div>
+                                        <h4 className="font-medium mb-1">Amenities</h4>
+                                        <div className="flex flex-wrap gap-1">
+                                          {hotel.hotel_amenities.map((amenity: any, i: number) => (
+                                            <span key={i} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+                                              {amenity.amenity}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+                                    
+                                    {/* Description */}
+                                    {hotel.description && (
+                                      <div>
+                                        <h4 className="font-medium mb-1">About</h4>
+                                        <p className="text-sm text-gray-600">{hotel.description}</p>
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
                               </DrawerContent>
                             </Drawer>
@@ -326,7 +375,58 @@ export default function CycladicChatUI() {
                               <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
                                 <div className="p-4">
                                   <h3 className="text-xl font-bold mb-4">{hotel.name}</h3>
-                                  <HotelCard hotel={hotel} />
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Large Hotel Image */}
+                                    <div className="w-full h-64 overflow-hidden rounded-lg">
+                                      {hotel.hotel_photos?.find((photo: any) => photo.is_main_photo)?.photo_url ? (
+                                        <img 
+                                          src={`/uploads/hotels/${hotel.hotel_photos.find((photo: any) => photo.is_main_photo).photo_url}`}
+                                          alt={hotel.name}
+                                          className="w-full h-full object-cover"
+                                        />
+                                      ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                                          <Hotel className="text-gray-400 h-16 w-16" />
+                                        </div>
+                                      )}
+                                    </div>
+                                    
+                                    <div>
+                                      {/* Hotel Details */}
+                                      <div className="mb-4">
+                                        <div className="flex items-center space-x-2">
+                                          <MapPin className="h-4 w-4 text-sifnos-deep-blue" />
+                                          <span className="text-gray-700">{hotel.location}</span>
+                                        </div>
+                                        <div className="flex items-center space-x-2 mt-1">
+                                          <Star className="h-4 w-4 text-amber-500" />
+                                          <span className="text-gray-700">Rating: {hotel.rating}</span>
+                                        </div>
+                                      </div>
+                                      
+                                      {/* Amenities */}
+                                      {hotel.hotel_amenities && hotel.hotel_amenities.length > 0 && (
+                                        <div className="mb-4">
+                                          <h4 className="font-medium mb-1">Amenities</h4>
+                                          <div className="flex flex-wrap gap-1">
+                                            {hotel.hotel_amenities.map((amenity: any, i: number) => (
+                                              <span key={i} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+                                                {amenity.amenity}
+                                              </span>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Description */}
+                                  {hotel.description && (
+                                    <div className="mt-4">
+                                      <h4 className="font-medium mb-1">About</h4>
+                                      <p className="text-sm text-gray-600">{hotel.description}</p>
+                                    </div>
+                                  )}
                                 </div>
                               </DialogContent>
                             </Dialog>
