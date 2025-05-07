@@ -137,21 +137,30 @@ export default function CycladicChatUI() {
         hotels: relevantHotels 
       }]);
 
-      // Create a reader to handle the streaming response
-      const response = await supabase.functions.invoke('ai-travel-assistant', {
-        body: {
+      // Call the Edge Function using fetch directly to handle streaming properly
+      const response = await fetch('/functions/v1/ai-travel-assistant', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY || ''}`,
+        },
+        body: JSON.stringify({
           messages: messages.map(msg => ({ role: msg.role, content: msg.content })).concat([userMessage]),
           hotelQuery: input
-        },
-        responseType: 'stream'  // Use streaming response
+        }),
       });
       
-      if (!response.data) {
-        throw new Error('Failed to get response from AI assistant');
+      if (!response.ok) {
+        throw new Error(`Error from AI travel assistant: ${response.status}`);
       }
 
       // Process the streaming response
-      const reader = response.data.getReader();
+      const reader = response.body?.getReader();
+      
+      if (!reader) {
+        throw new Error('Failed to get response reader');
+      }
+      
       const decoder = new TextDecoder();
       let fullContent = '';
       
