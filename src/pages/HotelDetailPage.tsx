@@ -159,7 +159,7 @@ export default function HotelDetailPage() {
         }
         
         // Special handling for Filadaki Villas - add photos
-        if (hotelData.name === 'Filadaki Villas') {
+        if (hotelData.name === 'Filadaki Villas' || slug === 'filadaki-villas') {
           hotelData.hotel_photos = filadakiPhotos;
           hotelData.logo_path = 'filadaki-studios/filadaki-logo.png';
           
@@ -357,7 +357,7 @@ export default function HotelDetailPage() {
   
   // Check if current hotel is Meropi Rooms, Filadaki Villas, Morpheas Pension, Villa Olivia Clara, or ALK HOTEL
   const isMeropiRooms = hotel.id === '0c9632b6-db5c-4179-8122-0003896e465e';
-  const isFiladakiVillas = hotel.name === 'Filadaki Villas';
+  const isFiladakiVillas = hotel.name === 'Filadaki Villas' || slug === 'filadaki-villas';
   const isMorpheasPension = hotel.name === 'Morpheas Pension & Apartments';
   const isVillaOliviaClara = hotel.name === 'Villa Olivia Clara';
   const isAlkHotel = hotel.name === 'ALK HOTEL™';

@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { generateHotelUrl } from '@/lib/url-utils';
@@ -192,18 +193,63 @@ export default function SitemapGenerator() {
             });
             console.log("Added manual entry for Meropi Rooms and Apartments");
           }
+          
+          // Add explicit entry for Filadaki Villas
+          const filadakiVillas = hotels.find(hotel => 
+            hotel.name === "Filadaki Villas" || 
+            hotel.name.toLowerCase().includes("filadaki")
+          );
+          
+          if (filadakiVillas) {
+            console.log("Found Filadaki Villas in database, ID:", filadakiVillas.id);
+            console.log("Filadaki Villas URL slug:", generateHotelUrl(filadakiVillas.name));
+            
+            // Ensure it's correctly included even if it's in the database
+            const filadakiUrl = `${baseURL}/hotels/filadaki-villas`;
+            
+            // Check if it's already in hotelPages with this exact URL
+            const alreadyIncluded = hotelPages.some(page => page.loc === filadakiUrl);
+            
+            if (!alreadyIncluded) {
+              // Add it with higher priority
+              hotelPages.push({
+                loc: filadakiUrl,
+                lastmod: currentDate,
+                changefreq: 'daily' as const,
+                priority: 0.9
+              });
+              console.log("Added Filadaki Villas to sitemap with enhanced priority");
+            }
+          } else {
+            // Add a manual entry if not found in database
+            hotelPages.push({
+              loc: `${baseURL}/hotels/filadaki-villas`,
+              lastmod: currentDate,
+              changefreq: 'daily' as const,
+              priority: 0.9
+            });
+            console.log("Added manual entry for Filadaki Villas");
+          }
         }
       } catch (error) {
         console.error('Error fetching hotels for sitemap:', error);
         
-        // Always ensure Meropi is in the sitemap even if database fetch fails
+        // Always ensure Meropi and Filadaki are in the sitemap even if database fetch fails
         hotelPages.push({
           loc: `${baseURL}/hotels/meropi-rooms-and-apartments`,
           lastmod: currentDate,
           changefreq: 'daily' as const,
           priority: 0.9
         });
-        console.log("Added fallback entry for Meropi Rooms and Apartments due to database error");
+        
+        hotelPages.push({
+          loc: `${baseURL}/hotels/filadaki-villas`,
+          lastmod: currentDate,
+          changefreq: 'daily' as const,
+          priority: 0.9
+        });
+        
+        console.log("Added fallback entries for special hotels due to database error");
       }
       
       // Combine all pages

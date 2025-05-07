@@ -34,6 +34,11 @@ export function generateHotelUrl(name: string): string {
     return "villa-olivia-clara";
   }
   
+  // Special case for Filadaki Villas
+  if (name === "Filadaki Villas" || name.toLowerCase().includes("filadaki")) {
+    return "filadaki-villas";
+  }
+  
   return slugify(name);
 }
 
@@ -43,7 +48,8 @@ export function generateHotelUrl(name: string): string {
 const KNOWN_HOTEL_IDS = {
   "meropi-rooms-and-apartments": "0c9632b6-db5c-4179-8122-0003896e465e",
   "morpheas-pension-apartments": null, // Will be populated once we have the real ID
-  "villa-olivia-clara": null // Will be populated once we have the real ID
+  "villa-olivia-clara": null, // Will be populated once we have the real ID
+  "filadaki-villas": null // Will be populated once we have the real ID
 };
 
 /**

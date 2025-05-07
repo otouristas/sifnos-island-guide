@@ -1,4 +1,3 @@
-
 import { Helmet } from 'react-helmet';
 
 interface SEOProps {
@@ -56,6 +55,14 @@ export default function SEO({
   const timestamp = Date.now();
   const randomValue = Math.floor(Math.random() * 1000);
   const cacheBuster = `${timestamp}-${randomValue}`;
+  
+  // Check if this is a hotel detail page
+  const isHotelPage = formattedCanonical.includes('/hotels/');
+  
+  // Override noIndex for hotel pages to ensure they're always indexed
+  if (isHotelPage) {
+    noIndex = false;
+  }
   
   let schemaData: SchemaData = {
     "@context": "https://schema.org",
