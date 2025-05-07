@@ -1,11 +1,14 @@
+
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import HotelCard from '@/components/HotelCard';
+import SponsoredHotelCard from '@/components/SponsoredHotelCard';
 import { useToast } from '@/hooks/use-toast';
 
 export default function FeaturedHotelsSection() {
   const [featuredHotels, setFeaturedHotels] = useState([]);
+  const [sponsoredHotel, setSponsoredHotel] = useState(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
@@ -36,11 +39,14 @@ export default function FeaturedHotelsSection() {
         console.log('Featured hotels loaded:', data?.length || 0, 'hotels');
         logSupabaseResponse('fetch featured hotels', data, error);
         
-        // Process the data to add special handling for ALK HOTEL
-        const processedData = data?.map(hotel => {
+        // Process the data and separate ALK HOTEL as sponsored
+        let alkHotel = null;
+        let otherHotels = [];
+        
+        data?.forEach(hotel => {
           if (hotel.name === 'ALK HOTEL™') {
             // Add logo path and photos for ALK HOTEL
-            return {
+            alkHotel = {
               ...hotel,
               logo_url: 'alk-hotel-sifnos/logo.png',
               hotel_photos: [
@@ -53,18 +59,40 @@ export default function FeaturedHotelsSection() {
                 { id: 'alk-7', photo_url: 'alk-hotel-sifnos/image.php_6.jpeg', is_main_photo: false },
               ]
             };
+            console.log('ALK HOTEL found and set as sponsored');
+          } else {
+            otherHotels.push(hotel);
           }
-          return hotel;
         });
         
-        setFeaturedHotels(processedData || []);
+        setSponsoredHotel(alkHotel);
+        setFeaturedHotels(otherHotels || []);
         
-        // Log the hotel names for debugging
-        if (processedData) {
-          processedData.forEach(hotel => {
-            console.log(`Loaded featured hotel: ${hotel.name}, Rating: ${hotel.rating}`);
-          });
+        // If we didn't find ALK HOTEL in the data, create it manually
+        if (!alkHotel) {
+          const defaultAlkHotel = {
+            id: 'alk-hotel-id',
+            name: 'ALK HOTEL™',
+            location: 'Platis Gialos, Sifnos',
+            rating: 5,
+            hotel_types: ['luxury-hotels', 'beach-hotels'],
+            logo_url: 'alk-hotel-sifnos/logo.png',
+            hotel_amenities: [
+              { amenity: 'Free WiFi' },
+              { amenity: 'Breakfast Included' },
+              { amenity: 'Sea View' },
+              { amenity: 'Pool Access' },
+            ],
+            hotel_photos: [
+              { id: 'alk-1', photo_url: 'alk-hotel-sifnos/alk-hotel-feature.jpeg', is_main_photo: true },
+              { id: 'alk-2', photo_url: 'alk-hotel-sifnos/1.jpg_1.jpeg', is_main_photo: false },
+              { id: 'alk-3', photo_url: 'alk-hotel-sifnos/3.jpg.jpeg', is_main_photo: false },
+            ]
+          };
+          setSponsoredHotel(defaultAlkHotel);
+          console.log('ALK HOTEL manually created as sponsored');
         }
+        
       } catch (error) {
         console.error('Error in featured hotels fetch:', error);
       } finally {
@@ -92,6 +120,11 @@ export default function FeaturedHotelsSection() {
             <span className="ml-1">→</span>
           </Link>
         </div>
+        
+        {/* Always show sponsored hotel first if available */}
+        {!loading && sponsoredHotel && (
+          <SponsoredHotelCard hotel={sponsoredHotel} />
+        )}
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
           {loading ? (

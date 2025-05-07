@@ -3,8 +3,9 @@ import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
 import { Search, Filter, Star } from 'lucide-react';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import HotelCard from '@/components/HotelCard';
+import SponsoredHotelCard from '@/components/SponsoredHotelCard';
 import { hotelTypes } from '@/data/hotelTypes';
 import { getHotelTypeIcon } from '@/components/icons/HotelTypeIcons';
 
@@ -25,6 +26,7 @@ export default function HotelsPage() {
   });
 
   const [hotels, setHotels] = useState([]);
+  const [sponsoredHotel, setSponsoredHotel] = useState(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
@@ -62,7 +64,53 @@ export default function HotelsPage() {
 
         console.log(`Hotels found: ${data?.length || 0}`);
         
-        setHotels(data || []);
+        // Separate ALK HOTEL for sponsored placement
+        let alkHotel = null;
+        let otherHotels = [];
+        
+        data?.forEach(hotel => {
+          if (hotel.name === 'ALK HOTEL™') {
+            // Add logo path and photos for ALK HOTEL
+            alkHotel = {
+              ...hotel,
+              logo_url: 'alk-hotel-sifnos/logo.png',
+              hotel_photos: [
+                { id: 'alk-1', photo_url: 'alk-hotel-sifnos/alk-hotel-feature.jpeg', is_main_photo: true },
+                { id: 'alk-2', photo_url: 'alk-hotel-sifnos/1.jpg_1.jpeg', is_main_photo: false },
+                { id: 'alk-3', photo_url: 'alk-hotel-sifnos/3.jpg.jpeg', is_main_photo: false },
+              ]
+            };
+          } else {
+            otherHotels.push(hotel);
+          }
+        });
+        
+        setSponsoredHotel(alkHotel);
+        setHotels(otherHotels || []);
+        
+        // If we didn't find ALK HOTEL in the data, create it manually
+        if (!alkHotel) {
+          const defaultAlkHotel = {
+            id: 'alk-hotel-id',
+            name: 'ALK HOTEL™',
+            location: 'Platis Gialos, Sifnos',
+            rating: 5,
+            hotel_types: ['luxury-hotels', 'beach-hotels'],
+            logo_url: 'alk-hotel-sifnos/logo.png',
+            hotel_amenities: [
+              { amenity: 'Free WiFi' },
+              { amenity: 'Breakfast Included' },
+              { amenity: 'Sea View' },
+              { amenity: 'Pool Access' },
+            ],
+            hotel_photos: [
+              { id: 'alk-1', photo_url: 'alk-hotel-sifnos/alk-hotel-feature.jpeg', is_main_photo: true },
+            ]
+          };
+          setSponsoredHotel(defaultAlkHotel);
+          console.log('ALK HOTEL manually created as sponsored');
+        }
+        
       } catch (error) {
         console.error('Error fetching hotels:', error);
         toast({
@@ -329,7 +377,7 @@ export default function HotelsPage() {
             <div className="w-full lg:w-3/4 px-4">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="font-montserrat font-semibold text-xl">
-                  {loading ? "Loading hotels..." : `${hotels.length} hotels found`}
+                  {loading ? "Loading hotels..." : `${hotels.length + (sponsoredHotel ? 1 : 0)} hotels found`}
                 </h2>
                 <div className="flex items-center">
                   <span className="mr-2 text-sm">Sort by:</span>
@@ -348,6 +396,11 @@ export default function HotelsPage() {
                 </div>
               )}
               
+              {/* Sponsored Hotel */}
+              {!loading && sponsoredHotel && (
+                <SponsoredHotelCard hotel={sponsoredHotel} />
+              )}
+              
               {/* Hotels Grid */}
               {!loading && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -355,7 +408,7 @@ export default function HotelsPage() {
                     hotels.map(hotel => (
                       <HotelCard key={hotel.id} hotel={hotel} showLogo={true} />
                     ))
-                  ) : (
+                  ) : !sponsoredHotel && (
                     <div className="text-center py-12 col-span-3">
                       <h3 className="font-medium text-xl text-gray-700">No hotels found matching your criteria</h3>
                       <p className="text-gray-500 mt-2">Try adjusting your filters or search terms</p>

@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import SEO from '@/components/SEO';
 import TouristasAIBanner from '@/components/TouristasAIBanner';
+import SponsoredHotelCard from '@/components/SponsoredHotelCard';
 
 // Import our newly created component sections
 import HeroSection from '@/components/home/HeroSection';
