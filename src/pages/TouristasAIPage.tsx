@@ -1,16 +1,14 @@
 
 import { Helmet } from 'react-helmet';
 import { useState } from 'react';
-import { Bot, Search, User, MessageSquare, Heart, Hotel } from 'lucide-react';
+import { Bot, Search, User, MessageSquare, Heart, Hotel, MapPin, Star } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import CycladicChatUI from '@/components/touristas/CycladicChatUI';
+import TouristasChat from '@/components/touristas/TouristasChat';
 import SEO from '@/components/SEO';
 
 export default function TouristasAIPage() {
-  const [activeTab, setActiveTab] = useState<string>('chat');
-  
   return (
     <>
       <SEO
@@ -81,7 +79,7 @@ export default function TouristasAIPage() {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-12 md:py-24 -mt-12 relative z-20" id="chat-section">
         <div className="max-w-5xl mx-auto">
-          <CycladicChatUI />
+          <TouristasChat />
           
           {/* Info Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
@@ -91,27 +89,27 @@ export default function TouristasAIPage() {
               </div>
               <h3 className="text-lg font-semibold mb-2">Chat Naturally</h3>
               <p className="text-gray-600">
-                Talk to our AI in your own words. Tell it what you're looking for in your perfect Sifnos stay.
+                Talk to our AI in your own words about which Sifnos location you're interested in staying.
               </p>
             </Card>
             
             <Card className="p-6 bg-gradient-to-br from-white to-purple-50 border-purple-100">
               <div className="h-12 w-12 rounded-2xl bg-purple-100 text-sifnos-deep-blue flex items-center justify-center mb-4">
-                <Hotel className="h-6 w-6" />
+                <MapPin className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Get Personalized Results</h3>
+              <h3 className="text-lg font-semibold mb-2">Location-Based Results</h3>
               <p className="text-gray-600">
-                Receive curated hotel suggestions based on your preferences, budget, and travel style.
+                Get hotel recommendations in specific Sifnos locations like Platis Gialos, Apollonia, or Kamares.
               </p>
             </Card>
             
             <Card className="p-6 bg-gradient-to-br from-white to-amber-50 border-amber-100">
               <div className="h-12 w-12 rounded-2xl bg-amber-100 text-sifnos-deep-blue flex items-center justify-center mb-4">
-                <Search className="h-6 w-6" />
+                <Star className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Discover Hidden Gems</h3>
+              <h3 className="text-lg font-semibold mb-2">Top-Rated Options</h3>
               <p className="text-gray-600">
-                Find unique accommodations and areas of Sifnos that perfectly match your ideal vacation vision.
+                Discover the highest-rated accommodations in each area of Sifnos based on verified guest reviews.
               </p>
             </Card>
           </div>

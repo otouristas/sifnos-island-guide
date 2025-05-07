@@ -16,9 +16,9 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, hotelQuery } = await req.json();
+    const { messages } = await req.json();
     
-    // Create a system message with context about Sifnos and the purpose of the assistant
+    // Create a system message with location-focused context
     const systemMessage = {
       role: "system",
       content: `You are TouristasAI, a helpful travel assistant specialized in finding the perfect accommodation in Sifnos, Greece.
@@ -28,7 +28,7 @@ serve(async (req) => {
       Your job is to help visitors find their ideal stay based on their preferences. Be friendly, informative, and knowledgeable about Sifnos.
       
       When the user mentions specific locations like Platis Gialos, Apollonia, Kamares, Vathi, Kastro, or Faros,
-      focus your recommendations on properties in those exact locations only.
+      ALWAYS focus your recommendations on properties in those EXACT locations only. If they mention "Platy Gialo", understand this is the same as "Platis Gialos".
       
       Key locations in Sifnos:
       - Apollonia: The capital, inland with traditional architecture
@@ -38,7 +38,7 @@ serve(async (req) => {
       - Kastro: Medieval village with stunning views
       - Faros: Quiet coastal village with beaches
       
-      Keep your responses conversational, helpful, and focused on helping travelers find their ideal accommodation in Sifnos.`
+      Keep your responses conversational, helpful, and focused on helping travelers find their ideal accommodation in Sifnos based on their specified location preferences.`
     };
 
     // Combine system message with user messages
@@ -46,7 +46,7 @@ serve(async (req) => {
     
     console.log("Calling OpenRouter API with messages:", JSON.stringify(allMessages));
     
-    // Call OpenRouter API with a valid model
+    // Call OpenRouter API with streaming enabled
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -70,7 +70,7 @@ serve(async (req) => {
       throw new Error(`OpenRouter API error: ${response.status} ${errorText}`);
     }
     
-    // Return the streaming response directly without modifying it
+    // Return the streaming response with proper headers
     return new Response(response.body, {
       headers: {
         ...corsHeaders,
