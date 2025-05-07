@@ -282,13 +282,13 @@ const HotelDetailPage = () => {
               {/* Reviews Section */}
               <div className="mb-6">
                 <h2 className="text-xl font-semibold mb-3">Guest Reviews</h2>
-                <BookingReviews hotelName={hotel.name} />
+                <BookingReviews hotelId={hotel.id} hotelName={hotel.name} />
               </div>
               
               {/* FAQs Section */}
               <div className="mb-6">
                 <h2 className="text-xl font-semibold mb-3">Frequently Asked Questions</h2>
-                <HotelFAQs hotel={hotel} faqs={faqs} />
+                <HotelFAQs hotelName={hotel.name} faqs={faqs} />
               </div>
             </div>
           </div>
