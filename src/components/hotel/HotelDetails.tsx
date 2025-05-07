@@ -14,6 +14,9 @@ const HotelDetails = ({ hotel, hotelLogoUrl, showLogo }: HotelDetailsProps) => {
   const isVilla = hotel.hotel_types?.includes('villas');
   const propertyType = isVilla ? 'Villa' : 'Hotel';
 
+  // Prepare amenities for schema
+  const amenities = hotel.hotel_amenities?.map((amenity: any) => amenity.amenity) || [];
+
   return (
     <div className="p-4">
       <div className="flex items-center justify-start gap-2 mb-2">
