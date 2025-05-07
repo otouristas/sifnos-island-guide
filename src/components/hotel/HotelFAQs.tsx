@@ -1,12 +1,13 @@
-
 import React, { useState } from 'react';
 import { PlusCircle, MinusCircle } from 'lucide-react';
 
 interface HotelFAQsProps {
-  hotelName: string;
+  hotelName?: string;
+  hotel?: any;
+  faqs?: Array<{ question: string, answer: string }>;
 }
 
-const HotelFAQs = ({ hotelName }: HotelFAQsProps) => {
+const HotelFAQs = ({ hotelName, hotel, faqs: externalFaqs }: HotelFAQsProps) => {
   const [openFaqIndex, setOpenFaqIndex] = useState(-1);
 
   // Toggle FAQ
@@ -226,23 +227,29 @@ const HotelFAQs = ({ hotelName }: HotelFAQsProps) => {
     }
   ];
 
-  // Determine which FAQs to display based on hotel name
-  let faqs = genericFaqs;
-  if (hotelName.includes("Filadaki Villas")) {
-    faqs = filadakiVillasFaqs;
-  } else if (hotelName.includes("Morpheas Pension")) {
-    faqs = morpheasPensionFaqs;
-  } else if (hotelName.includes("Villa Olivia Clara")) {
-    faqs = villaOliviaFaqs;
-  } else if (hotelName.includes("ALK HOTEL")) {
-    faqs = alkHotelFaqs;
-  } else if (hotelName.includes("Meropi")) {
-    faqs = meropiRoomsFaqs;
+  // Determine which FAQs to display based on the inputs
+  let displayFaqs = externalFaqs || genericFaqs;
+  
+  // If external FAQs are not provided, determine based on hotel name or hotel object
+  if (!externalFaqs) {
+    const name = hotelName || hotel?.name || '';
+    
+    if (name.includes("Filadaki Villas")) {
+      displayFaqs = filadakiVillasFaqs;
+    } else if (name.includes("Morpheas Pension")) {
+      displayFaqs = morpheasPensionFaqs;
+    } else if (name.includes("Villa Olivia Clara")) {
+      displayFaqs = villaOliviaFaqs;
+    } else if (name.includes("ALK HOTEL")) {
+      displayFaqs = alkHotelFaqs;
+    } else if (name.includes("Meropi")) {
+      displayFaqs = meropiRoomsFaqs;
+    }
   }
 
   return (
     <div className="space-y-4">
-      {faqs.map((faq, index) => (
+      {displayFaqs.map((faq, index) => (
         <div 
           key={index} 
           className="border-b pb-4 last:border-b-0 last:pb-0"

@@ -288,7 +288,7 @@ const HotelDetailPage = () => {
               {/* FAQs Section */}
               <div className="mb-6">
                 <h2 className="text-xl font-semibold mb-3">Frequently Asked Questions</h2>
-                <HotelFAQs hotel={hotel} faqs={faqs} />
+                <HotelFAQs hotelName={hotel.name} faqs={faqs} />
               </div>
             </div>
           </div>
