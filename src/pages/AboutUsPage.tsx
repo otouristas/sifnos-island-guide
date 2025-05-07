@@ -1,15 +1,16 @@
 
 import SEO from '../components/SEO';
 import { Link } from 'react-router-dom';
-import { MessageCircle, Mail, Heart, Check, Users, Building, Award, MapPin, Clock } from 'lucide-react';
+import { MessageCircle, Mail, Heart, Check, Users, Building, Award, MapPin, Clock, Brain, Sparkles, Zap } from 'lucide-react';
+import { Avatar, AvatarImage, AvatarFallback } from '../components/ui/avatar';
 
 export default function AboutUsPage() {
   return (
     <>
       <SEO 
-        title="About Hotels Sifnos - Your Guide to Accommodation in Sifnos Island" 
-        description="Learn about Hotels Sifnos, the leading accommodation guide for Sifnos Island. Discover our mission, expert team, and commitment to providing curated hotel recommendations and travel advice."
-        keywords={['about hotels sifnos', 'sifnos accommodation experts', 'sifnos travel guide', 'sifnos hotel recommendations', 'cyclades accommodation']}
+        title="About Hotels Sifnos - AI-Powered Accommodation Guide for Sifnos Island" 
+        description="Discover Hotels Sifnos, the first AI-powered accommodation platform dedicated to Sifnos Island. Find your perfect stay with our Touristas AI technology that delivers personalized recommendations in minutes."
+        keywords={['AI-powered accommodation', 'Sifnos hotels', 'Touristas AI', 'Sifnos villas', 'personalized booking', 'Greek islands accommodation']}
         schemaType="Organization"
         canonical="https://hotelssifnos.com/about-us"
       />
@@ -19,220 +20,240 @@ export default function AboutUsPage() {
         <div className="page-container">
           <div className="text-center text-white max-w-3xl mx-auto">
             <h1 className="font-montserrat text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-              About Hotels Sifnos
+              🏝️ Hotels Sifnos – The AI-Powered Guide to Your Perfect Stay
             </h1>
             <p className="text-lg md:text-xl">
-              Your trusted guide to finding the perfect accommodation in the captivating island of Sifnos
+              The first and only AI-powered accommodation discovery platform dedicated exclusively to the captivating island of Sifnos, Greece.
             </p>
           </div>
         </div>
       </div>
       
-      {/* Our Story */}
-      <div className="py-20">
+      {/* About Section */}
+      <div className="py-16">
         <div className="page-container">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="order-2 lg:order-1">
-              <h2 className="text-2xl md:text-3xl font-montserrat font-semibold mb-8">
-                Our Story
-              </h2>
-              <div className="space-y-6 text-gray-700">
-                <p>
-                  Hotels Sifnos was born from a deep love for the enchanting island of Sifnos and a desire to help travelers discover its unparalleled beauty and hospitality. Founded in 2018 by a team of travel enthusiasts with strong connections to the island, our platform has evolved into the definitive resource for finding the perfect accommodation in Sifnos.
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-montserrat font-semibold mb-8">
+              About Hotels Sifnos
+            </h2>
+            <div className="prose prose-lg max-w-none">
+              <p className="font-medium text-xl">
+                <strong>Hotels Sifnos</strong> is the first and only <strong>AI-powered accommodation discovery platform</strong> dedicated exclusively to the captivating island of <strong>Sifnos, Greece</strong>. Our mission? To make booking the right accommodation <strong>faster, smarter, and deeply local</strong>.
+              </p>
+              <p>
+                Whether you're looking for a luxury villa, a cozy seaside studio, or a traditional Cycladic pension, we connect you with the best available stays on the island—<strong>in one place</strong>.
+              </p>
+              
+              <blockquote className="bg-sifnos-turquoise/10 p-6 rounded-lg border-l-4 border-sifnos-turquoise my-8">
+                <p className="text-lg font-medium text-sifnos-deep-blue">
+                  ⏱️ <strong>Cut your booking time. Maximize relevance. Powered by Touristas AI.</strong>
                 </p>
-                <p>
-                  What began as a simple directory has grown into a comprehensive guide, connecting visitors with carefully curated hotels, villas, and traditional accommodations that showcase the authentic Cycladic charm and warm hospitality that Sifnos is known for.
-                </p>
-                <p>
-                  Unlike generic booking platforms, we specialize exclusively in Sifnos, allowing us to provide detailed insights and personalized recommendations based on intimate knowledge of the island's diverse regions, beaches, and villages. Our team personally visits and evaluates each property, ensuring that our listings maintain the highest standards of quality and authenticity.
-                </p>
-              </div>
+              </blockquote>
             </div>
-            
-            <div className="order-1 lg:order-2 bg-sifnos-teal/10 rounded-lg h-80 flex items-center justify-center">
-              <img 
-                src="/placeholder.svg" 
-                alt="Hotels Sifnos Team"
-                className="max-h-full max-w-full rounded-lg"
-              />
+          </div>
+        </div>
+      </div>
+      
+      {/* What Makes Us Different */}
+      <div className="py-16 bg-gray-50">
+        <div className="page-container">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-montserrat font-semibold mb-8">
+              🚀 What Makes Us Different
+            </h2>
+            <div className="prose prose-lg max-w-none">
+              <p>
+                Unlike generic booking sites, Hotels Sifnos is laser-focused on <strong>one destination</strong>: Sifnos. Our curated platform leverages the <strong>Touristas AI Engine</strong> to instantly match travelers with personalized accommodation results based on:
+              </p>
+              
+              <ul className="my-6 space-y-2">
+                <li className="flex items-start">
+                  <Check size={20} className="mt-1 mr-2 text-sifnos-turquoise flex-shrink-0" />
+                  <span>Traveler type & group size</span>
+                </li>
+                <li className="flex items-start">
+                  <Check size={20} className="mt-1 mr-2 text-sifnos-turquoise flex-shrink-0" />
+                  <span>Preferred location or beach</span>
+                </li>
+                <li className="flex items-start">
+                  <Check size={20} className="mt-1 mr-2 text-sifnos-turquoise flex-shrink-0" />
+                  <span>Amenity requirements</span>
+                </li>
+                <li className="flex items-start">
+                  <Check size={20} className="mt-1 mr-2 text-sifnos-turquoise flex-shrink-0" />
+                  <span>Seasonal availability</span>
+                </li>
+                <li className="flex items-start">
+                  <Check size={20} className="mt-1 mr-2 text-sifnos-turquoise flex-shrink-0" />
+                  <span>Authenticity & local charm</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Touristas AI Section */}
+      <div className="py-16">
+        <div className="page-container">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-montserrat font-semibold mb-8 flex items-center">
+              <Brain size={30} className="text-sifnos-turquoise mr-3" />
+              Touristas AI: Personalized Search, Smarter Choices
+            </h2>
+            <div className="prose prose-lg max-w-none">
+              <p>
+                At the heart of our platform is <strong>Touristas</strong>, our proprietary AI engine developed specifically for tourism and local accommodation discovery. Here's what it does:
+              </p>
+              
+              <ul className="my-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <li className="flex items-start bg-white p-4 rounded-lg shadow-sm">
+                  <Zap size={20} className="mt-1 mr-3 text-sifnos-turquoise flex-shrink-0" />
+                  <span>Instantly understands user intent</span>
+                </li>
+                <li className="flex items-start bg-white p-4 rounded-lg shadow-sm">
+                  <Sparkles size={20} className="mt-1 mr-3 text-sifnos-turquoise flex-shrink-0" />
+                  <span>Filters and ranks properties with smart algorithms</span>
+                </li>
+                <li className="flex items-start bg-white p-4 rounded-lg shadow-sm">
+                  <Brain size={20} className="mt-1 mr-3 text-sifnos-turquoise flex-shrink-0" />
+                  <span>Adapts to seasonality, availability, and user preferences</span>
+                </li>
+                <li className="flex items-start bg-white p-4 rounded-lg shadow-sm">
+                  <Clock size={20} className="mt-1 mr-3 text-sifnos-turquoise flex-shrink-0" />
+                  <span>Reduces booking time from hours to minutes</span>
+                </li>
+              </ul>
+              
+              <blockquote className="bg-sifnos-deep-blue/5 p-6 rounded-lg border-l-4 border-sifnos-deep-blue my-8">
+                <p className="text-lg font-medium text-sifnos-deep-blue">
+                  With Touristas AI, you don't browse. You find.
+                </p>
+              </blockquote>
             </div>
           </div>
         </div>
       </div>
       
       {/* Mission & Values */}
-      <div className="py-20 bg-gray-50">
+      <div className="py-16 bg-gray-50">
         <div className="page-container">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-2xl md:text-3xl font-montserrat font-semibold mb-6">
-              Our Mission & Values
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-montserrat font-semibold mb-8">
+              🌟 Our Mission & Values
             </h2>
-            <p className="text-lg text-gray-700">
-              At Hotels Sifnos, we're guided by a commitment to authentic hospitality and sustainable tourism that benefits both visitors and the local community.
-            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="cycladic-card text-center p-8">
+                <div className="w-16 h-16 mx-auto mb-6 bg-sifnos-turquoise/20 rounded-full flex items-center justify-center">
+                  <Heart size={28} className="text-sifnos-deep-blue" />
+                </div>
+                <h3 className="text-xl font-montserrat font-semibold mb-4">Authenticity</h3>
+                <p className="text-gray-700">
+                  We feature properties that reflect the soul of Sifnos—Cycladic architecture, warm hospitality, and true local experiences.
+                </p>
+              </div>
+              
+              <div className="cycladic-card text-center p-8">
+                <div className="w-16 h-16 mx-auto mb-6 bg-sifnos-turquoise/20 rounded-full flex items-center justify-center">
+                  <Check size={28} className="text-sifnos-deep-blue" />
+                </div>
+                <h3 className="text-xl font-montserrat font-semibold mb-4">Quality & Trust</h3>
+                <p className="text-gray-700">
+                  Every listing is handpicked, reviewed, and updated regularly. We showcase only the places we'd stay in ourselves.
+                </p>
+              </div>
+              
+              <div className="cycladic-card text-center p-8">
+                <div className="w-16 h-16 mx-auto mb-6 bg-sifnos-turquoise/20 rounded-full flex items-center justify-center">
+                  <Users size={28} className="text-sifnos-deep-blue" />
+                </div>
+                <h3 className="text-xl font-montserrat font-semibold mb-4">Local Impact</h3>
+                <p className="text-gray-700">
+                  We prioritize family-owned businesses and help support Sifnos's economy through sustainable, community-first tourism.
+                </p>
+              </div>
+            </div>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="cycladic-card text-center p-8">
-              <div className="w-16 h-16 mx-auto mb-6 bg-sifnos-turquoise/20 rounded-full flex items-center justify-center">
-                <Heart size={28} className="text-sifnos-deep-blue" />
-              </div>
-              <h3 className="text-xl font-montserrat font-semibold mb-4">Authentic Experiences</h3>
-              <p className="text-gray-700">
-                We're committed to promoting accommodations that offer genuine Cycladic experiences, respecting local culture, architecture, and traditions. We believe in showcasing the authentic character of Sifnos that makes it a truly special destination.
+        </div>
+      </div>
+      
+      {/* Our Story */}
+      <div className="py-16">
+        <div className="page-container">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-montserrat font-semibold mb-8">
+              🧠 Our Story
+            </h2>
+            <div className="prose prose-lg max-w-none">
+              <p>
+                <strong>Founded in 2025</strong> by a team of professionals passionate about the Cyclades, <strong>Hotels Sifnos</strong> was created to solve a simple yet widespread problem: finding the right accommodation in a sea of generic booking platforms.
               </p>
-            </div>
-            
-            <div className="cycladic-card text-center p-8">
-              <div className="w-16 h-16 mx-auto mb-6 bg-sifnos-turquoise/20 rounded-full flex items-center justify-center">
-                <Check size={28} className="text-sifnos-deep-blue" />
-              </div>
-              <h3 className="text-xl font-montserrat font-semibold mb-4">Quality & Reliability</h3>
-              <p className="text-gray-700">
-                Every property on our platform is carefully selected and regularly reviewed to ensure it meets our standards for quality, cleanliness, service, and value. We only recommend accommodations we would personally stay in and enjoy.
-              </p>
-            </div>
-            
-            <div className="cycladic-card text-center p-8">
-              <div className="w-16 h-16 mx-auto mb-6 bg-sifnos-turquoise/20 rounded-full flex items-center justify-center">
-                <Users size={28} className="text-sifnos-deep-blue" />
-              </div>
-              <h3 className="text-xl font-montserrat font-semibold mb-4">Community Support</h3>
-              <p className="text-gray-700">
-                We prioritize family-owned properties and local businesses, supporting the island's economy and helping preserve its unique cultural identity. We believe sustainable tourism should benefit the communities that make Sifnos special.
+              <p>
+                Led by <strong>George Kasiotis</strong>, a globally recognized <strong>SEO Manager & Data Analyst</strong>, the platform combines cutting-edge AI technology with hands-on knowledge of Sifnos to deliver a booking experience that's faster, smarter, and genuinely local.
               </p>
             </div>
           </div>
         </div>
       </div>
       
-      {/* Our Team */}
-      <div className="py-20">
+      {/* Meet the Founder */}
+      <div className="py-16 bg-gray-50">
         <div className="page-container">
-          <h2 className="text-2xl md:text-3xl font-montserrat font-semibold text-center mb-16">
-            Meet Our Team
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            <div className="cycladic-card text-center p-8">
-              <div className="w-24 h-24 mx-auto mb-6 bg-gray-200 rounded-full overflow-hidden">
-                <img 
-                  src="/placeholder.svg"
-                  alt="Team member" 
-                  className="w-full h-full object-cover"
-                />
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-montserrat font-semibold mb-8">
+              👤 Meet the Founder
+            </h2>
+            
+            <div className="cycladic-card p-8">
+              <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+                <div className="w-40 h-40 rounded-full overflow-hidden flex-shrink-0 border-4 border-white shadow-lg">
+                  <img 
+                    src="/uploads/seo-kasiotis-manager.jpg" 
+                    alt="George Kasiotis - Founder of Hotels Sifnos" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                
+                <div>
+                  <h3 className="text-2xl font-montserrat font-semibold mb-2">George Kasiotis</h3>
+                  <p className="text-sifnos-turquoise font-medium mb-4">Founder | SEO Manager & Data Analyst</p>
+                  <p className="text-gray-700">
+                    The architect behind Touristas AI and the vision for Hotels Sifnos. With a career built on delivering SEO and data performance for global brands like JD Sports, Bvlgari, Mindvalley, Cosmos Sport, and multiple travel-tech ventures, George brings enterprise-level strategy to the heart of Sifnian hospitality.
+                  </p>
+                </div>
               </div>
-              <h3 className="text-xl font-montserrat font-semibold mb-2">Eleni Papadopoulos</h3>
-              <p className="text-sifnos-turquoise mb-4">Founder & Managing Director</p>
-              <p className="text-gray-700 mb-4">
-                Born and raised in Sifnos, Eleni combines her deep knowledge of the island with 15+ years in the hospitality industry to ensure Hotels Sifnos delivers exceptional value to visitors and property partners.
-              </p>
-            </div>
-            
-            <div className="cycladic-card text-center p-8">
-              <div className="w-24 h-24 mx-auto mb-6 bg-gray-200 rounded-full overflow-hidden">
-                <img 
-                  src="/placeholder.svg"
-                  alt="Team member" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <h3 className="text-xl font-montserrat font-semibold mb-2">Nikos Antoniou</h3>
-              <p className="text-sifnos-turquoise mb-4">Head of Partnerships</p>
-              <p className="text-gray-700 mb-4">
-                With extensive experience in hotel management across the Cyclades, Nikos oversees our relationships with property owners and ensures all listings meet our quality standards.
-              </p>
-            </div>
-            
-            <div className="cycladic-card text-center p-8">
-              <div className="w-24 h-24 mx-auto mb-6 bg-gray-200 rounded-full overflow-hidden">
-                <img 
-                  src="/placeholder.svg"
-                  alt="Team member" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <h3 className="text-xl font-montserrat font-semibold mb-2">Marina Roussou</h3>
-              <p className="text-sifnos-turquoise mb-4">Travel Content Specialist</p>
-              <p className="text-gray-700 mb-4">
-                A travel writer and Sifnos enthusiast, Marina creates our detailed guides and property descriptions, bringing the magic of the island to life through her engaging content.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      {/* Why Choose Us */}
-      <div className="py-20 bg-gray-50">
-        <div className="page-container">
-          <h2 className="text-2xl md:text-3xl font-montserrat font-semibold text-center mb-16">
-            Why Choose Hotels Sifnos
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            <div className="cycladic-card p-8">
-              <h3 className="flex items-center text-xl font-montserrat font-semibold mb-5">
-                <Building size={22} className="text-sifnos-turquoise mr-3" />
-                Local Expertise
-              </h3>
-              <p className="text-gray-700">
-                Our team lives and breathes Sifnos. We have personal connections with property owners and intimate knowledge of each village and beach area, allowing us to match you with the perfect accommodation for your preferences.
-              </p>
-            </div>
-            
-            <div className="cycladic-card p-8">
-              <h3 className="flex items-center text-xl font-montserrat font-semibold mb-5">
-                <Award size={22} className="text-sifnos-turquoise mr-3" />
-                Curated Selection
-              </h3>
-              <p className="text-gray-700">
-                Unlike mass-market booking sites, we personally evaluate each property before listing it. Our selective approach ensures quality and authenticity, saving you hours of research and preventing disappointment.
-              </p>
-            </div>
-            
-            <div className="cycladic-card p-8">
-              <h3 className="flex items-center text-xl font-montserrat font-semibold mb-5">
-                <MapPin size={22} className="text-sifnos-turquoise mr-3" />
-                Destination Insights
-              </h3>
-              <p className="text-gray-700">
-                Beyond accommodation, we provide detailed information about Sifnos attractions, dining, beaches, and activities. Our comprehensive travel guides help you plan the perfect island experience.
-              </p>
-            </div>
-            
-            <div className="cycladic-card p-8">
-              <h3 className="flex items-center text-xl font-montserrat font-semibold mb-5">
-                <Clock size={22} className="text-sifnos-turquoise mr-3" />
-                Seasonal Expertise
-              </h3>
-              <p className="text-gray-700">
-                Sifnos changes with the seasons, and our recommendations adapt accordingly. We help you choose the ideal time to visit and the best accommodation options for your selected travel dates.
-              </p>
             </div>
           </div>
         </div>
       </div>
       
       {/* Contact Section */}
-      <div className="py-20">
+      <div className="py-16">
         <div className="page-container">
-          <div className="max-w-3xl mx-auto text-center">
+          <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-montserrat font-semibold mb-8">
-              Get in Touch
+              📬 Get in Touch
             </h2>
-            <p className="text-lg text-gray-700 mb-10">
-              Have questions about Sifnos accommodations or need personalized recommendations? Our team is here to help you plan the perfect stay.
-            </p>
-            
-            <div className="cycladic-card text-center mb-10 inline-block px-12 py-8">
-              <div className="w-12 h-12 mx-auto mb-4 bg-sifnos-turquoise/20 rounded-full flex items-center justify-center">
-                <Mail size={20} className="text-sifnos-deep-blue" />
+            <div className="prose prose-lg max-w-none">
+              <p>
+                Need help planning your stay in Sifnos? Want to recommend a property? Looking for the perfect villa or hidden gem?
+              </p>
+              
+              <div className="flex flex-col md:flex-row items-start gap-6 my-8">
+                <div className="cycladic-card p-6 flex items-center">
+                  <Mail size={20} className="text-sifnos-turquoise mr-3" />
+                  <span>Email us: <a href="mailto:hello@hotelssifnos.com" className="text-sifnos-turquoise">hello@hotelssifnos.com</a></span>
+                </div>
+                
+                <div className="cycladic-card p-6 flex items-center">
+                  <MapPin size={20} className="text-sifnos-turquoise mr-3" />
+                  <span>Visit: <a href="https://hotelssifnos.com" className="text-sifnos-turquoise">hotelssifnos.com</a></span>
+                </div>
               </div>
-              <h3 className="font-medium">Email Us</h3>
-              <p className="text-sifnos-turquoise">info@hotelssifnos.com</p>
             </div>
             
-            <div className="mt-8">
+            <div className="mt-12 text-center">
               <Link 
                 to="/contact" 
                 className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-8 py-4 rounded-lg transition-colors font-medium"
@@ -244,29 +265,12 @@ export default function AboutUsPage() {
         </div>
       </div>
       
-      {/* Call to Action */}
-      <div className="py-20 bg-sifnos-deep-blue text-white">
+      {/* Closing Quote */}
+      <div className="py-16 bg-sifnos-deep-blue text-white">
         <div className="page-container text-center">
-          <h2 className="font-montserrat text-2xl md:text-3xl font-semibold mb-8">
-            Start Planning Your Sifnos Experience
-          </h2>
-          <p className="text-lg mb-10 max-w-2xl mx-auto">
-            Discover our curated selection of hotels, villas, and traditional accommodations across Sifnos Island.
-          </p>
-          <div className="flex flex-wrap justify-center gap-6">
-            <Link 
-              to="/hotels" 
-              className="bg-white text-sifnos-deep-blue px-10 py-4 rounded-lg font-medium hover:bg-gray-100 transition-colors"
-            >
-              Browse Hotels
-            </Link>
-            <Link 
-              to="/travel-guide" 
-              className="border border-white text-white px-10 py-4 rounded-lg font-medium hover:bg-white/10 transition-colors"
-            >
-              Explore Travel Guide
-            </Link>
-          </div>
+          <blockquote className="max-w-3xl mx-auto text-xl md:text-2xl font-light italic">
+            🧿 <span className="font-medium">Hotels Sifnos</span> – One island. Every stay. AI-personalized.
+          </blockquote>
         </div>
       </div>
     </>
