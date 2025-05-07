@@ -9,6 +9,10 @@ interface HotelDetailsProps {
 }
 
 const HotelDetails = ({ hotel, hotelLogoUrl, showLogo }: HotelDetailsProps) => {
+  // Determine if the property is a villa or hotel
+  const isVilla = hotel.hotel_types?.includes('villas');
+  const propertyType = isVilla ? 'Villa' : 'Hotel';
+
   return (
     <div className="p-4">
       <div className="flex items-center justify-start gap-2 mb-2">
@@ -24,14 +28,26 @@ const HotelDetails = ({ hotel, hotelLogoUrl, showLogo }: HotelDetailsProps) => {
       </div>
       <p className="text-sm text-gray-600 mb-2">{hotel.location}</p>
       
-      {/* Hotel Types */}
+      {/* Property Types (Hotel/Villa types) */}
       {hotel.hotel_types && hotel.hotel_types.length > 0 && (
         <div className="flex flex-wrap gap-1 mb-2">
-          {hotel.hotel_types.map((type: string, index: number) => (
-            <span key={index} className="text-xs bg-sifnos-turquoise/10 text-sifnos-deep-blue px-2 py-1 rounded-full">
-              {type.replace(/-/g, ' ').replace(/hotels/g, 'hotel')}
-            </span>
-          ))}
+          {hotel.hotel_types.map((type: string, index: number) => {
+            // Format the type display name
+            let displayType = type.replace(/-/g, ' ');
+            
+            // Special handling for property types
+            if (displayType.includes('hotels')) {
+              displayType = displayType.replace(/hotels/g, 'hotel');
+            } else if (displayType === 'villas') {
+              displayType = 'luxury villa';
+            }
+            
+            return (
+              <span key={index} className="text-xs bg-sifnos-turquoise/10 text-sifnos-deep-blue px-2 py-1 rounded-full">
+                {displayType}
+              </span>
+            );
+          })}
         </div>
       )}
       

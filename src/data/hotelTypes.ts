@@ -108,6 +108,25 @@ export const hotelTypes: HotelType[] = [
       title: "Traditional Hotels in Sifnos - Authentic Cycladic Accommodations",
       description: "Stay in authentic traditional hotels in Sifnos featuring classic Cycladic architecture, family hospitality, and cultural charm. Experience the real Greek islands in these historic accommodations."
     }
+  },
+  {
+    id: "villas",
+    title: "Luxury Villas",
+    slug: "villas",
+    shortDescription: "Indulge in private luxury with exclusive villas offering complete privacy and premium amenities.",
+    description: "Experience the ultimate in privacy and luxury with Sifnos' exclusive villa rentals. These standalone properties offer discerning travelers their own private slice of paradise with stunning Aegean views, private swimming pools, and spacious outdoor entertaining areas. Perfect for families or groups seeking more independence, Sifnos' villas combine authentic Cycladic architectural elements with modern comfort and sophisticated design. From contemporary minimalist villas with floor-to-ceiling windows to restored traditional houses with elegant stone facades, these accommodations provide a true home-away-from-home experience with fully-equipped kitchens, multiple bedrooms, and personalized services including private chefs, concierge assistance, and housekeeping. Enjoy sunset cocktails by your private infinity pool or starlit dinners on your secluded terrace—all while experiencing the natural beauty and serenity of Sifnos.",
+    imageUrl: "/uploads/hotel-types/luxury-villas.jpg",
+    keywords: [
+      "luxury villas sifnos",
+      "private villas sifnos",
+      "villa rental sifnos",
+      "exclusive accommodation sifnos",
+      "villas with pool sifnos greece"
+    ],
+    meta: {
+      title: "Luxury Villas in Sifnos - Private Pool Villas & Exclusive Rentals",
+      description: "Discover Sifnos' most luxurious private villas with pools, panoramic sea views, and premium amenities. Perfect for families and groups seeking exclusive, high-end accommodation in a stunning Greek island setting."
+    }
   }
 ];
 

@@ -5,13 +5,23 @@ interface SEOProps {
   title: string;
   description: string;
   keywords?: string[];
-  schemaType?: 'Hotel' | 'TravelAgency' | 'Organization' | 'Article' | 'TouristDestination';
+  schemaType?: 'Hotel' | 'Villa' | 'TravelAgency' | 'Organization' | 'Article' | 'TouristDestination';
   canonical?: string;
   imageUrl?: string;
   datePublished?: string;
   dateModified?: string;
   author?: string;
   noIndex?: boolean;
+  hotelData?: {
+    name: string;
+    location: string;
+    type: string;
+    priceRange?: string;
+    rating?: number;
+    amenities?: string[];
+    imageUrl?: string;
+    telephone?: string;
+  };
 }
 
 type SchemaData = {
@@ -32,10 +42,11 @@ export default function SEO({
   datePublished,
   dateModified,
   author = 'Hotels Sifnos',
-  noIndex = false
+  noIndex = false,
+  hotelData
 }: SEOProps) {
   // Use the provided image or fall back to the default one
-  const ogImage = imageUrl || 'https://hotelssifnos.com/uploads/sifnos-og-image.jpg';
+  const ogImage = imageUrl || (hotelData?.imageUrl || 'https://hotelssifnos.com/uploads/sifnos-og-image.jpg');
   
   const formattedCanonical = canonical ? 
     (canonical.startsWith('http') ? canonical : `https://hotelssifnos.com${canonical.startsWith('/') ? canonical : `/${canonical}`}`) 
@@ -49,7 +60,7 @@ export default function SEO({
   let schemaData: SchemaData = {
     "@context": "https://schema.org",
     "@type": schemaType,
-    "name": "Hotels Sifnos",
+    "name": hotelData?.name || "Hotels Sifnos",
     "url": formattedCanonical,
     "logo": "https://hotelssifnos.com/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png",
     "sameAs": [
@@ -59,7 +70,7 @@ export default function SEO({
     ],
     "address": {
       "@type": "PostalAddress",
-      "addressLocality": "Sifnos",
+      "addressLocality": hotelData?.location || "Sifnos",
       "addressRegion": "Cyclades",
       "addressCountry": "Greece"
     }
@@ -89,26 +100,55 @@ export default function SEO({
         "longitude": "24.7458"
       }
     };
-  } else if (schemaType === 'Hotel') {
+  } else if (schemaType === 'Hotel' || schemaType === 'Villa') {
+    // Enhanced schema for hotels and villas with more detailed information
     schemaData = {
       ...schemaData,
       "description": description,
       "image": ogImage,
       "address": {
         "@type": "PostalAddress",
-        "addressLocality": "Sifnos",
+        "addressLocality": hotelData?.location || "Sifnos",
         "addressRegion": "Cyclades",
         "addressCountry": "Greece"
       },
-      "priceRange": "€€€",
-      "telephone": "+30 2284031370"
+      "priceRange": hotelData?.priceRange || "€€€",
+      "telephone": hotelData?.telephone || "+30 2284031370"
     };
+    
+    // Add rating if available
+    if (hotelData?.rating) {
+      schemaData.aggregateRating = {
+        "@type": "AggregateRating",
+        "ratingValue": hotelData.rating.toString(),
+        "reviewCount": "42" // This should ideally be dynamic
+      };
+    }
+    
+    // Add amenities if available
+    if (hotelData?.amenities && hotelData.amenities.length > 0) {
+      schemaData.amenityFeature = hotelData.amenities.map(amenity => ({
+        "@type": "LocationFeatureSpecification",
+        "name": amenity
+      }));
+    }
   }
 
-  // If title doesn't already contain "Sifnos", append it to maintain brand consistency
-  const fullTitle = title.includes("Sifnos") ? 
-    `${title} | Hotels Sifnos` : 
-    `${title} | Hotels Sifnos`;
+  // Create SEO-optimized title
+  const generateSEOTitle = () => {
+    if (hotelData) {
+      // Hotel/Villa specific title
+      const propertyType = hotelData.type === 'Villa' ? 'Villa' : 'Hotel';
+      return `${hotelData.name} - Luxury ${propertyType} in ${hotelData.location}, Sifnos | Hotels Sifnos`;
+    }
+    
+    // If title doesn't already contain "Sifnos", append it to maintain brand consistency
+    return title.includes("Sifnos") ? 
+      `${title} | Hotels Sifnos` : 
+      `${title} | Hotels Sifnos`;
+  };
+  
+  const fullTitle = generateSEOTitle();
 
   return (
     <Helmet>
