@@ -99,7 +99,7 @@ export default function HotelDetailPage() {
       id: "vo-2",
       reviewer_name: "Li-Chuen",
       rating: 5,
-      comment: "We are family of 5, with three young adult/adolescent children. We have literally had the most magical holiday at Elena's villa. The photos just don't do justice to this incredibly stunning home. The view is breath-taking and it's just 5 min walk to downtown Platis Gialos, where you will find a great beach and many restaurants. Elena's villa is a home, with nothing wanting at all. I actually cannot believe we have had the privilege to stay at this exceptional place.\n\nPlease do not hesitate to book!",
+      comment: "We are family of 5, with three young adult/adolescent children. We have literally had the most magical holiday at Elena's villa. The photos don't even do justice to this incredibly stunning home. The view is breath-taking and it's just 5 min walk to downtown Platis Gialos, where you will find a great beach and many restaurants. Elena's villa is a home, with nothing wanting at all. I actually cannot believe we have had the privilege to stay at this exceptional place.\n\nPlease do not hesitate to book!",
       country: "Canada",
       date: new Date("2023-07-22"),
       source: "Airbnb"
@@ -754,9 +754,9 @@ export default function HotelDetailPage() {
                 {isVillaOliviaClara && renderCustomReviews()}
                 
                 {/* Show reviews from BookingReviews component for other hotels */}
-                {(isMeropiRooms || isFiladakiVillas || isMorpheasPension) && <BookingReviews hotelId={hotel.id} />}
+                {(isMeropiRooms || isFiladakiVillas || isMorpheasPension || isAlkHotel) && <BookingReviews hotelId={hotel.id} />}
                 
-                {!isMeropiRooms && !isFiladakiVillas && !isMorpheasPension && !isVillaOliviaClara && (
+                {!isMeropiRooms && !isFiladakiVillas && !isMorpheasPension && !isVillaOliviaClara && !isAlkHotel && (
                   <div className="text-center py-8">
                     <p className="text-gray-600">No reviews available for this hotel.</p>
                   </div>

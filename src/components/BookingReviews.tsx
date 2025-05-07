@@ -124,7 +124,14 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
       
       console.log('Fetched reviews:', data);
       console.log('Reviews length:', data?.length || 0);
-      setReviews(data || []);
+      
+      if (data && data.length > 0) {
+        setReviews(data);
+      } else {
+        console.log('No reviews found in the database. Refreshing from Booking.com.');
+        // If no reviews are found, try to fetch them from Booking.com
+        await fetchBookingReviews();
+      }
       
     } catch (error) {
       console.error('Error fetching reviews:', error);
