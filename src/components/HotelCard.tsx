@@ -48,21 +48,23 @@ const HotelCard = ({ hotel, showLogo = true, ...props }) => {
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1">
       <Link to={`/hotels/${hotelSlug}`} className="block">
         {/* Hotel image with error handling and loading state */}
-        <HotelImage 
-          hotel={hotel}
-          imageSrc={imageSrc}
-          primaryType={primaryType}
-          getHotelTypeIcon={getHotelTypeIcon}
-        />
-        
-        {/* Show prominent hotel logo in top-right if available */}
-        {showLogo && hotelLogoUrl && (
-          <HotelLogo 
+        <div className="relative">
+          <HotelImage 
             hotel={hotel}
-            hotelLogoUrl={hotelLogoUrl}
-            position="corner"
+            imageSrc={imageSrc}
+            primaryType={primaryType}
+            getHotelTypeIcon={getHotelTypeIcon}
           />
-        )}
+          
+          {/* Show prominent hotel logo in top-right if available - Now visible all the time */}
+          {showLogo && hotelLogoUrl && (
+            <HotelLogo 
+              hotel={hotel}
+              hotelLogoUrl={hotelLogoUrl}
+              position="corner"
+            />
+          )}
+        </div>
         
         {/* Hotel details section */}
         <HotelDetails 
