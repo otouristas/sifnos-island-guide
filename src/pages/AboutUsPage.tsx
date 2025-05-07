@@ -8,8 +8,8 @@ export default function AboutUsPage() {
   return (
     <>
       <SEO 
-        title="About Hotels Sifnos - AI-Powered Accommodation Guide for Sifnos Island" 
-        description="Discover Hotels Sifnos, the first AI-powered accommodation platform dedicated to Sifnos Island. Find your perfect stay with our Touristas AI technology that delivers personalized recommendations in minutes."
+        title="About Hotels Sifnos | AI-Powered Accommodation Platform for Sifnos Island" 
+        description="Discover the team behind Hotels Sifnos, the first AI-powered accommodation platform dedicated to Sifnos Island. Learn how our Touristas AI technology delivers personalized recommendations for your perfect Greek island stay."
         keywords={['AI-powered accommodation', 'Sifnos hotels', 'Touristas AI', 'Sifnos villas', 'personalized booking', 'Greek islands accommodation']}
         schemaType="Organization"
         canonical="https://hotelssifnos.com/about-us"
@@ -20,7 +20,7 @@ export default function AboutUsPage() {
         <div className="page-container">
           <div className="text-center text-white max-w-3xl mx-auto">
             <h1 className="font-montserrat text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-              🏝️ Hotels Sifnos – The AI-Powered Guide to Your Perfect Stay
+              Hotels Sifnos – The AI-Powered Guide to Your Perfect Stay
             </h1>
             <p className="text-lg md:text-xl">
               The first and only AI-powered accommodation discovery platform dedicated exclusively to the captivating island of Sifnos, Greece.
@@ -46,7 +46,7 @@ export default function AboutUsPage() {
               
               <blockquote className="bg-sifnos-turquoise/10 p-6 rounded-lg border-l-4 border-sifnos-turquoise my-8">
                 <p className="text-lg font-medium text-sifnos-deep-blue">
-                  ⏱️ <strong>Cut your booking time. Maximize relevance. Powered by Touristas AI.</strong>
+                  <strong>Cut your booking time. Maximize relevance. Powered by Touristas AI.</strong>
                 </p>
               </blockquote>
             </div>
@@ -59,7 +59,7 @@ export default function AboutUsPage() {
         <div className="page-container">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-montserrat font-semibold mb-8">
-              🚀 What Makes Us Different
+              What Makes Us Different
             </h2>
             <div className="prose prose-lg max-w-none">
               <p>
@@ -140,7 +140,7 @@ export default function AboutUsPage() {
         <div className="page-container">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-montserrat font-semibold mb-8">
-              🌟 Our Mission & Values
+              Our Mission & Values
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -183,7 +183,7 @@ export default function AboutUsPage() {
         <div className="page-container">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-montserrat font-semibold mb-8">
-              🧠 Our Story
+              Our Story
             </h2>
             <div className="prose prose-lg max-w-none">
               <p>
@@ -202,7 +202,7 @@ export default function AboutUsPage() {
         <div className="page-container">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-montserrat font-semibold mb-8">
-              👤 Meet the Founder
+              Meet the Founder
             </h2>
             
             <div className="cycladic-card p-8">
@@ -233,7 +233,7 @@ export default function AboutUsPage() {
         <div className="page-container">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-montserrat font-semibold mb-8">
-              📬 Get in Touch
+              Get in Touch
             </h2>
             <div className="prose prose-lg max-w-none">
               <p>
@@ -269,7 +269,7 @@ export default function AboutUsPage() {
       <div className="py-16 bg-sifnos-deep-blue text-white">
         <div className="page-container text-center">
           <blockquote className="max-w-3xl mx-auto text-xl md:text-2xl font-light italic">
-            🧿 <span className="font-medium">Hotels Sifnos</span> – One island. Every stay. AI-personalized.
+            <span className="font-medium">Hotels Sifnos</span> – One island. Every stay. AI-personalized.
           </blockquote>
         </div>
       </div>
