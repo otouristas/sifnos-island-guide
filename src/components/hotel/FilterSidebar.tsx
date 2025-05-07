@@ -181,7 +181,7 @@ const FilterSidebar = ({
                 <SelectValue placeholder="All locations" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All locations</SelectItem>
+                <SelectItem value="all">All locations</SelectItem>
                 <SelectItem value="Apollonia">Apollonia</SelectItem>
                 <SelectItem value="Kamares">Kamares</SelectItem>
                 <SelectItem value="Platis Gialos">Platis Gialos</SelectItem>

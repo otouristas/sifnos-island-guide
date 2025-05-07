@@ -147,8 +147,8 @@ export default function HotelsPage() {
       results = results.filter(hotel => hotel.rating === filters.starRating);
     }
     
-    // Filter by location
-    if (filters.location) {
+    // Filter by location - now handling "all" value specifically
+    if (filters.location && filters.location !== "all") {
       results = results.filter(hotel => 
         hotel.location && hotel.location.includes(filters.location)
       );
