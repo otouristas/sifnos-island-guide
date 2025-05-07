@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { getHotelBySlug, generateHotelUrl } from '@/lib/url-utils';
 import BookingReviews from '@/components/BookingReviews';
 import HotelAmenities from '@/components/HotelAmenities';
+import HotelFAQs from '@/components/hotel/HotelFAQs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -719,32 +720,7 @@ export default function HotelDetailPage() {
               {/* FAQs */}
               <div className="cycladic-card p-6 md:p-8">
                 <h2 className="text-2xl font-montserrat font-semibold mb-6">Frequently Asked Questions</h2>
-                <div className="space-y-4">
-                  {faqs.map((faq, index) => (
-                    <div 
-                      key={index} 
-                      className="border-b pb-4 last:border-b-0 last:pb-0"
-                    >
-                      <button 
-                        className="flex justify-between items-center w-full text-left font-medium text-gray-800 py-2"
-                        onClick={() => toggleFaq(index)}
-                      >
-                        <span>{faq.question}</span>
-                        {openFaqIndex === index ? (
-                          <MinusCircle size={18} className="text-sifnos-turquoise flex-shrink-0" />
-                        ) : (
-                          <PlusCircle size={18} className="text-sifnos-turquoise flex-shrink-0" />
-                        )}
-                      </button>
-                      
-                      {openFaqIndex === index && (
-                        <div className="mt-2 text-gray-600 pl-2">
-                          {faq.answer}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                {hotel && <HotelFAQs hotelName={hotel.name} />}
               </div>
               
               {/* Reviews - Booking.com Reviews or Custom Reviews */}

@@ -73,7 +73,7 @@ export default function FeaturedHotelsSection() {
           const defaultAlkHotel = {
             id: 'alk-hotel-id',
             name: 'ALK HOTEL™',
-            location: 'Kamares, Sifnos',
+            location: 'Agia Marina - Kamares, Sifnos',
             rating: 5,
             hotel_types: ['luxury-hotels', 'beach-hotels'],
             logo_url: 'alk-hotel-sifnos/logo.png',
