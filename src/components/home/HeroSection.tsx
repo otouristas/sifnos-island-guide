@@ -36,8 +36,8 @@ export default function HeroSection() {
   return (
     <div className="relative h-[70vh] flex items-center justify-center bg-sifnos-deep-blue overflow-hidden">
       <img 
-        src="/uploads/beaches/plats-gialos.webp" 
-        alt="Beautiful Platis Gialos beach in Sifnos" 
+        src="/uploads/homepage-hero.jpg" 
+        alt="Chrysopigi Monastery in Sifnos" 
         className="absolute inset-0 w-full h-full object-cover opacity-60"
       />
       <div className="absolute inset-0 bg-black bg-opacity-40"></div>
