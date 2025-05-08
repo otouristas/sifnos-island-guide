@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
 
 @tailwind base;
@@ -129,4 +130,28 @@
 
 .toast-default {
   @apply bg-[hsl(var(--toast-default-background))] text-[hsl(var(--toast-default-foreground))];
+}
+
+/* Grid pattern for hero backgrounds */
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Custom animation for fading up elements */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.5s ease-out forwards;
 }

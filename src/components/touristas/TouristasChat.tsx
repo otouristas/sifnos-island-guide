@@ -1,15 +1,22 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Send, Loader2, Search, MapPin, User, Bot, Info, X } from 'lucide-react';
+import { Send, Loader2, Bot, User, MapPin, Info, X, Hotel } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
+import { Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useMediaQuery } from 'react-responsive';
 import { filterHotelsByLocation, getHotelImageUrl } from '@/utils/hotel-utils';
+import { 
+  Carousel, 
+  CarouselContent, 
+  CarouselItem, 
+  CarouselNext, 
+  CarouselPrevious 
+} from '@/components/ui/carousel';
 
 // Define types for better type safety
 type MessageRole = 'user' | 'assistant' | 'system';
@@ -35,6 +42,25 @@ const Separator = () => (
     <div className="h-px bg-gray-200 flex-grow"></div>
   </div>
 );
+
+// Hotel Carousel Component
+const HotelCarousel = ({ hotels }: { hotels: any[] }) => {
+  if (!hotels?.length) return null;
+  
+  return (
+    <Carousel className="w-full">
+      <CarouselContent>
+        {hotels.map((hotel) => (
+          <CarouselItem key={hotel.id} className="md:basis-1/2 lg:basis-1/3">
+            <HotelCard hotel={hotel} />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious className="left-2 bg-white/80 hover:bg-white" />
+      <CarouselNext className="right-2 bg-white/80 hover:bg-white" />
+    </Carousel>
+  );
+};
 
 // Hotel info dialog/drawer component
 const HotelDialog = ({ hotel, onClose }: HotelDialogProps) => {
@@ -91,11 +117,6 @@ const HotelContent = ({ hotel }: { hotel: any }) => {
           <MapPin className="h-4 w-4 text-sifnos-deep-blue" />
           <span className="text-sm font-medium text-sifnos-deep-blue">{hotel.location}</span>
         </div>
-        
-        <div className="flex items-center space-x-2 bg-amber-50 px-3 py-1.5 rounded-full">
-          <Info className="h-4 w-4 text-amber-600" />
-          <span className="text-sm font-medium text-amber-600">€{hotel.price} per night</span>
-        </div>
       </div>
       
       {/* Amenities */}
@@ -129,7 +150,7 @@ const HotelCard = ({ hotel }: { hotel: any }) => {
   const [isOpen, setIsOpen] = useState(false);
   
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow border border-gray-100">
+    <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow border border-gray-100 mx-1">
       <div className="relative w-full h-40 overflow-hidden bg-gray-100">
         <img 
           src={getHotelImageUrl(hotel)}
@@ -153,27 +174,22 @@ const HotelCard = ({ hotel }: { hotel: any }) => {
       <div className="p-3">
         <h3 className="font-semibold text-base truncate">{hotel.name}</h3>
         <div className="mt-1 flex items-center justify-between">
-          <span className="text-sm font-medium text-emerald-700">€{hotel.price} per night</span>
           <span className="text-xs text-gray-500">{hotel.hotel_types?.join(', ')}</span>
         </div>
       </div>
       
       {isMobile ? (
         <Drawer open={isOpen} onOpenChange={setIsOpen}>
-          <DrawerTrigger asChild>
-            <Button className="w-full rounded-none bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90">
-              View Details
-            </Button>
-          </DrawerTrigger>
+          <Button className="w-full rounded-none bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90" onClick={() => setIsOpen(true)}>
+            View Details
+          </Button>
           {isOpen && <HotelDialog hotel={hotel} onClose={() => setIsOpen(false)} />}
         </Drawer>
       ) : (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <Button className="w-full rounded-none bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90">
-              View Details
-            </Button>
-          </DialogTrigger>
+          <Button className="w-full rounded-none bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90" onClick={() => setIsOpen(true)}>
+            View Details
+          </Button>
           {isOpen && <HotelDialog hotel={hotel} onClose={() => setIsOpen(false)} />}
         </Dialog>
       )}
@@ -444,24 +460,26 @@ export default function TouristasChat() {
                   {message.content}
                 </div>
                 
-                {/* Hotel Recommendations */}
+                {/* Hotel Recommendations Carousel */}
                 {message.hotels && message.hotels.length > 0 && (
                   <div className="mt-4 space-y-4">
                     <Separator />
                     
                     <div className="font-medium text-center px-2 py-1 mb-3">
                       {message.location ? (
-                        <span>Recommended Hotels in {message.location.charAt(0).toUpperCase() + message.location.slice(1)}</span>
+                        <div className="flex items-center justify-center gap-2">
+                          <Hotel className="h-4 w-4" />
+                          <span>Recommended Hotels in {message.location.charAt(0).toUpperCase() + message.location.slice(1)}</span>
+                        </div>
                       ) : (
-                        <span>Top Recommended Hotels in Sifnos</span>
+                        <div className="flex items-center justify-center gap-2">
+                          <Hotel className="h-4 w-4" />
+                          <span>Top Recommended Hotels in Sifnos</span>
+                        </div>
                       )}
                     </div>
                     
-                    <div className="grid gap-4">
-                      {message.hotels.map((hotel) => (
-                        <HotelCard key={hotel.id} hotel={hotel} />
-                      ))}
-                    </div>
+                    <HotelCarousel hotels={message.hotels} />
                   </div>
                 )}
               </div>

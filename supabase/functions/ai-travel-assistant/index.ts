@@ -40,7 +40,9 @@ serve(async (req) => {
       
       Keep your responses conversational, helpful, and focused on helping travelers find their ideal accommodation in Sifnos based on their specified location preferences.
       
-      When the user asks about a specific location, ALWAYS phrase part of your response as: "Here are some hotel options in [LOCATION]:" to ensure you're addressing their location request.`
+      When the user asks about a specific location, ALWAYS phrase part of your response as: "Here are some hotel options in [LOCATION]:" to ensure you're addressing their location request.
+      
+      Never mention prices - focus instead on the quality, amenities, location benefits, and overall experience of each recommended property.`
     };
 
     // Combine system message with user messages
