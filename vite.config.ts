@@ -84,6 +84,32 @@ const clearCache = (): Plugin => {
   };
 };
 
+// Directory resolver plugin to handle directory imports correctly
+const directoryResolver = (): Plugin => {
+  return {
+    name: 'directory-resolver',
+    resolveId(source, importer) {
+      if (source && importer && !source.startsWith('.') && !source.startsWith('/') && !path.isAbsolute(source)) {
+        return null; // Skip non-relative imports
+      }
+      
+      if (source && fs.existsSync(source) && fs.statSync(source).isDirectory()) {
+        const indexFile = path.join(source, 'index.ts');
+        if (fs.existsSync(indexFile)) {
+          return indexFile;
+        }
+        
+        const indexTsxFile = path.join(source, 'index.tsx');
+        if (fs.existsSync(indexTsxFile)) {
+          return indexTsxFile;
+        }
+      }
+      
+      return null;
+    }
+  };
+};
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
@@ -92,6 +118,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
+    directoryResolver(), // Add our directory resolver plugin
     mode === 'development' &&
     componentTagger(),
     mode === 'production' && prerender(),
@@ -126,7 +153,7 @@ export default defineConfig(({ mode }) => ({
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'ui-lib': ['@/components/ui/index'],
           'supabase': ['@supabase/supabase-js'],
-          'touristas': ['@/components/touristas']
+          'touristas': ['@/components/touristas/index']
         },
         // Fixed file naming pattern by removing the [time] placeholder
         entryFileNames: mode === 'production' ? 'assets/[name]-[hash].js' : 'assets/[name].js',

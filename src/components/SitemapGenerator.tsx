@@ -139,7 +139,7 @@ export default function SitemapGenerator() {
       try {
         const { data: hotels, error } = await supabase
           .from('hotels')
-          .select('id, name, updated_at, hotel_types')
+          .select('id, name, updated_at, hotel_types, rating')
           .order('rating', { ascending: false });
         
         if (!error && hotels) {
@@ -148,7 +148,8 @@ export default function SitemapGenerator() {
             loc: `${baseURL}/hotels/${generateHotelUrl(hotel.name)}`,
             lastmod: new Date(hotel.updated_at).toISOString().split('T')[0],
             changefreq: 'weekly' as const,
-            priority: hotel.rating >= 4 ? 0.8 : 0.7 // Higher priority for better rated hotels
+            // Use optional chaining and nullish coalescing to safely handle missing rating
+            priority: (hotel.rating >= 4) ? 0.8 : 0.7
           }));
           
           // Add featured hotels with higher priority

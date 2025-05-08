@@ -7,7 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SEO from "./components/SEO";
 import SitemapGenerator from "./components/SitemapGenerator";
 import CookieConsent from "./components/CookieConsent";
-import TouristasAIMiniBubble from "./components/touristas/TouristasAIMiniBubble";
+import { TouristasAIMiniBubble } from "./components/touristas";
 
 // Pages
 import HomePage from "./pages/HomePage";
