@@ -96,7 +96,11 @@ export default function TouristasAIBanner() {
             <div className="absolute inset-0 bg-sifnos-turquoise/20 rounded-full animate-pulse"></div>
             <div className="absolute inset-4 bg-sifnos-turquoise/30 rounded-full animate-pulse delay-75"></div>
             <div className="relative bg-white/30 rounded-full p-6 backdrop-blur-sm">
-              <Bot className="h-24 w-24 md:h-32 md:w-32 text-white" />
+              <img 
+                src="/uploads/touristas-ai-logo.svg" 
+                alt="Touristas AI" 
+                className="h-24 w-24 md:h-32 md:w-32"
+              />
             </div>
           </div>
         </div>
