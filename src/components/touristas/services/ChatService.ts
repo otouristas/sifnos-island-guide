@@ -10,11 +10,12 @@ export interface AIRequestMessage {
 
 export const callTouristasAI = async (messages: AIRequestMessage[]): Promise<ReadableStream<Uint8Array> | null> => {
   try {
-    const response = await fetch(`${process.env.REACT_APP_SUPABASE_URL}/functions/v1/ai-travel-assistant`, {
+    // Use import.meta.env instead of process.env for Vite applications
+    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-travel-assistant`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.REACT_APP_SUPABASE_ANON_KEY}`
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
       },
       body: JSON.stringify({ messages }),
     });
@@ -33,11 +34,12 @@ export const callTouristasAI = async (messages: AIRequestMessage[]): Promise<Rea
 
 export const searchHotels = async (query: string): Promise<any[]> => {
   try {
-    const response = await fetch(`${process.env.REACT_APP_SUPABASE_URL}/functions/v1/search-hotels`, {
+    // Use import.meta.env instead of process.env for Vite applications
+    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/search-hotels`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.REACT_APP_SUPABASE_ANON_KEY}`
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
       },
       body: JSON.stringify({ query }),
     });
