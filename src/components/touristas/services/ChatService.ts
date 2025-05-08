@@ -81,7 +81,7 @@ export const processStreamingResponse = async (
         break;
       }
       
-      // Decode the chunk and append to the message content
+      // Decode the chunk - now direct content, not SSE format
       const chunk = decoder.decode(value, { stream: true });
       fullContent += chunk;
       

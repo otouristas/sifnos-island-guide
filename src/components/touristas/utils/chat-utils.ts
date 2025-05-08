@@ -1,4 +1,3 @@
-
 type Location = 'platis gialos' | 'apollonia' | 'kamares' | 'vathi' | 'kastro' | 'faros' | 'artemonas';
 
 export const isHotelRelatedQuery = (message: string): boolean => {
@@ -85,50 +84,105 @@ export const isHotelRelatedQuery = (message: string): boolean => {
   return false;
 };
 
+/**
+ * Extract location from a message
+ * @param message The message to analyze
+ * @returns The extracted location or undefined
+ */
 export const extractLocationFromMessage = (message: string): string | undefined => {
-  // List of known locations in Sifnos, with different spelling variations
-  const locationMappings: Record<string, string[]> = {
-    'platis gialos': ['platy gialo', 'plati gialo', 'plati gialos', 'platys gialos', 'platys', 'platys gialo'],
-    'apollonia': ['appolonia', 'apollona', 'apollina', 'appolina'],
-    'kamares': ['kamares', 'kamaris', 'kamari'],
-    'vathi': ['vathi', 'vathy', 'vati'],
-    'kastro': ['castro', 'kastro', 'casrto'],
-    'faros': ['pharos', 'faros', 'pharo'],
-    'artemonas': ['artemonas', 'artemona', 'artemones']
-  };
-  
-  const messageLower = message.toLowerCase();
-  
-  // Check for each location and its variations
-  for (const [standardName, variations] of Object.entries(locationMappings)) {
-    // First check if the standard name is present
-    if (messageLower.includes(standardName)) {
-      return standardName;
-    }
-    
-    // Then check variations
-    for (const variation of variations) {
-      if (messageLower.includes(variation)) {
-        return standardName; // Return the standard name
+  const lowercaseMessage = message.toLowerCase();
+  const locations = [
+    'apollonia',
+    'kamares',
+    'platis gialos', 
+    'platy gialo', // alternative spelling
+    'vathi',
+    'kastro',
+    'faros',
+    'artemonas',
+    'exambela',
+    'agios loukas',
+    'chrysopigi',
+    'herronisos',
+    'kato petali',
+    'pano petali',
+    'troullaki'
+  ];
+
+  // Check for location mentions in the message
+  for (const location of locations) {
+    if (lowercaseMessage.includes(location)) {
+      // Handle the special case of Platy Gialo (alternative spelling)
+      if (location === 'platy gialo') {
+        return 'platis gialos';
       }
+      return location;
     }
   }
-  
-  // Check for prepositional phrases (in X, near X, at X)
-  const prepositions = ['in ', 'near ', 'at ', 'to '];
-  for (const [standardName, variations] of Object.entries(locationMappings)) {
-    const allNames = [standardName, ...variations];
-    
-    for (const name of allNames) {
-      for (const prep of prepositions) {
-        if (messageLower.includes(`${prep}${name}`)) {
-          return standardName;
-        }
-      }
-    }
-  }
-  
+
   return undefined;
+};
+
+/**
+ * Extract locations from an AI response
+ * @param response The AI response to analyze
+ * @returns Array of extracted locations
+ */
+export const extractLocationsFromResponse = (response: string): string[] => {
+  if (!response) return [];
+  
+  const lowercaseResponse = response.toLowerCase();
+  const locations = [
+    'apollonia',
+    'kamares',
+    'platis gialos', 
+    'platy gialo', // alternative spelling
+    'vathi',
+    'kastro',
+    'faros',
+    'artemonas',
+    'exambela',
+    'agios loukas', 
+    'chrysopigi',
+    'herronisos',
+    'kato petali',
+    'pano petali',
+    'troullaki'
+  ];
+
+  const foundLocations = locations.filter(location => 
+    lowercaseResponse.includes(location)
+  );
+  
+  // Handle the special case of Platy Gialo (alternative spelling)
+  if (foundLocations.includes('platy gialo') && !foundLocations.includes('platis gialos')) {
+    const index = foundLocations.indexOf('platy gialo');
+    foundLocations[index] = 'platis gialos';
+  }
+  
+  return [...new Set(foundLocations)]; // Remove duplicates
+};
+
+/**
+ * Check if response requires showing hotel recommendations
+ * @param response The AI response to analyze
+ * @returns Boolean indicating if hotels should be shown
+ */
+export const shouldShowHotelsInResponse = (response: string): boolean => {
+  if (!response) return false;
+  
+  const triggerPhrases = [
+    'here are some hotel options',
+    'recommended hotels', 
+    'suggest staying at',
+    'accommodation options',
+    'places to stay',
+    'consider staying at',
+    'hotels that might interest you'
+  ];
+  
+  const lowercaseResponse = response.toLowerCase();
+  return triggerPhrases.some(phrase => lowercaseResponse.includes(phrase));
 };
 
 export type MessageRole = 'user' | 'assistant' | 'system';

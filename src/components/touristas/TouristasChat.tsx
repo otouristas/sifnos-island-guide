@@ -1,11 +1,10 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import ChatMessages from './ChatMessages';
-import { Message, isHotelRelatedQuery, extractLocationFromMessage } from './utils/chat-utils';
+import { Message, isHotelRelatedQuery, extractLocationFromMessage, extractLocationsFromResponse, shouldShowHotelsInResponse } from './utils/chat-utils';
 import { AIRequestMessage, searchHotels, callTouristasAI, processStreamingResponse } from './services/ChatService';
 
 export default function TouristasChat() {
@@ -98,19 +97,19 @@ export default function TouristasChat() {
       const reader = response.getReader();
       const fullContent = await processStreamingResponse(reader, assistantId, setMessages);
       
-      // If the AI response suggests showing hotels but we initially didn't think so
-      const showHotelsFromResponse = (
-        fullContent.includes('Here are some hotel options') || 
-        fullContent.includes('recommended hotels') || 
-        fullContent.includes('suggest staying at') ||
-        fullContent.includes('accommodation options') ||
-        fullContent.includes('places to stay') ||
-        fullContent.includes('consider staying at')
-      );
+      // After getting the full response, check if we should show hotels
+      const locationsInResponse = extractLocationsFromResponse(fullContent);
+      const showHotelsByTrigger = shouldShowHotelsInResponse(fullContent);
       
-      if (showHotelsFromResponse && (!shouldShowHotels || relevantHotels.length === 0)) {
-        // Fetch hotels if the AI response suggests showing them but we didn't initially
-        relevantHotels = await searchHotels(input);
+      if ((locationsInResponse.length > 0 || showHotelsByTrigger) && !shouldShowHotels) {
+        // Fetch hotels for the mentioned locations
+        let query = input;
+        if (locationsInResponse.length > 0) {
+          // Add locations to the query for better search results
+          query = `${input} ${locationsInResponse.join(' ')}`;
+        }
+        
+        relevantHotels = await searchHotels(query);
         
         if (relevantHotels.length > 0) {
           // Update message to include hotels
@@ -121,7 +120,7 @@ export default function TouristasChat() {
                     ...msg, 
                     hotels: relevantHotels,
                     showHotels: true,
-                    location: extractLocationFromMessage(input)
+                    location: locationsInResponse.length === 1 ? locationsInResponse[0] : undefined
                   } 
                 : msg
             )
