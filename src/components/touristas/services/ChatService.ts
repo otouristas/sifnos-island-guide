@@ -11,11 +11,22 @@ export interface AIRequestMessage {
 export const callTouristasAI = async (messages: AIRequestMessage[]): Promise<ReadableStream<Uint8Array> | null> => {
   try {
     // Use import.meta.env instead of process.env for Vite applications
-    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-travel-assistant`, {
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    
+    // Debug information to help troubleshoot
+    console.log('Using Supabase URL:', supabaseUrl);
+    
+    if (!supabaseUrl) {
+      console.error('VITE_SUPABASE_URL is not defined in environment variables');
+      return null;
+    }
+    
+    const response = await fetch(`${supabaseUrl}/functions/v1/ai-travel-assistant`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+        'Authorization': `Bearer ${supabaseAnonKey}`
       },
       body: JSON.stringify({ messages }),
     });
@@ -35,11 +46,19 @@ export const callTouristasAI = async (messages: AIRequestMessage[]): Promise<Rea
 export const searchHotels = async (query: string): Promise<any[]> => {
   try {
     // Use import.meta.env instead of process.env for Vite applications
-    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/search-hotels`, {
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    
+    if (!supabaseUrl) {
+      console.error('VITE_SUPABASE_URL is not defined in environment variables');
+      return [];
+    }
+    
+    const response = await fetch(`${supabaseUrl}/functions/v1/search-hotels`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+        'Authorization': `Bearer ${supabaseAnonKey}`
       },
       body: JSON.stringify({ query }),
     });
