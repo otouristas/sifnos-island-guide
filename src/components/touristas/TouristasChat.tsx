@@ -404,64 +404,74 @@ export default function TouristasChat() {
       }]);
       
       // Call the AI travel assistant function using Supabase client
-      const { data, error } = await supabase.functions.invoke("ai-travel-assistant", {
+      const response = await supabase.functions.invoke("ai-travel-assistant", {
         body: {
-          messages: messages.map(msg => ({ role: msg.role, content: msg.content })).concat([userMessage]),
+          messages: [
+            ...messages.map(msg => ({ role: msg.role, content: msg.content })),
+            { role: userMessage.role, content: userMessage.content }
+          ],
         },
       });
       
-      if (error) {
-        console.error("Error from AI travel assistant:", error);
-        throw new Error(`Error from AI travel assistant: ${error.message}`);
+      // Handle non-streaming response first to catch errors
+      if (response.error) {
+        console.error("Error from AI travel assistant:", response.error);
+        throw new Error(`Error from AI travel assistant: ${response.error.message || response.error}`);
       }
       
-      // Process the streaming response
-      const reader = new ReadableStreamDefaultReader(data as ReadableStream);
-      const decoder = new TextDecoder();
+      if (!response.data) {
+        throw new Error("Empty response from AI travel assistant");
+      }
+
+      // Process the response data as an event stream
+      const reader = new ReadableStream({
+        start(controller) {
+          const decoder = new TextDecoder();
+          const lines = decoder.decode(response.data as ArrayBuffer).split("\n");
+          
+          for (const line of lines) {
+            if (line.startsWith("data:")) {
+              controller.enqueue(line.slice(5).trim());
+            }
+          }
+          controller.close();
+        }
+      }).getReader();
+      
       let fullContent = '';
       
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         
-        // Decode and process the chunk
-        const chunk = decoder.decode(value);
-        const lines = chunk.split('\n');
+        if (value === '[DONE]') continue;
         
-        for (const line of lines) {
-          if (line.startsWith('data:')) {
-            const content = line.slice(5).trim();
+        try {
+          const parsed = JSON.parse(value);
+          if (parsed.choices && parsed.choices[0]?.delta?.content) {
+            const content = parsed.choices[0].delta.content;
+            fullContent += content;
             
-            // Check if it's the end of stream
-            if (content === '[DONE]') continue;
-            
-            try {
-              const parsedData = JSON.parse(content);
-              if (parsedData.choices && parsedData.choices[0]?.delta?.content) {
-                fullContent += parsedData.choices[0].delta.content;
-                
-                // Update the message with accumulated content
-                setMessages((prev) => 
-                  prev.map(msg => 
-                    msg.id === assistantId 
-                      ? { ...msg, content: fullContent } 
-                      : msg
-                  )
-                );
-              }
-            } catch (err) {
-              console.error('Error parsing chunk:', err, 'Content:', content);
-            }
+            // Update the message with accumulated content
+            setMessages((prev) => 
+              prev.map(msg => 
+                msg.id === assistantId 
+                  ? { ...msg, content: fullContent } 
+                  : msg
+              )
+            );
           }
+        } catch (err) {
+          console.error('Error parsing chunk:', err, 'Content:', value);
         }
       }
       
-      // If the content suggests we should show hotels but we initially didn't think so
+      // If the AI response suggests showing hotels but we initially didn't think so
       const showHotelsFromResponse = fullContent.includes('Here are some hotel options') || 
                                     fullContent.includes('recommended hotels') || 
                                     fullContent.includes('suggest staying at');
       
-      if (showHotelsFromResponse && !shouldShowHotels && relevantHotels.length === 0) {
+      if (showHotelsFromResponse && (!shouldShowHotels || relevantHotels.length === 0)) {
         // Fetch hotels if the AI response suggests showing them but we didn't initially
         relevantHotels = await searchHotels(input);
         

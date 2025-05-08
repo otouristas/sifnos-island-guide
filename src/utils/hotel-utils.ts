@@ -22,16 +22,8 @@ export const filterHotelsByLocation = (hotels: any[], location: string): any[] =
  * @returns URL string for the hotel image
  */
 export const getHotelImageUrl = (hotel: any): string => {
-  if (!hotel || !hotel.hotel_photos || hotel.hotel_photos.length === 0) {
+  if (!hotel) {
     return '/placeholder.svg'; // Fallback image
-  }
-  
-  // First try to find the main photo
-  const mainPhoto = hotel.hotel_photos.find((photo: any) => photo.is_main_photo);
-  const photoUrl = mainPhoto?.photo_url || hotel.hotel_photos[0]?.photo_url;
-  
-  if (!photoUrl) {
-    return '/placeholder.svg';
   }
   
   // Generate cache-busting timestamp
@@ -39,7 +31,7 @@ export const getHotelImageUrl = (hotel: any): string => {
   const randomValue = Math.floor(Math.random() * 1000);
   const cacheBuster = `?v=${timestamp}-${randomValue}`;
   
-  // Special case handling for specific hotels
+  // Special case handling for specific hotels - hardcoded paths for reliability
   if (hotel.name === 'Filadaki Villas') {
     return `/uploads/hotels/filadaki-studios/home-page_9151.jpg.jpeg${cacheBuster}`;
   }
@@ -61,13 +53,25 @@ export const getHotelImageUrl = (hotel: any): string => {
     return `/uploads/hotels/meropirooms-hero.webp${cacheBuster}`;
   }
   
-  // Check if the path already includes a subfolder
-  if (photoUrl.includes('/')) {
-    return `/uploads/hotels/${photoUrl}${cacheBuster}`;
+  // Check if hotel has photos
+  if (hotel.hotel_photos && hotel.hotel_photos.length > 0) {
+    // First try to find the main photo
+    const mainPhoto = hotel.hotel_photos.find((photo: any) => photo.is_main_photo);
+    let photoUrl = mainPhoto?.photo_url || hotel.hotel_photos[0]?.photo_url;
+    
+    if (photoUrl) {
+      // Check if the path already includes a subfolder
+      if (photoUrl.includes('/')) {
+        return `/uploads/hotels/${photoUrl}${cacheBuster}`;
+      }
+      
+      // Default path for hotel images
+      return `/uploads/hotels/${photoUrl}${cacheBuster}`;
+    }
   }
   
-  // Default path for hotel images
-  return `/uploads/hotels/${photoUrl}${cacheBuster}`;
+  // Final fallback to placeholder
+  return '/placeholder.svg';
 };
 
 /**
@@ -76,7 +80,7 @@ export const getHotelImageUrl = (hotel: any): string => {
  * @returns URL string for the hotel logo
  */
 export const getHotelLogoUrl = (hotel: any): string => {
-  if (!hotel || !hotel.logo_path) {
+  if (!hotel) {
     return '/placeholder.svg';
   }
   
@@ -84,7 +88,7 @@ export const getHotelLogoUrl = (hotel: any): string => {
   const randomValue = Math.floor(Math.random() * 1000);
   const cacheBuster = `?v=${timestamp}-${randomValue}`;
   
-  // Special case for specific hotels
+  // Special case for specific hotels - hardcoded paths for reliability
   if (hotel.name === 'Meropi Rooms and Apartments') {
     return `/uploads/hotels/meropi-logo.svg${cacheBuster}`;
   }
@@ -105,10 +109,15 @@ export const getHotelLogoUrl = (hotel: any): string => {
     return `/uploads/hotels/morpheas-pension/logo.png${cacheBuster}`;
   }
   
-  // If logo_path contains a directory path
-  if (hotel.logo_path.includes('/')) {
+  // If logo_path exists and contains a directory path
+  if (hotel.logo_path) {
+    if (hotel.logo_path.includes('/')) {
+      return `/uploads/hotels/${hotel.logo_path}${cacheBuster}`;
+    }
+    
     return `/uploads/hotels/${hotel.logo_path}${cacheBuster}`;
   }
   
-  return `/uploads/hotels/${hotel.logo_path}${cacheBuster}`;
+  // Final fallback to placeholder
+  return '/placeholder.svg';
 };
