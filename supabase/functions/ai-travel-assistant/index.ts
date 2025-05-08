@@ -42,6 +42,8 @@ serve(async (req) => {
       
       When the user asks about a specific location, ALWAYS phrase part of your response as: "Here are some hotel options in [LOCATION]:" to ensure you're addressing their location request.
       
+      Even for general greetings like "hello" or "hi", provide a warm, informative response about finding accommodations in Sifnos.
+      
       Never mention prices - focus instead on the quality, amenities, location benefits, and overall experience of each recommended property.`
     };
 
@@ -60,7 +62,7 @@ serve(async (req) => {
         "X-Title": "Hotels Sifnos"
       },
       body: JSON.stringify({
-        model: "openai/gpt-4o",
+        model: "anthropic/claude-3-sonnet@20240229",
         messages: allMessages,
         temperature: 0.7,
         max_tokens: 1000,

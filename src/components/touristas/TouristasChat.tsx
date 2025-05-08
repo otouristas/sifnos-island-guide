@@ -225,7 +225,7 @@ export default function TouristasChat() {
       'platis gialos': ['platy gialo', 'plati gialo', 'plati gialos', 'platys gialos'],
       'apollonia': ['appolonia', 'apollona'],
       'kamares': ['kamares'],
-      'vathi': ['vathi', 'vathi'],
+      'vathi': ['vathi', 'vathy'],
       'kastro': ['castro', 'kastro'],
       'faros': ['pharos', 'faros'],
       'artemonas': ['artemonas']
@@ -278,12 +278,12 @@ export default function TouristasChat() {
         const filteredHotels = filterHotelsByLocation(hotels, locationFromQuery);
         console.log(`Filtered hotels by ${locationFromQuery}:`, filteredHotels.length);
         
-        // Limit results to top 3
-        return filteredHotels.slice(0, 3);
+        // Limit results to top 6
+        return filteredHotels.slice(0, 6);
       }
       
-      // If no location specified, return top 3 hotels
-      return hotels.slice(0, 3);
+      // If no location specified, return top 6 hotels
+      return hotels.slice(0, 6);
     } catch (error) {
       console.error('Error searching hotels:', error);
       return [];
@@ -336,6 +336,7 @@ export default function TouristasChat() {
       });
       
       if (error) {
+        console.error("Error from AI travel assistant:", error);
         throw new Error(`Error from AI travel assistant: ${error.message}`);
       }
       
@@ -374,7 +375,7 @@ export default function TouristasChat() {
                 );
               }
             } catch (err) {
-              console.error('Error parsing chunk:', err);
+              console.error('Error parsing chunk:', err, 'Content:', content);
             }
           }
         }
@@ -382,15 +383,14 @@ export default function TouristasChat() {
       
       // If no content was received, show fallback message
       if (!fullContent) {
+        const fallbackMessage = locationFromMessage 
+          ? `I found some hotel options in ${locationFromMessage} that might interest you. Feel free to ask me more about them!`
+          : "I found some hotel options in Sifnos that might interest you. Feel free to ask me more about them!";
+          
         setMessages((prev) => 
           prev.map(msg => 
             msg.id === assistantId 
-              ? { 
-                  ...msg, 
-                  content: locationFromMessage 
-                    ? `I found some hotel options in ${locationFromMessage} that might interest you. Feel free to ask me more about them!`
-                    : "I found some hotel options in Sifnos that might interest you. Feel free to ask me more about them!" 
-                } 
+              ? { ...msg, content: fallbackMessage } 
               : msg
           )
         );

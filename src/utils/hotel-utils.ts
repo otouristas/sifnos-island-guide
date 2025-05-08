@@ -8,7 +8,7 @@
  * @returns Filtered array of hotels
  */
 export const filterHotelsByLocation = (hotels: any[], location: string): any[] => {
-  if (!location || !hotels?.length) return [];
+  if (!location || !hotels?.length) return hotels;
   
   const normalizedLocation = location.toLowerCase();
   return hotels.filter(hotel => 
