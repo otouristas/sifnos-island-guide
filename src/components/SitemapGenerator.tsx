@@ -139,7 +139,8 @@ export default function SitemapGenerator() {
       try {
         const { data: hotels, error } = await supabase
           .from('hotels')
-          .select('id, name, updated_at, hotel_types');
+          .select('id, name, updated_at, hotel_types')
+          .order('rating', { ascending: false });
         
         if (!error && hotels) {
           // Create sitemap entries for each hotel
@@ -147,109 +148,57 @@ export default function SitemapGenerator() {
             loc: `${baseURL}/hotels/${generateHotelUrl(hotel.name)}`,
             lastmod: new Date(hotel.updated_at).toISOString().split('T')[0],
             changefreq: 'weekly' as const,
-            priority: 0.8
+            priority: hotel.rating >= 4 ? 0.8 : 0.7 // Higher priority for better rated hotels
           }));
           
-          // Ensure all hotels with their types are correctly indexed
-          hotels.forEach(hotel => {
-            if (hotel.hotel_types && hotel.hotel_types.length > 0) {
-              console.log(`Hotel ${hotel.name} has types: ${hotel.hotel_types.join(', ')}`);
+          // Add featured hotels with higher priority
+          const featuredHotels = [
+            {name: "Meropi Rooms and Apartments", id: "meropi-rooms-and-apartments", priority: 0.9},
+            {name: "Filadaki Villas", id: "filadaki-villas", priority: 0.9},
+            {name: "ALK Hotel Sifnos", id: "alk-hotel-sifnos", priority: 0.8},
+            {name: "Villa Olivia Clara", id: "villa-olivia-clara", priority: 0.8}
+          ];
+          
+          // Add each featured hotel, ensuring no duplicates
+          featuredHotels.forEach(featured => {
+            const urlSlug = generateHotelUrl(featured.name);
+            const featureUrl = `${baseURL}/hotels/${urlSlug}`;
+            
+            // Check if it's already in hotelPages with this exact URL
+            const existingIndex = hotelPages.findIndex(page => page.loc === featureUrl);
+            
+            if (existingIndex >= 0) {
+              // Update the existing entry with higher priority
+              hotelPages[existingIndex].priority = featured.priority;
+              hotelPages[existingIndex].changefreq = 'daily';
+            } else {
+              // Add new entry
+              hotelPages.push({
+                loc: featureUrl,
+                lastmod: currentDate,
+                changefreq: 'daily',
+                priority: featured.priority
+              });
             }
           });
-          
-          // Add explicit entry for Meropi Rooms and Apartments
-          const meropiHotel = hotels.find(hotel => 
-            hotel.name === "Meropi Rooms and Apartments" || 
-            hotel.id === "0c9632b6-db5c-4179-8122-0003896e465e"
-          );
-          
-          if (meropiHotel) {
-            console.log("Found Meropi hotel in database, ID:", meropiHotel.id);
-            console.log("Meropi hotel URL slug:", generateHotelUrl(meropiHotel.name));
-            
-            // Ensure it's correctly included even if it's in the database
-            const meropiUrl = `${baseURL}/hotels/meropi-rooms-and-apartments`;
-            
-            // Check if it's already in hotelPages with this exact URL
-            const alreadyIncluded = hotelPages.some(page => page.loc === meropiUrl);
-            
-            if (!alreadyIncluded) {
-              // Add it with higher priority as a featured property
-              hotelPages.push({
-                loc: meropiUrl,
-                lastmod: currentDate,
-                changefreq: 'daily' as const,
-                priority: 0.9
-              });
-              console.log("Added Meropi Rooms and Apartments to sitemap with enhanced priority");
-            }
-          } else {
-            // Add a manual entry if not found in database
-            hotelPages.push({
-              loc: `${baseURL}/hotels/meropi-rooms-and-apartments`,
-              lastmod: currentDate,
-              changefreq: 'daily' as const,
-              priority: 0.9
-            });
-            console.log("Added manual entry for Meropi Rooms and Apartments");
-          }
-          
-          // Add explicit entry for Filadaki Villas
-          const filadakiVillas = hotels.find(hotel => 
-            hotel.name === "Filadaki Villas" || 
-            hotel.name.toLowerCase().includes("filadaki")
-          );
-          
-          if (filadakiVillas) {
-            console.log("Found Filadaki Villas in database, ID:", filadakiVillas.id);
-            console.log("Filadaki Villas URL slug:", generateHotelUrl(filadakiVillas.name));
-            
-            // Ensure it's correctly included even if it's in the database
-            const filadakiUrl = `${baseURL}/hotels/filadaki-villas`;
-            
-            // Check if it's already in hotelPages with this exact URL
-            const alreadyIncluded = hotelPages.some(page => page.loc === filadakiUrl);
-            
-            if (!alreadyIncluded) {
-              // Add it with higher priority
-              hotelPages.push({
-                loc: filadakiUrl,
-                lastmod: currentDate,
-                changefreq: 'daily' as const,
-                priority: 0.9
-              });
-              console.log("Added Filadaki Villas to sitemap with enhanced priority");
-            }
-          } else {
-            // Add a manual entry if not found in database
-            hotelPages.push({
-              loc: `${baseURL}/hotels/filadaki-villas`,
-              lastmod: currentDate,
-              changefreq: 'daily' as const,
-              priority: 0.9
-            });
-            console.log("Added manual entry for Filadaki Villas");
-          }
         }
       } catch (error) {
         console.error('Error fetching hotels for sitemap:', error);
         
-        // Always ensure Meropi and Filadaki are in the sitemap even if database fetch fails
-        hotelPages.push({
-          loc: `${baseURL}/hotels/meropi-rooms-and-apartments`,
+        // Add fallback entries for featured hotels if database fetch fails
+        const fallbackHotels = [
+          {name: "Meropi Rooms and Apartments", slug: "meropi-rooms-and-apartments", priority: 0.9},
+          {name: "Filadaki Villas", slug: "filadaki-villas", priority: 0.9},
+          {name: "ALK Hotel Sifnos", slug: "alk-hotel-sifnos", priority: 0.8},
+          {name: "Villa Olivia Clara", slug: "villa-olivia-clara", priority: 0.8}
+        ];
+        
+        hotelPages = fallbackHotels.map(hotel => ({
+          loc: `${baseURL}/hotels/${hotel.slug}`,
           lastmod: currentDate,
           changefreq: 'daily' as const,
-          priority: 0.9
-        });
-        
-        hotelPages.push({
-          loc: `${baseURL}/hotels/filadaki-villas`,
-          lastmod: currentDate,
-          changefreq: 'daily' as const,
-          priority: 0.9
-        });
-        
-        console.log("Added fallback entries for special hotels due to database error");
+          priority: hotel.priority
+        }));
       }
       
       // Combine all pages
@@ -272,6 +221,11 @@ ${allPages.map(page => `  <url>
       } else {
         // Browser environment - just log it
         console.log('Generated sitemap with', allPages.length, 'URLs');
+        
+        // For development purposes, output the sitemap to console
+        if (import.meta.env.DEV) {
+          console.log('Sitemap content:', sitemapContent);
+        }
       }
 
       return sitemapContent;
