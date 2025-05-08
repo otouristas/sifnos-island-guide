@@ -86,14 +86,9 @@ serve(async (req) => {
           for await (const chunk of stream) {
             const content = chunk.choices[0]?.delta?.content || '';
             if (content) {
-              // Format as SSE
-              const sseMessage = `data: ${JSON.stringify({
-                choices: [{ delta: { content }, index: 0 }]
-              })}\n\n`;
-              controller.enqueue(encoder.encode(sseMessage));
+              controller.enqueue(encoder.encode(content));
             }
           }
-          controller.enqueue(encoder.encode('data: [DONE]\n\n'));
           controller.close();
         } catch (error) {
           console.error("Stream error:", error);
@@ -106,7 +101,7 @@ serve(async (req) => {
     return new Response(readable, {
       headers: {
         ...corsHeaders,
-        "Content-Type": "text/event-stream",
+        "Content-Type": "text/plain; charset=utf-8",
       },
     });
   } catch (error) {
