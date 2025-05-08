@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SEO from "./components/SEO";
 import SitemapGenerator from "./components/SitemapGenerator";
 import CookieConsent from "./components/CookieConsent";
+import TouristasAIMiniBubble from "./components/touristas/TouristasAIMiniBubble";
 
 // Pages
 import HomePage from "./pages/HomePage";
@@ -91,6 +92,7 @@ const App = () => (
         </main>
         <Footer />
         <CookieConsent />
+        <TouristasAIMiniBubble />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
