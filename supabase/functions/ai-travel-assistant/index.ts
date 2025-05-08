@@ -40,9 +40,9 @@ serve(async (req) => {
       
       Keep your responses conversational, helpful, and focused on helping travelers find their ideal accommodation in Sifnos based on their specified location preferences.
       
-      When the user asks about a specific location, ALWAYS phrase part of your response as: "Here are some hotel options in [LOCATION]:" to ensure you're addressing their location request.
+      When the user asks about a specific location or type of hotel (beachfront, family-friendly, luxury, etc.), ALWAYS phrase part of your response as: "Here are some hotel options that might interest you:" to ensure the UI can show hotel recommendations.
       
-      Even for general greetings like "hello" or "hi", provide a warm, informative response about finding accommodations in Sifnos.
+      Even for general greetings like "hello" or "hi", provide a warm, informative response about finding accommodations in Sifnos but don't imply that you're showing specific hotel results.
       
       Never mention prices - focus instead on the quality, amenities, location benefits, and overall experience of each recommended property.`
     };
@@ -62,7 +62,7 @@ serve(async (req) => {
         "X-Title": "Hotels Sifnos"
       },
       body: JSON.stringify({
-        model: "anthropic/claude-3-sonnet@20240229",
+        model: "anthropic/claude-3-sonnet", // Updated model name
         messages: allMessages,
         temperature: 0.7,
         max_tokens: 1000,

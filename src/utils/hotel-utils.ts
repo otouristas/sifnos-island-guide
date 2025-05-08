@@ -41,31 +41,19 @@ export const getHotelImageUrl = (hotel: any): string => {
   
   // Special case handling for specific hotels
   if (hotel.name === 'Filadaki Villas') {
-    if (photoUrl.includes('filadaki-studios/')) {
-      return `/uploads/hotels/${photoUrl}${cacheBuster}`;
-    }
-    return `/uploads/hotels/filadaki-studios/${photoUrl}${cacheBuster}`;
+    return `/uploads/hotels/filadaki-studios/home-page_9151.jpg.jpeg${cacheBuster}`;
   }
   
   if (hotel.name === 'Villa Olivia Clara') {
-    if (photoUrl.includes('villa-olivia-clara/')) {
-      return `/uploads/hotels/${photoUrl}${cacheBuster}`;
-    }
-    return `/uploads/hotels/villa-olivia-clara/${photoUrl}${cacheBuster}`;
+    return `/uploads/hotels/villa-olivia-clara/feature-image.jpeg${cacheBuster}`;
   }
   
   if (hotel.name === 'ALK HOTEL™') {
-    if (photoUrl.includes('alk-hotel-sifnos/')) {
-      return `/uploads/hotels/${photoUrl}${cacheBuster}`;
-    }
-    return `/uploads/hotels/alk-hotel-sifnos/${photoUrl}${cacheBuster}`;
+    return `/uploads/hotels/alk-hotel-sifnos/alk-hotel-feature.jpeg${cacheBuster}`;
   }
   
   if (hotel.name === 'Morpheas Pension & Apartments') {
-    if (photoUrl.includes('morpheas-pension/')) {
-      return `/uploads/hotels/${photoUrl}${cacheBuster}`;
-    }
-    return `/uploads/hotels/morpheas-pension/${photoUrl}${cacheBuster}`;
+    return `/uploads/hotels/morpheas-pension/sifnos-accommodation.jpg.jpeg${cacheBuster}`;
   }
   
   // Handle hotel-specific paths for Meropi

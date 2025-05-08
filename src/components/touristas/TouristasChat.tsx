@@ -1,7 +1,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Send, Loader2, Bot, User, MapPin, Info, X, Hotel } from 'lucide-react';
+import { Send, Loader2, Bot, User, MapPin, Info, X, Hotel, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Badge } from '@/components/ui/badge';
 import { Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useMediaQuery } from 'react-responsive';
-import { filterHotelsByLocation, getHotelImageUrl } from '@/utils/hotel-utils';
+import { filterHotelsByLocation, getHotelImageUrl, getHotelLogoUrl } from '@/utils/hotel-utils';
 import { 
   Carousel, 
   CarouselContent, 
@@ -27,6 +27,7 @@ type Message = {
   content: string;
   location?: string;
   hotels?: any[];
+  showHotels?: boolean;
 };
 
 type HotelDialogProps = {
@@ -206,7 +207,8 @@ export default function TouristasChat() {
     {
       id: 'welcome',
       role: 'assistant',
-      content: 'Γεια σου! 👋 I\'m your Sifnos travel assistant. Tell me what location in Sifnos you\'re interested in staying - like Platis Gialos, Apollonia, Kamares, or Vathi? I can help you find the perfect accommodation!'
+      content: 'Γεια σου! 👋 I\'m your Sifnos travel assistant. Tell me what location in Sifnos you\'re interested in staying - like Platis Gialos, Apollonia, Kamares, or Vathi. Or ask me general questions about Sifnos and its accommodations!',
+      showHotels: false
     }
   ]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -218,6 +220,31 @@ export default function TouristasChat() {
   
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+  
+  // This helper checks if a message is specifically asking about hotels or locations
+  const isHotelRelatedQuery = (message: string): boolean => {
+    const hotelTerms = ['hotel', 'stay', 'accommodation', 'room', 'apartment', 'villa', 'place to stay'];
+    const locationTerms = ['platis gialos', 'apollonia', 'kamares', 'vathi', 'kastro', 'faros', 'artemonas'];
+    const beachTerms = ['beach', 'beachfront', 'by the sea', 'oceanfront', 'sea view'];
+    const messageLower = message.toLowerCase();
+    
+    // Check for hotel terms
+    if (hotelTerms.some(term => messageLower.includes(term))) {
+      return true;
+    }
+    
+    // Check for location terms
+    if (locationTerms.some(term => messageLower.includes(term))) {
+      return true;
+    }
+    
+    // Check for beach terms
+    if (beachTerms.some(term => messageLower.includes(term))) {
+      return true;
+    }
+    
+    return false;
   };
   
   const extractLocationFromMessage = (message: string): string | undefined => {
@@ -274,17 +301,56 @@ export default function TouristasChat() {
       
       if (!hotels) return [];
       
+      // Check for specific types of accommodations in the query
+      const luxuryTerms = ['luxury', 'high-end', 'upscale', 'premium', 'exclusive'];
+      const familyTerms = ['family', 'kid', 'children', 'family-friendly'];
+      const beachTerms = ['beach', 'beachfront', 'sea view', 'by the sea'];
+      const budgetTerms = ['budget', 'affordable', 'cheap', 'inexpensive'];
+      
+      const queryLower = query.toLowerCase();
+      let filteredHotels = hotels;
+      
       // Filter by location if specified
       if (locationFromQuery) {
-        const filteredHotels = filterHotelsByLocation(hotels, locationFromQuery);
+        filteredHotels = filterHotelsByLocation(filteredHotels, locationFromQuery);
         console.log(`Filtered hotels by ${locationFromQuery}:`, filteredHotels.length);
-        
-        // Limit results to top 6
-        return filteredHotels.slice(0, 6);
       }
       
-      // If no location specified, return top 6 hotels
-      return hotels.slice(0, 6);
+      // Apply additional filters based on the query
+      if (luxuryTerms.some(term => queryLower.includes(term))) {
+        filteredHotels = filteredHotels.filter(hotel => 
+          hotel.hotel_types?.some((type: string) => type.toLowerCase().includes('luxury')) || 
+          hotel.rating >= 4.5
+        );
+      }
+      
+      if (familyTerms.some(term => queryLower.includes(term))) {
+        filteredHotels = filteredHotels.filter(hotel => 
+          hotel.hotel_types?.some((type: string) => type.toLowerCase().includes('family'))
+        );
+      }
+      
+      if (beachTerms.some(term => queryLower.includes(term))) {
+        // Filter for beach hotels - either by location or by description
+        filteredHotels = filteredHotels.filter(hotel => 
+          hotel.location?.toLowerCase().includes('platis gialos') || 
+          hotel.location?.toLowerCase().includes('vathi') || 
+          hotel.location?.toLowerCase().includes('kamares') ||
+          (hotel.description && 
+            beachTerms.some(term => hotel.description.toLowerCase().includes(term)))
+        );
+      }
+      
+      if (budgetTerms.some(term => queryLower.includes(term))) {
+        // Assume budget hotels have lower prices
+        filteredHotels = filteredHotels.filter(hotel => 
+          hotel.price < 150 || 
+          hotel.hotel_types?.some((type: string) => type.toLowerCase().includes('budget'))
+        );
+      }
+      
+      // Limit results to top 6
+      return filteredHotels.slice(0, 6);
     } catch (error) {
       console.error('Error searching hotels:', error);
       return [];
@@ -312,12 +378,19 @@ export default function TouristasChat() {
     setIsLoading(true);
     
     try {
-      // Extract location from user message
-      const locationFromMessage = extractLocationFromMessage(input);
+      // Check if this is a hotel-related query
+      const shouldShowHotels = isHotelRelatedQuery(input);
+      let relevantHotels: any[] = [];
       
-      // Search for hotels based on user query
-      const relevantHotels = await searchHotels(input);
-      console.log("Found relevant hotels:", relevantHotels);
+      // Only search for hotels if it's a hotel-related query
+      if (shouldShowHotels) {
+        // Extract location from user message
+        const locationFromMessage = extractLocationFromMessage(input);
+        
+        // Search for hotels based on user query
+        relevantHotels = await searchHotels(input);
+        console.log("Found relevant hotels:", relevantHotels);
+      }
 
       // Add temporary assistant message
       const assistantId = (Date.now() + 1).toString();
@@ -325,8 +398,9 @@ export default function TouristasChat() {
         id: assistantId, 
         role: 'assistant', 
         content: '', 
-        location: locationFromMessage, 
-        hotels: relevantHotels.length > 0 ? relevantHotels : undefined
+        location: extractLocationFromMessage(input), 
+        hotels: shouldShowHotels && relevantHotels.length > 0 ? relevantHotels : undefined,
+        showHotels: shouldShowHotels && relevantHotels.length > 0
       }]);
       
       // Call the AI travel assistant function using Supabase client
@@ -382,8 +456,35 @@ export default function TouristasChat() {
         }
       }
       
+      // If the content suggests we should show hotels but we initially didn't think so
+      const showHotelsFromResponse = fullContent.includes('Here are some hotel options') || 
+                                    fullContent.includes('recommended hotels') || 
+                                    fullContent.includes('suggest staying at');
+      
+      if (showHotelsFromResponse && !shouldShowHotels && relevantHotels.length === 0) {
+        // Fetch hotels if the AI response suggests showing them but we didn't initially
+        relevantHotels = await searchHotels(input);
+        
+        if (relevantHotels.length > 0) {
+          // Update message to include hotels
+          setMessages((prev) => 
+            prev.map(msg => 
+              msg.id === assistantId 
+                ? { 
+                    ...msg, 
+                    hotels: relevantHotels,
+                    showHotels: true,
+                    location: extractLocationFromMessage(input)
+                  } 
+                : msg
+            )
+          );
+        }
+      }
+      
       // If no content was received, show fallback message
       if (!fullContent) {
+        const locationFromMessage = extractLocationFromMessage(input);
         const fallbackMessage = locationFromMessage 
           ? `I found some hotel options in ${locationFromMessage} that might interest you. Feel free to ask me more about them!`
           : "I found some hotel options in Sifnos that might interest you. Feel free to ask me more about them!";
@@ -453,8 +554,8 @@ export default function TouristasChat() {
                   {message.content}
                 </div>
                 
-                {/* Hotel Recommendations Carousel */}
-                {message.hotels && message.hotels.length > 0 && (
+                {/* Hotel Recommendations Carousel - only show when specifically asked about hotels */}
+                {message.showHotels && message.hotels && message.hotels.length > 0 && (
                   <div className="mt-4 space-y-4">
                     <Separator />
                     
