@@ -19,7 +19,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, messagesEndRef })
           className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
         >
           <div 
-            className={`flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] md:max-w-[80%] ${
+            className={`flex gap-2 sm:gap-3 max-w-[95%] sm:max-w-[90%] md:max-w-[85%] ${
               message.role === 'user' 
                 ? 'flex-row-reverse' 
                 : 'flex-row'
@@ -36,19 +36,19 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, messagesEndRef })
             )}
             
             <div 
-              className={`rounded-2xl p-3 sm:p-4 shadow-sm ${
+              className={`rounded-2xl p-2.5 sm:p-3.5 shadow-sm ${
                 message.role === 'user' 
-                  ? 'bg-sifnos-deep-blue text-white' 
-                  : 'bg-white border border-gray-200'
+                  ? 'bg-sifnos-deep-blue text-white break-words' 
+                  : 'bg-white border border-gray-200 break-words'
               }`}
             >
-              <div className="whitespace-pre-wrap text-xs sm:text-sm md:text-base">
+              <div className="whitespace-pre-wrap text-xs sm:text-sm md:text-base break-words">
                 {message.content}
               </div>
               
               {/* Hotel Recommendations Carousel - only show when specifically asked about hotels */}
               {message.showHotels && message.hotels && message.hotels.length > 0 && (
-                <div className="mt-3 sm:mt-4 space-y-3 sm:space-y-4">
+                <div className="mt-3 sm:mt-4 space-y-3 sm:space-y-4 max-w-full overflow-hidden">
                   <Separator />
                   
                   <div className="font-medium text-center px-2 py-1 mb-2 sm:mb-3 text-sm sm:text-base">
@@ -65,7 +65,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, messagesEndRef })
                     )}
                   </div>
                   
-                  <div className="w-full overflow-x-hidden">
+                  <div className="w-full overflow-hidden">
                     <HotelCarousel hotels={message.hotels} />
                   </div>
                 </div>
