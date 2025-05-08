@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Send, Loader2, Bot, User, MapPin, Info, X, Hotel } from 'lucide-react';
@@ -156,6 +157,7 @@ const HotelCard = ({ hotel }: { hotel: any }) => {
           alt={hotel.name}
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
           onError={(e) => {
+            console.error(`Failed to load image for ${hotel.name}`);
             (e.target as HTMLImageElement).src = '/placeholder.svg';
           }}
           loading="eager"

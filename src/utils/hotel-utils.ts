@@ -1,65 +1,93 @@
 
-import { getHotelRoomImagePath } from '@/integrations/supabase/client';
+// Hotel utility functions
 
-// Function to get the proper image URL for a hotel
-export const getHotelImageUrl = (hotel: any): string => {
-  if (!hotel || !hotel.hotel_photos) {
-    return '/placeholder.svg';
-  }
-  
-  // Find main photo or use the first one
-  const mainPhoto = hotel.hotel_photos.find((photo: any) => photo.is_main_photo);
-  const photoToUse = mainPhoto || hotel.hotel_photos[0];
-  
-  if (!photoToUse || !photoToUse.photo_url) {
-    return '/placeholder.svg';
-  }
-  
-  return getHotelRoomImagePath(photoToUse.photo_url, hotel.name);
-};
-
-// Function to normalize location names for better matching
-export const normalizeLocation = (location: string): string => {
-  if (!location) return '';
-  
-  location = location.toLowerCase().trim();
-  
-  // Handle common misspellings and variations
-  if (location === 'platy gialo' || location === 'plati gialo' || location === 'plati gialos' || location === 'platys gialos') {
-    return 'platis gialos';
-  }
-  
-  if (location === 'appolonia' || location === 'apollona') {
-    return 'apollonia';
-  }
-  
-  if (location === 'vathy') {
-    return 'vathi';
-  }
-  
-  if (location === 'castro') {
-    return 'kastro';
-  }
-  
-  if (location === 'pharos') {
-    return 'faros';
-  }
-  
-  return location;
-};
-
-// Filter hotels by location with fuzzy matching
+/**
+ * Filter hotels by location with case-insensitive matching
+ * @param hotels Array of hotel objects
+ * @param location Location string to filter by
+ * @returns Filtered array of hotels
+ */
 export const filterHotelsByLocation = (hotels: any[], location: string): any[] => {
-  if (!location || !hotels?.length) return hotels;
+  if (!location || !hotels?.length) return [];
   
-  console.log(`Filtering hotels by location: ${location}`);
-  const normalizedLocation = normalizeLocation(location);
-  console.log(`Normalized location: ${normalizedLocation}`);
+  const normalizedLocation = location.toLowerCase();
+  return hotels.filter(hotel => 
+    hotel.location && hotel.location.toLowerCase().includes(normalizedLocation)
+  );
+};
+
+/**
+ * Get the proper URL for a hotel image, handling different paths and ensuring proper caching
+ * @param hotel Hotel object
+ * @returns URL string for the hotel image
+ */
+export const getHotelImageUrl = (hotel: any): string => {
+  if (!hotel || !hotel.hotel_photos || hotel.hotel_photos.length === 0) {
+    return '/placeholder.svg'; // Fallback image
+  }
   
-  return hotels.filter(hotel => {
-    if (!hotel.location) return false;
-    const hotelNormalizedLocation = normalizeLocation(hotel.location);
-    console.log(`Hotel ${hotel.name} location: ${hotel.location}, normalized: ${hotelNormalizedLocation}`);
-    return hotelNormalizedLocation === normalizedLocation;
-  });
+  // First try to find the main photo
+  const mainPhoto = hotel.hotel_photos.find((photo: any) => photo.is_main_photo);
+  const photoUrl = mainPhoto?.photo_url || hotel.hotel_photos[0]?.photo_url;
+  
+  if (!photoUrl) {
+    return '/placeholder.svg';
+  }
+  
+  // Generate cache-busting timestamp
+  const timestamp = Date.now();
+  const randomValue = Math.floor(Math.random() * 1000);
+  const cacheBuster = `?v=${timestamp}-${randomValue}`;
+  
+  // Check if path already includes logo_path subfolder
+  if (hotel.logo_path && photoUrl.includes(hotel.logo_path.split('/')[0])) {
+    return `/uploads/hotels/${photoUrl}${cacheBuster}`;
+  }
+  
+  // Handle hotel-specific paths
+  if (hotel.name === 'Filadaki Villas' && !photoUrl.includes('filadaki-studios/')) {
+    return `/uploads/hotels/filadaki-studios/${photoUrl}${cacheBuster}`;
+  }
+  
+  if (hotel.name === 'Villa Olivia Clara' && !photoUrl.includes('villa-olivia-clara/')) {
+    return `/uploads/hotels/villa-olivia-clara/${photoUrl}${cacheBuster}`;
+  }
+  
+  if (hotel.name === 'ALK HOTEL™' && !photoUrl.includes('alk-hotel-sifnos/')) {
+    return `/uploads/hotels/alk-hotel-sifnos/${photoUrl}${cacheBuster}`;
+  }
+  
+  if (hotel.name === 'Morpheas Pension & Apartments' && !photoUrl.includes('morpheas-pension/')) {
+    return `/uploads/hotels/morpheas-pension/${photoUrl}${cacheBuster}`;
+  }
+  
+  // Check if the path is already an absolute path
+  if (photoUrl.startsWith('/')) {
+    return `${photoUrl}${cacheBuster}`;
+  }
+  
+  // Default path for hotel images
+  return `/uploads/hotels/${photoUrl}${cacheBuster}`;
+};
+
+/**
+ * Get hotel logo URL with proper path handling
+ * @param hotel Hotel object
+ * @returns URL string for the hotel logo
+ */
+export const getHotelLogoUrl = (hotel: any): string => {
+  if (!hotel || !hotel.logo_path) {
+    return '/placeholder.svg';
+  }
+  
+  const timestamp = Date.now();
+  const randomValue = Math.floor(Math.random() * 1000);
+  const cacheBuster = `?v=${timestamp}-${randomValue}`;
+  
+  // If logo_path contains a directory path
+  if (hotel.logo_path.includes('/')) {
+    return `/uploads/hotels/${hotel.logo_path}${cacheBuster}`;
+  }
+  
+  return `/uploads/hotels/${hotel.logo_path}${cacheBuster}`;
 };
