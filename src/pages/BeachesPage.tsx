@@ -285,104 +285,106 @@ export default function BeachesPage() {
         </div>
       </div>
 
-      {/* FAQ Section */}
-      <div className="py-12 bg-white">
+      {/* FAQ Section - Improved spacing and padding */}
+      <div className="py-16 bg-white">
         <div className="page-container">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-montserrat font-semibold text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-montserrat font-semibold text-center mb-10">
               Frequently Asked Questions About Sifnos Beaches
             </h2>
             
-            <div className="cycladic-card space-y-6">
-              <div>
-                <h3 className="font-medium text-lg mb-2">Which is the best beach for families on Sifnos?</h3>
-                <p className="text-gray-700">Platy Gialos and Kamares are ideal for families thanks to their wide sandy shores, shallow waters, and full amenities.</p>
-              </div>
-              
-              <div>
-                <h3 className="font-medium text-lg mb-2">Where can I find traditional pottery workshops?</h3>
-                <p className="text-gray-700">Pottery lovers should visit Kamares, Faros, and Herronisos, where authentic workshops operate year-round.</p>
-              </div>
-              
-              <div>
-                <h3 className="font-medium text-lg mb-2">Are there hiking trails starting from the beach villages?</h3>
-                <p className="text-gray-700">Yes! Kamares, Faros, Vathi, and Platy Gialos all serve as trailheads for scenic routes across Sifnos.</p>
-              </div>
-              
-              <div>
-                <h3 className="font-medium text-lg mb-2">What is the most famous church on Sifnos?</h3>
-                <p className="text-gray-700">The Monastery of Panagia Chrysopigi is the island's most iconic religious site and patron saint, celebrated with a major annual festival.</p>
-              </div>
-              
-              <div>
-                <h3 className="font-medium text-lg mb-2">Can I access Fykiada beach by car?</h3>
-                <p className="text-gray-700">No, Fykiada is only reachable by foot or by boat, offering a serene, crowd-free experience.</p>
-              </div>
-              
-              <div>
-                <h3 className="font-medium text-lg mb-2">Are there Blue Flag beaches on Sifnos?</h3>
-                <p className="text-gray-700">Yes, Platy Gialos consistently earns the Blue Flag award for cleanliness, safety, and eco-friendliness.</p>
+            <div className="cycladic-card p-8">
+              <div className="space-y-8">
+                <div>
+                  <h3 className="font-medium text-lg mb-3">Which is the best beach for families on Sifnos?</h3>
+                  <p className="text-gray-700">Platy Gialos and Kamares are ideal for families thanks to their wide sandy shores, shallow waters, and full amenities.</p>
+                </div>
+                
+                <div>
+                  <h3 className="font-medium text-lg mb-3">Where can I find traditional pottery workshops?</h3>
+                  <p className="text-gray-700">Pottery lovers should visit Kamares, Faros, and Herronisos, where authentic workshops operate year-round.</p>
+                </div>
+                
+                <div>
+                  <h3 className="font-medium text-lg mb-3">Are there hiking trails starting from the beach villages?</h3>
+                  <p className="text-gray-700">Yes! Kamares, Faros, Vathi, and Platy Gialos all serve as trailheads for scenic routes across Sifnos.</p>
+                </div>
+                
+                <div>
+                  <h3 className="font-medium text-lg mb-3">What is the most famous church on Sifnos?</h3>
+                  <p className="text-gray-700">The Monastery of Panagia Chrysopigi is the island's most iconic religious site and patron saint, celebrated with a major annual festival.</p>
+                </div>
+                
+                <div>
+                  <h3 className="font-medium text-lg mb-3">Can I access Fykiada beach by car?</h3>
+                  <p className="text-gray-700">No, Fykiada is only reachable by foot or by boat, offering a serene, crowd-free experience.</p>
+                </div>
+                
+                <div>
+                  <h3 className="font-medium text-lg mb-3">Are there Blue Flag beaches on Sifnos?</h3>
+                  <p className="text-gray-700">Yes, Platy Gialos consistently earns the Blue Flag award for cleanliness, safety, and eco-friendliness.</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Beach Safety Tips */}
-      <div className="py-12 bg-gray-50">
+      {/* Beach Safety Tips - Improved spacing and padding */}
+      <div className="py-16 bg-gray-50">
         <div className="page-container">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-montserrat font-semibold text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-montserrat font-semibold text-center mb-10">
               Beach Safety Tips
             </h2>
             
-            <div className="cycladic-card">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="cycladic-card p-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div>
-                  <h3 className="font-medium text-xl mb-4 flex items-center">
-                    <ShieldCheck size={20} className="text-sifnos-turquoise mr-2" />
-                    Stay Safe at Sifnos Beaches
+                  <h3 className="font-medium text-xl mb-6 flex items-center">
+                    <ShieldCheck size={20} className="text-sifnos-turquoise mr-3 flex-shrink-0" />
+                    <span>Stay Safe at Sifnos Beaches</span>
                   </h3>
-                  <ul className="space-y-3">
+                  <ul className="space-y-4">
                     <li className="flex items-start">
-                      <span className="w-1.5 h-1.5 bg-sifnos-turquoise rounded-full mr-2 mt-2"></span>
+                      <span className="w-1.5 h-1.5 bg-sifnos-turquoise rounded-full mr-3 mt-2.5 flex-shrink-0"></span>
                       <span>Use sunscreen (SPF 30+) and reapply every 2 hours, especially after swimming</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="w-1.5 h-1.5 bg-sifnos-turquoise rounded-full mr-2 mt-2"></span>
+                      <span className="w-1.5 h-1.5 bg-sifnos-turquoise rounded-full mr-3 mt-2.5 flex-shrink-0"></span>
                       <span>Stay hydrated by drinking plenty of water throughout the day</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="w-1.5 h-1.5 bg-sifnos-turquoise rounded-full mr-2 mt-2"></span>
+                      <span className="w-1.5 h-1.5 bg-sifnos-turquoise rounded-full mr-3 mt-2.5 flex-shrink-0"></span>
                       <span>Be cautious of strong winds which can create challenging swimming conditions</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="w-1.5 h-1.5 bg-sifnos-turquoise rounded-full mr-2 mt-2"></span>
+                      <span className="w-1.5 h-1.5 bg-sifnos-turquoise rounded-full mr-3 mt-2.5 flex-shrink-0"></span>
                       <span>Not all beaches have lifeguards - supervise children at all times</span>
                     </li>
                   </ul>
                 </div>
                 
                 <div>
-                  <h3 className="font-medium text-xl mb-4 flex items-center">
-                    <Sailboat size={20} className="text-sifnos-turquoise mr-2" />
-                    Environmental Consciousness
+                  <h3 className="font-medium text-xl mb-6 flex items-center">
+                    <Sailboat size={20} className="text-sifnos-turquoise mr-3 flex-shrink-0" />
+                    <span>Environmental Consciousness</span>
                   </h3>
-                  <ul className="space-y-3">
+                  <ul className="space-y-4">
                     <li className="flex items-start">
-                      <span className="w-1.5 h-1.5 bg-sifnos-turquoise rounded-full mr-2 mt-2"></span>
+                      <span className="w-1.5 h-1.5 bg-sifnos-turquoise rounded-full mr-3 mt-2.5 flex-shrink-0"></span>
                       <span>Take all trash with you when leaving the beach</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="w-1.5 h-1.5 bg-sifnos-turquoise rounded-full mr-2 mt-2"></span>
+                      <span className="w-1.5 h-1.5 bg-sifnos-turquoise rounded-full mr-3 mt-2.5 flex-shrink-0"></span>
                       <span>Avoid removing pebbles, shells, or any natural elements</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="w-1.5 h-1.5 bg-sifnos-turquoise rounded-full mr-2 mt-2"></span>
+                      <span className="w-1.5 h-1.5 bg-sifnos-turquoise rounded-full mr-3 mt-2.5 flex-shrink-0"></span>
                       <span>Use reef-safe sunscreen to protect marine life</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="w-1.5 h-1.5 bg-sifnos-turquoise rounded-full mr-2 mt-2"></span>
+                      <span className="w-1.5 h-1.5 bg-sifnos-turquoise rounded-full mr-3 mt-2.5 flex-shrink-0"></span>
                       <span>Respect local wildlife and marine ecosystems</span>
                     </li>
                   </ul>
