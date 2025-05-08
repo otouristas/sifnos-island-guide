@@ -1,6 +1,6 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
+import { OpenAI } from "https://esm.sh/openai@4.19.0";
 
 const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY") || "";
 
@@ -52,32 +52,52 @@ serve(async (req) => {
     
     console.log("Calling OpenRouter API with messages:", JSON.stringify(allMessages));
 
-    // Call OpenRouter API with streaming enabled - fixed model name
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
-        "HTTP-Referer": "https://hotelssifnos.com",
-        "X-Title": "Hotels Sifnos"
-      },
-      body: JSON.stringify({
-        model: "anthropic/claude-3-sonnet", // Fixed model name - removed version
-        messages: allMessages,
-        temperature: 0.7,
-        max_tokens: 1000,
-        stream: true,
-      }),
+    // Initialize OpenAI client with OpenRouter base URL
+    const client = new OpenAI({
+      baseURL: "https://openrouter.ai/api/v1",
+      apiKey: OPENROUTER_API_KEY,
+      dangerouslyAllowBrowser: true
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("OpenRouter API error:", response.status, errorText);
-      throw new Error(`OpenRouter API error: ${response.status} ${errorText}`);
-    }
-    
+    // Create streaming chat completion
+    const stream = await client.chat.completions.create({
+      model: "anthropic/claude-3-haiku:beta",
+      messages: allMessages,
+      temperature: 0.7,
+      max_tokens: 1000,
+      stream: true,
+      extra_headers: {
+        "HTTP-Referer": "https://hotelssifnos.com",
+        "X-Title": "Hotels Sifnos"
+      }
+    });
+
+    // Create a ReadableStream from the OpenAI stream
+    const encoder = new TextEncoder();
+    const readable = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const chunk of stream) {
+            const content = chunk.choices[0]?.delta?.content || '';
+            if (content) {
+              // Format as SSE
+              const sseMessage = `data: ${JSON.stringify({
+                choices: [{ delta: { content }, index: 0 }]
+              })}\n\n`;
+              controller.enqueue(encoder.encode(sseMessage));
+            }
+          }
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+          controller.close();
+        } catch (error) {
+          console.error("Stream error:", error);
+          controller.error(error);
+        }
+      }
+    });
+
     // Return the streaming response with proper headers
-    return new Response(response.body, {
+    return new Response(readable, {
       headers: {
         ...corsHeaders,
         "Content-Type": "text/event-stream",

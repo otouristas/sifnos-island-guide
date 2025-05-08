@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Send, Loader2, Bot, User, MapPin, Info, X, Hotel, Search } from 'lucide-react';
@@ -497,47 +496,46 @@ export default function TouristasChat() {
       if (!response.data) {
         throw new Error("Empty response from AI travel assistant");
       }
-
-      // Process the response data as an event stream
-      const reader = new ReadableStream({
-        start(controller) {
-          const decoder = new TextDecoder();
-          const lines = decoder.decode(response.data as ArrayBuffer).split("\n");
-          
-          for (const line of lines) {
-            if (line.startsWith("data:")) {
-              controller.enqueue(line.slice(5).trim());
-            }
-          }
-          controller.close();
-        }
-      }).getReader();
       
+      // Process the streaming response
+      const reader = response.data.getReader();
+      const decoder = new TextDecoder();
       let fullContent = '';
       
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         
-        if (value === '[DONE]') continue;
+        // Decode the chunk and split by lines
+        const text = decoder.decode(value, { stream: true });
+        const lines = text.split('\n\n');
         
-        try {
-          const parsed = JSON.parse(value);
-          if (parsed.choices && parsed.choices[0]?.delta?.content) {
-            const content = parsed.choices[0].delta.content;
-            fullContent += content;
-            
-            // Update the message with accumulated content
-            setMessages((prev) => 
-              prev.map(msg => 
-                msg.id === assistantId 
-                  ? { ...msg, content: fullContent } 
-                  : msg
-              )
-            );
+        for (const line of lines) {
+          // Skip empty lines and DONE messages
+          if (!line || line === 'data: [DONE]') continue;
+          
+          // Extract the JSON payload from the SSE format
+          const dataMatch = line.match(/^data: (.+)$/m);
+          if (!dataMatch) continue;
+          
+          try {
+            const parsed = JSON.parse(dataMatch[1]);
+            if (parsed.choices && parsed.choices[0]?.delta?.content) {
+              const content = parsed.choices[0].delta.content;
+              fullContent += content;
+              
+              // Update the message with accumulated content
+              setMessages((prev) => 
+                prev.map(msg => 
+                  msg.id === assistantId 
+                    ? { ...msg, content: fullContent } 
+                    : msg
+                )
+              );
+            }
+          } catch (err) {
+            console.error('Error parsing chunk:', err, 'Content:', dataMatch[1]);
           }
-        } catch (err) {
-          console.error('Error parsing chunk:', err, 'Content:', value);
         }
       }
       
