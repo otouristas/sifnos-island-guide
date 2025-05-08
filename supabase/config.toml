@@ -1,7 +1,7 @@
 
 # A string used to distinguish different Supabase projects on the same host. Defaults to the working
 # directory name when running `supabase init`.
-project_id = "wdzlruiekcznbcicjgrz"
+project_id = "hotels-sifnos"
 
 [api]
 # Port to use for the API URL.
@@ -10,7 +10,7 @@ port = 54321
 # endpoints. public and storage are always included.
 schemas = ["public", "storage", "graphql_public"]
 # Extra schemas to add to the search_path of every request. public is always included.
-extra_search_path = ["extensions"]
+extra_search_path = ["public", "extensions"]
 # The maximum number of rows returns from a view, table, or stored procedure. Limits payload size
 # for accidental or malicious requests.
 max_rows = 1000
@@ -49,31 +49,25 @@ additional_redirect_urls = ["https://localhost:3000"]
 jwt_expiry = 3600
 # Allow/disallow new user signups to your project.
 enable_signup = true
-# If disabled, invitations are required for new users to sign up.
+# If enabled, a user will be required to confirm any email change on both the old, and new email
+# addresses. If disabled, only the new email is required to confirm.
+double_confirm_changes = true
+# If enabled, users need to confirm their email address before signing in.
 enable_confirmations = false
 
-# Uncomment to customize email template
-# [auth.email]
-# # Allow/disallow new user signups via email to your project.
-# enable_signup = true
-# # If enabled, a user will be required to confirm any email change on both the old, and new email
-# # addresses. If disabled, only the new email is required to confirm.
-# double_confirm_changes = true
-# # If enabled, users need to confirm their email address before signing in.
-# enable_confirmations = false
-
-# Uncomment to customize SMS provided
-# [auth.sms]
-# # Allow/disallow new user signups via SMS to your project.
-# enable_signup = true
-# # If enabled, users need to confirm their phone number before signing in.
-# enable_confirmations = false
+# Use an external OAuth provider. The full list of providers are: `apple`, `azure`, `bitbucket`,
+# `discord`, `facebook`, `github`, `gitlab`, `google`, `keycloak`, `linkedin`, `notion`, `twitch`,
+# `twitter`, `slack`, `spotify`, `workos`, `zoom`.
+[auth.external.apple]
+enabled = false
+client_id = ""
+secret = ""
+# Overrides the default auth redirectUrl.
+redirect_uri = ""
+# Overrides the default auth provider URL. Used to support self-hosted gitlab, single-tenant Azure,
+# or any other third-party OIDC providers.
+url = ""
 
 [functions]
 [functions.ai-travel-assistant]
 verify_jwt = false
-
-[analytics]
-enabled = false
-port = 54327
-vector_port = 54328

@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Send, Loader2, Bot, User, MapPin, Info, X, Hotel } from 'lucide-react';
@@ -224,7 +223,7 @@ export default function TouristasChat() {
       'platis gialos': ['platy gialo', 'plati gialo', 'plati gialos', 'platys gialos'],
       'apollonia': ['appolonia', 'apollona'],
       'kamares': ['kamares'],
-      'vathi': ['vathy', 'vathi'],
+      'vathi': ['vathi', 'vathi'],
       'kastro': ['castro', 'kastro'],
       'faros': ['pharos', 'faros'],
       'artemonas': ['artemonas']
@@ -327,28 +326,19 @@ export default function TouristasChat() {
         hotels: relevantHotels.length > 0 ? relevantHotels : undefined
       }]);
       
-      // Call the AI travel assistant function
-      const response = await fetch('/functions/v1/ai-travel-assistant', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      // Call the AI travel assistant function using Supabase client
+      const { data, error } = await supabase.functions.invoke("ai-travel-assistant", {
+        body: {
           messages: messages.map(msg => ({ role: msg.role, content: msg.content })).concat([userMessage]),
-        }),
+        },
       });
       
-      if (!response.ok) {
-        throw new Error(`Error from AI travel assistant: ${response.status}`);
+      if (error) {
+        throw new Error(`Error from AI travel assistant: ${error.message}`);
       }
       
       // Process the streaming response
-      const reader = response.body?.getReader();
-      
-      if (!reader) {
-        throw new Error('Failed to get response reader');
-      }
-      
+      const reader = new ReadableStreamDefaultReader(data as ReadableStream);
       const decoder = new TextDecoder();
       let fullContent = '';
       
