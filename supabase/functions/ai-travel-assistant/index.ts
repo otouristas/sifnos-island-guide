@@ -52,7 +52,7 @@ serve(async (req) => {
     
     console.log("Calling OpenRouter API with messages:", JSON.stringify(allMessages));
 
-    // Call OpenRouter API with streaming enabled
+    // Call OpenRouter API with streaming enabled - fixed model name
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -62,7 +62,7 @@ serve(async (req) => {
         "X-Title": "Hotels Sifnos"
       },
       body: JSON.stringify({
-        model: "anthropic/claude-3-sonnet@20240229",
+        model: "anthropic/claude-3-sonnet", // Fixed model name - removed version
         messages: allMessages,
         temperature: 0.7,
         max_tokens: 1000,

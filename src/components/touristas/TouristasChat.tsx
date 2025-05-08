@@ -224,24 +224,84 @@ export default function TouristasChat() {
   
   // This helper checks if a message is specifically asking about hotels or locations
   const isHotelRelatedQuery = (message: string): boolean => {
-    const hotelTerms = ['hotel', 'stay', 'accommodation', 'room', 'apartment', 'villa', 'place to stay'];
-    const locationTerms = ['platis gialos', 'apollonia', 'kamares', 'vathi', 'kastro', 'faros', 'artemonas'];
-    const beachTerms = ['beach', 'beachfront', 'by the sea', 'oceanfront', 'sea view'];
+    // More specific hotel-related terms
+    const hotelTerms = [
+      'hotel', 'stay', 'accommodation', 'room', 'apartment', 'villa', 'place to stay',
+      'where to stay', 'lodging', 'resort', 'motel', 'inn', 'hostel', 'pension',
+      'where can i stay', 'places to stay', 'best hotel', 'recommend hotel',
+      'good hotel'
+    ];
+    const locationTerms = [
+      'platis gialos', 'apollonia', 'kamares', 'vathi', 'kastro', 'faros', 
+      'artemonas', 'platy gialo', 'in kamares', 'in apollonia', 'in vathi',
+      'in kastro', 'in faros', 'in platis gialos', 'near kamares', 'near apollonia',
+      'near platis gialos', 'near vathi', 'near kastro', 'near faros'
+    ];
+    const searchPhrases = [
+      'looking for', 'searching for', 'find me', 'can you suggest', 
+      'recommend', 'show me', 'i need', 'i want', 'i\'m looking for'
+    ];
+    const beachTerms = [
+      'beach', 'beachfront', 'by the sea', 'oceanfront', 'sea view', 
+      'ocean view', 'waterfront', 'by the beach', 'near the beach',
+      'close to the beach', 'on the beach'
+    ];
+    
     const messageLower = message.toLowerCase();
     
-    // Check for hotel terms
-    if (hotelTerms.some(term => messageLower.includes(term))) {
+    // Check for phrases like "hotels in Kamares" or "accommodations near the beach"
+    for (const hotelTerm of hotelTerms) {
+      // Check for location-specific queries
+      for (const locationTerm of locationTerms) {
+        if (messageLower.includes(`${hotelTerm} in ${locationTerm}`) || 
+            messageLower.includes(`${hotelTerm} near ${locationTerm}`) ||
+            messageLower.includes(`${hotelTerm} at ${locationTerm}`) ||
+            messageLower.includes(`${locationTerm} ${hotelTerm}`)) {
+          return true;
+        }
+      }
+      
+      // Check for beach-related queries
+      for (const beachTerm of beachTerms) {
+        if (messageLower.includes(`${hotelTerm} ${beachTerm}`) || 
+            messageLower.includes(`${beachTerm} ${hotelTerm}`)) {
+          return true;
+        }
+      }
+      
+      // Check for search phrases + hotel terms
+      for (const searchPhrase of searchPhrases) {
+        if (messageLower.includes(`${searchPhrase} ${hotelTerm}`)) {
+          return true;
+        }
+      }
+    }
+    
+    // Check if message contains both a hotel term and a location term
+    const hasHotelTerm = hotelTerms.some(term => messageLower.includes(term));
+    const hasLocationTerm = locationTerms.some(term => messageLower.includes(term));
+    
+    if (hasHotelTerm && hasLocationTerm) {
       return true;
     }
     
-    // Check for location terms
-    if (locationTerms.some(term => messageLower.includes(term))) {
+    // Check for explicit beach hotel questions
+    const hasBeachTerm = beachTerms.some(term => messageLower.includes(term));
+    if (hasHotelTerm && hasBeachTerm) {
       return true;
     }
     
-    // Check for beach terms
-    if (beachTerms.some(term => messageLower.includes(term))) {
-      return true;
+    // Check for questions about specific hotel types
+    const hotelTypeQueries = [
+      'luxury hotel', 'family hotel', 'budget hotel', 'cheap hotel', 
+      'boutique hotel', 'best place to stay', 'good place to stay',
+      'nice hotel', 'affordable hotel'
+    ];
+    
+    for (const query of hotelTypeQueries) {
+      if (messageLower.includes(query)) {
+        return true;
+      }
     }
     
     return false;
@@ -250,13 +310,13 @@ export default function TouristasChat() {
   const extractLocationFromMessage = (message: string): string | undefined => {
     // List of known locations in Sifnos, with different spelling variations
     const locationMappings: Record<string, string[]> = {
-      'platis gialos': ['platy gialo', 'plati gialo', 'plati gialos', 'platys gialos', 'platys'],
-      'apollonia': ['appolonia', 'apollona', 'apollina'],
-      'kamares': ['kamares', 'kamaris'],
-      'vathi': ['vathi', 'vathy'],
-      'kastro': ['castro', 'kastro'],
-      'faros': ['pharos', 'faros'],
-      'artemonas': ['artemonas', 'artemona']
+      'platis gialos': ['platy gialo', 'plati gialo', 'plati gialos', 'platys gialos', 'platys', 'platys gialo'],
+      'apollonia': ['appolonia', 'apollona', 'apollina', 'appolina'],
+      'kamares': ['kamares', 'kamaris', 'kamari'],
+      'vathi': ['vathi', 'vathy', 'vati'],
+      'kastro': ['castro', 'kastro', 'casrto'],
+      'faros': ['pharos', 'faros', 'pharo'],
+      'artemonas': ['artemonas', 'artemona', 'artemones']
     };
     
     const messageLower = message.toLowerCase();
@@ -272,6 +332,20 @@ export default function TouristasChat() {
       for (const variation of variations) {
         if (messageLower.includes(variation)) {
           return standardName; // Return the standard name
+        }
+      }
+    }
+    
+    // Check for prepositional phrases (in X, near X, at X)
+    const prepositions = ['in ', 'near ', 'at ', 'to '];
+    for (const [standardName, variations] of Object.entries(locationMappings)) {
+      const allNames = [standardName, ...variations];
+      
+      for (const name of allNames) {
+        for (const prep of prepositions) {
+          if (messageLower.includes(`${prep}${name}`)) {
+            return standardName;
+          }
         }
       }
     }
@@ -302,10 +376,10 @@ export default function TouristasChat() {
       if (!hotels) return [];
       
       // Check for specific types of accommodations in the query
-      const luxuryTerms = ['luxury', 'high-end', 'upscale', 'premium', 'exclusive'];
-      const familyTerms = ['family', 'kid', 'children', 'family-friendly'];
-      const beachTerms = ['beach', 'beachfront', 'sea view', 'by the sea'];
-      const budgetTerms = ['budget', 'affordable', 'cheap', 'inexpensive'];
+      const luxuryTerms = ['luxury', 'high-end', 'upscale', 'premium', 'exclusive', 'fancy', 'best'];
+      const familyTerms = ['family', 'kid', 'children', 'family-friendly', 'child-friendly', 'kids'];
+      const beachTerms = ['beach', 'beachfront', 'sea view', 'by the sea', 'ocean', 'coastal'];
+      const budgetTerms = ['budget', 'affordable', 'cheap', 'inexpensive', 'economical', 'low cost'];
       
       const queryLower = query.toLowerCase();
       let filteredHotels = hotels;
@@ -336,6 +410,7 @@ export default function TouristasChat() {
           hotel.location?.toLowerCase().includes('platis gialos') || 
           hotel.location?.toLowerCase().includes('vathi') || 
           hotel.location?.toLowerCase().includes('kamares') ||
+          hotel.hotel_types?.some((type: string) => type.toLowerCase().includes('beach')) ||
           (hotel.description && 
             beachTerms.some(term => hotel.description.toLowerCase().includes(term)))
         );
@@ -389,7 +464,7 @@ export default function TouristasChat() {
         
         // Search for hotels based on user query
         relevantHotels = await searchHotels(input);
-        console.log("Found relevant hotels:", relevantHotels);
+        console.log("Found relevant hotels:", relevantHotels.length);
       }
 
       // Add temporary assistant message
@@ -467,9 +542,14 @@ export default function TouristasChat() {
       }
       
       // If the AI response suggests showing hotels but we initially didn't think so
-      const showHotelsFromResponse = fullContent.includes('Here are some hotel options') || 
-                                    fullContent.includes('recommended hotels') || 
-                                    fullContent.includes('suggest staying at');
+      const showHotelsFromResponse = (
+        fullContent.includes('Here are some hotel options') || 
+        fullContent.includes('recommended hotels') || 
+        fullContent.includes('suggest staying at') ||
+        fullContent.includes('accommodation options') ||
+        fullContent.includes('places to stay') ||
+        fullContent.includes('consider staying at')
+      );
       
       if (showHotelsFromResponse && (!shouldShowHotels || relevantHotels.length === 0)) {
         // Fetch hotels if the AI response suggests showing them but we didn't initially
