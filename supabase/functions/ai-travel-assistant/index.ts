@@ -38,7 +38,9 @@ serve(async (req) => {
       - Kastro: Medieval village with stunning views
       - Faros: Quiet coastal village with beaches
       
-      Keep your responses conversational, helpful, and focused on helping travelers find their ideal accommodation in Sifnos based on their specified location preferences.`
+      Keep your responses conversational, helpful, and focused on helping travelers find their ideal accommodation in Sifnos based on their specified location preferences.
+      
+      When the user asks about a specific location, ALWAYS phrase part of your response as: "Here are some hotel options in [LOCATION]:" to ensure you're addressing their location request.`
     };
 
     // Combine system message with user messages

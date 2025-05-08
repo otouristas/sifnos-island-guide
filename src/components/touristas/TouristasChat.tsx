@@ -203,12 +203,31 @@ export default function TouristasChat() {
   };
   
   const extractLocationFromMessage = (message: string): string | undefined => {
-    const locations = ['platis gialos', 'platy gialo', 'apollonia', 'kamares', 'vathi', 'kastro', 'faros'];
+    // List of known locations in Sifnos, with different spelling variations
+    const locationMappings: Record<string, string[]> = {
+      'platis gialos': ['platy gialo', 'plati gialo', 'plati gialos', 'platys gialos'],
+      'apollonia': ['appolonia', 'apollona'],
+      'kamares': ['kamares'],
+      'vathi': ['vathy', 'vathi'],
+      'kastro': ['castro', 'kastro'],
+      'faros': ['pharos', 'faros'],
+      'artemonas': ['artemonas']
+    };
+    
     const messageLower = message.toLowerCase();
     
-    for (const location of locations) {
-      if (messageLower.includes(location)) {
-        return location;
+    // Check for each location and its variations
+    for (const [standardName, variations] of Object.entries(locationMappings)) {
+      // First check if the standard name is present
+      if (messageLower.includes(standardName)) {
+        return standardName;
+      }
+      
+      // Then check variations
+      for (const variation of variations) {
+        if (messageLower.includes(variation)) {
+          return standardName; // Return the standard name
+        }
       }
     }
     
@@ -218,6 +237,7 @@ export default function TouristasChat() {
   const searchHotels = async (query: string): Promise<any[]> => {
     try {
       const locationFromQuery = extractLocationFromMessage(query);
+      console.log("Detected location from query:", locationFromQuery);
       
       // Get all hotels from Supabase
       const { data: hotels, error } = await supabase
@@ -359,7 +379,9 @@ export default function TouristasChat() {
             msg.id === assistantId 
               ? { 
                   ...msg, 
-                  content: "I found some hotel options in Sifnos that might interest you. Feel free to ask me more about them!" 
+                  content: locationFromMessage 
+                    ? `I found some hotel options in ${locationFromMessage} that might interest you. Feel free to ask me more about them!`
+                    : "I found some hotel options in Sifnos that might interest you. Feel free to ask me more about them!" 
                 } 
               : msg
           )
@@ -429,7 +451,7 @@ export default function TouristasChat() {
                     
                     <div className="font-medium text-center px-2 py-1 mb-3">
                       {message.location ? (
-                        <span>Recommended Hotels in {message.hotels[0]?.location || "Sifnos"}</span>
+                        <span>Recommended Hotels in {message.location.charAt(0).toUpperCase() + message.location.slice(1)}</span>
                       ) : (
                         <span>Top Recommended Hotels in Sifnos</span>
                       )}

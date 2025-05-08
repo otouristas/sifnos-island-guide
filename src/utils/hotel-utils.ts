@@ -20,11 +20,29 @@ export const getHotelImageUrl = (hotel: any): string => {
 
 // Function to normalize location names for better matching
 export const normalizeLocation = (location: string): string => {
+  if (!location) return '';
+  
   location = location.toLowerCase().trim();
   
   // Handle common misspellings and variations
-  if (location === 'platy gialo' || location === 'plati gialo' || location === 'plati gialos') {
+  if (location === 'platy gialo' || location === 'plati gialo' || location === 'plati gialos' || location === 'platys gialos') {
     return 'platis gialos';
+  }
+  
+  if (location === 'appolonia' || location === 'apollona') {
+    return 'apollonia';
+  }
+  
+  if (location === 'vathy') {
+    return 'vathi';
+  }
+  
+  if (location === 'castro') {
+    return 'kastro';
+  }
+  
+  if (location === 'pharos') {
+    return 'faros';
   }
   
   return location;
@@ -34,10 +52,14 @@ export const normalizeLocation = (location: string): string => {
 export const filterHotelsByLocation = (hotels: any[], location: string): any[] => {
   if (!location || !hotels?.length) return hotels;
   
+  console.log(`Filtering hotels by location: ${location}`);
   const normalizedLocation = normalizeLocation(location);
+  console.log(`Normalized location: ${normalizedLocation}`);
   
   return hotels.filter(hotel => {
     if (!hotel.location) return false;
-    return normalizeLocation(hotel.location) === normalizedLocation;
+    const hotelNormalizedLocation = normalizeLocation(hotel.location);
+    console.log(`Hotel ${hotel.name} location: ${hotel.location}, normalized: ${hotelNormalizedLocation}`);
+    return hotelNormalizedLocation === normalizedLocation;
   });
 };
