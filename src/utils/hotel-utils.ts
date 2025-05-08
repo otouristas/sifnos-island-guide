@@ -39,31 +39,43 @@ export const getHotelImageUrl = (hotel: any): string => {
   const randomValue = Math.floor(Math.random() * 1000);
   const cacheBuster = `?v=${timestamp}-${randomValue}`;
   
-  // Check if path already includes logo_path subfolder
-  if (hotel.logo_path && photoUrl.includes(hotel.logo_path.split('/')[0])) {
-    return `/uploads/hotels/${photoUrl}${cacheBuster}`;
-  }
-  
-  // Handle hotel-specific paths
-  if (hotel.name === 'Filadaki Villas' && !photoUrl.includes('filadaki-studios/')) {
+  // Special case handling for specific hotels
+  if (hotel.name === 'Filadaki Villas') {
+    if (photoUrl.includes('filadaki-studios/')) {
+      return `/uploads/hotels/${photoUrl}${cacheBuster}`;
+    }
     return `/uploads/hotels/filadaki-studios/${photoUrl}${cacheBuster}`;
   }
   
-  if (hotel.name === 'Villa Olivia Clara' && !photoUrl.includes('villa-olivia-clara/')) {
+  if (hotel.name === 'Villa Olivia Clara') {
+    if (photoUrl.includes('villa-olivia-clara/')) {
+      return `/uploads/hotels/${photoUrl}${cacheBuster}`;
+    }
     return `/uploads/hotels/villa-olivia-clara/${photoUrl}${cacheBuster}`;
   }
   
-  if (hotel.name === 'ALK HOTEL™' && !photoUrl.includes('alk-hotel-sifnos/')) {
+  if (hotel.name === 'ALK HOTEL™') {
+    if (photoUrl.includes('alk-hotel-sifnos/')) {
+      return `/uploads/hotels/${photoUrl}${cacheBuster}`;
+    }
     return `/uploads/hotels/alk-hotel-sifnos/${photoUrl}${cacheBuster}`;
   }
   
-  if (hotel.name === 'Morpheas Pension & Apartments' && !photoUrl.includes('morpheas-pension/')) {
+  if (hotel.name === 'Morpheas Pension & Apartments') {
+    if (photoUrl.includes('morpheas-pension/')) {
+      return `/uploads/hotels/${photoUrl}${cacheBuster}`;
+    }
     return `/uploads/hotels/morpheas-pension/${photoUrl}${cacheBuster}`;
   }
   
-  // Check if the path is already an absolute path
-  if (photoUrl.startsWith('/')) {
-    return `${photoUrl}${cacheBuster}`;
+  // Handle hotel-specific paths for Meropi
+  if (hotel.name === 'Meropi Rooms and Apartments') {
+    return `/uploads/hotels/meropirooms-hero.webp${cacheBuster}`;
+  }
+  
+  // Check if the path already includes a subfolder
+  if (photoUrl.includes('/')) {
+    return `/uploads/hotels/${photoUrl}${cacheBuster}`;
   }
   
   // Default path for hotel images
@@ -83,6 +95,27 @@ export const getHotelLogoUrl = (hotel: any): string => {
   const timestamp = Date.now();
   const randomValue = Math.floor(Math.random() * 1000);
   const cacheBuster = `?v=${timestamp}-${randomValue}`;
+  
+  // Special case for specific hotels
+  if (hotel.name === 'Meropi Rooms and Apartments') {
+    return `/uploads/hotels/meropi-logo.svg${cacheBuster}`;
+  }
+  
+  if (hotel.name === 'Filadaki Villas') {
+    return `/uploads/hotels/filadaki-studios/filadaki-logo.png${cacheBuster}`;
+  }
+  
+  if (hotel.name === 'Villa Olivia Clara') {
+    return `/uploads/hotels/villa-olivia-clara/logo-villa-olivia.png${cacheBuster}`;
+  }
+  
+  if (hotel.name === 'ALK HOTEL™') {
+    return `/uploads/hotels/alk-hotel-sifnos/logo.png${cacheBuster}`;
+  }
+  
+  if (hotel.name === 'Morpheas Pension & Apartments') {
+    return `/uploads/hotels/morpheas-pension/logo.png${cacheBuster}`;
+  }
   
   // If logo_path contains a directory path
   if (hotel.logo_path.includes('/')) {

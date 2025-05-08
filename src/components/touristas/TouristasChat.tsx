@@ -107,6 +107,7 @@ const HotelContent = ({ hotel }: { hotel: any }) => {
           alt={hotel.name}
           className="w-full h-full object-cover"
           onError={(e) => {
+            console.error(`Failed to load image for ${hotel.name}`);
             (e.target as HTMLImageElement).src = '/placeholder.svg';
           }}
         />
@@ -222,13 +223,13 @@ export default function TouristasChat() {
   const extractLocationFromMessage = (message: string): string | undefined => {
     // List of known locations in Sifnos, with different spelling variations
     const locationMappings: Record<string, string[]> = {
-      'platis gialos': ['platy gialo', 'plati gialo', 'plati gialos', 'platys gialos'],
-      'apollonia': ['appolonia', 'apollona'],
-      'kamares': ['kamares'],
+      'platis gialos': ['platy gialo', 'plati gialo', 'plati gialos', 'platys gialos', 'platys'],
+      'apollonia': ['appolonia', 'apollona', 'apollina'],
+      'kamares': ['kamares', 'kamaris'],
       'vathi': ['vathi', 'vathy'],
       'kastro': ['castro', 'kastro'],
       'faros': ['pharos', 'faros'],
-      'artemonas': ['artemonas']
+      'artemonas': ['artemonas', 'artemona']
     };
     
     const messageLower = message.toLowerCase();
