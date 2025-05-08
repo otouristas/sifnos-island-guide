@@ -9,10 +9,11 @@ import { Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle } from '@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { getHotelImageUrl } from '@/utils/hotel-utils';
 import { HotelType } from './utils/chat-utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Separator component
 export const Separator = () => (
-  <div className="flex items-center my-4">
+  <div className="flex items-center my-2 sm:my-4">
     <div className="h-px bg-gray-200 flex-grow"></div>
     <div className="mx-2 text-xs text-gray-400 font-medium">Touristas AI</div>
     <div className="h-px bg-gray-200 flex-grow"></div>
@@ -22,8 +23,8 @@ export const Separator = () => (
 // Hotel Content Component (used in both Dialog and Drawer)
 export const HotelContent = ({ hotel }: { hotel: HotelType }) => {
   return (
-    <div className="space-y-4">
-      <div className="w-full h-60 overflow-hidden rounded-lg">
+    <div className="space-y-3 sm:space-y-4">
+      <div className="w-full h-40 sm:h-60 overflow-hidden rounded-lg">
         <img 
           src={getHotelImageUrl(hotel)}
           alt={hotel.name}
@@ -35,20 +36,20 @@ export const HotelContent = ({ hotel }: { hotel: HotelType }) => {
         />
       </div>
       
-      <div className="flex flex-wrap gap-3">
-        <div className="flex items-center space-x-2 bg-blue-50 px-3 py-1.5 rounded-full">
-          <MapPin className="h-4 w-4 text-sifnos-deep-blue" />
-          <span className="text-sm font-medium text-sifnos-deep-blue">{hotel.location}</span>
+      <div className="flex flex-wrap gap-2 sm:gap-3">
+        <div className="flex items-center space-x-1.5 sm:space-x-2 bg-blue-50 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full">
+          <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-sifnos-deep-blue" />
+          <span className="text-xs sm:text-sm font-medium text-sifnos-deep-blue">{hotel.location}</span>
         </div>
       </div>
       
       {/* Amenities */}
       {hotel.hotel_amenities && hotel.hotel_amenities.length > 0 && (
         <div>
-          <h4 className="font-medium mb-2 text-gray-700">Amenities</h4>
-          <div className="flex flex-wrap gap-2">
+          <h4 className="font-medium mb-2 text-gray-700 text-sm sm:text-base">Amenities</h4>
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {hotel.hotel_amenities.map((amenity: any, i: number) => (
-              <Badge key={i} variant="outline" className="bg-gray-50">
+              <Badge key={i} variant="outline" className="bg-gray-50 text-xs sm:text-sm">
                 {amenity.amenity}
               </Badge>
             ))}
@@ -59,8 +60,8 @@ export const HotelContent = ({ hotel }: { hotel: HotelType }) => {
       {/* Description */}
       {hotel.description && (
         <div>
-          <h4 className="font-medium mb-2 text-gray-700">About</h4>
-          <p className="text-sm text-gray-600 leading-relaxed">{hotel.description}</p>
+          <h4 className="font-medium mb-1.5 sm:mb-2 text-gray-700 text-sm sm:text-base">About</h4>
+          <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">{hotel.description}</p>
         </div>
       )}
     </div>
@@ -74,20 +75,20 @@ type HotelDialogProps = {
 };
 
 export const HotelDialog = ({ hotel, onClose }: HotelDialogProps) => {
-  const isMobile = useMediaQuery({ maxWidth: 768 });
+  const isMobile = useIsMobile();
   
   if (isMobile) {
     return (
       <DrawerContent className="h-[85vh]">
-        <DrawerHeader className="border-b pb-3">
-          <DrawerTitle className="flex justify-between">
+        <DrawerHeader className="border-b pb-2 sm:pb-3">
+          <DrawerTitle className="flex justify-between items-center text-sm sm:text-base">
             {hotel.name}
             <DrawerClose onClick={onClose}>
               <X className="h-4 w-4" />
             </DrawerClose>
           </DrawerTitle>
         </DrawerHeader>
-        <div className="px-4 py-4 overflow-y-auto">
+        <div className="px-3 sm:px-4 py-3 sm:py-4 overflow-y-auto">
           <HotelContent hotel={hotel} />
         </div>
       </DrawerContent>
@@ -95,10 +96,10 @@ export const HotelDialog = ({ hotel, onClose }: HotelDialogProps) => {
   }
   
   return (
-    <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+    <DialogContent className="max-w-2xl sm:max-w-3xl max-h-[80vh] overflow-y-auto">
       <DialogHeader>
         <DialogTitle>{hotel.name}</DialogTitle>
-        <DialogDescription className="text-sm text-muted-foreground">
+        <DialogDescription className="text-xs sm:text-sm text-muted-foreground">
           {hotel.short_description || `A beautiful stay in ${hotel.location}, Sifnos`}
         </DialogDescription>
       </DialogHeader>
@@ -109,12 +110,12 @@ export const HotelDialog = ({ hotel, onClose }: HotelDialogProps) => {
 
 // Hotel Card Component
 export const HotelCard = ({ hotel }: { hotel: HotelType }) => {
-  const isMobile = useMediaQuery({ maxWidth: 768 });
+  const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
   
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow border border-gray-100 mx-1">
-      <div className="relative w-full h-40 overflow-hidden bg-gray-100">
+    <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow border border-gray-100 mx-0.5 sm:mx-1">
+      <div className="relative w-full h-28 sm:h-40 overflow-hidden bg-gray-100">
         <img 
           src={getHotelImageUrl(hotel)}
           alt={hotel.name}
@@ -126,8 +127,8 @@ export const HotelCard = ({ hotel }: { hotel: HotelType }) => {
           loading="eager"
         />
         
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
-          <div className="flex items-center space-x-2">
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2 sm:p-3">
+          <div className="flex items-center">
             <Badge variant="outline" className="bg-white/80 backdrop-blur-sm text-xs">
               {hotel.location}
             </Badge>
@@ -135,23 +136,29 @@ export const HotelCard = ({ hotel }: { hotel: HotelType }) => {
         </div>
       </div>
       
-      <div className="p-3">
-        <h3 className="font-semibold text-base truncate">{hotel.name}</h3>
-        <div className="mt-1 flex items-center justify-between">
+      <div className="p-2 sm:p-3">
+        <h3 className="font-semibold text-xs sm:text-base truncate">{hotel.name}</h3>
+        <div className="mt-0.5 sm:mt-1 flex items-center justify-between">
           <span className="text-xs text-gray-500">{hotel.hotel_types?.join(', ')}</span>
         </div>
       </div>
       
       {isMobile ? (
         <Drawer open={isOpen} onOpenChange={setIsOpen}>
-          <Button className="w-full rounded-none bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90" onClick={() => setIsOpen(true)}>
+          <Button 
+            className="w-full rounded-none bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 text-xs sm:text-sm py-1 sm:py-2" 
+            onClick={() => setIsOpen(true)}
+          >
             View Details
           </Button>
           {isOpen && <HotelDialog hotel={hotel} onClose={() => setIsOpen(false)} />}
         </Drawer>
       ) : (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <Button className="w-full rounded-none bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90" onClick={() => setIsOpen(true)}>
+          <Button 
+            className="w-full rounded-none bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 text-xs sm:text-sm py-1 sm:py-2" 
+            onClick={() => setIsOpen(true)}
+          >
             View Details
           </Button>
           {isOpen && <HotelDialog hotel={hotel} onClose={() => setIsOpen(false)} />}
@@ -169,13 +176,13 @@ export const HotelCarousel = ({ hotels }: { hotels: HotelType[] }) => {
     <Carousel className="w-full">
       <CarouselContent>
         {hotels.map((hotel) => (
-          <CarouselItem key={hotel.id} className="md:basis-1/2 lg:basis-1/3">
+          <CarouselItem key={hotel.id} className="basis-full xs:basis-1/2 sm:basis-1/2 md:basis-1/3">
             <HotelCard hotel={hotel} />
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="left-2 bg-white/80 hover:bg-white" />
-      <CarouselNext className="right-2 bg-white/80 hover:bg-white" />
+      <CarouselPrevious className="left-1 sm:left-2 bg-white/80 hover:bg-white h-6 w-6 sm:h-8 sm:w-8" />
+      <CarouselNext className="right-1 sm:right-2 bg-white/80 hover:bg-white h-6 w-6 sm:h-8 sm:w-8" />
     </Carousel>
   );
 };

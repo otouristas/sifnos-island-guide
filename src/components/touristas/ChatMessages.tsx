@@ -12,60 +12,62 @@ interface ChatMessagesProps {
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, messagesEndRef }) => {
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-6">
+    <div className="flex-1 overflow-y-auto p-2 sm:p-4 space-y-4 sm:space-y-6">
       {messages.map((message) => (
         <div 
           key={message.id} 
           className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
         >
           <div 
-            className={`flex gap-3 max-w-[80%] ${
+            className={`flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] md:max-w-[80%] ${
               message.role === 'user' 
                 ? 'flex-row-reverse' 
                 : 'flex-row'
             }`}
           >
             {message.role === 'user' ? (
-              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-sifnos-deep-blue to-blue-700 text-white flex items-center justify-center flex-shrink-0">
-                <User className="h-4 w-4" />
+              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-gradient-to-br from-sifnos-deep-blue to-blue-700 text-white flex items-center justify-center flex-shrink-0">
+                <User className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </div>
             ) : (
-              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center flex-shrink-0">
-                <Bot className="h-4 w-4" />
+              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center flex-shrink-0">
+                <Bot className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </div>
             )}
             
             <div 
-              className={`rounded-2xl p-4 shadow-sm ${
+              className={`rounded-2xl p-3 sm:p-4 shadow-sm ${
                 message.role === 'user' 
                   ? 'bg-sifnos-deep-blue text-white' 
                   : 'bg-white border border-gray-200'
               }`}
             >
-              <div className="whitespace-pre-wrap text-sm md:text-base">
+              <div className="whitespace-pre-wrap text-xs sm:text-sm md:text-base">
                 {message.content}
               </div>
               
               {/* Hotel Recommendations Carousel - only show when specifically asked about hotels */}
               {message.showHotels && message.hotels && message.hotels.length > 0 && (
-                <div className="mt-4 space-y-4">
+                <div className="mt-3 sm:mt-4 space-y-3 sm:space-y-4">
                   <Separator />
                   
-                  <div className="font-medium text-center px-2 py-1 mb-3">
+                  <div className="font-medium text-center px-2 py-1 mb-2 sm:mb-3 text-sm sm:text-base">
                     {message.location ? (
-                      <div className="flex items-center justify-center gap-2">
-                        <Hotel className="h-4 w-4" />
+                      <div className="flex items-center justify-center gap-1 sm:gap-2">
+                        <Hotel className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         <span>Recommended Hotels in {message.location.charAt(0).toUpperCase() + message.location.slice(1)}</span>
                       </div>
                     ) : (
-                      <div className="flex items-center justify-center gap-2">
-                        <Hotel className="h-4 w-4" />
+                      <div className="flex items-center justify-center gap-1 sm:gap-2">
+                        <Hotel className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         <span>Top Recommended Hotels in Sifnos</span>
                       </div>
                     )}
                   </div>
                   
-                  <HotelCarousel hotels={message.hotels} />
+                  <div className="w-full overflow-x-hidden">
+                    <HotelCarousel hotels={message.hotels} />
+                  </div>
                 </div>
               )}
             </div>
