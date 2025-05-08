@@ -1,3 +1,4 @@
+
 type Location = 'platis gialos' | 'apollonia' | 'kamares' | 'vathi' | 'kastro' | 'faros' | 'artemonas';
 
 export const isHotelRelatedQuery = (message: string): boolean => {
@@ -6,7 +7,7 @@ export const isHotelRelatedQuery = (message: string): boolean => {
     'hotel', 'stay', 'accommodation', 'room', 'apartment', 'villa', 'place to stay',
     'where to stay', 'lodging', 'resort', 'motel', 'inn', 'hostel', 'pension',
     'where can i stay', 'places to stay', 'best hotel', 'recommend hotel',
-    'good hotel'
+    'good hotel', 'beach hotel', 'where should i stay'
   ];
   const locationTerms = [
     'platis gialos', 'apollonia', 'kamares', 'vathi', 'kastro', 'faros', 
@@ -21,7 +22,7 @@ export const isHotelRelatedQuery = (message: string): boolean => {
   const beachTerms = [
     'beach', 'beachfront', 'by the sea', 'oceanfront', 'sea view', 
     'ocean view', 'waterfront', 'by the beach', 'near the beach',
-    'close to the beach', 'on the beach'
+    'close to the beach', 'on the beach', 'best beach'
   ];
   
   const messageLower = message.toLowerCase();
@@ -79,6 +80,12 @@ export const isHotelRelatedQuery = (message: string): boolean => {
     if (messageLower.includes(query)) {
       return true;
     }
+  }
+  
+  // Check for "what's the best beach" type questions - these should also trigger hotel results
+  if (messageLower.includes('best beach') || messageLower.includes('good beach') || 
+      messageLower.includes('beautiful beach') || messageLower.includes('nice beach')) {
+    return true;
   }
   
   return false;
@@ -171,6 +178,7 @@ export const extractLocationsFromResponse = (response: string): string[] => {
 export const shouldShowHotelsInResponse = (response: string): boolean => {
   if (!response) return false;
   
+  // Check for specific phrases in the AI response that indicate hotel recommendations
   const triggerPhrases = [
     'here are some hotel options',
     'recommended hotels', 
@@ -178,11 +186,34 @@ export const shouldShowHotelsInResponse = (response: string): boolean => {
     'accommodation options',
     'places to stay',
     'consider staying at',
-    'hotels that might interest you'
+    'hotels that might interest you',
+    'hotel options that might interest you',
+    'hotel options',
+    'stay at',
+    'hotels in',
+    'hotels near'
   ];
   
   const lowercaseResponse = response.toLowerCase();
-  return triggerPhrases.some(phrase => lowercaseResponse.includes(phrase));
+  
+  // Also check for mentions of specific beach locations, which should trigger hotel recommendations
+  const beachLocationMentions = [
+    'platis gialos is',
+    'platy gialo is',
+    'vathi is',
+    'kamares is',
+    'best beach',
+    'beautiful beach',
+    'popular beach'
+  ];
+  
+  // If we detect a discussion about beaches, also trigger hotel results
+  const hasBeachDiscussion = beachLocationMentions.some(phrase => 
+    lowercaseResponse.includes(phrase.toLowerCase())
+  );
+  
+  // Return true if any trigger phrase or beach location is mentioned
+  return triggerPhrases.some(phrase => lowercaseResponse.includes(phrase.toLowerCase())) || hasBeachDiscussion;
 };
 
 export type MessageRole = 'user' | 'assistant' | 'system';

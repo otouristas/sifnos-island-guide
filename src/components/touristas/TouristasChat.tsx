@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -61,13 +62,16 @@ export default function TouristasChat() {
         console.log("Found relevant hotels:", relevantHotels.length);
       }
 
+      // Extract location from user query
+      const locationFromQuery = extractLocationFromMessage(input);
+
       // Add temporary assistant message
       const assistantId = (Date.now() + 1).toString();
       setMessages((prev) => [...prev, { 
         id: assistantId, 
         role: 'assistant', 
         content: '', 
-        location: extractLocationFromMessage(input), 
+        location: locationFromQuery, 
         hotels: shouldShowHotels && relevantHotels.length > 0 ? relevantHotels : undefined,
         showHotels: shouldShowHotels && relevantHotels.length > 0
       }]);
@@ -101,6 +105,12 @@ export default function TouristasChat() {
       const locationsInResponse = extractLocationsFromResponse(fullContent);
       const showHotelsByTrigger = shouldShowHotelsInResponse(fullContent);
       
+      // Set the location to show for hotels - prioritize location from user query, then locations from response
+      let locationToShow = locationFromQuery;
+      if (!locationToShow && locationsInResponse.length === 1) {
+        locationToShow = locationsInResponse[0];
+      }
+      
       if ((locationsInResponse.length > 0 || showHotelsByTrigger) && !shouldShowHotels) {
         // Fetch hotels for the mentioned locations
         let query = input;
@@ -120,7 +130,7 @@ export default function TouristasChat() {
                     ...msg, 
                     hotels: relevantHotels,
                     showHotels: true,
-                    location: locationsInResponse.length === 1 ? locationsInResponse[0] : undefined
+                    location: locationToShow
                   } 
                 : msg
             )
@@ -130,9 +140,8 @@ export default function TouristasChat() {
       
       // If no content was received, show fallback message
       if (!fullContent) {
-        const locationFromMessage = extractLocationFromMessage(input);
-        const fallbackMessage = locationFromMessage 
-          ? `I found some hotel options in ${locationFromMessage} that might interest you. Feel free to ask me more about them!`
+        const fallbackMessage = locationToShow
+          ? `I found some hotel options in ${locationToShow} that might interest you. Feel free to ask me more about them!`
           : "I found some hotel options in Sifnos that might interest you. Feel free to ask me more about them!";
           
         setMessages((prev) => 

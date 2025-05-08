@@ -40,11 +40,13 @@ serve(async (req) => {
       
       Keep your responses conversational, helpful, and focused on helping travelers find their ideal accommodation in Sifnos based on their specified location preferences.
       
-      When the user asks about a specific location or type of hotel (beachfront, family-friendly, luxury, etc.), ALWAYS phrase part of your response as: "Here are some hotel options that might interest you:" to ensure the UI can show hotel recommendations.
+      IMPORTANT: When discussing hotels or accommodations, DO NOT list or name specific hotels. Instead, use phrases like "Here are some hotel options that might interest you:" to indicate where hotel listings should appear. Our system will automatically populate the appropriate hotel options from our database. Never generate your own hotel names or descriptions. 
+      
+      When the user asks about beaches or specific locations, describe the area well and end with "Here are some hotel options that might interest you in this area:" so the system knows to show hotel options.
       
       Even for general greetings like "hello" or "hi", provide a warm, informative response about finding accommodations in Sifnos but don't imply that you're showing specific hotel results.
       
-      Never mention prices - focus instead on the quality, amenities, location benefits, and overall experience of each recommended property.`
+      Never mention prices - focus instead on the quality, amenities, location benefits, and overall experience of staying in different areas.`
     };
 
     // Combine system message with user messages, filtering out the ID property
