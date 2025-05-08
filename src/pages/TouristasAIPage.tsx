@@ -1,13 +1,14 @@
 
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import { Bot, Search, MessageSquare, Hotel, MapPin, Star, Sparkles, ArrowRight, CheckCircle } from 'lucide-react';
+import { Bot, Search, MessageSquare, Hotel, MapPin, Star, Sparkles, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TouristasChat from '@/components/touristas/TouristasChat';
 import SEO from '@/components/SEO';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export default function TouristasAIPage() {
   const [activeSection, setActiveSection] = useState<string>('chat');
@@ -21,6 +22,16 @@ export default function TouristasAIPage() {
         schemaType="TravelAgency"
         canonical="/touristas-ai"
       />
+      
+      {/* Beta Notice Alert */}
+      <div className="bg-amber-50 border-b border-amber-200">
+        <Alert variant="default" className="bg-transparent border-none max-w-6xl mx-auto">
+          <AlertCircle className="h-4 w-4 text-amber-600" />
+          <AlertDescription className="text-amber-800 text-sm">
+            <span className="font-semibold">Beta:</span> Touristas AI is still in development. We're improving our models every day to provide the best experience and results!
+          </AlertDescription>
+        </Alert>
+      </div>
       
       {/* Hero Section with Solid Color Background */}
       <div className="relative min-h-[50vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-sifnos-deep-blue via-[#2a3d5c] to-[#1E2E48]">
