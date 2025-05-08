@@ -74,9 +74,18 @@ export default function TouristasChat() {
       }]);
       
       // Call the AI travel assistant function
+      // Fix: Include id property when mapping messages for the AI service
       const response = await callTouristasAI([
-        ...messages.map(msg => ({ role: msg.role, content: msg.content })),
-        { role: userMessage.role, content: userMessage.content }
+        ...messages.map(msg => ({ 
+          role: msg.role, 
+          content: msg.content, 
+          id: msg.id 
+        })),
+        { 
+          role: userMessage.role, 
+          content: userMessage.content, 
+          id: userMessage.id 
+        }
       ]);
       
       if (!response) {
