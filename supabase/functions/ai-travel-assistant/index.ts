@@ -44,6 +44,8 @@ serve(async (req) => {
       
       When the user asks about beaches or specific locations, describe the area well and end with "Here are some hotel options that might interest you in this area:" so the system knows to show hotel options.
       
+      When the user asks specifically about hotel amenities or facilities like pools, restaurants, breakfast, or any other feature, DO NOT make up information. Instead, say something like: "Let me search for hotels with [amenity] for you. Here are some hotel options with [amenity] that might interest you:" so our system can filter actual hotels with these amenities from our database.
+      
       Even for general greetings like "hello" or "hi", provide a warm, informative response about finding accommodations in Sifnos but don't imply that you're showing specific hotel results.
       
       Never mention prices - focus instead on the quality, amenities, location benefits, and overall experience of staying in different areas.`
@@ -69,7 +71,7 @@ serve(async (req) => {
 
     // Create streaming chat completion
     const stream = await client.chat.completions.create({
-      model: "anthropic/claude-3-haiku:beta",
+      model: "anthropic/claude-3.7-sonnet",
       messages: aiMessages,
       temperature: 0.7,
       max_tokens: 1000,

@@ -5,7 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import ChatMessages from './ChatMessages';
-import { Message, isHotelRelatedQuery, extractLocationFromMessage, extractLocationsFromResponse, shouldShowHotelsInResponse } from './utils/chat-utils';
+import { 
+  Message, 
+  isHotelRelatedQuery, 
+  extractLocationFromMessage, 
+  extractAmenityFromMessage,
+  extractLocationsFromResponse, 
+  shouldShowHotelsInResponse 
+} from './utils/chat-utils';
 import { AIRequestMessage, searchHotels, callTouristasAI, processStreamingResponse } from './services/ChatService';
 
 export default function TouristasChat() {
@@ -55,15 +62,16 @@ export default function TouristasChat() {
       const shouldShowHotels = isHotelRelatedQuery(input);
       let relevantHotels: any[] = [];
       
+      // Extract location and amenity from user query
+      const locationFromQuery = extractLocationFromMessage(input);
+      const amenityFromQuery = extractAmenityFromMessage(input);
+      
       // Only search for hotels if it's a hotel-related query
       if (shouldShowHotels) {
-        // Search for hotels based on user query
+        // Search for hotels based on user query - includes location and amenity logic
         relevantHotels = await searchHotels(input);
         console.log("Found relevant hotels:", relevantHotels.length);
       }
-
-      // Extract location from user query
-      const locationFromQuery = extractLocationFromMessage(input);
 
       // Add temporary assistant message
       const assistantId = (Date.now() + 1).toString();
@@ -111,12 +119,17 @@ export default function TouristasChat() {
         locationToShow = locationsInResponse[0];
       }
       
-      if ((locationsInResponse.length > 0 || showHotelsByTrigger) && !shouldShowHotels) {
-        // Fetch hotels for the mentioned locations
+      if ((locationsInResponse.length > 0 || showHotelsByTrigger || amenityFromQuery) && !shouldShowHotels) {
+        // Fetch hotels for the mentioned locations and/or amenities
         let query = input;
         if (locationsInResponse.length > 0) {
           // Add locations to the query for better search results
           query = `${input} ${locationsInResponse.join(' ')}`;
+        }
+        
+        // If an amenity was mentioned in the question or response, add it to the search
+        if (amenityFromQuery) {
+          query = `${query} ${amenityFromQuery}`;
         }
         
         relevantHotels = await searchHotels(query);

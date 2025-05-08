@@ -64,24 +64,62 @@ export const searchHotels = async (query: string): Promise<any[]> => {
 
     const hotels = await response.json();
     
-    // Filter hotels based on the query - match location, name, or description
-    let filteredHotels = hotels;
+    // Check for amenity/facility queries
+    const amenityTerms = [
+      'pool', 'swimming pool', 'pools', 'swim', 
+      'breakfast', 'restaurant', 'restaurants', 
+      'wifi', 'internet', 'wi-fi',
+      'air conditioning', 'ac', 'air-con',
+      'sea view', 'ocean view', 'view', 'beach view', 
+      'parking', 'free parking',
+      'gym', 'fitness', 'workout',
+      'spa', 'massage',
+      'room service', 'service',
+      'bar', 'lounge',
+      'reception', '24 hour', '24-hour',
+      'family friendly', 'kids', 'children',
+      'pet friendly', 'pets',
+      'accessible', 'disabled', 'wheelchair',
+      'balcony', 'terrace', 'patio'
+    ];
     
-    // If location is mentioned, filter by that location
-    if (searchQuery.includes('platis gialos') || searchQuery.includes('platy gialo')) {
-      filteredHotels = hotels.filter(h => 
-        h.location?.toLowerCase()?.includes('platis gialos') || 
-        h.location?.toLowerCase()?.includes('platy gialo'));
-    } else if (searchQuery.includes('apollonia')) {
-      filteredHotels = hotels.filter(h => h.location?.toLowerCase()?.includes('apollonia'));
-    } else if (searchQuery.includes('kamares')) {
-      filteredHotels = hotels.filter(h => h.location?.toLowerCase()?.includes('kamares'));
-    } else if (searchQuery.includes('vathi')) {
-      filteredHotels = hotels.filter(h => h.location?.toLowerCase()?.includes('vathi'));
-    } else if (searchQuery.includes('kastro')) {
-      filteredHotels = hotels.filter(h => h.location?.toLowerCase()?.includes('kastro'));
-    } else if (searchQuery.includes('faros')) {
-      filteredHotels = hotels.filter(h => h.location?.toLowerCase()?.includes('faros'));
+    let filteredHotels = hotels;
+    let foundAmenityFilter = false;
+    
+    // First check for amenity queries
+    for (const amenity of amenityTerms) {
+      if (searchQuery.includes(amenity)) {
+        // Filter hotels that have this amenity in their hotel_amenities list
+        filteredHotels = hotels.filter(hotel => 
+          hotel.hotel_amenities?.some((a: {amenity: string}) => 
+            a.amenity.toLowerCase().includes(amenity) || 
+            amenity.includes(a.amenity.toLowerCase())
+          )
+        );
+        
+        console.log(`Filtered hotels for amenity "${amenity}":`, filteredHotels.length);
+        foundAmenityFilter = true;
+        break;
+      }
+    }
+    
+    // If no amenity filter was applied, then check for location filters
+    if (!foundAmenityFilter) {
+      if (searchQuery.includes('platis gialos') || searchQuery.includes('platy gialo')) {
+        filteredHotels = hotels.filter(h => 
+          h.location?.toLowerCase()?.includes('platis gialos') || 
+          h.location?.toLowerCase()?.includes('platy gialo'));
+      } else if (searchQuery.includes('apollonia')) {
+        filteredHotels = hotels.filter(h => h.location?.toLowerCase()?.includes('apollonia'));
+      } else if (searchQuery.includes('kamares')) {
+        filteredHotels = hotels.filter(h => h.location?.toLowerCase()?.includes('kamares'));
+      } else if (searchQuery.includes('vathi')) {
+        filteredHotels = hotels.filter(h => h.location?.toLowerCase()?.includes('vathi'));
+      } else if (searchQuery.includes('kastro')) {
+        filteredHotels = hotels.filter(h => h.location?.toLowerCase()?.includes('kastro'));
+      } else if (searchQuery.includes('faros')) {
+        filteredHotels = hotels.filter(h => h.location?.toLowerCase()?.includes('faros'));
+      }
     }
     
     console.log(`Filtered hotels for "${searchQuery}":`, filteredHotels.length);

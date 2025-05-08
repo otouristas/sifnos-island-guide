@@ -25,7 +25,33 @@ export const isHotelRelatedQuery = (message: string): boolean => {
     'close to the beach', 'on the beach', 'best beach'
   ];
   
+  // Amenity/facility terms - expanded list
+  const amenityTerms = [
+    'pool', 'swimming pool', 'pools', 'swim', 
+    'breakfast', 'restaurant', 'restaurants', 
+    'wifi', 'internet', 'wi-fi',
+    'air conditioning', 'ac', 'air-con',
+    'sea view', 'ocean view', 'view', 'beach view', 
+    'parking', 'free parking',
+    'gym', 'fitness', 'workout',
+    'spa', 'massage',
+    'room service', 'service',
+    'bar', 'lounge',
+    'reception', '24 hour', '24-hour',
+    'family friendly', 'kids', 'children',
+    'pet friendly', 'pets',
+    'accessible', 'disabled', 'wheelchair',
+    'balcony', 'terrace', 'patio'
+  ];
+  
   const messageLower = message.toLowerCase();
+  
+  // Check for amenity queries first
+  for (const amenity of amenityTerms) {
+    if (messageLower.includes(amenity)) {
+      return true;
+    }
+  }
   
   // Check for phrases like "hotels in Kamares" or "accommodations near the beach"
   for (const hotelTerm of hotelTerms) {
@@ -131,6 +157,40 @@ export const extractLocationFromMessage = (message: string): string | undefined 
 };
 
 /**
+ * Extract facilities/amenities from a message
+ * @param message The message to analyze
+ * @returns The extracted amenity or undefined
+ */
+export const extractAmenityFromMessage = (message: string): string | undefined => {
+  const lowercaseMessage = message.toLowerCase();
+  const amenities = [
+    'pool', 'swimming pool', 
+    'breakfast', 'restaurant',
+    'wifi', 'wi-fi', 'internet',
+    'air conditioning', 'ac', 
+    'sea view', 'ocean view', 'beach view',
+    'parking',
+    'gym', 'fitness',
+    'spa',
+    'room service',
+    'bar',
+    'family friendly', 'kids',
+    'pet friendly',
+    'accessible', 'wheelchair',
+    'balcony', 'terrace'
+  ];
+
+  // Check for amenity mentions in the message
+  for (const amenity of amenities) {
+    if (lowercaseMessage.includes(amenity)) {
+      return amenity;
+    }
+  }
+
+  return undefined;
+};
+
+/**
  * Extract locations from an AI response
  * @param response The AI response to analyze
  * @returns Array of extracted locations
@@ -191,7 +251,11 @@ export const shouldShowHotelsInResponse = (response: string): boolean => {
     'hotel options',
     'stay at',
     'hotels in',
-    'hotels near'
+    'hotels near',
+    'hotels with',
+    'options with',
+    'properties with',
+    'accommodations with'
   ];
   
   const lowercaseResponse = response.toLowerCase();
