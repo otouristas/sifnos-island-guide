@@ -22,9 +22,8 @@ export default function TouristasAIPage() {
         canonical="/touristas-ai"
       />
       
-      {/* Hero Section with Gradient Background */}
-      <div className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-sifnos-deep-blue via-[#2a3d5c] to-[#1E2E48]">
-        <div className="absolute inset-0 bg-[url('/uploads/homepage-hero.jpg')] opacity-10 bg-cover bg-center mix-blend-overlay"></div>
+      {/* Hero Section with Solid Color Background */}
+      <div className="relative min-h-[50vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-sifnos-deep-blue via-[#2a3d5c] to-[#1E2E48]">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
         
         <div className="relative z-10 container mx-auto px-4 text-center text-white">
@@ -71,17 +70,30 @@ export default function TouristasAIPage() {
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </div>
-        
-        {/* Wave divider at bottom of hero */}
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[60px]">
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="fill-white"></path>
-          </svg>
+      </div>
+      
+      {/* AI Assistant Section - Positioned right after hero */}
+      <div id="ai-assistant-section" className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-10">
+            <Badge className="mb-4 px-3 py-1.5 bg-gradient-to-r from-sifnos-deep-blue to-sifnos-deep-blue/70 text-white hover:from-sifnos-deep-blue/90 hover:to-sifnos-deep-blue/60">
+              <Bot className="h-4 w-4 mr-1.5" />
+              Intelligent Assistant
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold text-sifnos-deep-blue mb-4">Start Your AI Hotel Search</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Chat with Touristas AI to find the perfect accommodation in your desired Sifnos location
+            </p>
+          </div>
+          
+          <div className="max-w-5xl mx-auto">
+            <TouristasChat />
+          </div>
         </div>
       </div>
       
       {/* How It Works Section */}
-      <div className="py-20 bg-white">
+      <div className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <Badge className="mb-4 px-3 py-1.5 bg-purple-100 text-purple-800 hover:bg-purple-200">
@@ -130,7 +142,7 @@ export default function TouristasAIPage() {
       </div>
       
       {/* Features Section */}
-      <div className="py-20 bg-gray-50">
+      <div className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-sifnos-deep-blue mb-4">Smart Features</h2>
@@ -276,28 +288,8 @@ export default function TouristasAIPage() {
         </div>
       </div>
       
-      {/* AI Assistant Section */}
-      <div id="ai-assistant-section" className="py-20 bg-gradient-to-br from-sifnos-deep-blue via-[#2a3d5c] to-[#1E2E48]">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-10">
-            <Badge className="mb-4 px-3 py-1.5 bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm">
-              <Bot className="h-4 w-4 mr-1.5" />
-              Intelligent Assistant
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Start Your AI Hotel Search</h2>
-            <p className="text-white/80 max-w-2xl mx-auto">
-              Chat with Touristas AI to find the perfect accommodation in your desired Sifnos location
-            </p>
-          </div>
-          
-          <div className="max-w-5xl mx-auto">
-            <TouristasChat />
-          </div>
-        </div>
-      </div>
-      
       {/* FAQ Section */}
-      <div className="py-20 bg-white">
+      <div className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-sifnos-deep-blue mb-4">Frequently Asked Questions</h2>
@@ -347,7 +339,7 @@ export default function TouristasAIPage() {
       </div>
       
       {/* Call to Action */}
-      <div className="py-16 bg-gray-50">
+      <div className="py-16 bg-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-sifnos-deep-blue mb-6">Ready to Find Your Perfect Stay in Sifnos?</h2>
           <p className="text-gray-600 max-w-2xl mx-auto mb-8">
