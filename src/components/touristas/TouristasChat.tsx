@@ -144,20 +144,30 @@ export default function TouristasChat() {
         locationToShow = locationsInResponse[0];
       }
       
+      // Handle cases where original search didn't include hotels but the response suggests hotels
       if ((locationsInResponse.length > 0 || showHotelsByTrigger || amenitiesFromQuery.length > 0) && !shouldShowHotels) {
-        // Fetch hotels for the mentioned locations and/or amenities
-        let query = input;
-        if (locationsInResponse.length > 0) {
-          // Add locations to the query for better search results
-          query = `${input} ${locationsInResponse.join(' ')}`;
+        let searchTerm = input;
+        
+        // Prioritize location from query, then from response
+        if (locationToShow) {
+          // Add explicit location query to ensure correct results
+          searchTerm = `hotels in ${locationToShow}`;
         }
         
-        // If amenities were mentioned in the question or response, add them to the search
+        // If amenities were mentioned in the question, add them to the search
         if (amenitiesFromQuery.length > 0) {
-          query = `${query} ${amenitiesFromQuery.join(' ')}`;
+          searchTerm = `${searchTerm} ${amenitiesFromQuery.join(' ')}`;
         }
         
-        relevantHotels = await searchHotels(query, updatedPreferences);
+        console.log("Second search with term:", searchTerm);
+        
+        // Perform hotel search with enhanced query
+        relevantHotels = await searchHotels(searchTerm, {
+          ...updatedPreferences,
+          location: locationToShow // Ensure location is explicitly set in preferences
+        });
+        
+        console.log("Second search found hotels:", relevantHotels.length);
         
         if (relevantHotels.length > 0) {
           // Update message to include hotels

@@ -147,14 +147,29 @@ export const searchHotels = async (query: string, preferences?: Record<string, s
       foundSpecificFilter = true;
     }
     
-    // Location filter from preferences or query
-    const locationToFilter = userPrefs.location || 
-                           searchQuery.includes('platis gialos') || searchQuery.includes('platy gialo') ? 'platis gialos' :
-                           searchQuery.includes('apollonia') ? 'apollonia' :
-                           searchQuery.includes('kamares') ? 'kamares' :
-                           searchQuery.includes('vathi') ? 'vathi' :
-                           searchQuery.includes('kastro') ? 'kastro' :
-                           searchQuery.includes('faros') ? 'faros' : undefined;
+    // FIX: Extract location from query first - prioritize explicitly mentioned locations
+    const locationMatches = {
+      'kamares': ['kamares'],
+      'apollonia': ['apollonia'],
+      'platis gialos': ['platis gialos', 'platy gialo', 'platys gialos'],
+      'vathi': ['vathi'],
+      'kastro': ['kastro'],
+      'faros': ['faros'],
+      'artemonas': ['artemonas']
+    };
+    
+    // Improved location extraction from query and preferences
+    let locationToFilter = userPrefs.location;
+    
+    if (!locationToFilter) {
+      // Look for location mentions in the query
+      for (const [location, aliases] of Object.entries(locationMatches)) {
+        if (aliases.some(alias => searchQuery.includes(alias))) {
+          locationToFilter = location;
+          break;
+        }
+      }
+    }
     
     if (locationToFilter) {
       console.log("Filtering by location:", locationToFilter);
@@ -282,6 +297,19 @@ export const searchHotels = async (query: string, preferences?: Record<string, s
     }
     
     console.log(`Filtered hotels for "${searchQuery}":`, filteredHotels.length);
+    
+    // Additional location-specific filtering for explicit location queries
+    if (locationToFilter) {
+      const locationFilteredHotels = filteredHotels.filter(
+        (hotel) => hotel.location?.toLowerCase() === locationToFilter?.toLowerCase()
+      );
+      
+      // Only use location filtering if it doesn't eliminate all results
+      if (locationFilteredHotels.length > 0) {
+        filteredHotels = locationFilteredHotels;
+        console.log(`Location-filtered hotels for "${locationToFilter}":`, filteredHotels.length);
+      }
+    }
     
     // Return final filtered and sorted results
     return filteredHotels.slice(0, 6);
