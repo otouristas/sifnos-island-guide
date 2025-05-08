@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { MapPin, X, Hotel } from 'lucide-react';
+import { MapPin, X, Hotel, ExternalLink } from 'lucide-react';
 import { useMediaQuery } from 'react-responsive';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,8 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { getHotelImageUrl } from '@/utils/hotel-utils';
 import { HotelType } from './utils/chat-utils';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { generateHotelUrl } from '@/lib/url-utils';
+import { Link } from 'react-router-dom';
 
 // Separator component
 export const Separator = () => (
@@ -22,6 +24,9 @@ export const Separator = () => (
 
 // Hotel Content Component (used in both Dialog and Drawer)
 export const HotelContent = ({ hotel }: { hotel: HotelType }) => {
+  // Generate the URL for the hotel page
+  const hotelSlug = generateHotelUrl(hotel.name);
+  
   return (
     <div className="space-y-3 sm:space-y-4">
       <div className="w-full h-40 sm:h-60 overflow-hidden rounded-lg">
@@ -64,6 +69,17 @@ export const HotelContent = ({ hotel }: { hotel: HotelType }) => {
           <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">{hotel.description}</p>
         </div>
       )}
+      
+      {/* See More Link to Hotel Page */}
+      <div className="pt-2">
+        <Link 
+          to={`/hotels/${hotelSlug}`}
+          className="inline-flex items-center text-sifnos-deep-blue hover:text-blue-700 text-sm font-medium"
+        >
+          See Full Hotel Details
+          <ExternalLink className="ml-1 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+        </Link>
+      </div>
     </div>
   );
 };
@@ -113,6 +129,9 @@ export const HotelCard = ({ hotel }: { hotel: HotelType }) => {
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
   
+  // Generate the URL for the hotel page
+  const hotelSlug = generateHotelUrl(hotel.name);
+  
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow border border-gray-100 mx-0.5 sm:mx-1">
       <div className="relative w-full h-28 sm:h-40 overflow-hidden bg-gray-100">
@@ -143,27 +162,40 @@ export const HotelCard = ({ hotel }: { hotel: HotelType }) => {
         </div>
       </div>
       
-      {isMobile ? (
-        <Drawer open={isOpen} onOpenChange={setIsOpen}>
+      <div className="flex flex-col sm:flex-row gap-1 px-2 pb-2">
+        {isMobile ? (
+          <Drawer open={isOpen} onOpenChange={setIsOpen}>
+            <Button 
+              className="w-full rounded-sm bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 text-xs sm:text-sm py-1" 
+              onClick={() => setIsOpen(true)}
+            >
+              View Details
+            </Button>
+            {isOpen && <HotelDialog hotel={hotel} onClose={() => setIsOpen(false)} />}
+          </Drawer>
+        ) : (
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <Button 
+              className="w-full rounded-sm bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 text-xs sm:text-sm py-1" 
+              onClick={() => setIsOpen(true)}
+            >
+              View Details
+            </Button>
+            {isOpen && <HotelDialog hotel={hotel} onClose={() => setIsOpen(false)} />}
+          </Dialog>
+        )}
+        
+        {/* See More Link to Hotel Page */}
+        <Link to={`/hotels/${hotelSlug}`} className="w-full">
           <Button 
-            className="w-full rounded-none bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 text-xs sm:text-sm py-1 sm:py-2" 
-            onClick={() => setIsOpen(true)}
+            variant="outline" 
+            className="w-full rounded-sm border-gray-300 text-xs sm:text-sm py-1 mt-1 sm:mt-0"
           >
-            View Details
+            See More
+            <ExternalLink className="ml-1 h-3.5 w-3.5" />
           </Button>
-          {isOpen && <HotelDialog hotel={hotel} onClose={() => setIsOpen(false)} />}
-        </Drawer>
-      ) : (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <Button 
-            className="w-full rounded-none bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 text-xs sm:text-sm py-1 sm:py-2" 
-            onClick={() => setIsOpen(true)}
-          >
-            View Details
-          </Button>
-          {isOpen && <HotelDialog hotel={hotel} onClose={() => setIsOpen(false)} />}
-        </Dialog>
-      )}
+        </Link>
+      </div>
     </div>
   );
 };
@@ -186,3 +218,4 @@ export const HotelCarousel = ({ hotels }: { hotels: HotelType[] }) => {
     </Carousel>
   );
 };
+
