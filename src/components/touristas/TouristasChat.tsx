@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import ChatMessages from './ChatMessages';
 import { Message, isHotelRelatedQuery, extractLocationFromMessage } from './utils/chat-utils';
-import { searchHotels, callTouristasAI, processStreamingResponse } from './services/ChatService';
+import { AIRequestMessage, searchHotels, callTouristasAI, processStreamingResponse } from './services/ChatService';
 
 export default function TouristasChat() {
   const [input, setInput] = useState('');
@@ -73,20 +73,22 @@ export default function TouristasChat() {
         showHotels: shouldShowHotels && relevantHotels.length > 0
       }]);
       
+      // Prepare messages for the AI service with correct format
+      const aiMessages: AIRequestMessage[] = messages.map(msg => ({
+        role: msg.role,
+        content: msg.content,
+        id: msg.id
+      }));
+      
+      // Add the current user message
+      aiMessages.push({
+        role: userMessage.role,
+        content: userMessage.content,
+        id: userMessage.id
+      });
+      
       // Call the AI travel assistant function
-      // Fix: Include id property when mapping messages for the AI service
-      const response = await callTouristasAI([
-        ...messages.map(msg => ({ 
-          role: msg.role, 
-          content: msg.content, 
-          id: msg.id 
-        })),
-        { 
-          role: userMessage.role, 
-          content: userMessage.content, 
-          id: userMessage.id 
-        }
-      ]);
+      const response = await callTouristasAI(aiMessages);
       
       if (!response) {
         throw new Error("Failed to get response from AI");

@@ -1,17 +1,15 @@
-// Update the interface to include 'id' if it's not already there
+
 import { Message, MessageRole } from '../utils/chat-utils';
 
-// Add this interface if it doesn't exist already
-interface AIRequestMessage {
+// Use this interface for sending messages to the AI service
+export interface AIRequestMessage {
   role: MessageRole;
   content: string;
-  id: string;  // Add the id field
+  id: string;
 }
 
 export const callTouristasAI = async (messages: AIRequestMessage[]): Promise<ReadableStream<Uint8Array> | null> => {
   try {
-    // We can simply pass through the messages with their id properties
-    // The actual Supabase function might not use the id field, but it's now part of the interface
     const response = await fetch(`${process.env.REACT_APP_SUPABASE_URL}/functions/v1/ai-travel-assistant`, {
       method: 'POST',
       headers: {

@@ -47,10 +47,16 @@ serve(async (req) => {
       Never mention prices - focus instead on the quality, amenities, location benefits, and overall experience of each recommended property.`
     };
 
-    // Combine system message with user messages
-    const allMessages = [systemMessage, ...messages];
+    // Combine system message with user messages, filtering out the ID property
+    const aiMessages = [
+      systemMessage, 
+      ...messages.map((msg: any) => ({
+        role: msg.role,
+        content: msg.content
+      }))
+    ];
     
-    console.log("Calling OpenRouter API with messages:", JSON.stringify(allMessages));
+    console.log("Calling OpenRouter API with messages:", JSON.stringify(aiMessages));
 
     // Initialize OpenAI client with OpenRouter base URL
     const client = new OpenAI({
@@ -62,7 +68,7 @@ serve(async (req) => {
     // Create streaming chat completion
     const stream = await client.chat.completions.create({
       model: "anthropic/claude-3-haiku:beta",
-      messages: allMessages,
+      messages: aiMessages,
       temperature: 0.7,
       max_tokens: 1000,
       stream: true,
