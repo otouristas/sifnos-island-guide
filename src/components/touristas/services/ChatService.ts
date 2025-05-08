@@ -10,17 +10,11 @@ export interface AIRequestMessage {
 
 export const callTouristasAI = async (messages: AIRequestMessage[]): Promise<ReadableStream<Uint8Array> | null> => {
   try {
-    // Use import.meta.env instead of process.env for Vite applications
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    // Hardcoded Supabase URL and anon key - no environment variables needed
+    const supabaseUrl = 'https://wdzlruiekcznbcicjgrz.supabase.co';
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkemxydWlla2N6bmJjaWNqZ3J6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQyODAyNzYsImV4cCI6MjA1OTg1NjI3Nn0.NaoVf3tU3Xz08CWCHpQtq7_9H6G6ES9EjtCvPHa0aRk';
     
-    // Debug information to help troubleshoot
-    console.log('Using Supabase URL:', supabaseUrl);
-    
-    if (!supabaseUrl) {
-      console.error('VITE_SUPABASE_URL is not defined in environment variables');
-      return null;
-    }
+    console.log('Using hardcoded Supabase URL:', supabaseUrl);
     
     const response = await fetch(`${supabaseUrl}/functions/v1/ai-travel-assistant`, {
       method: 'POST',
@@ -45,14 +39,9 @@ export const callTouristasAI = async (messages: AIRequestMessage[]): Promise<Rea
 
 export const searchHotels = async (query: string): Promise<any[]> => {
   try {
-    // Use import.meta.env instead of process.env for Vite applications
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-    
-    if (!supabaseUrl) {
-      console.error('VITE_SUPABASE_URL is not defined in environment variables');
-      return [];
-    }
+    // Hardcoded Supabase URL and anon key - no environment variables needed
+    const supabaseUrl = 'https://wdzlruiekcznbcicjgrz.supabase.co';
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkemxydWlla2N6bmJjaWNqZ3J6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQyODAyNzYsImV4cCI6MjA1OTg1NjI3Nn0.NaoVf3tU3Xz08CWCHpQtq7_9H6G6ES9EjtCvPHa0aRk';
     
     const response = await fetch(`${supabaseUrl}/functions/v1/search-hotels`, {
       method: 'POST',
