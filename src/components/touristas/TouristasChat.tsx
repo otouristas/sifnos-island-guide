@@ -11,9 +11,17 @@ import {
   extractLocationFromMessage, 
   extractAmenityFromMessage,
   extractLocationsFromResponse, 
-  shouldShowHotelsInResponse 
+  shouldShowHotelsInResponse,
+  extractUserPreferencesFromMessage 
 } from './utils/chat-utils';
-import { AIRequestMessage, searchHotels, callTouristasAI, processStreamingResponse } from './services/ChatService';
+import { 
+  AIRequestMessage, 
+  searchHotels, 
+  callTouristasAI, 
+  processStreamingResponse,
+  trackConversationContext,
+  ConversationContext
+} from './services/ChatService';
 
 export default function TouristasChat() {
   const [input, setInput] = useState('');
@@ -27,6 +35,7 @@ export default function TouristasChat() {
     }
   ]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [userPreferences, setUserPreferences] = useState<Record<string, string>>({});
   const { toast } = useToast();
   
   useEffect(() => {
@@ -58,18 +67,30 @@ export default function TouristasChat() {
     setIsLoading(true);
     
     try {
+      // Extract user preferences from the message
+      const newPreferences = extractUserPreferencesFromMessage(input);
+      
+      // Update user preferences with new information
+      const updatedPreferences = { ...userPreferences, ...newPreferences };
+      setUserPreferences(updatedPreferences);
+      
       // Check if this is a hotel-related query
       const shouldShowHotels = isHotelRelatedQuery(input);
       let relevantHotels: any[] = [];
       
-      // Extract location and amenity from user query
+      // Extract location and amenities from user query
       const locationFromQuery = extractLocationFromMessage(input);
-      const amenityFromQuery = extractAmenityFromMessage(input);
+      const amenitiesFromQuery = extractAmenityFromMessage(input);
+      
+      console.log('Extracted preferences:', updatedPreferences);
+      console.log('Location from query:', locationFromQuery);
+      console.log('Amenities from query:', amenitiesFromQuery);
+      console.log('Should show hotels:', shouldShowHotels);
       
       // Only search for hotels if it's a hotel-related query
       if (shouldShowHotels) {
-        // Search for hotels based on user query - includes location and amenity logic
-        relevantHotels = await searchHotels(input);
+        // Search for hotels based on user query and preferences
+        relevantHotels = await searchHotels(input, updatedPreferences);
         console.log("Found relevant hotels:", relevantHotels.length);
       }
 
@@ -81,7 +102,8 @@ export default function TouristasChat() {
         content: '', 
         location: locationFromQuery, 
         hotels: shouldShowHotels && relevantHotels.length > 0 ? relevantHotels : undefined,
-        showHotels: shouldShowHotels && relevantHotels.length > 0
+        showHotels: shouldShowHotels && relevantHotels.length > 0,
+        preferences: updatedPreferences
       }]);
       
       // Prepare messages for the AI service with correct format
@@ -98,8 +120,11 @@ export default function TouristasChat() {
         id: userMessage.id
       });
       
-      // Call the AI travel assistant function
-      const response = await callTouristasAI(aiMessages);
+      // Track conversation context for better continuity
+      const conversationContexts: ConversationContext[] = trackConversationContext([...messages, userMessage]);
+      
+      // Call the AI travel assistant function with preferences and context
+      const response = await callTouristasAI(aiMessages, updatedPreferences, conversationContexts);
       
       if (!response) {
         throw new Error("Failed to get response from AI");
@@ -119,7 +144,7 @@ export default function TouristasChat() {
         locationToShow = locationsInResponse[0];
       }
       
-      if ((locationsInResponse.length > 0 || showHotelsByTrigger || amenityFromQuery) && !shouldShowHotels) {
+      if ((locationsInResponse.length > 0 || showHotelsByTrigger || amenitiesFromQuery.length > 0) && !shouldShowHotels) {
         // Fetch hotels for the mentioned locations and/or amenities
         let query = input;
         if (locationsInResponse.length > 0) {
@@ -127,12 +152,12 @@ export default function TouristasChat() {
           query = `${input} ${locationsInResponse.join(' ')}`;
         }
         
-        // If an amenity was mentioned in the question or response, add it to the search
-        if (amenityFromQuery) {
-          query = `${query} ${amenityFromQuery}`;
+        // If amenities were mentioned in the question or response, add them to the search
+        if (amenitiesFromQuery.length > 0) {
+          query = `${query} ${amenitiesFromQuery.join(' ')}`;
         }
         
-        relevantHotels = await searchHotels(query);
+        relevantHotels = await searchHotels(query, updatedPreferences);
         
         if (relevantHotels.length > 0) {
           // Update message to include hotels

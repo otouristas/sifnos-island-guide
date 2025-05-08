@@ -1,5 +1,5 @@
 
-import { Message, MessageRole } from '../utils/chat-utils';
+import { Message, MessageRole, extractUserPreferencesFromMessage, analyzeMessageTopic } from '../utils/chat-utils';
 
 // Use this interface for sending messages to the AI service
 export interface AIRequestMessage {
@@ -8,13 +8,34 @@ export interface AIRequestMessage {
   id: string;
 }
 
-export const callTouristasAI = async (messages: AIRequestMessage[]): Promise<ReadableStream<Uint8Array> | null> => {
+export interface ConversationContext {
+  topic: string;
+  summary: string;
+  timestamp: number;
+}
+
+export const callTouristasAI = async (
+  messages: AIRequestMessage[], 
+  preferences?: Record<string, string>,
+  previousConversations?: ConversationContext[]
+): Promise<ReadableStream<Uint8Array> | null> => {
   try {
     // Hardcoded Supabase URL and anon key - no environment variables needed
     const supabaseUrl = 'https://wdzlruiekcznbcicjgrz.supabase.co';
     const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkemxydWlla2N6bmJjaWNqZ3J6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQyODAyNzYsImV4cCI6MjA1OTg1NjI3Nn0.NaoVf3tU3Xz08CWCHpQtq7_9H6G6ES9EjtCvPHa0aRk';
     
     console.log('Using hardcoded Supabase URL:', supabaseUrl);
+    console.log('Messages for AI:', messages);
+    
+    // Extract user preferences if not provided
+    const extractedPreferences = preferences || extractUserPreferencesFromMessage(messages[messages.length - 1].content);
+    
+    // Prepare request payload with enhanced context
+    const requestPayload = {
+      messages,
+      preferences: extractedPreferences,
+      previousConversations
+    };
     
     const response = await fetch(`${supabaseUrl}/functions/v1/ai-travel-assistant`, {
       method: 'POST',
@@ -22,7 +43,7 @@ export const callTouristasAI = async (messages: AIRequestMessage[]): Promise<Rea
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${supabaseAnonKey}`
       },
-      body: JSON.stringify({ messages }),
+      body: JSON.stringify(requestPayload),
     });
 
     if (!response.ok) {
@@ -37,7 +58,7 @@ export const callTouristasAI = async (messages: AIRequestMessage[]): Promise<Rea
   }
 };
 
-export const searchHotels = async (query: string): Promise<any[]> => {
+export const searchHotels = async (query: string, preferences?: Record<string, string>): Promise<any[]> => {
   try {
     // Hardcoded Supabase URL and anon key - no environment variables needed
     const supabaseUrl = 'https://wdzlruiekcznbcicjgrz.supabase.co';
@@ -45,6 +66,11 @@ export const searchHotels = async (query: string): Promise<any[]> => {
     
     // Convert query to lowercase for better matching
     const searchQuery = query.toLowerCase();
+    const userPrefs = preferences || {};
+    
+    // Log search parameters for debugging
+    console.log("Searching hotels with query:", searchQuery);
+    console.log("User preferences:", userPrefs);
     
     // Direct database fetch instead of using edge function
     const response = await fetch(`${supabaseUrl}/rest/v1/hotels?select=*,hotel_amenities(amenity),hotel_photos(id,photo_url,is_main_photo)`, {
@@ -64,7 +90,7 @@ export const searchHotels = async (query: string): Promise<any[]> => {
 
     const hotels = await response.json();
     
-    // Check for amenity/facility queries
+    // Enhanced keyword search terms to better capture intent
     const amenityTerms = [
       'pool', 'swimming pool', 'pools', 'swim', 
       'breakfast', 'restaurant', 'restaurants', 
@@ -83,51 +109,181 @@ export const searchHotels = async (query: string): Promise<any[]> => {
       'balcony', 'terrace', 'patio'
     ];
     
+    const travelerTypes = [
+      'family', 'luxury', 'budget', 'couple', 'solo', 'group'
+    ];
+
+    // Improved filtering logic with scoring system
     let filteredHotels = hotels;
-    let foundAmenityFilter = false;
+    let foundSpecificFilter = false;
+    let scoreMap = new Map<string, number>(); // Hotel ID -> Relevance score
     
-    // First check for amenity queries
+    // Initialize scores for all hotels
+    hotels.forEach((hotel: any) => {
+      scoreMap.set(hotel.id, 0);
+    });
+    
+    // Apply traveler type boosting from preferences
+    if (userPrefs.travelerType) {
+      const travelerType = userPrefs.travelerType.toLowerCase();
+      
+      hotels.forEach((hotel: any) => {
+        let currentScore = scoreMap.get(hotel.id) || 0;
+        
+        // Boost score for hotels matching traveler type
+        if (travelerType === 'family' && hotel.hotel_types?.includes('family-friendly')) {
+          scoreMap.set(hotel.id, currentScore + 10);
+        } else if (travelerType === 'luxury' && hotel.rating >= 4) {
+          scoreMap.set(hotel.id, currentScore + 10);
+        } else if (travelerType === 'budget' && hotel.price && hotel.price <= 150) {
+          scoreMap.set(hotel.id, currentScore + 10);
+        } else if (travelerType === 'couple' && 
+                  (hotel.description?.toLowerCase().includes('romantic') || 
+                   hotel.description?.toLowerCase().includes('couple'))) {
+          scoreMap.set(hotel.id, currentScore + 10);
+        }
+      });
+      
+      foundSpecificFilter = true;
+    }
+    
+    // Location filter from preferences or query
+    const locationToFilter = userPrefs.location || 
+                           searchQuery.includes('platis gialos') || searchQuery.includes('platy gialo') ? 'platis gialos' :
+                           searchQuery.includes('apollonia') ? 'apollonia' :
+                           searchQuery.includes('kamares') ? 'kamares' :
+                           searchQuery.includes('vathi') ? 'vathi' :
+                           searchQuery.includes('kastro') ? 'kastro' :
+                           searchQuery.includes('faros') ? 'faros' : undefined;
+    
+    if (locationToFilter) {
+      console.log("Filtering by location:", locationToFilter);
+      
+      hotels.forEach((hotel: any) => {
+        if (hotel.location?.toLowerCase() === locationToFilter.toLowerCase()) {
+          let currentScore = scoreMap.get(hotel.id) || 0;
+          scoreMap.set(hotel.id, currentScore + 20); // High boost for exact location match
+        }
+      });
+      
+      foundSpecificFilter = true;
+    }
+    
+    // Beach proximity filter from preferences
+    if (userPrefs.beachProximity || searchQuery.includes('beach') || searchQuery.includes('sea')) {
+      console.log("Boosting beach proximity hotels");
+      
+      // Beach locations
+      const beachLocations = ['platis gialos', 'vathi', 'kamares', 'faros'];
+      
+      hotels.forEach((hotel: any) => {
+        let currentScore = scoreMap.get(hotel.id) || 0;
+        
+        // Check if hotel is in a beach location
+        if (hotel.location && beachLocations.includes(hotel.location.toLowerCase())) {
+          scoreMap.set(hotel.id, currentScore + 15);
+        }
+        
+        // Check if hotel description mentions beach proximity
+        if (hotel.description?.toLowerCase().includes('beach') || 
+            hotel.description?.toLowerCase().includes('meters from the sea') ||
+            hotel.description?.toLowerCase().includes('by the sea')) {
+          scoreMap.set(hotel.id, currentScore + 10);
+        }
+      });
+      
+      foundSpecificFilter = true;
+    }
+    
+    // Amenity filter
+    let targetAmenity = '';
     for (const amenity of amenityTerms) {
       if (searchQuery.includes(amenity)) {
-        // Filter hotels that have this amenity in their hotel_amenities list
-        filteredHotels = hotels.filter(hotel => 
-          hotel.hotel_amenities?.some((a: {amenity: string}) => 
-            a.amenity.toLowerCase().includes(amenity) || 
-            amenity.includes(a.amenity.toLowerCase())
-          )
-        );
-        
-        console.log(`Filtered hotels for amenity "${amenity}":`, filteredHotels.length);
-        foundAmenityFilter = true;
+        targetAmenity = amenity;
+        console.log("Found amenity in query:", targetAmenity);
         break;
       }
     }
     
-    // If no amenity filter was applied, then check for location filters
-    if (!foundAmenityFilter) {
-      if (searchQuery.includes('platis gialos') || searchQuery.includes('platy gialo')) {
-        filteredHotels = hotels.filter(h => 
-          h.location?.toLowerCase()?.includes('platis gialos') || 
-          h.location?.toLowerCase()?.includes('platy gialo'));
-      } else if (searchQuery.includes('apollonia')) {
-        filteredHotels = hotels.filter(h => h.location?.toLowerCase()?.includes('apollonia'));
-      } else if (searchQuery.includes('kamares')) {
-        filteredHotels = hotels.filter(h => h.location?.toLowerCase()?.includes('kamares'));
-      } else if (searchQuery.includes('vathi')) {
-        filteredHotels = hotels.filter(h => h.location?.toLowerCase()?.includes('vathi'));
-      } else if (searchQuery.includes('kastro')) {
-        filteredHotels = hotels.filter(h => h.location?.toLowerCase()?.includes('kastro'));
-      } else if (searchQuery.includes('faros')) {
-        filteredHotels = hotels.filter(h => h.location?.toLowerCase()?.includes('faros'));
+    if (targetAmenity) {
+      hotels.forEach((hotel: any) => {
+        const hasAmenity = hotel.hotel_amenities?.some((a: {amenity: string}) => 
+          a.amenity.toLowerCase().includes(targetAmenity) || 
+          targetAmenity.includes(a.amenity.toLowerCase())
+        );
+        
+        if (hasAmenity) {
+          let currentScore = scoreMap.get(hotel.id) || 0;
+          scoreMap.set(hotel.id, currentScore + 25); // High boost for amenity match
+        }
+      });
+      
+      foundSpecificFilter = true;
+    }
+    
+    // Activity interest boost
+    if (userPrefs.activityInterest) {
+      const interest = userPrefs.activityInterest.toLowerCase();
+      
+      // Mapping of interests to relevant locations
+      const interestLocationMap: Record<string, string[]> = {
+        'nature': ['vathi', 'faros', 'chrysopigi'],
+        'culture': ['apollonia', 'kastro', 'artemonas'],
+        'culinary': ['apollonia', 'artemonas'],
+        'watersports': ['platis gialos', 'vathi', 'kamares']
+      };
+      
+      const relevantLocations = interestLocationMap[interest] || [];
+      
+      hotels.forEach((hotel: any) => {
+        if (hotel.location && relevantLocations.includes(hotel.location.toLowerCase())) {
+          let currentScore = scoreMap.get(hotel.id) || 0;
+          scoreMap.set(hotel.id, currentScore + 8);
+        }
+      });
+      
+      foundSpecificFilter = true;
+    }
+    
+    // Apply basic rating boost
+    hotels.forEach((hotel: any) => {
+      let currentScore = scoreMap.get(hotel.id) || 0;
+      // Add 1-5 points based on rating
+      if (hotel.rating) {
+        scoreMap.set(hotel.id, currentScore + Math.min(5, hotel.rating));
       }
+    });
+    
+    // If no specific filter was found, fall back to broader location-based filtering
+    if (!foundSpecificFilter) {
+      if (searchQuery.includes('beach') || searchQuery.includes('sea') || searchQuery.includes('water')) {
+        console.log("Filtering for beach hotels");
+        filteredHotels = hotels.filter((hotel) => 
+          hotel.description?.toLowerCase().includes('beach') || 
+          ['platis gialos', 'vathi', 'kamares', 'faros'].includes(hotel.location?.toLowerCase() || '')
+        );
+      }
+    } else {
+      // Sort hotels by score and take top results
+      const hotelScores = Array.from(scoreMap.entries());
+      hotelScores.sort((a, b) => b[1] - a[1]); // Sort by descending score
+      
+      // Filter out low-scoring hotels (score < 5)
+      const topHotelIds = hotelScores
+        .filter(entry => entry[1] >= 5)
+        .map(entry => entry[0]);
+        
+      console.log("Top hotel scores:", hotelScores.slice(0, 6).map(([id, score]) => {
+        const hotel = hotels.find((h: any) => h.id === id);
+        return `${hotel?.name || id}: ${score}`;
+      }));
+      
+      filteredHotels = hotels.filter(hotel => topHotelIds.includes(hotel.id));
     }
     
     console.log(`Filtered hotels for "${searchQuery}":`, filteredHotels.length);
     
-    // Sort by rating (highest first)
-    filteredHotels.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-    
-    // Limit results to prevent flooding the UI
+    // Return final filtered and sorted results
     return filteredHotels.slice(0, 6);
   } catch (error) {
     console.error('Error searching hotels:', error);
@@ -170,4 +326,41 @@ export const processStreamingResponse = async (
     console.error('Error processing stream:', error);
     return fullContent;
   }
+};
+
+/**
+ * Track conversation context for better AI responses
+ * @param messages Array of conversation messages
+ * @returns Array of conversation context objects
+ */
+export const trackConversationContext = (messages: Message[]): ConversationContext[] => {
+  // Only process user messages
+  const userMessages = messages.filter(msg => msg.role === 'user');
+  
+  if (userMessages.length === 0) {
+    return [];
+  }
+  
+  const contexts: ConversationContext[] = [];
+  
+  // Analyze the last 3 user messages for context
+  const recentUserMessages = userMessages.slice(-3);
+  
+  for (const message of recentUserMessages) {
+    const topic = analyzeMessageTopic(message.content);
+    
+    // Create a summary of the user's question
+    let summary = message.content;
+    if (summary.length > 100) {
+      summary = summary.substring(0, 97) + '...';
+    }
+    
+    contexts.push({
+      topic,
+      summary,
+      timestamp: Date.now()
+    });
+  }
+  
+  return contexts;
 };
