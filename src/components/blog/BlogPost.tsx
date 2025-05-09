@@ -43,7 +43,7 @@ const BlogPost = ({ slug }: BlogPostProps) => {
       <img 
         src={post.featuredImage} 
         alt={post.title} 
-        className="w-full h-80 object-cover rounded-lg mb-6"
+        className="w-full h-[300px] md:h-[400px] object-cover rounded-lg mb-8"
       />
       
       {/* Categories */}
@@ -58,7 +58,7 @@ const BlogPost = ({ slug }: BlogPostProps) => {
       </div>
       
       {/* Post content */}
-      <div className="mt-6" dangerouslySetInnerHTML={{ __html: post.content }} />
+      <div className="mt-8 space-y-6" dangerouslySetInnerHTML={{ __html: post.content }} />
       
       {/* Author note */}
       <div className="mt-10 pt-6 border-t border-gray-200">

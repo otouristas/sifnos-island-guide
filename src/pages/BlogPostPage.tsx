@@ -41,9 +41,9 @@ const BlogPostPage = () => {
       </div>
       
       <div className="container mx-auto px-4 py-10">        
-        <div className="flex flex-col md:flex-row gap-10">
+        <div className="flex flex-col md:flex-row gap-10 max-w-7xl mx-auto">
           {/* Main content */}
-          <div className="w-full md:w-2/3">
+          <div className="w-full md:w-2/3 bg-white p-6 md:p-8 rounded-lg shadow-sm">
             <BlogPost slug={slug} />
           </div>
           
