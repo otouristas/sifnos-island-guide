@@ -6,6 +6,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { blogPosts } from '@/data/blogPosts';
+import { slugify } from '@/lib/url-utils';
 
 const BlogList = () => {
   return (
@@ -27,7 +28,7 @@ const BlogList = () => {
               <div className="flex flex-wrap gap-2 mb-2">
                 {post.categories.map((category) => (
                   <Badge key={category} variant="secondary" className="bg-purple-100 text-purple-800 hover:bg-purple-200">
-                    <Link to={`/blog/category/${category.toLowerCase().replace(/ /g, '-')}`}>
+                    <Link to={`/blog/category/${slugify(category)}`}>
                       {category}
                     </Link>
                   </Badge>

@@ -4,6 +4,7 @@ import { CalendarIcon, User, Tag } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { blogPosts } from '@/data/blogPosts';
 import { Link } from 'react-router-dom';
+import { slugify } from '@/lib/url-utils';
 
 interface BlogPostProps {
   slug?: string;
@@ -50,7 +51,7 @@ const BlogPost = ({ slug }: BlogPostProps) => {
       <div className="flex flex-wrap gap-2 mb-6">
         {post.categories.map((category) => (
           <Badge key={category} variant="secondary" className="bg-purple-100 text-purple-800 hover:bg-purple-200">
-            <Link to={`/blog/category/${category.toLowerCase().replace(/ /g, '-')}`}>
+            <Link to={`/blog/category/${slugify(category)}`}>
               {category}
             </Link>
           </Badge>
