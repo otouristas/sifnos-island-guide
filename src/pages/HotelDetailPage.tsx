@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, PlusCircle, MinusCircle, ExternalLink, Map } from 'lucide-react';
+import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, PlusCircle, MinusCircle, ExternalLink, Map, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase, logSupabaseResponse, getHotelRoomImagePath } from '@/integrations/supabase/client';
 import SEO from '../components/SEO';
 import { useToast } from "@/hooks/use-toast";
@@ -15,11 +15,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from '@/hooks/use-mobile';
+import { ImageGalleryDialog } from '@/components/hotel/ImageGalleryDialog';
 
 export default function HotelDetailPage() {
   const { slug } = useParams();
   const [hotel, setHotel] = useState(null);
   const [activeImage, setActiveImage] = useState(null);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [galleryOpen, setGalleryOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [openFaqIndex, setOpenFaqIndex] = useState(-1);
   const { toast } = useToast();
@@ -248,6 +251,7 @@ export default function HotelDetailPage() {
           const mainPhoto = hotelData.hotel_photos.find(photo => photo.is_main_photo);
           const photoUrl = mainPhoto ? mainPhoto.photo_url : hotelData.hotel_photos[0].photo_url;
           setActiveImage(`/uploads/hotels/${photoUrl}`);
+          setActiveImageIndex(mainPhoto ? hotelData.hotel_photos.indexOf(mainPhoto) : 0);
         }
       } catch (error) {
         console.error('Error fetching hotel details:', error);
@@ -263,6 +267,18 @@ export default function HotelDetailPage() {
 
     fetchHotelDetails();
   }, [slug, toast]);
+
+  // Function to change the active image
+  const handleImageChange = (photoUrl: string, index: number) => {
+    setActiveImage(`/uploads/hotels/${photoUrl}`);
+    setActiveImageIndex(index);
+  };
+
+  // Function to open the full-screen gallery
+  const openGallery = (index: number) => {
+    setActiveImageIndex(index);
+    setGalleryOpen(true);
+  };
 
   // Function to render star rating
   const renderStarRating = (rating) => {
@@ -565,13 +581,25 @@ export default function HotelDetailPage() {
         <div className="page-container">
           {/* Using Carousel for all hotels */}
           <div className="space-y-4">
-            {/* Main large image */}
-            <div className="rounded-lg overflow-hidden aspect-video shadow-md">
+            {/* Main large image - now clickable to open gallery */}
+            <div 
+              className="rounded-lg overflow-hidden aspect-video shadow-md relative cursor-pointer"
+              onClick={() => openGallery(activeImageIndex)}
+            >
               <img 
                 src={activeImage || '/placeholder.svg'} 
                 alt={hotel?.name} 
                 className="w-full h-full object-cover"
               />
+              
+              {/* Mobile overlay hint to open gallery */}
+              {isMobile && (
+                <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                  <div className="bg-black/50 text-white text-sm py-1.5 px-3 rounded-full">
+                    Tap to view gallery
+                  </div>
+                </div>
+              )}
             </div>
             
             {/* Carousel for thumbnails */}
@@ -583,7 +611,7 @@ export default function HotelDetailPage() {
                       className={`rounded-lg overflow-hidden aspect-square cursor-pointer border-2 h-full
                         transition-all hover:opacity-90 hover:shadow-md
                         ${activeImage === `/uploads/hotels/${photo.photo_url}` ? 'border-sifnos-turquoise' : 'border-transparent'}`}
-                      onClick={() => setActiveImage(`/uploads/hotels/${photo.photo_url}`)}
+                      onClick={() => handleImageChange(photo.photo_url, index)}
                     >
                       <img 
                         src={`/uploads/hotels/${photo.photo_url}`} 
@@ -594,12 +622,24 @@ export default function HotelDetailPage() {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious className="hidden sm:flex -left-4 lg:-left-6 bg-white/70" />
-              <CarouselNext className="hidden sm:flex -right-4 lg:-right-6 bg-white/70" />
+              {/* Make carousel arrows always visible, especially on mobile */}
+              <CarouselPrevious className="sm:flex -left-2 lg:-left-4 bg-white/70 hover:bg-white border border-gray-200" />
+              <CarouselNext className="sm:flex -right-2 lg:-right-4 bg-white/70 hover:bg-white border border-gray-200" />
             </Carousel>
           </div>
         </div>
       </div>
+      
+      {/* Gallery Dialog/Drawer component */}
+      {hotel?.hotel_photos && (
+        <ImageGalleryDialog
+          images={hotel.hotel_photos}
+          activeImageIndex={activeImageIndex}
+          isOpen={galleryOpen}
+          onClose={() => setGalleryOpen(false)}
+          hotelName={hotel.name}
+        />
+      )}
       
       {/* Hotel Details */}
       <div className="py-10">
