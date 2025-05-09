@@ -27,8 +27,6 @@ const BlogPost = ({ slug }: BlogPostProps) => {
   
   return (
     <article className="prose prose-slate lg:prose-lg max-w-none">
-      <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
-      
       {/* Post meta */}
       <div className="flex items-center text-sm text-gray-500 space-x-4 mb-6 border-b border-gray-200 pb-4">
         <div className="flex items-center">
@@ -37,7 +35,7 @@ const BlogPost = ({ slug }: BlogPostProps) => {
         </div>
         <div className="flex items-center">
           <User size={16} className="mr-1" />
-          <span>{post.author}</span>
+          <span>Touristas AI</span>
         </div>
       </div>
       
@@ -61,6 +59,13 @@ const BlogPost = ({ slug }: BlogPostProps) => {
       
       {/* Post content */}
       <div className="mt-6" dangerouslySetInnerHTML={{ __html: post.content }} />
+      
+      {/* Author note */}
+      <div className="mt-10 pt-6 border-t border-gray-200">
+        <p className="italic text-gray-600 text-sm">
+          This article was curated by Touristas AI, bringing you the most accurate and helpful information about Sifnos Island.
+        </p>
+      </div>
     </article>
   );
 };
