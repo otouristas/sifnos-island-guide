@@ -31,6 +31,8 @@ import Index from "./pages/Index";
 import PricingPage from "./pages/PricingPage";
 import ThankYouPage from "./pages/ThankYouPage";
 import TouristasAIPage from "./pages/TouristasAIPage";
+import BlogPage from "./pages/BlogPage";
+import BlogPostPage from "./pages/BlogPostPage";
 
 // Components
 import Navigation from "./components/Navigation";
@@ -71,6 +73,9 @@ const App = () => (
             {/* Hotel types routes */}
             <Route path="/hotel-types" element={<HotelTypesPage />} />
             <Route path="/hotel-types/:slug" element={<HotelTypePage />} />
+            {/* Blog routes */}
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:slug" element={<BlogPostPage />} />
             {/* Touristas AI route */}
             <Route path="/touristas-ai" element={<TouristasAIPage />} />
             {/* Other routes */}
