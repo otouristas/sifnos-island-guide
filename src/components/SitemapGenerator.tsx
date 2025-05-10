@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { generateHotelUrl } from '@/lib/url-utils';
 import { hotelTypes } from '@/data/hotelTypes';
 import { sifnosLocations } from '@/data/locations';
+import { blogPosts } from '@/data/blogPosts';
 
 interface SitemapURL {
   loc: string;
@@ -102,6 +103,22 @@ export default function SitemapGenerator() {
         }
       ];
       
+      // Blog pages
+      const blogPages: SitemapURL[] = [
+        {
+          loc: `${baseURL}/blog`,
+          lastmod: currentDate,
+          changefreq: 'weekly',
+          priority: 0.8
+        },
+        ...blogPosts.map(post => ({
+          loc: `${baseURL}/blog/${post.slug}`,
+          lastmod: post.date,
+          changefreq: 'monthly' as const,
+          priority: 0.8
+        }))
+      ];
+      
       // Locations pages - from data/locations.ts
       const locationPages: SitemapURL[] = [
         {
@@ -157,7 +174,8 @@ export default function SitemapGenerator() {
             {name: "Meropi Rooms and Apartments", id: "meropi-rooms-and-apartments", priority: 0.9},
             {name: "Filadaki Villas", id: "filadaki-villas", priority: 0.9},
             {name: "ALK Hotel Sifnos", id: "alk-hotel-sifnos", priority: 0.8},
-            {name: "Villa Olivia Clara", id: "villa-olivia-clara", priority: 0.8}
+            {name: "Villa Olivia Clara", id: "villa-olivia-clara", priority: 0.8},
+            {name: "Morpheas Pension & Apartments", id: "morpheas-pension-apartments", priority: 0.8}
           ];
           
           // Add each featured hotel, ensuring no duplicates
@@ -191,7 +209,8 @@ export default function SitemapGenerator() {
           {name: "Meropi Rooms and Apartments", slug: "meropi-rooms-and-apartments", priority: 0.9},
           {name: "Filadaki Villas", slug: "filadaki-villas", priority: 0.9},
           {name: "ALK Hotel Sifnos", slug: "alk-hotel-sifnos", priority: 0.8},
-          {name: "Villa Olivia Clara", slug: "villa-olivia-clara", priority: 0.8}
+          {name: "Villa Olivia Clara", slug: "villa-olivia-clara", priority: 0.8},
+          {name: "Morpheas Pension & Apartments", slug: "morpheas-pension-apartments", priority: 0.8}
         ];
         
         hotelPages = fallbackHotels.map(hotel => ({
@@ -203,7 +222,7 @@ export default function SitemapGenerator() {
       }
       
       // Combine all pages
-      const allPages = [...staticPages, ...locationPages, ...hotelTypePages, ...hotelPages];
+      const allPages = [...staticPages, ...blogPages, ...locationPages, ...hotelTypePages, ...hotelPages];
 
       const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

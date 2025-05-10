@@ -1,19 +1,84 @@
-
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import SEO from "../components/SEO";
+import { blogPosts } from "@/data/blogPosts";
+import { slugify } from "@/lib/url-utils";
 
 const NotFound = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [redirectingToHotel, setRedirectingToHotel] = useState<string | null>(null);
+  const [redirectingToBlog, setRedirectingToBlog] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check if the URL path might be related to specific hotels
+    // Check if the URL path might be related to specific hotels or blog posts
     const path = location.pathname.toLowerCase();
     
+    // Check for blog post redirections first
+    if (path.includes('/blog/')) {
+      const pathSegments = path.split('/');
+      const possibleSlug = pathSegments[pathSegments.length - 1];
+      
+      // Look for an exact match first
+      const exactMatch = blogPosts.find(post => post.slug.toLowerCase() === possibleSlug);
+      
+      if (exactMatch) {
+        setRedirectingToBlog(exactMatch.title);
+        
+        toast({
+          title: "Redirecting...",
+          description: `We're taking you to "${exactMatch.title}".`,
+          duration: 3000,
+        });
+        
+        const timer = setTimeout(() => {
+          navigate(`/blog/${exactMatch.slug}`, { replace: true });
+        }, 1000);
+        
+        return () => clearTimeout(timer);
+      }
+      
+      // If no exact match, try to find a similar post based on keywords
+      if (path.includes('hotel') && path.includes('sifnos')) {
+        // This is likely looking for the main hotel guide
+        const mainGuide = blogPosts.find(post => post.slug.includes('guide') && post.slug.includes('hotel'));
+        
+        if (mainGuide) {
+          setRedirectingToBlog(mainGuide.title);
+          
+          toast({
+            title: "Redirecting...",
+            description: `We're taking you to "${mainGuide.title}".`,
+            duration: 3000,
+          });
+          
+          const timer = setTimeout(() => {
+            navigate(`/blog/${mainGuide.slug}`, { replace: true });
+          }, 1000);
+          
+          return () => clearTimeout(timer);
+        }
+      }
+      
+      // If we still haven't found a match, redirect to the blog index
+      if (path !== '/blog') {
+        toast({
+          title: "Blog post not found",
+          description: "We're taking you to our blog homepage.",
+          duration: 3000,
+        });
+        
+        const timer = setTimeout(() => {
+          navigate('/blog', { replace: true });
+        }, 1000);
+        
+        return () => clearTimeout(timer);
+      }
+    }
+    
+    // Hotel redirections - keep existing logic
     if (path.includes('/hotel/') && path.includes('meropi')) {
       // This looks like it might be a misspelled or old URL format for Meropi
       setRedirectingToHotel('Meropi Rooms and Apartments');
@@ -161,6 +226,8 @@ const NotFound = () => {
           <p className="text-gray-600 mb-8 max-w-md mx-auto">
             {redirectingToHotel 
               ? `We're redirecting you to ${redirectingToHotel}...` 
+              : redirectingToBlog
+              ? `We're redirecting you to "${redirectingToBlog}"...`
               : "We couldn't find the page you're looking for. It might have been moved or doesn't exist."}
           </p>
           <Link to="/" className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-6 py-3 rounded-lg transition-colors duration-300 font-medium">
