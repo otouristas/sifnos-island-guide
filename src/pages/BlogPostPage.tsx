@@ -29,14 +29,22 @@ const BlogPostPage = () => {
     console.log('Post not found, redirecting to blog index');
     return <Navigate to="/blog" replace />;
   }
+
+  // Custom title for specific blog post
+  const getCustomTitle = () => {
+    if (post?.slug === 'ultimate-guide-to-sifnos-hotels-2025') {
+      return 'Sifnos Hotels Guide 2025 | Best Areas & Stays to Book | Hotels Sifnos';
+    }
+    return post ? `${post.title} | Hotels in Sifnos 2025 Guide | Hotels Sifnos` : 'Blog Post | Sifnos Travel';
+  };
   
   return (
     <div>
       <SEO
-        title={post ? `${post.title} | Hotels in Sifnos 2025 Guide | Hotels Sifnos` : 'Blog Post | Sifnos Travel'}
+        title={getCustomTitle()}
         description={post?.excerpt || "Read our detailed guide and insights about Sifnos island, accommodations, beaches, and local culture."}
         schemaType="Article"
-        canonical={post ? `/blog/${post.slug}` : "/blog"} // Fixed canonical URL to point to the specific blog post or blog index
+        canonical={post ? `/blog/${post.slug}` : "/blog"} 
         imageUrl={post?.featuredImage}
         datePublished={post?.date}
         author="Touristas AI"
