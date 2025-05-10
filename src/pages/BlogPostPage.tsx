@@ -33,7 +33,7 @@ const BlogPostPage = () => {
   return (
     <div>
       <SEO
-        title={post ? `${post.title} | Sifnos Blog` : 'Blog Post | Sifnos Travel'}
+        title={post ? `${post.title} | Hotels in Sifnos 2025 Guide` : 'Blog Post | Sifnos Travel'}
         description={post?.excerpt || "Read our detailed guide and insights about Sifnos island, accommodations, beaches, and local culture."}
         schemaType="Article"
         canonical={post ? `/blog/${post.slug}` : undefined}
