@@ -14,127 +14,235 @@ export interface BlogPost {
 export const blogPosts: BlogPost[] = [
   {
     id: 1,
-    title: "Top 10 Beaches in Sifnos You Must Visit",
-    slug: "top-10-beaches-in-sifnos",
-    author: "Maria Papadopoulos",
-    date: "May 15, 2025",
+    title: "The Ultimate Guide to Sifnos Hotels in 2025: Discover Where to Stay on This Authentic Greek Island",
+    slug: "ultimate-guide-to-sifnos-hotels-2025",
+    author: "Touristas AI",
+    date: "May 5, 2025",
     featuredImage: "/uploads/beaches/plats-gialos.webp",
-    excerpt: "Discover the most beautiful beaches in Sifnos, from the popular Platis Gialos to the secluded Vroulidia. Each beach offers a unique experience with crystal-clear waters.",
-    categories: ["Beaches", "Travel Tips"],
+    excerpt: "Find your perfect accommodation in Sifnos with our comprehensive 2025 guide. From boutique hotels to beach resorts, discover the best places to stay on this authentic Greek island.",
+    categories: ["Travel Tips", "Accommodation", "Guides"],
     content: `
-      <p>Sifnos is home to some of the most beautiful beaches in the Cyclades. Whether you're looking for organized beaches with amenities or secluded coves for privacy, Sifnos has it all.</p>
+      <p>Sifnos, a picturesque Cycladic island nestled in the heart of the Aegean Sea, is the perfect mix of luxury, authenticity, and tranquility. Whether you're a beach lover, a cultural explorer, or a food enthusiast, Sifnos offers something for everyone. With the power of <strong>HotelsSifnos.com</strong> and the smart recommendations of <strong>Touristas AI</strong>, this comprehensive guide will help you find your ideal place to stay — all while exploring one of Greece's most cherished destinations.</p>
       
-      <h2>1. Platis Gialos</h2>
-      <p>The longest and most popular beach on the island, Platis Gialos is a sandy beach with clear blue waters. The beach is lined with tavernas, cafes, and hotels, making it perfect for families.</p>
+      <hr class="my-8 border-t border-gray-200" />
       
-      <h2>2. Vathi</h2>
-      <p>A picturesque bay with a sandy beach and shallow waters, ideal for children. The beach is surrounded by tamarisk trees providing natural shade.</p>
+      <h2 class="text-2xl font-bold mb-4 text-sifnos-deep-blue">Why Visit Sifnos in 2025?</h2>
       
-      <h2>3. Kamares</h2>
-      <p>The main port of Sifnos offers a long, sandy beach with plenty of facilities. Its protected location makes it a good option even on windy days.</p>
+      <p>Plan your unforgettable 2025 escape to Sifnos, Greece — an island known for its vibrant culinary scene, picturesque whitewashed villages, and tranquil sandy beaches. Explore ancient monasteries, hike scenic coastal trails, visit local pottery studios, and indulge in dishes made with Cycladic tradition and heart.</p>
       
-      <h2>4. Faros</h2>
-      <p>A family-friendly beach with calm waters, located in a charming fishing village. The area has several small coves to explore.</p>
+      <p class="font-bold mt-4">Is Sifnos worth visiting?</p>
+      <p>Absolutely. Sifnos blends authenticity, laid-back luxury, and stunning scenery. With fewer tourists than Santorini or Mykonos, it's perfect for peaceful beaches, gourmet food, and traditional Cycladic charm — minus the crowds.</p>
       
-      <h2>5. Chrysopigi</h2>
-      <p>Named after the nearby monastery, this beach features crystal clear waters and is divided into two parts by rocky outcrops.</p>
+      <hr class="my-8 border-t border-gray-200" />
       
-      <h2>6. Vroulidia</h2>
-      <p>A secluded beach accessible by a dirt road and a short hike down. The effort is worth it for the pristine waters and peaceful atmosphere.</p>
+      <h2 class="text-2xl font-bold mb-4 text-sifnos-deep-blue">Where to Stay in Sifnos: Best Villages and Beach Resorts</h2>
       
-      <h2>7. Heronissos</h2>
-      <p>A small pebble beach in the northernmost part of the island with a few fish tavernas known for fresh seafood.</p>
+      <h3 class="text-xl font-bold mt-6 mb-3">Cheat Sheet of Where to Stay in Sifnos:</h3>
       
-      <h2>8. Apokofto</h2>
-      <p>Located near Chrysopigi, this is a sandy beach with shallow waters and good facilities.</p>
-      
-      <h2>9. Glyfo</h2>
-      <p>A quiet, sandy beach near Faros with tamarisk trees providing shade.</p>
-      
-      <h2>10. Fykiada</h2>
-      <p>A remote beach on the southwest side of the island, perfect for those seeking tranquility.</p>
-      
-      <p>When visiting the beaches of Sifnos, remember to bring water, sunscreen, and respect the natural environment by taking your trash with you.</p>
-    `
-  },
-  {
-    id: 2,
-    title: "Traditional Sifnian Cuisine: A Culinary Journey",
-    slug: "traditional-sifnian-cuisine",
-    author: "Nikos Dimitriou",
-    date: "April 28, 2025",
-    featuredImage: "/uploads/beaches/apollonia.webp",
-    excerpt: "Explore the rich culinary traditions of Sifnos, an island known for its exceptional food. From mastelo to revithada, discover the flavors that make Sifnos a gastronomic paradise.",
-    categories: ["Gastronomy", "Culture"],
-    content: `
-      <p>Sifnos has a well-deserved reputation as a gastronomic destination in the Cyclades. The island's cuisine is characterized by simple ingredients, slow cooking, and the use of herbs and spices that grow on the island.</p>
-      
-      <h2>The Pottery Connection</h2>
-      <p>Sifnos is famous for its pottery, and this tradition is deeply connected to its cuisine. Many traditional dishes are cooked in clay pots, which give them their distinctive flavor.</p>
-      
-      <h2>Must-Try Traditional Dishes</h2>
-      
-      <h3>Mastelo</h3>
-      <p>Lamb or goat marinated in red wine and herbs, then slow-cooked in a clay pot. Traditionally prepared for Easter celebrations.</p>
-      
-      <h3>Revithada</h3>
-      <p>Chickpeas baked overnight in a clay pot with olive oil and herbs. This dish is typically served on Sunday lunches.</p>
-      
-      <h3>Manoura</h3>
-      <p>A local cheese made from goat's milk, aged in wine dregs, giving it a distinctive flavor and aroma.</p>
-      
-      <h3>Melopita</h3>
-      <p>A traditional dessert made with local honey and fresh cheese, similar to a cheesecake.</p>
-      
-      <h2>Where to Eat in Sifnos</h2>
-      
-      <p>Sifnos has numerous tavernas and restaurants where you can sample authentic local cuisine:</p>
-      
-      <ul>
-        <li><strong>Omega 3</strong> in Platis Gialos for seafood with a creative twist</li>
-        <li><strong>Leonidas</strong> in Apollonia for traditional recipes</li>
-        <li><strong>To Tsikali</strong> in Vathi for fresh fish by the sea</li>
-        <li><strong>Drimoni</strong> in Apollonia for local specialties</li>
+      <ul class="list-disc pl-6 mb-6">
+        <li><strong>Apollonia</strong> – Best for nightlife, dining, bus connections, and central location.</li>
+        <li><strong>Kamares</strong> – Budget-friendly, family-friendly, and walkable from the ferry port.</li>
+        <li><strong>Platis Gialos</strong> – Best beach resort with luxury and restaurants.</li>
+        <li><strong>Vathi</strong> – Most secluded and romantic.</li>
+        <li><strong>Kastro</strong> – Epic sea views and old-world charm.</li>
+        <li><strong>Artemonas</strong> – Idyllic and aristocratic.</li>
+        <li><strong>Faros</strong> – Quiet, authentic, and local.</li>
       </ul>
       
-      <p>When dining in Sifnos, don't rush. Take your time to enjoy the food, the atmosphere, and the company - this is the Greek way!</p>
-    `
-  },
-  {
-    id: 3,
-    title: "A Guide to Sifnos Villages: Exploring Apollonia, Kastro, and Beyond",
-    slug: "guide-to-sifnos-villages",
-    author: "Elena Koutsoukou",
-    date: "April 10, 2025",
-    featuredImage: "/uploads/beaches/kastro.webp",
-    excerpt: "Discover the charming villages of Sifnos, each with its unique character and attractions. From the bustling capital of Apollonia to the medieval settlement of Kastro.",
-    categories: ["Travel Tips", "Culture"],
-    content: `
-      <p>Sifnos is dotted with picturesque villages that showcase the island's rich history and traditional Cycladic architecture. Each village has its own character and attractions worth exploring.</p>
+      <h3 class="text-xl font-bold mt-6 mb-3">Kamares</h3>
+      <div class="flex flex-col md:flex-row gap-6 mb-6">
+        <div class="md:w-2/3">
+          <p>As the main port and first impression of Sifnos, Kamares combines convenience with charm. It's the ideal base for families and first-time visitors, thanks to its shallow golden-sand beach, vibrant yet laid-back atmosphere, and convenient access to transportation. Visit pottery workshops or enjoy sunsets at Old Captain's Bar. <a href="https://hotelssifnos.com/hotels/meropi-rooms-and-apartments" class="text-blue-600 hover:underline">Meropi Rooms and Apartments</a> is a great option. <a href="https://hotelssifnos.com/locations/kamares" class="text-blue-600 hover:underline">Explore Kamares</a></p>
+        </div>
+        <div class="md:w-1/3">
+          <img src="/uploads/beaches/kamares.webp" alt="Kamares Beach in Sifnos" class="rounded-lg w-full h-auto object-cover" />
+        </div>
+      </div>
       
-      <h2>Apollonia</h2>
-      <p>The capital of Sifnos is a typical Cycladic settlement with whitewashed houses and narrow alleys. Named after god Apollo, it's the main hub of the island with numerous shops, restaurants, and bars. Don't miss the folklore museum and the church of Panagia Ouranofora.</p>
+      <h3 class="text-xl font-bold mt-6 mb-3">Apollonia</h3>
+      <div class="flex flex-col md:flex-row gap-6 mb-6">
+        <div class="md:w-2/3">
+          <p>The capital and cultural heart of the island, Apollonia is a vibrant hilltop village known for its Cycladic alleys, lounge bars, and boutique stores. A hub for hiking and nightlife alike, it's ideal for travelers wanting to experience both tradition and cosmopolitan flair. <a href="https://hotelssifnos.com/locations/apollonia" class="text-blue-600 hover:underline">Explore Apollonia</a></p>
+        </div>
+        <div class="md:w-1/3">
+          <img src="/uploads/beaches/apollonia.webp" alt="Apollonia village in Sifnos" class="rounded-lg w-full h-auto object-cover" />
+        </div>
+      </div>
       
-      <h2>Kastro</h2>
-      <p>A medieval settlement built on a rocky hill overlooking the sea. Kastro has preserved much of its medieval character with narrow streets and ancient walls. The Archaeological Museum of Sifnos is located here, housing finds from the ancient acropolis.</p>
+      <h3 class="text-xl font-bold mt-6 mb-3">Platis Gialos</h3>
+      <div class="flex flex-col md:flex-row gap-6 mb-6">
+        <div class="md:w-2/3">
+          <p>One of the island's most cosmopolitan beaches with upscale dining, boutique shopping, and golden sand. Enjoy clear waters and high-end accommodations like <a href="https://hotelssifnos.com/hotels/villa-olivia-clara" class="text-blue-600 hover:underline">Villa Olivia Clara</a>. <a href="https://hotelssifnos.com/locations/platis-gialos" class="text-blue-600 hover:underline">Discover Platis Gialos</a></p>
+        </div>
+        <div class="md:w-1/3">
+          <img src="/uploads/beaches/plats-gialos.webp" alt="Platis Gialos Beach in Sifnos" class="rounded-lg w-full h-auto object-cover" />
+        </div>
+      </div>
       
-      <h2>Artemonas</h2>
-      <p>Known for its neoclassical mansions and elegant architecture, Artemonas is one of the most beautiful villages on the island. The village offers spectacular views and some of the best traditional pastry shops on Sifnos.</p>
+      <h3 class="text-xl font-bold mt-6 mb-3">Vathi</h3>
+      <div class="flex flex-col md:flex-row gap-6 mb-6">
+        <div class="md:w-2/3">
+          <p>Quiet and luxurious, Vathi is surrounded by olive groves and the calmest waters on the island. Great for couples seeking tranquility. Don't miss the nearby Church of Taxiarches and beachfront tavernas. <a href="https://hotelssifnos.com/locations/vathi" class="text-blue-600 hover:underline">Explore Vathi</a></p>
+        </div>
+        <div class="md:w-1/3">
+          <img src="/uploads/beaches/vathi.webp" alt="Vathi Bay in Sifnos" class="rounded-lg w-full h-auto object-cover" />
+        </div>
+      </div>
       
-      <h2>Kamares</h2>
-      <p>The main port of Sifnos is a picturesque coastal village with a long sandy beach. It's the first impression most visitors get of the island and features a good selection of accommodation, tavernas, and shops.</p>
+      <h3 class="text-xl font-bold mt-6 mb-3">Kastro</h3>
+      <div class="flex flex-col md:flex-row gap-6 mb-6">
+        <div class="md:w-2/3">
+          <p>Medieval and dramatic, Kastro sits on a cliff above the Aegean, complete with narrow passages and views of the iconic Church of the Seven Martyrs. Best for romantics and photographers. <a href="https://hotelssifnos.com/locations/kastro" class="text-blue-600 hover:underline">Visit Kastro</a></p>
+        </div>
+        <div class="md:w-1/3">
+          <img src="/uploads/beaches/kastro.webp" alt="Medieval Kastro village in Sifnos" class="rounded-lg w-full h-auto object-cover" />
+        </div>
+      </div>
       
-      <h2>Faros</h2>
-      <p>A charming fishing village with three consecutive beaches. The village is named after the lighthouse ("faros" in Greek) that once stood here. It's a peaceful place ideal for relaxation.</p>
+      <h3 class="text-xl font-bold mt-6 mb-3">Artemonas & Cheronissos</h3>
+      <div class="flex flex-col md:flex-row gap-6 mb-6">
+        <div class="md:w-2/3">
+          <p>Artemonas is a neoclassical gem, famous for its pastries and historic villas. Cheronissos is a peaceful northern fishing village, ideal for quiet escapes. <a href="https://hotelssifnos.com/locations/artemonas" class="text-blue-600 hover:underline">Explore Artemonas</a> | <a href="https://hotelssifnos.com/locations/herronisos" class="text-blue-600 hover:underline">Cheronissos</a></p>
+        </div>
+        <div class="md:w-1/3">
+          <img src="/uploads/beaches/artemonas.webp" alt="Artemonas village in Sifnos" class="rounded-lg w-full h-auto object-cover" />
+        </div>
+      </div>
       
-      <h2>Vathi</h2>
-      <p>A seaside village built around a natural bay with a beautiful sandy beach. The village is known for its pottery workshops and the church of Taxiarches with its impressive blue dome.</p>
+      <hr class="my-8 border-t border-gray-200" />
       
-      <h2>Exambela</h2>
-      <p>Located near Apollonia, this village is known for its pottery tradition. Many pottery workshops can be visited here.</p>
+      <h2 class="text-2xl font-bold mb-4 text-sifnos-deep-blue">How Many Days Should You Spend in Sifnos?</h2>
       
-      <h2>Getting Around</h2>
-      <p>The villages of Sifnos are connected by a good road network and regular bus services. Renting a car or scooter is recommended for exploring at your own pace. Many of the villages are also connected by well-marked hiking trails, offering a more immersive experience of the island's landscape.</p>
+      <p>We recommend <strong>3–5 days</strong> to fully enjoy what Sifnos has to offer. This allows time to:</p>
+      
+      <ul class="list-disc pl-6 mb-6">
+        <li>Explore multiple beaches</li>
+        <li>Visit historic villages like Kastro and Apollonia</li>
+        <li>Hike scenic trails</li>
+        <li>Try traditional cuisine</li>
+        <li>Enjoy the slower Cycladic pace</li>
+      </ul>
+      
+      <p>Short on time? Even 2 days will let you visit Kamares Beach, dine in Apollonia, and snap sunset photos in Kastro.</p>
+      
+      <hr class="my-8 border-t border-gray-200" />
+      
+      <h2 class="text-2xl font-bold mb-4 text-sifnos-deep-blue">Hotel Types in Sifnos: Something for Every Traveler</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="border rounded-lg shadow-sm p-4 flex flex-col">
+          <h3 class="text-xl font-bold mb-3">Boutique Hotels</h3>
+          <p class="mb-3 flex-grow">Charming and curated, boutique hotels deliver unique style and hospitality. Explore gems like <a href="https://hotelssifnos.com/hotels/filadaki-villas" class="text-blue-600 hover:underline">Filadaki Villas</a>.</p>
+          <a href="https://hotelssifnos.com/hotel-types/boutique-hotels" class="text-blue-600 hover:underline self-start">View Boutique Hotels</a>
+        </div>
+        
+        <div class="border rounded-lg shadow-sm p-4 flex flex-col">
+          <h3 class="text-xl font-bold mb-3">Luxury Hotels</h3>
+          <p class="mb-3 flex-grow">Indulge in fine dining, elegant design, and exceptional service. <a href="https://hotelssifnos.com/hotels/villa-olivia-clara" class="text-blue-600 hover:underline">Villa Olivia Clara</a> leads the way.</p>
+          <a href="https://hotelssifnos.com/hotel-types/luxury-hotels" class="text-blue-600 hover:underline self-start">View Luxury Hotels</a>
+        </div>
+        
+        <div class="border rounded-lg shadow-sm p-4 flex flex-col">
+          <h3 class="text-xl font-bold mb-3">Beach Hotels</h3>
+          <p class="mb-3 flex-grow">Stay just steps from sandy shores in places like Kamares, Vathi, and Platis Gialos.</p>
+          <a href="https://hotelssifnos.com/hotel-types/beach-hotels" class="text-blue-600 hover:underline self-start">View Beach Hotels</a>
+        </div>
+        
+        <div class="border rounded-lg shadow-sm p-4 flex flex-col">
+          <h3 class="text-xl font-bold mb-3">Family-Friendly Hotels</h3>
+          <p class="mb-3 flex-grow">Spacious rooms and kid-friendly amenities in safe, welcoming locations.</p>
+          <a href="https://hotelssifnos.com/hotel-types/family-friendly-hotels" class="text-blue-600 hover:underline self-start">View Family Hotels</a>
+        </div>
+        
+        <div class="border rounded-lg shadow-sm p-4 flex flex-col">
+          <h3 class="text-xl font-bold mb-3">Traditional Hotels</h3>
+          <p class="mb-3 flex-grow">Cycladic architecture, village ambiance, and authentic Sifnian hospitality.</p>
+          <a href="https://hotelssifnos.com/hotel-types/traditional-hotels" class="text-blue-600 hover:underline self-start">View Traditional Hotels</a>
+        </div>
+        
+        <div class="border rounded-lg shadow-sm p-4 flex flex-col">
+          <h3 class="text-xl font-bold mb-3">Villas</h3>
+          <p class="mb-3 flex-grow">Privacy meets comfort in luxurious private villas with sea views and full amenities.</p>
+          <a href="https://hotelssifnos.com/hotel-types/villas" class="text-blue-600 hover:underline self-start">View Villas</a>
+        </div>
+      </div>
+      
+      <hr class="my-8 border-t border-gray-200" />
+      
+      <h2 class="text-2xl font-bold mb-4 text-sifnos-deep-blue">Featured Accommodations: Handpicked for 2025</h2>
+      
+      <ul class="list-disc pl-6 mb-6">
+        <li><strong><a href="https://hotelssifnos.com/hotels/meropi-rooms-and-apartments" class="text-blue-600 hover:underline">Meropi Rooms and Apartments</a></strong> – Excellent family option in central Kamares.</li>
+        <li><strong><a href="https://hotelssifnos.com/hotels/villa-olivia-clara" class="text-blue-600 hover:underline">Villa Olivia Clara</a></strong> – Upscale villa ideal for couples, friends, and families.</li>
+        <li><strong><a href="https://hotelssifnos.com/hotels/filadaki-villas" class="text-blue-600 hover:underline">Filadaki Villas</a></strong> – Boutique-style privacy with Aegean views.</li>
+        <li><strong><a href="https://hotelssifnos.com/hotels/alk-hotel" class="text-blue-600 hover:underline">ALK Hotel</a></strong> – Budget-friendly, port-side hotel with modern amenities.</li>
+        <li><strong><a href="https://hotelssifnos.com/hotels/morpheas-pension-apartments" class="text-blue-600 hover:underline">Morpheas Pension Apartments</a></strong> – Clean, traditional, and centrally located.</li>
+      </ul>
+      
+      <hr class="my-8 border-t border-gray-200" />
+      
+      <h2 class="text-2xl font-bold mb-4 text-sifnos-deep-blue">Powered by Touristas AI: Your Personal Travel Assistant</h2>
+      
+      <div class="bg-gradient-to-r from-sifnos-beige to-blue-50 p-6 rounded-lg shadow-sm mb-6">
+        <p class="mb-4"><strong>Touristas AI</strong> simplifies the decision-making process:</p>
+        
+        <ul class="list-disc pl-6 mb-4">
+          <li><strong>Smart Chat:</strong> Just say where and how you want to stay</li>
+          <li><strong>Tailored Suggestions:</strong> Personalized based on area, vibe, and travel style</li>
+          <li><strong>Visual Experience:</strong> See galleries before booking</li>
+          <li><strong>Quick Action:</strong> Click to read, decide, and reserve</li>
+        </ul>
+        
+        <a href="https://hotelssifnos.com/touristas-ai" class="inline-block bg-sifnos-turquoise text-white py-2 px-4 rounded hover:bg-sifnos-teal transition-colors">Try Touristas AI Today</a>
+      </div>
+      
+      <hr class="my-8 border-t border-gray-200" />
+      
+      <h2 class="text-2xl font-bold mb-4 text-sifnos-deep-blue">Travel Essentials for Your Sifnos Trip</h2>
+      
+      <ul class="list-disc pl-6 mb-6">
+        <li><a href="https://greececyclades.com/guides/sifnos" class="text-blue-600 hover:underline">Sifnos Travel Guide</a></li>
+        <li><a href="https://greececyclades.com/blog/sifnos-guide" class="text-blue-600 hover:underline">Insider Tips & Tricks</a></li>
+        <li><a href="https://greececyclades.com/ferry-tickets" class="text-blue-600 hover:underline">Book Ferry Tickets</a></li>
+        <li><a href="https://cycladesrentacar.com" class="text-blue-600 hover:underline">Car Rentals in Sifnos</a></li>
+      </ul>
+      
+      <hr class="my-8 border-t border-gray-200" />
+      
+      <h2 class="text-2xl font-bold mb-4 text-sifnos-deep-blue">FAQs About Sifnos Hotels & Travel</h2>
+      
+      <div class="space-y-4">
+        <div>
+          <p class="font-bold">What are the best beaches in Sifnos?</p>
+          <p>Top choices include Kamares, Platis Gialos, Chrissopigi (Apokofto), Vathi, Faros, and Cheronissos.</p>
+        </div>
+        
+        <div>
+          <p class="font-bold">Is Sifnos a party island?</p>
+          <p>Not really — nightlife is low-key and charming, with cocktails in Apollonia, beach bars in Kamares, and traditional Greek festivals (panigiria) with food, wine, and dancing.</p>
+        </div>
+        
+        <div>
+          <p class="font-bold">How do I get to Sifnos?</p>
+          <p>There's no airport. Take a ferry from Piraeus (2.5–5 hours). The closest airport is on Milos, with a 40–70 minute ferry connection.</p>
+        </div>
+        
+        <div>
+          <p class="font-bold">How do you get around Sifnos?</p>
+          <p>By public bus, taxi, or rental car/scooter. Buses run frequently in summer. Cars are best for reaching remote beaches like Vroulidia.</p>
+        </div>
+        
+        <div>
+          <p class="font-bold">What food is Sifnos famous for?</p>
+          <p>Local staples include revithada (baked chickpeas), mastelo (lamb or goat with dill), caper salad, manoura cheese, melopita (honey pie), and almond sweets.</p>
+        </div>
+      </div>
+      
+      <hr class="my-8 border-t border-gray-200" />
+      
+      <h2 class="text-2xl font-bold mb-4 text-sifnos-deep-blue">Your Dream Sifnos Stay Starts Here</h2>
+      
+      <p class="mb-6"><a href="https://hotelssifnos.com/hotels" class="text-blue-600 hover:underline">Browse All Hotels</a> or let <a href="https://hotelssifnos.com/touristas-ai" class="text-blue-600 hover:underline">Touristas AI</a> personalize your journey. The beaches, villages, and timeless elegance of Sifnos are just a click away.</p>
     `
   }
 ];

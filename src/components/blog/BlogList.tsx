@@ -1,63 +1,60 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CalendarIcon, User, Tag } from 'lucide-react';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { CalendarIcon, User, ArrowRight } from 'lucide-react';
 import { blogPosts } from '@/data/blogPosts';
-import { slugify } from '@/lib/url-utils';
+import { Button } from '@/components/ui/button';
 
 const BlogList = () => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
       {blogPosts.map((post) => (
-        <Card key={post.slug} className="overflow-hidden">
-          <div className="flex flex-col md:flex-row">
-            <Link 
-              to={`/blog/${post.slug}`} 
-              className="block md:w-1/3 h-64 md:h-auto overflow-hidden"
-            >
+        <div key={post.id} className="border-b border-gray-200 pb-10 last:border-0">
+          <Link to={`/blog/${post.slug}`} className="block group">
+            <div className="relative mb-6 overflow-hidden rounded-lg">
               <img 
-                src={post.featuredImage} 
-                alt={post.title} 
-                className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                src={post.featuredImage}
+                alt={post.title}
+                className="w-full h-64 md:h-80 object-cover transition-transform duration-300 group-hover:scale-105"
               />
-            </Link>
-            <div className="md:w-2/3 p-6">
-              <div className="flex flex-wrap gap-2 mb-2">
-                {post.categories.map((category) => (
-                  <Badge key={category} variant="secondary" className="bg-purple-100 text-purple-800 hover:bg-purple-200">
-                    <Link to={`/blog/category/${slugify(category)}`}>
-                      {category}
-                    </Link>
-                  </Badge>
-                ))}
-              </div>
-              <Link to={`/blog/${post.slug}`} className="hover:underline">
-                <h2 className="text-xl font-bold mb-3">{post.title}</h2>
-              </Link>
-              <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
-              
-              <div className="flex items-center text-xs text-gray-500 space-x-4 mb-4">
-                <div className="flex items-center">
-                  <CalendarIcon size={14} className="mr-1" />
-                  <span>{post.date}</span>
-                </div>
-                <div className="flex items-center">
-                  <User size={14} className="mr-1" />
-                  <span>{post.author}</span>
+              <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4">
+                <div className="flex gap-4 text-white text-sm">
+                  <div className="flex items-center">
+                    <CalendarIcon size={14} className="mr-1" />
+                    <span>{post.date}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <User size={14} className="mr-1" />
+                    <span>{post.author}</span>
+                  </div>
                 </div>
               </div>
-              
-              <Button asChild variant="outline" className="mt-2">
-                <Link to={`/blog/${post.slug}`}>
-                  Read More
-                </Link>
-              </Button>
             </div>
+            
+            <h2 className="text-2xl sm:text-3xl font-bold text-sifnos-deep-blue mb-3 group-hover:text-sifnos-turquoise transition-colors">
+              {post.title}
+            </h2>
+          </Link>
+          
+          <p className="text-gray-600 mb-4 line-clamp-3">
+            {post.excerpt}
+          </p>
+          
+          <div className="flex flex-wrap gap-2 mb-6">
+            {post.categories.map((category) => (
+              <span key={category} className="inline-block bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full">
+                {category}
+              </span>
+            ))}
           </div>
-        </Card>
+          
+          <Button asChild variant="outline" className="group">
+            <Link to={`/blog/${post.slug}`} className="flex items-center">
+              Read Full Article
+              <ArrowRight size={16} className="ml-2 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </Button>
+        </div>
       ))}
     </div>
   );

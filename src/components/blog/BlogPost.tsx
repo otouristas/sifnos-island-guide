@@ -1,9 +1,10 @@
 
 import React from 'react';
-import { CalendarIcon, User, Tag } from 'lucide-react';
+import { Helmet } from 'react-helmet';
+import { CalendarIcon, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { blogPosts } from '@/data/blogPosts';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { slugify } from '@/lib/url-utils';
 
 interface BlogPostProps {
@@ -11,6 +12,8 @@ interface BlogPostProps {
 }
 
 const BlogPost = ({ slug }: BlogPostProps) => {
+  const navigate = useNavigate();
+  
   // Find the blog post by slug
   const post = blogPosts.find(post => post.slug === slug);
   
@@ -26,8 +29,40 @@ const BlogPost = ({ slug }: BlogPostProps) => {
     );
   }
   
+  // Create schema markup for the blog post
+  const postSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "description": post.excerpt,
+    "image": `https://hotelssifnos.com${post.featuredImage}`,
+    "author": {
+      "@type": "Person",
+      "name": post.author
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Hotels Sifnos",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://hotelssifnos.com/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png"
+      }
+    },
+    "datePublished": post.date,
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://hotelssifnos.com/blog/${post.slug}`
+    }
+  };
+  
   return (
     <article className="prose prose-slate lg:prose-lg max-w-none">
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(postSchema)}
+        </script>
+      </Helmet>
+      
       {/* Post meta */}
       <div className="flex items-center text-sm text-gray-500 space-x-4 mb-6 border-b border-gray-200 pb-4">
         <div className="flex items-center">
@@ -36,7 +71,7 @@ const BlogPost = ({ slug }: BlogPostProps) => {
         </div>
         <div className="flex items-center">
           <User size={16} className="mr-1" />
-          <span>Touristas AI</span>
+          <span>{post.author}</span>
         </div>
       </div>
       
@@ -64,7 +99,7 @@ const BlogPost = ({ slug }: BlogPostProps) => {
       {/* Author note */}
       <div className="mt-10 pt-6 border-t border-gray-200">
         <p className="italic text-gray-600 text-sm">
-          This article was curated by Touristas AI, bringing you the most accurate and helpful information about Sifnos Island.
+          This article was curated by {post.author}, bringing you the most accurate and helpful information about Sifnos Island.
         </p>
       </div>
     </article>

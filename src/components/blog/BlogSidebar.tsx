@@ -2,75 +2,83 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+import { blogPosts } from '@/data/blogPosts';
 import { slugify } from '@/lib/url-utils';
 
-const BlogSidebar = () => {
-  // Blog categories
-  const categories = [
-    { name: 'Travel Tips', slug: 'travel-tips', count: 4 },
-    { name: 'Beaches', slug: 'beaches', count: 6 },
-    { name: 'Gastronomy', slug: 'gastronomy', count: 3 },
-    { name: 'Culture', slug: 'culture', count: 2 },
-    { name: 'Accommodation', slug: 'accommodation', count: 5 }
-  ];
+// Extract all unique categories from blog posts
+const getCategories = () => {
+  const categoryMap = new Map();
   
-  // Sample sponsored hotel (would come from a database in a real app)
-  const sponsoredHotel = {
-    name: 'ALK Hotel Sifnos',
-    location: 'Kamares, Sifnos',
-    image: '/uploads/hotels/alk-hotel-sifnos/alk-hotel-feature.jpeg',
-    slug: 'alk-hotel'
-  };
+  blogPosts.forEach(post => {
+    post.categories.forEach(category => {
+      if (categoryMap.has(category)) {
+        categoryMap.set(category, categoryMap.get(category) + 1);
+      } else {
+        categoryMap.set(category, 1);
+      }
+    });
+  });
   
-  // Sifnos quick facts
-  const quickFacts = [
-    { fact: 'Location', value: 'Cyclades, Greece' },
-    { fact: 'Population', value: '~2,600' },
-    { fact: 'Area', value: '74 km²' },
-    { fact: 'Known for', value: 'Pottery, Gastronomy' },
-    { fact: 'Best time to visit', value: 'May-October' }
-  ];
+  return Array.from(categoryMap.entries()).map(([category, count]) => ({
+    name: category,
+    count: count as number,
+    slug: slugify(category)
+  }));
+};
 
+const BlogSidebar = () => {
+  const categories = getCategories();
+  
   return (
-    <div className="w-full md:w-1/3 space-y-6">
-      {/* Sponsored hotel card */}
+    <div className="w-full md:w-1/3 space-y-8">
+      {/* Sponsored Hotel */}
       <Card className="overflow-hidden">
         <CardHeader className="pb-3">
           <CardTitle className="text-lg font-semibold">Sponsored Hotel</CardTitle>
         </CardHeader>
-        <Link to={`/hotels/${sponsoredHotel.slug}`}>
+        <Link to="/hotels/alk-hotel">
           <img 
-            src={sponsoredHotel.image} 
-            alt={sponsoredHotel.name} 
+            src="/uploads/hotels/alk-hotel-sifnos/alk-hotel-feature.jpeg" 
+            alt="ALK Hotel Sifnos" 
             className="w-full h-48 object-cover"
           />
         </Link>
         <CardContent className="pt-4">
-          <h3 className="font-semibold">{sponsoredHotel.name}</h3>
-          <p className="text-gray-500 text-sm">{sponsoredHotel.location}</p>
-          <Link 
-            to={`/hotels/${sponsoredHotel.slug}`}
-            className="mt-2 block text-sm text-blue-600 hover:underline"
-          >
+          <h3 className="font-semibold">ALK Hotel Sifnos</h3>
+          <p className="text-gray-500 text-sm">Kamares, Sifnos</p>
+          <Link to="/hotels/alk-hotel" className="mt-2 block text-sm text-blue-600 hover:underline">
             View Details
           </Link>
         </CardContent>
       </Card>
-
-      {/* Sifnos Info Card */}
+      
+      {/* Sifnos Quick Facts */}
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-lg font-semibold">Sifnos Quick Facts</CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
           <ul className="space-y-2">
-            {quickFacts.map((item, i) => (
-              <li key={i} className="flex justify-between">
-                <span className="text-gray-500">{item.fact}</span>
-                <span className="font-medium">{item.value}</span>
-              </li>
-            ))}
+            <li className="flex justify-between">
+              <span className="text-gray-500">Location</span>
+              <span className="font-medium">Cyclades, Greece</span>
+            </li>
+            <li className="flex justify-between">
+              <span className="text-gray-500">Population</span>
+              <span className="font-medium">~2,600</span>
+            </li>
+            <li className="flex justify-between">
+              <span className="text-gray-500">Area</span>
+              <span className="font-medium">74 km²</span>
+            </li>
+            <li className="flex justify-between">
+              <span className="text-gray-500">Known for</span>
+              <span className="font-medium">Pottery, Gastronomy</span>
+            </li>
+            <li className="flex justify-between">
+              <span className="text-gray-500">Best time to visit</span>
+              <span className="font-medium">May-October</span>
+            </li>
           </ul>
         </CardContent>
       </Card>
@@ -85,7 +93,7 @@ const BlogSidebar = () => {
             {categories.map((category) => (
               <li key={category.slug} className="flex justify-between">
                 <Link 
-                  to={`/blog/category/${category.slug}`} 
+                  to={`/blog/category/${category.slug}`}
                   className="hover:underline hover:text-blue-600"
                 >
                   {category.name}
@@ -109,6 +117,32 @@ const BlogSidebar = () => {
           />
         </Link>
       </div>
+      
+      {/* Newsletter Subscribe */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg font-semibold">Subscribe to Updates</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <p className="text-gray-600 mb-4 text-sm">
+            Get the latest travel tips, hotel offers, and Sifnos insights delivered to your inbox.
+          </p>
+          <form className="space-y-3">
+            <input 
+              type="email" 
+              placeholder="Your email address" 
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sifnos-teal focus:border-transparent"
+              required
+            />
+            <button 
+              type="submit"
+              className="w-full bg-sifnos-turquoise hover:bg-sifnos-teal text-white py-2 px-4 rounded-md transition-colors"
+            >
+              Subscribe
+            </button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 };
