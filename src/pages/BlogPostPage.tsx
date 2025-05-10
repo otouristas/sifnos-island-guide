@@ -35,7 +35,7 @@ const BlogPostPage = () => {
     if (post?.slug === 'ultimate-guide-to-sifnos-hotels-2025') {
       return 'Sifnos Hotels Guide 2025 | Best Areas & Stays to Book | Hotels Sifnos';
     }
-    return post ? `${post.title} | Hotels in Sifnos 2025 Guide | Hotels Sifnos` : 'Blog Post | Sifnos Travel';
+    return post ? `${post.title} | Hotels in Sifnos 2025 Guide` : 'Blog Post | Sifnos Travel';
   };
   
   return (
