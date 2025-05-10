@@ -52,6 +52,7 @@ const BlogPage = () => {
         description="Discover where to stay in Sifnos in 2025—from boutique hotels to beach resorts. Find top-rated stays, travel tips & book smart with Touristas AI."
         keywords={['sifnos blog', 'sifnos hotels guide', 'where to stay in sifnos', 'sifnos travel tips', 'greek island accommodation']}
         schemaType="Article"
+        canonical="/blog" // Fixed canonical URL to point to the blog page
       />
       
       <Helmet>
