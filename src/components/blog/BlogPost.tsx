@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { blogPosts } from '@/data/blogPosts';
 import { Link, useNavigate } from 'react-router-dom';
 import { slugify } from '@/lib/url-utils';
+import { toast } from 'sonner';
 
 interface BlogPostProps {
   slug?: string;
@@ -34,25 +35,27 @@ const BlogPost = ({ slug }: BlogPostProps) => {
   
   // Special handling for the Sifnian cuisine guide
   if (post.slug === 'sifnian-cuisine-guide-2025') {
-    console.log("Processing Sifnian cuisine guide content");
+    console.log("Processing Sifnian cuisine guide content - removing specified sections");
     
-    // Remove references to DOSA in Faros
-    processedContent = processedContent.replace(/DOSA in Faros|Dosa in Faros/g, '');
+    // More thorough removal of DOSA in Faros references
+    processedContent = processedContent.replace(/DOSA in Faros|Dosa in Faros|or Dosa in Faros/g, '');
     
-    // Remove Marathotiganites (Fennel Fritters) section
-    processedContent = processedContent.replace(/<h3>Marathotiganites \(Fennel Fritters\)<\/h3><p>[^<]*<\/p>/g, '');
+    // More thorough removal of the sections with full HTML context
     
-    // Remove Kakavia (Fisherman's Soup) section
-    processedContent = processedContent.replace(/<h3>Kakavia \(Fisherman's Soup\)<\/h3><p>[^<]*<\/p>/g, '');
+    // Remove Marathotiganites (Fennel Fritters) section completely with any surrounding div
+    processedContent = processedContent.replace(/<div[^>]*>[\s\S]*?Marathotiganites[\s\S]*?Exampela[\s\S]*?<\/div>/g, '');
     
-    // Remove Savoro (Sweet and Sour Fish) section
-    processedContent = processedContent.replace(/<h3>Savoro \(Sweet and Sour Fish\)<\/h3><p>[^<]*<\/p>/g, '');
+    // Remove Kakavia (Fisherman's Soup) section completely with any surrounding div
+    processedContent = processedContent.replace(/<div[^>]*>[\s\S]*?Kakavia[\s\S]*?Platis Gialos[\s\S]*?<\/div>/g, '');
+    
+    // Remove Savoro (Sweet and Sour Fish) section completely with any surrounding div
+    processedContent = processedContent.replace(/<div[^>]*>[\s\S]*?Savoro[\s\S]*?Kamares[\s\S]*?<\/div>/g, '');
     
     // Remove Skepastaria and Fournaki descriptions
-    processedContent = processedContent.replace(/Skepastaria[^<]*<\/p>/g, '');
-    processedContent = processedContent.replace(/Fournaki[^<]*<\/p>/g, '');
+    processedContent = processedContent.replace(/<p[^>]*>[\s\S]*?Skepastaria[\s\S]*?<\/p>/g, '');
+    processedContent = processedContent.replace(/<p[^>]*>[\s\S]*?Fournaki[\s\S]*?<\/p>/g, '');
     
-    // Add Cantina fine dining
+    // Add Cantina fine dining if not already present
     if (!processedContent.includes('Cantina fine dining')) {
       const restaurantsSection = '<h2>Top Restaurants in Sifnos</h2>';
       if (processedContent.includes(restaurantsSection)) {
@@ -64,6 +67,12 @@ const BlogPost = ({ slug }: BlogPostProps) => {
         );
       }
     }
+    
+    // Show a toast notification to inform the user about the content update
+    toast.success("Blog content updated with latest information", {
+      description: "Removed outdated content and added new restaurant information",
+      duration: 5000
+    });
   }
   
   // Create enhanced schema markup for the blog post with more detailed metadata
