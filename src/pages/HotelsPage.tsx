@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
@@ -373,71 +374,85 @@ export default function HotelsPage() {
                   <span className="truncate">Search for hotels, locations...</span>
                 </div>
 
-                <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-                  <SheetTrigger asChild>
-                    <Button variant="outline" size="icon" className="shrink-0">
-                      <Filter size={18} />
-                      {filterCount > 0 && (
-                        <span className="absolute -top-1 -right-1 w-5 h-5 text-xs flex items-center justify-center text-white bg-sifnos-turquoise rounded-full">
-                          {filterCount}
-                        </span>
-                      )}
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent side="bottom" className="h-screen p-0 max-h-screen">
-                    <SheetHeader className="sticky top-0 z-10 bg-white p-4 border-b border-gray-200 flex flex-row items-center justify-between">
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        onClick={() => setIsSheetOpen(false)}
-                        className="absolute left-2"
-                      >
-                        <ChevronLeft size={18} />
+                <div className="flex gap-2">
+                  <Button 
+                    asChild
+                    variant="default" 
+                    size="sm" 
+                    className="bg-sifnos-deep-blue hover:bg-sifnos-turquoise"
+                  >
+                    <Link to="/touristas-ai" className="flex items-center">
+                      <Zap size={16} className="mr-1" />
+                      <span className="sr-only md:not-sr-only">AI</span>
+                    </Link>
+                  </Button>
+
+                  <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+                    <SheetTrigger asChild>
+                      <Button variant="outline" size="icon" className="shrink-0">
+                        <Filter size={18} />
+                        {filterCount > 0 && (
+                          <span className="absolute -top-1 -right-1 w-5 h-5 text-xs flex items-center justify-center text-white bg-sifnos-turquoise rounded-full">
+                            {filterCount}
+                          </span>
+                        )}
                       </Button>
-                      <SheetTitle className="mx-auto">Filters</SheetTitle>
-                      <Button 
-                        variant="ghost" 
-                        onClick={() => {
-                          setFilters({
-                            amenities: {
-                              wifi: false,
-                              breakfast: false,
-                              pool: false,
-                              parking: false,
-                              airConditioning: false,
-                              restaurant: false,
-                              seaView: false,
-                            },
-                            starRating: 0,
-                            hotelType: '',
-                            priceRange: null,
-                            location: '',
-                          });
-                        }} 
-                        className="text-sm text-gray-500 absolute right-2"
-                        size="sm"
-                      >
-                        Clear all
-                      </Button>
-                    </SheetHeader>
-                    <div className="overflow-y-auto h-full p-4 pb-20">
-                      <FilterSidebar 
-                        filters={filters} 
-                        onFiltersChange={setFilters}
-                        isMobile={true}
-                        className="shadow-none p-0 bg-transparent"
-                      />
-                    </div>
-                    <div className="sticky bottom-0 p-4 bg-white border-t border-gray-200 flex justify-center">
-                      <Button 
-                        className="w-full bg-sifnos-turquoise hover:bg-sifnos-deep-blue"
-                        onClick={() => setIsSheetOpen(false)}
-                      >
-                        Show {filteredHotels.length} hotels
-                      </Button>
-                    </div>
-                  </SheetContent>
-                </Sheet>
+                    </SheetTrigger>
+                    <SheetContent side="bottom" className="h-screen p-0 max-h-screen">
+                      <SheetHeader className="sticky top-0 z-10 bg-white p-4 border-b border-gray-200 flex flex-row items-center justify-between">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={() => setIsSheetOpen(false)}
+                          className="absolute left-2"
+                        >
+                          <ChevronLeft size={18} />
+                        </Button>
+                        <SheetTitle className="mx-auto">Filters</SheetTitle>
+                        <Button 
+                          variant="ghost" 
+                          onClick={() => {
+                            setFilters({
+                              amenities: {
+                                wifi: false,
+                                breakfast: false,
+                                pool: false,
+                                parking: false,
+                                airConditioning: false,
+                                restaurant: false,
+                                seaView: false,
+                              },
+                              starRating: 0,
+                              hotelType: '',
+                              priceRange: null,
+                              location: '',
+                            });
+                          }} 
+                          className="text-sm text-gray-500 absolute right-2"
+                          size="sm"
+                        >
+                          Clear all
+                        </Button>
+                      </SheetHeader>
+                      <div className="overflow-y-auto h-full p-4 pb-20">
+                        <FilterSidebar 
+                          filters={filters} 
+                          onFiltersChange={setFilters}
+                          isMobile={true}
+                          className="shadow-none p-0 bg-transparent"
+                        />
+                      </div>
+                      <div className="sticky bottom-0 p-4 bg-white border-t border-gray-200 flex justify-center">
+                        <Button 
+                          className="w-full bg-sifnos-turquoise hover:bg-sifnos-deep-blue"
+                          onClick={() => setIsSheetOpen(false)}
+                        >
+                          Show {filteredHotels.length} hotels
+                        </Button>
+                      </div>
+                    </SheetContent>
+                  </Sheet>
+                </div>
               </div>
             )}
           </div>
