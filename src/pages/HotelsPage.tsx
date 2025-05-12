@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
-import { Search } from 'lucide-react';
+import { Search, Filter, ChevronLeft } from 'lucide-react';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
 import HotelCard from '@/components/HotelCard';
@@ -12,6 +12,13 @@ import FilterSidebar from '@/components/hotel/FilterSidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 export default function HotelsPage() {
   // Filter state
@@ -37,6 +44,7 @@ export default function HotelsPage() {
   const [sponsoredHotels, setSponsoredHotels] = useState([]);
   const [displayedSponsoredHotel, setDisplayedSponsoredHotel] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
@@ -270,6 +278,12 @@ export default function HotelsPage() {
     // The filtering is already handled by the useEffect that watches searchQuery
   };
 
+  const filterCount = 
+    (filters.starRating ? 1 : 0) +
+    (filters.hotelType ? 1 : 0) +
+    (filters.location ? 1 : 0) +
+    Object.values(filters.amenities).filter(Boolean).length;
+
   return (
     <>
       <SEO 
@@ -316,8 +330,8 @@ export default function HotelsPage() {
         </div>
       </div>
       
-      {/* Search and Filter Section - Improved sticky behavior */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+      {/* Search Bar - Fixed position for both mobile and desktop */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-md">
         <div className="page-container py-3">
           <form 
             className="flex flex-col md:flex-row gap-4 items-center"
@@ -330,23 +344,87 @@ export default function HotelsPage() {
               <Input
                 type="text"
                 placeholder="Search for hotels, locations, or amenities"
-                className="pl-10 py-5 h-auto"
+                className="pl-10 py-4 h-auto"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
               <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             </div>
             <div className="flex w-full md:w-auto gap-2 justify-between">
-              {isMobile && (
-                <FilterSidebar 
-                  filters={filters} 
-                  onFiltersChange={setFilters}
-                  isMobile={true}
-                />
-              )}
+              {isMobile ? (
+                <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+                  <SheetTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      className="flex items-center justify-center gap-2 flex-1"
+                    >
+                      <Filter size={16} />
+                      <span>Filters</span>
+                      {filterCount > 0 && (
+                        <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-sifnos-turquoise rounded-full">
+                          {filterCount}
+                        </span>
+                      )}
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="bottom" className="h-[85vh] p-0">
+                    <SheetHeader className="sticky top-0 z-10 bg-white p-4 border-b border-gray-200 flex flex-row items-center justify-between">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={() => setIsSheetOpen(false)}
+                        className="absolute left-2"
+                      >
+                        <ChevronLeft size={18} />
+                      </Button>
+                      <SheetTitle className="mx-auto">Filters</SheetTitle>
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => {
+                          setFilters({
+                            amenities: {
+                              wifi: false,
+                              breakfast: false,
+                              pool: false,
+                              parking: false,
+                              airConditioning: false,
+                              restaurant: false,
+                              seaView: false,
+                            },
+                            starRating: 0,
+                            hotelType: '',
+                            priceRange: null,
+                            location: '',
+                          });
+                        }} 
+                        className="text-sm text-gray-500 absolute right-2"
+                        size="sm"
+                      >
+                        Clear all
+                      </Button>
+                    </SheetHeader>
+                    <div className="overflow-y-auto h-full p-4 pb-20">
+                      <FilterSidebar 
+                        filters={filters} 
+                        onFiltersChange={setFilters}
+                        isMobile={true}
+                        className="shadow-none p-0 bg-transparent"
+                      />
+                    </div>
+                    <div className="sticky bottom-0 p-4 bg-white border-t border-gray-200 flex justify-center">
+                      <Button 
+                        className="w-full bg-sifnos-turquoise hover:bg-sifnos-deep-blue"
+                        onClick={() => setIsSheetOpen(false)}
+                      >
+                        Show {filteredHotels.length} hotels
+                      </Button>
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              ) : null}
               <Button 
                 type="submit" 
-                className="flex-1 md:flex-auto bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white py-5 h-auto"
+                className="flex-1 md:flex-auto bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white py-4 h-auto"
               >
                 Search
               </Button>
@@ -359,13 +437,15 @@ export default function HotelsPage() {
       <div className="bg-gray-50">
         <div className="page-container py-8">
           <div className="flex flex-wrap -mx-4">
-            {/* Filters Sidebar */}
+            {/* Filters Sidebar - Only visible on desktop */}
             {!isMobile && (
               <div className="w-full lg:w-1/4 px-4 mb-8 lg:mb-0">
-                <FilterSidebar 
-                  filters={filters} 
-                  onFiltersChange={setFilters}
-                />
+                <div className="sticky top-[73px]"> {/* Adjusted top value to account for search bar height */}
+                  <FilterSidebar 
+                    filters={filters} 
+                    onFiltersChange={setFilters}
+                  />
+                </div>
               </div>
             )}
             
