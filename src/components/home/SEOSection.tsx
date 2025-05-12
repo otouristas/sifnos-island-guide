@@ -16,7 +16,7 @@ export default function SEOSection() {
             </p>
             
             <p>
-              We invite you to browse our carefully selected hotels, compare features and prices, and book with confidence knowing that our team has personally verified the quality and accuracy of the information we provide. Your perfect <Link to="/about" className="text-sifnos-turquoise hover:text-sifnos-deep-blue">Sifnos getaway</Link> begins here!
+              We invite you to browse our carefully selected hotels, compare features and prices, and book with confidence knowing that our team has personally verified the quality and accuracy of the information we provide. Your perfect <Link to="/about" className="text-sifnos-turquoise hover:text-sifnos-deep-blue font-bold">Sifnos getaway</Link> begins here!
             </p>
           </div>
           
