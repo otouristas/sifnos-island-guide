@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getHotelTypeBySlug, HotelType } from '../data/hotelTypes';
@@ -73,7 +72,6 @@ export default function HotelTypePage() {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
   
-  // Create a dynamic SEO description based on hotel type
   let seoDescription = `Discover ${hotelType.title.toLowerCase()} in Sifnos - hand-selected accommodations offering ${hotelType.shortDescription.toLowerCase()}. Compare amenities, read verified guest reviews, and secure the best rates with our price-match guarantee.`;
   
   // Special handling for villas to enhance SEO
@@ -121,11 +119,11 @@ export default function HotelTypePage() {
           </div>
         </div>
         
-        {/* Introduction */}
+        {/* Introduction - Updated spacing and padding */}
         <div className="max-w-4xl mx-auto mb-12">
-          <div className="prose prose-lg">
-            <p className="lead text-xl text-gray-700">{hotelType.shortDescription}</p>
-            <p>{hotelType.description}</p>
+          <div className="prose prose-lg space-y-6">
+            <p className="lead text-xl text-gray-700 font-medium mb-6">{hotelType.shortDescription}</p>
+            <p className="text-gray-600">{hotelType.description}</p>
           </div>
         </div>
         
