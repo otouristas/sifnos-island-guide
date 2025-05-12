@@ -34,17 +34,22 @@ const BlogPost = ({ slug }: BlogPostProps) => {
   
   // Special handling for the Sifnian cuisine guide
   if (post.slug === 'sifnian-cuisine-guide-2025') {
-    // Update fennel fritters description
-    processedContent = processedContent.replace(
-      /Marathotiganites \(Fennel Fritters\)[^<]*<\/p>/s,
-      'Marathotiganites (Fennel Fritters)</h3><p>These delightfully crispy fritters feature wild fennel leaves mixed with flour and water, then fried to perfection. Often served as a meze with skordalia (garlic dip) or tzatziki, they showcase the island\'s love of wild herbs and simple preparations. Best enjoyed at: Leonidas in Apollonia or Drimoni in Exampela</p>'
-    );
+    // Remove the entries mentioned by the user
+    // Remove references to DOSA in Faros
+    processedContent = processedContent.replace(/DOSA in Faros|Dosa in Faros/g, '');
     
-    // Update Kakavia description
-    processedContent = processedContent.replace(
-      /Kakavia \(Fisherman's Soup\)[^<]*<\/p>/s,
-      'Kakavia (Fisherman\'s Soup)</h3><p>This hearty fish soup originated among the island\'s fishermen, who would use part of their daily catch to prepare a simple but flavorful meal. Made with fresh fish, potatoes, onions, and tomatoes, the broth is often served separately from the solids and finished with olive oil. Best enjoyed at: Omega 3 in Platis Gialos</p>'
-    );
+    // Remove Marathotiganites (Fennel Fritters) section
+    processedContent = processedContent.replace(/<h3>Marathotiganites \(Fennel Fritters\)<\/h3><p>[^<]*<\/p>/g, '');
+    
+    // Remove Kakavia (Fisherman's Soup) section
+    processedContent = processedContent.replace(/<h3>Kakavia \(Fisherman's Soup\)<\/h3><p>[^<]*<\/p>/g, '');
+    
+    // Remove Savoro (Sweet and Sour Fish) section
+    processedContent = processedContent.replace(/<h3>Savoro \(Sweet and Sour Fish\)<\/h3><p>[^<]*<\/p>/g, '');
+    
+    // Remove Skepastaria and Fournaki descriptions
+    processedContent = processedContent.replace(/Skepastaria[^<]*<\/p>/g, '');
+    processedContent = processedContent.replace(/Fournaki[^<]*<\/p>/g, '');
     
     // Add Cantina fine dining
     if (!processedContent.includes('Cantina fine dining')) {
@@ -58,9 +63,6 @@ const BlogPost = ({ slug }: BlogPostProps) => {
         );
       }
     }
-    
-    // Remove "DOSA in Faros Sifnos" references
-    processedContent = processedContent.replace(/DOSA in Faros|Dosa in Faros/g, 'Omega 3 in Platis Gialos');
   }
   
   // Create enhanced schema markup for the blog post with more detailed metadata
