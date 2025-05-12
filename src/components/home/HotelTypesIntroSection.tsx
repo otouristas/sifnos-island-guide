@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export default function HotelTypesIntroSection() {
   return (
-    <div className="max-w-4xl mx-auto mt-6 mb-10 text-center">
+    <div className="max-w-4xl mx-auto mt-6 mb-10 px-4 text-center">
       <div className="prose prose-lg mx-auto">
         <h2 className="text-2xl font-bold text-sifnos-deep-blue mb-4">Find Your Perfect Sifnos Accommodation</h2>
         <p className="text-gray-700">

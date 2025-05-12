@@ -34,7 +34,8 @@ const BlogPost = ({ slug }: BlogPostProps) => {
   
   // Special handling for the Sifnian cuisine guide
   if (post.slug === 'sifnian-cuisine-guide-2025') {
-    // Remove the entries mentioned by the user
+    console.log("Processing Sifnian cuisine guide content");
+    
     // Remove references to DOSA in Faros
     processedContent = processedContent.replace(/DOSA in Faros|Dosa in Faros/g, '');
     

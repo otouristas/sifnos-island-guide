@@ -8,6 +8,7 @@ import BlogPost from '@/components/blog/BlogPost';
 import SEO from '@/components/SEO';
 import { blogPosts } from '@/data/blogPosts';
 import { slugify } from '@/lib/url-utils';
+import { toast } from "sonner";
 
 const BlogPostPage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -21,6 +22,11 @@ const BlogPostPage = () => {
     if (post && slug !== post.slug) {
       console.log('Non-canonical URL detected, redirecting to:', post.slug);
       navigate(`/blog/${post.slug}`, { replace: true });
+    }
+    
+    // Special notification for the Sifnian cuisine guide
+    if (slug === 'sifnian-cuisine-guide-2025') {
+      console.log('Displaying updated Sifnian cuisine guide with removed content');
     }
   }, [slug, post, navigate]);
   
