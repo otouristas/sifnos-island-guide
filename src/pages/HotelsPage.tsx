@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
@@ -32,7 +33,8 @@ export default function HotelsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [hotels, setHotels] = useState([]);
   const [filteredHotels, setFilteredHotels] = useState([]);
-  const [sponsoredHotel, setSponsoredHotel] = useState(null);
+  const [sponsoredHotels, setSponsoredHotels] = useState([]);
+  const [displayedSponsoredHotel, setDisplayedSponsoredHotel] = useState(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   const isMobile = useIsMobile();
@@ -66,52 +68,107 @@ export default function HotelsPage() {
 
         console.log(`Hotels found: ${data?.length || 0}`);
         
-        // Separate ALK HOTEL for sponsored placement
-        let alkHotel = null;
+        // Define our sponsored hotels
+        const sponsoredHotelNames = ['ALK HOTEL™', 'Morpheas Pension & Apartments', 'Meropi Rooms and Apartments'];
+        
+        // Separate sponsored hotels
+        const sponsoredHotelsList = [];
         let otherHotels = [];
         
         data?.forEach(hotel => {
-          if (hotel.name === 'ALK HOTEL™') {
-            // Add logo path and photos for ALK HOTEL
-            alkHotel = {
-              ...hotel,
-              logo_url: 'alk-hotel-sifnos/logo.png',
-              hotel_photos: [
+          if (sponsoredHotelNames.includes(hotel.name)) {
+            // Add to sponsored hotels list with appropriate customization
+            const sponsoredHotel = { ...hotel };
+            
+            if (hotel.name === 'ALK HOTEL™') {
+              sponsoredHotel.logo_url = 'alk-hotel-sifnos/logo.png';
+              sponsoredHotel.hotel_photos = [
                 { id: 'alk-1', photo_url: 'alk-hotel-sifnos/alk-hotel-feature.jpeg', is_main_photo: true },
                 { id: 'alk-2', photo_url: 'alk-hotel-sifnos/1.jpg_1.jpeg', is_main_photo: false },
                 { id: 'alk-3', photo_url: 'alk-hotel-sifnos/3.jpg.jpeg', is_main_photo: false },
-              ]
-            };
+              ];
+            } else if (hotel.name === 'Morpheas Pension & Apartments') {
+              sponsoredHotel.logo_url = 'morpheas-pension/logo.png';
+              sponsoredHotel.hotel_photos = [
+                { id: 'morpheas-1', photo_url: 'morpheas-pension/sifnos-accommodation.jpg.jpeg', is_main_photo: true },
+                { id: 'morpheas-2', photo_url: 'morpheas-pension/sifnos-morpheas-pension3.jpg.jpeg', is_main_photo: false },
+                { id: 'morpheas-3', photo_url: 'morpheas-pension/sifnos-morpheas-pension4.jpg.jpeg', is_main_photo: false },
+              ];
+            } else if (hotel.name === 'Meropi Rooms and Apartments') {
+              sponsoredHotel.logo_url = 'meropi-logo.svg';
+              sponsoredHotel.hotel_photos = [
+                { id: 'meropi-1', photo_url: 'meropirooms-hero.webp', is_main_photo: true },
+                { id: 'meropi-2', photo_url: 'meropirooms-one.webp', is_main_photo: false },
+                { id: 'meropi-3', photo_url: 'meropirooms-two.webp', is_main_photo: false },
+              ];
+            }
+            
+            sponsoredHotelsList.push(sponsoredHotel);
+            console.log(`Added ${hotel.name} as a sponsored hotel`);
           } else {
             otherHotels.push(hotel);
           }
         });
         
-        setSponsoredHotel(alkHotel);
+        setSponsoredHotels(sponsoredHotelsList);
         setHotels(otherHotels || []);
         setFilteredHotels(otherHotels || []);
         
-        // If we didn't find ALK HOTEL in the data, create it manually
-        if (!alkHotel) {
-          const defaultAlkHotel = {
-            id: 'alk-hotel-id',
-            name: 'ALK HOTEL™',
-            location: 'Platis Gialos, Sifnos',
-            rating: 5,
-            hotel_types: ['luxury-hotels', 'beach-hotels'],
-            logo_url: 'alk-hotel-sifnos/logo.png',
-            hotel_amenities: [
-              { amenity: 'Free WiFi' },
-              { amenity: 'Breakfast Included' },
-              { amenity: 'Sea View' },
-              { amenity: 'Pool Access' },
-            ],
-            hotel_photos: [
-              { id: 'alk-1', photo_url: 'alk-hotel-sifnos/alk-hotel-feature.jpeg', is_main_photo: true },
-            ]
-          };
-          setSponsoredHotel(defaultAlkHotel);
-          console.log('ALK HOTEL manually created as sponsored');
+        // Create default sponsored hotels if any are missing
+        if (sponsoredHotelsList.length === 0) {
+          const defaultSponsoredHotels = [
+            {
+              id: 'alk-hotel-id',
+              name: 'ALK HOTEL™',
+              location: 'Agia Marina - Kamares, Sifnos',
+              rating: 5,
+              hotel_types: ['luxury-hotels', 'beach-hotels'],
+              logo_url: 'alk-hotel-sifnos/logo.png',
+              hotel_amenities: [
+                { amenity: 'Free WiFi' },
+                { amenity: 'Breakfast Included' },
+                { amenity: 'Sea View' },
+                { amenity: 'Pool Access' },
+              ],
+              hotel_photos: [
+                { id: 'alk-1', photo_url: 'alk-hotel-sifnos/alk-hotel-feature.jpeg', is_main_photo: true },
+              ]
+            },
+            {
+              id: 'morpheas-id',
+              name: 'Morpheas Pension & Apartments',
+              location: 'Apollonia, Sifnos',
+              rating: 4,
+              hotel_types: ['family-friendly', 'traditional-hotels'],
+              logo_url: 'morpheas-pension/logo.png',
+              hotel_amenities: [
+                { amenity: 'Free WiFi' },
+                { amenity: 'Family Rooms' },
+                { amenity: 'City Center' }
+              ],
+              hotel_photos: [
+                { id: 'morpheas-1', photo_url: 'morpheas-pension/sifnos-accommodation.jpg.jpeg', is_main_photo: true },
+              ]
+            },
+            {
+              id: 'meropi-id',
+              name: 'Meropi Rooms and Apartments',
+              location: 'Platis Gialos, Sifnos',
+              rating: 4,
+              hotel_types: ['beach-hotels', 'apartment-hotels'],
+              logo_url: 'meropi-logo.svg',
+              hotel_amenities: [
+                { amenity: 'Free WiFi' },
+                { amenity: 'Beach Access' },
+                { amenity: 'Kitchenette' }
+              ],
+              hotel_photos: [
+                { id: 'meropi-1', photo_url: 'meropirooms-hero.webp', is_main_photo: true },
+              ]
+            }
+          ];
+          setSponsoredHotels(defaultSponsoredHotels);
+          console.log('Created default sponsored hotels');
         }
         
       } catch (error) {
@@ -128,6 +185,15 @@ export default function HotelsPage() {
 
     fetchHotels();
   }, [toast]); 
+  
+  // Select a random sponsored hotel to display when the component loads
+  useEffect(() => {
+    if (sponsoredHotels.length > 0) {
+      const randomIndex = Math.floor(Math.random() * sponsoredHotels.length);
+      setDisplayedSponsoredHotel(sponsoredHotels[randomIndex]);
+      console.log(`Randomly selected ${sponsoredHotels[randomIndex]?.name} to display as sponsored`);
+    }
+  }, [sponsoredHotels]);
   
   // Apply filters whenever hotels or filters change
   useEffect(() => {
@@ -294,7 +360,7 @@ export default function HotelsPage() {
             <div className="w-full lg:w-3/4 px-4">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="font-montserrat font-semibold text-xl">
-                  {loading ? "Loading hotels..." : `${filteredHotels.length + (sponsoredHotel ? 1 : 0)} hotels found`}
+                  {loading ? "Loading hotels..." : `${filteredHotels.length + (displayedSponsoredHotel ? 1 : 0)} hotels found`}
                 </h2>
                 <div className="flex items-center">
                   <span className="mr-2 text-sm">Sort by:</span>
@@ -314,8 +380,8 @@ export default function HotelsPage() {
               )}
               
               {/* Sponsored Hotel */}
-              {!loading && sponsoredHotel && (
-                <SponsoredHotelCard hotel={sponsoredHotel} />
+              {!loading && displayedSponsoredHotel && (
+                <SponsoredHotelCard hotel={displayedSponsoredHotel} />
               )}
               
               {/* Hotels Grid */}
@@ -325,7 +391,7 @@ export default function HotelsPage() {
                     filteredHotels.map(hotel => (
                       <HotelCard key={hotel.id} hotel={hotel} showLogo={true} />
                     ))
-                  ) : !sponsoredHotel && (
+                  ) : !displayedSponsoredHotel && (
                     <div className="text-center py-12 col-span-3">
                       <h3 className="font-medium text-xl text-gray-700">No hotels found matching your criteria</h3>
                       <p className="text-gray-500 mt-2">Try adjusting your filters or search terms</p>
