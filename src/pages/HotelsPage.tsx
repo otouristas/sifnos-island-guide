@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
-import { Search, Filter, ChevronLeft, X } from 'lucide-react';
+import { Search, Filter, ChevronLeft, X, Zap, MessageCircle } from 'lucide-react';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
 import HotelCard from '@/components/HotelCard';
@@ -464,12 +465,26 @@ export default function HotelsPage() {
                 />
                 <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               </div>
-              <Button 
-                type="submit" 
-                className="flex-1 md:flex-auto bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white py-4 h-auto"
-              >
-                Search
-              </Button>
+              <div className="flex gap-2 w-full md:w-auto">
+                <Button 
+                  type="submit" 
+                  className="flex-1 md:w-auto bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white py-2 h-auto px-4"
+                  size="sm"
+                >
+                  <Search size={18} className="mr-1" />
+                  Search
+                </Button>
+                <Button 
+                  asChild
+                  className="flex-1 md:w-auto bg-sifnos-deep-blue hover:bg-sifnos-turquoise text-white py-2 h-auto"
+                  size="sm"
+                >
+                  <Link to="/touristas-ai" className="flex items-center">
+                    <Zap size={18} className="mr-1" />
+                    Touristas AI
+                  </Link>
+                </Button>
+              </div>
             </form>
           </div>
         </div>
