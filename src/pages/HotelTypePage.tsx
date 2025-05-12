@@ -1,6 +1,7 @@
-import { useParams, useNavigate } from 'react-router-dom';
+
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getHotelTypeBySlug, HotelType } from '../data/hotelTypes';
+import { getHotelTypeBySlug, HotelType, hotelTypes } from '../data/hotelTypes';
 import { supabase } from '@/integrations/supabase/client';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
@@ -10,6 +11,7 @@ import { getHotelTypeIcon } from '../components/icons/HotelTypeIcons';
 export default function HotelTypePage() {
   const { slug } = useParams<{ slug: string }>();
   const [hotelType, setHotelType] = useState<HotelType | null>(null);
+  const [relatedHotelTypes, setRelatedHotelTypes] = useState<HotelType[]>([]);
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -24,6 +26,14 @@ export default function HotelTypePage() {
     }
     
     setHotelType(typeData);
+    
+    // Find related hotel types (excluding current one)
+    const related = hotelTypes
+      .filter(type => type.slug !== slug)
+      .sort(() => 0.5 - Math.random()) // Randomly sort
+      .slice(0, 3); // Get 3 related types
+    
+    setRelatedHotelTypes(related);
     
     const fetchHotels = async () => {
       try {
@@ -155,6 +165,30 @@ export default function HotelTypePage() {
               )}
             </div>
           )}
+        </section>
+        
+        {/* Related Hotel Types Section */}
+        <section className="my-12 bg-gray-50 p-6 rounded-lg">
+          <h2 className="text-2xl font-bold text-sifnos-deep-blue mb-4">
+            Explore Other Accommodation Types in Sifnos
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            {relatedHotelTypes.map((type) => (
+              <Link 
+                key={type.slug} 
+                to={`/hotel-types/${type.slug}`}
+                className="flex items-center p-4 bg-white rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+              >
+                <div className="w-12 h-12 text-sifnos-turquoise mr-4">
+                  {getHotelTypeIcon(type.slug)}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sifnos-deep-blue">{type.title}</h3>
+                  <p className="text-sm text-gray-600 line-clamp-1">{type.shortDescription}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </section>
         
         {/* Why Choose Section */}

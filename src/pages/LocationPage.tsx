@@ -1,7 +1,7 @@
 
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getLocationBySlug, Location } from '../data/locations';
+import { getLocationBySlug, Location, sifnosLocations } from '../data/locations';
 import { supabase } from '@/integrations/supabase/client';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
@@ -11,6 +11,7 @@ import { MapPin } from 'lucide-react';
 export default function LocationPage() {
   const { slug } = useParams<{ slug: string }>();
   const [location, setLocation] = useState<Location | null>(null);
+  const [relatedLocations, setRelatedLocations] = useState<Location[]>([]);
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -25,6 +26,14 @@ export default function LocationPage() {
     }
     
     setLocation(locationData);
+    
+    // Find related locations (excluding current one)
+    const related = sifnosLocations
+      .filter(loc => loc.slug !== slug)
+      .sort(() => 0.5 - Math.random()) // Randomly sort
+      .slice(0, 3); // Get 3 related locations
+    
+    setRelatedLocations(related);
     
     const fetchHotels = async () => {
       try {
@@ -96,9 +105,9 @@ export default function LocationPage() {
         
         {/* Introduction */}
         <div className="max-w-4xl mx-auto mb-12">
-          <div className="prose prose-lg">
-            <p className="lead text-xl text-gray-700">{location.shortDescription}</p>
-            <p>{location.description}</p>
+          <div className="prose prose-lg space-y-6">
+            <p className="lead text-xl text-gray-700 font-medium mb-6">{location.shortDescription}</p>
+            <p className="text-gray-600">{location.description}</p>
           </div>
         </div>
         
@@ -133,6 +142,45 @@ export default function LocationPage() {
               )}
             </div>
           )}
+        </section>
+        
+        {/* Related Locations Section */}
+        <section className="my-12 bg-gray-50 p-6 rounded-lg">
+          <h2 className="text-2xl font-bold text-sifnos-deep-blue mb-4">
+            Explore Other Locations in Sifnos
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            {relatedLocations.map((loc) => (
+              <Link 
+                key={loc.slug} 
+                to={`/locations/${loc.slug}`}
+                className="group block overflow-hidden rounded-lg shadow-sm bg-white hover:shadow-md transition-all"
+              >
+                <div className="relative h-32">
+                  <img 
+                    src={loc.imageUrl} 
+                    alt={loc.name} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-30"></div>
+                  <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black to-transparent">
+                    <h3 className="text-white font-semibold">{loc.name}</h3>
+                  </div>
+                </div>
+                <div className="p-3">
+                  <p className="text-sm text-gray-600 line-clamp-1">{loc.shortDescription}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="text-center mt-6">
+            <Link 
+              to="/locations" 
+              className="text-sifnos-turquoise font-medium hover:text-sifnos-deep-blue transition-colors"
+            >
+              View All Locations →
+            </Link>
+          </div>
         </section>
         
         {/* Nearby Attractions */}
