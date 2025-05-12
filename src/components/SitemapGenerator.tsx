@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { generateHotelUrl } from '@/lib/url-utils';
@@ -115,7 +114,7 @@ export default function SitemapGenerator() {
           loc: `${baseURL}/blog/${post.slug}`,
           lastmod: post.date,
           changefreq: 'monthly' as const,
-          priority: post.featured ? 0.9 : 0.8
+          priority: post.categories.includes('Featured') ? 0.9 : 0.8
         }))
       ];
       
