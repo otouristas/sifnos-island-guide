@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
@@ -81,21 +80,21 @@ export default function HotelsPage() {
             const sponsoredHotel = { ...hotel };
             
             if (hotel.name === 'ALK HOTEL™') {
-              sponsoredHotel.logo_url = 'alk-hotel-sifnos/logo.png';
+              sponsoredHotel.logo_path = 'alk-hotel-sifnos/logo.png';
               sponsoredHotel.hotel_photos = [
                 { id: 'alk-1', photo_url: 'alk-hotel-sifnos/alk-hotel-feature.jpeg', is_main_photo: true },
                 { id: 'alk-2', photo_url: 'alk-hotel-sifnos/1.jpg_1.jpeg', is_main_photo: false },
                 { id: 'alk-3', photo_url: 'alk-hotel-sifnos/3.jpg.jpeg', is_main_photo: false },
               ];
             } else if (hotel.name === 'Morpheas Pension & Apartments') {
-              sponsoredHotel.logo_url = 'morpheas-pension/logo.png';
+              sponsoredHotel.logo_path = 'morpheas-pension/logo.png';
               sponsoredHotel.hotel_photos = [
                 { id: 'morpheas-1', photo_url: 'morpheas-pension/sifnos-accommodation.jpg.jpeg', is_main_photo: true },
                 { id: 'morpheas-2', photo_url: 'morpheas-pension/sifnos-morpheas-pension3.jpg.jpeg', is_main_photo: false },
                 { id: 'morpheas-3', photo_url: 'morpheas-pension/sifnos-morpheas-pension4.jpg.jpeg', is_main_photo: false },
               ];
             } else if (hotel.name === 'Meropi Rooms and Apartments') {
-              sponsoredHotel.logo_url = 'meropi-logo.svg';
+              sponsoredHotel.logo_path = 'meropi-logo.svg';
               sponsoredHotel.hotel_photos = [
                 { id: 'meropi-1', photo_url: 'meropirooms-hero.webp', is_main_photo: true },
                 { id: 'meropi-2', photo_url: 'meropirooms-one.webp', is_main_photo: false },
@@ -123,7 +122,7 @@ export default function HotelsPage() {
               location: 'Agia Marina - Kamares, Sifnos',
               rating: 5,
               hotel_types: ['luxury-hotels', 'beach-hotels'],
-              logo_url: 'alk-hotel-sifnos/logo.png',
+              logo_path: 'alk-hotel-sifnos/logo.png',
               hotel_amenities: [
                 { amenity: 'Free WiFi' },
                 { amenity: 'Breakfast Included' },
@@ -140,7 +139,7 @@ export default function HotelsPage() {
               location: 'Apollonia, Sifnos',
               rating: 4,
               hotel_types: ['family-friendly', 'traditional-hotels'],
-              logo_url: 'morpheas-pension/logo.png',
+              logo_path: 'morpheas-pension/logo.png',
               hotel_amenities: [
                 { amenity: 'Free WiFi' },
                 { amenity: 'Family Rooms' },
@@ -156,7 +155,7 @@ export default function HotelsPage() {
               location: 'Platis Gialos, Sifnos',
               rating: 4,
               hotel_types: ['beach-hotels', 'apartment-hotels'],
-              logo_url: 'meropi-logo.svg',
+              logo_path: 'meropi-logo.svg',
               hotel_amenities: [
                 { amenity: 'Free WiFi' },
                 { amenity: 'Beach Access' },

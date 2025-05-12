@@ -53,7 +53,7 @@ export const determineHotelLogoUrl = (hotel: any): string | null => {
   const randomValue = Math.floor(Math.random() * 1000);
   
   // Generate a logo URL with cache busting if there is a logo
-  const logoUrl = hotel.logo_url ? `/uploads/hotels/${hotel.logo_url}?v=${timestamp}-${randomValue}` : null;
+  const logoUrl = hotel.logo_path ? `/uploads/hotels/${hotel.logo_path}?v=${timestamp}-${randomValue}` : null;
   
   if (logoUrl) return logoUrl;
   
