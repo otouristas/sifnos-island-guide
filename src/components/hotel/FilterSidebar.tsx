@@ -129,43 +129,6 @@ const FilterSidebar = ({
     (filters.location ? 1 : 0) +
     Object.values(filters.amenities).filter(Boolean).length;
 
-  if (isMobile) {
-    return (
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button 
-            variant="outline" 
-            className="flex items-center justify-center gap-2 w-full mb-4"
-          >
-            <Filter size={16} />
-            <span>Filters</span>
-            {filterCount > 0 && (
-              <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-sifnos-turquoise rounded-full">
-                {filterCount}
-              </span>
-            )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-80 p-0" align="center">
-          <div className="p-4 max-h-[80vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="font-semibold text-lg">Filters</h2>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={handleClearFilters} 
-                className="text-sm text-gray-500"
-              >
-                Clear all
-              </Button>
-            </div>
-            {renderFilterContent()}
-          </div>
-        </PopoverContent>
-      </Popover>
-    );
-  }
-
   function renderFilterContent() {
     return (
       <>

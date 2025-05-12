@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
@@ -367,7 +368,7 @@ export default function HotelsPage() {
                       )}
                     </Button>
                   </SheetTrigger>
-                  <SheetContent side="bottom" className="h-[85vh] p-0">
+                  <SheetContent side="bottom" className="h-[100vh] p-0 max-h-screen">
                     <SheetHeader className="sticky top-0 z-10 bg-white p-4 border-b border-gray-200 flex flex-row items-center justify-between">
                       <Button 
                         variant="ghost" 
