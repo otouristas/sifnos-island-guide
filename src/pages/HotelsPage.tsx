@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
-import { Search, Filter } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
 import HotelCard from '@/components/HotelCard';
@@ -10,6 +10,8 @@ import { hotelTypes } from '@/data/hotelTypes';
 import { getHotelTypeIcon } from '@/components/icons/HotelTypeIcons';
 import FilterSidebar from '@/components/hotel/FilterSidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 export default function HotelsPage() {
   // Filter state
@@ -263,6 +265,11 @@ export default function HotelsPage() {
     setFilteredHotels(results);
   }, [hotels, filters, searchQuery]);
 
+  const handleSearch = () => {
+    console.log("Searching with query:", searchQuery);
+    // The filtering is already handled by the useEffect that watches searchQuery
+  };
+
   return (
     <>
       <SEO 
@@ -309,33 +316,42 @@ export default function HotelsPage() {
         </div>
       </div>
       
-      {/* Search and Filter Section */}
+      {/* Search and Filter Section - Improved for better mobile display */}
       <div className="bg-white shadow-md sticky top-0 z-10">
         <div className="page-container py-4">
-          <div className="flex flex-wrap items-center -mx-2">
-            <div className="w-full md:w-1/2 px-2 mb-4 md:mb-0">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search for hotels, locations, or amenities"
-                  className="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+          <form 
+            className="flex flex-col md:flex-row gap-4 items-center"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSearch();
+            }}
+          >
+            <div className="w-full md:flex-1 relative">
+              <Input
+                type="text"
+                placeholder="Search for hotels, locations, or amenities"
+                className="pl-10 py-6 h-auto"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            </div>
+            <div className="flex w-full md:w-auto gap-2 justify-between">
+              {isMobile && (
+                <FilterSidebar 
+                  filters={filters} 
+                  onFiltersChange={setFilters}
+                  isMobile={true}
                 />
-                <Search size={20} className="absolute left-3 top-3.5 text-gray-400" />
-              </div>
-            </div>
-            <div className="w-full md:w-1/2 px-2 flex justify-end">
-              {isMobile && <FilterSidebar 
-                filters={filters} 
-                onFiltersChange={setFilters}
-                isMobile={true}
-              />}
-              <button className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white px-6 py-3 rounded-lg transition-colors duration-300 ml-2">
+              )}
+              <Button 
+                type="submit" 
+                className="flex-1 md:flex-auto bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white py-6 h-auto"
+              >
                 Search
-              </button>
+              </Button>
             </div>
-          </div>
+          </form>
         </div>
       </div>
       
