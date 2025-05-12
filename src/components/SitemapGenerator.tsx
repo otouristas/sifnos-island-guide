@@ -103,7 +103,7 @@ export default function SitemapGenerator() {
         }
       ];
       
-      // Blog pages
+      // Blog pages - enhanced to automatically include all blog posts
       const blogPages: SitemapURL[] = [
         {
           loc: `${baseURL}/blog`,
@@ -115,7 +115,7 @@ export default function SitemapGenerator() {
           loc: `${baseURL}/blog/${post.slug}`,
           lastmod: post.date,
           changefreq: 'monthly' as const,
-          priority: 0.8
+          priority: post.featured ? 0.9 : 0.8
         }))
       ];
       
@@ -190,6 +190,7 @@ export default function SitemapGenerator() {
               // Update the existing entry with higher priority
               hotelPages[existingIndex].priority = featured.priority;
               hotelPages[existingIndex].changefreq = 'daily';
+              hotelPages[existingIndex].lastmod = currentDate; // Ensure the date is current
             } else {
               // Add new entry
               hotelPages.push({

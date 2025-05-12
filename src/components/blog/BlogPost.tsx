@@ -29,7 +29,7 @@ const BlogPost = ({ slug }: BlogPostProps) => {
     );
   }
   
-  // Create schema markup for the blog post
+  // Create enhanced schema markup for the blog post with more detailed metadata
   const postSchema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -49,10 +49,14 @@ const BlogPost = ({ slug }: BlogPostProps) => {
       }
     },
     "datePublished": post.date,
+    "dateModified": post.date, // Ideally should track last modified date
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": `https://hotelssifnos.com/blog/${post.slug}`
-    }
+    },
+    "keywords": post.categories.join(', ').toLowerCase(),
+    "articleSection": post.categories[0] || "Travel",
+    "wordCount": post.content.split(' ').length.toString()
   };
   
   return (

@@ -30,24 +30,79 @@ const BlogPostPage = () => {
     return <Navigate to="/blog" replace />;
   }
 
-  // Custom title for specific blog post
-  const getCustomTitle = () => {
-    if (post?.slug === 'ultimate-guide-to-sifnos-hotels-2025') {
+  // Enhanced SEO title generation based on post content
+  const generateSeoTitle = () => {
+    if (!post) return 'Blog Post | Sifnos Travel Guide 2025';
+    
+    // Specific custom titles for certain blog posts
+    if (post.slug === 'ultimate-guide-to-sifnos-hotels-2025') {
       return 'Sifnos Hotels Guide 2025 | Best Areas & Stays to Book | Hotels Sifnos';
     }
-    return post ? `${post.title} | Hotels in Sifnos 2025 Guide` : 'Blog Post | Sifnos Travel';
+    
+    if (post.slug === 'top-beaches-sifnos-2025') {
+      return 'Best Beaches in Sifnos 2025 | Hidden Coves & Popular Shores | Sifnos Guide';
+    }
+    
+    if (post.slug === 'family-friendly-sifnos-travel-guide') {
+      return 'Family-Friendly Sifnos Guide 2025 | Activities, Hotels & Tips for Kids';
+    }
+    
+    if (post.slug === 'luxury-stays-sifnos-island-2025') {
+      return 'Luxury Sifnos Hotels & Villas 2025 | Premium Stays with Stunning Views';
+    }
+    
+    if (post.slug === 'perfect-sifnos-itinerary-7-days') {
+      return '7 Days in Sifnos | Perfect Itinerary 2025 | Day by Day Travel Guide';
+    }
+    
+    if (post.slug === 'sifnos-food-guide-best-restaurants-cuisine') {
+      return 'Sifnos Food Guide 2025 | Best Restaurants, Local Dishes & Culinary Experiences';
+    }
+    
+    // Default title format for other posts
+    return `${post.title} | Sifnos Island Travel Guide 2025`;
+  };
+  
+  // Enhanced SEO description generation
+  const generateSeoDescription = () => {
+    if (!post) return "Read our detailed guide about Sifnos island, accommodations, beaches, and local culture.";
+    
+    // Create a more compelling and keyword-rich description based on post content
+    if (post.categories.includes('Beaches')) {
+      return `Discover the best beaches in Sifnos for 2025, from secluded coves to popular shores. Find information on facilities, access, water conditions, and nearby accommodations for your perfect beach day.`;
+    }
+    
+    if (post.categories.includes('Family Travel')) {
+      return `Plan your family vacation to Sifnos with our comprehensive 2025 guide. Find family-friendly hotels, kid-approved activities, safe beaches, and practical tips for traveling with children of all ages.`;
+    }
+    
+    if (post.categories.includes('Luxury')) {
+      return `Experience luxury in Sifnos with our exclusive guide to premium accommodations, upscale dining, private beaches, and bespoke experiences. Find the perfect high-end villa or 5-star hotel for your 2025 vacation.`;
+    }
+    
+    if (post.categories.includes('Itineraries')) {
+      return `Follow our perfect 7-day Sifnos itinerary for 2025. Day-by-day guide with the best beaches, villages, restaurants, and cultural experiences to make the most of your Greek island vacation.`;
+    }
+    
+    if (post.categories.includes('Food')) {
+      return `Explore Sifnos' renowned culinary scene with our 2025 food guide. Discover traditional dishes, award-winning restaurants, cooking classes, and the best places to experience authentic Greek cuisine.`;
+    }
+    
+    // Default description using the post excerpt
+    return post.excerpt || "Read our detailed guide about Sifnos island, accommodations, beaches, and local culture.";
   };
   
   return (
     <div>
       <SEO
-        title={getCustomTitle()}
-        description={post?.excerpt || "Read our detailed guide and insights about Sifnos island, accommodations, beaches, and local culture."}
+        title={generateSeoTitle()}
+        description={generateSeoDescription()}
         schemaType="Article"
         canonical={post ? `/blog/${post.slug}` : "/blog"} 
         imageUrl={post?.featuredImage}
         datePublished={post?.date}
-        author="Touristas AI"
+        author={post?.author || "Touristas AI"}
+        keywords={post?.categories.map(category => category.toLowerCase()) || ['sifnos travel', 'greek islands']}
       />
       
       {/* Hero Section */}

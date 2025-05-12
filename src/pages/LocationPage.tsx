@@ -62,16 +62,63 @@ export default function LocationPage() {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
   
-  // Create a dynamic SEO description based on location
-  const seoDescription = `Explore hotels in ${location.name}, Sifnos - ${location.shortDescription.toLowerCase()}. Find exclusive accommodations with sea views, local charm, and authentic Cycladic experiences. Compare prices and book with our best-rate guarantee.`;
+  // Generate a more descriptive SEO title based on location characteristics
+  const generateSeoTitle = () => {
+    if (location.name === "Apollonia") {
+      return `Hotels in Apollonia, Sifnos - Central Location & Traditional Charm | Hotels Sifnos`;
+    }
+    
+    if (location.name === "Kamares") {
+      return `Hotels in Kamares, Sifnos - Port Location, Beachfront Stays 2025 | Hotels Sifnos`;
+    }
+    
+    if (location.name === "Platis Gialos") {
+      return `Hotels in Platis Gialos, Sifnos - Beachfront Resorts & Family Stays | Hotels Sifnos`;
+    }
+    
+    if (location.name === "Kastro") {
+      return `Hotels in Kastro, Sifnos - Historic Medieval Village Accommodation | Hotels Sifnos`;
+    }
+    
+    if (location.name === "Vathi") {
+      return `Hotels in Vathi, Sifnos - Sheltered Bay & Beach Accommodation | Hotels Sifnos`;
+    }
+    
+    // Default format for other locations
+    return `Hotels in ${location.name}, Sifnos - Best Places to Stay 2025 | Hotels Sifnos`;
+  };
   
-  const pageTitle = `Hotels in ${location.name}, Sifnos - Best Places to Stay`;
+  // Create a dynamic SEO description based on location
+  const generateSeoDescription = () => {
+    // Base description that applies to all locations
+    let baseDesc = `Explore hotels in ${location.name}, Sifnos - ${location.shortDescription.toLowerCase()}. Find exclusive accommodations with sea views, local charm, and authentic Cycladic experiences. Compare prices and book with our best-rate guarantee.`;
+    
+    // Add location-specific details
+    if (location.name === "Apollonia") {
+      return `${baseDesc} Central location with easy access to restaurants, shops, and nightlife.`;
+    }
+    
+    if (location.name === "Kamares") {
+      return `${baseDesc} Convenient port location, beachfront hotels, and transport connections.`;
+    }
+    
+    if (location.name === "Platis Gialos") {
+      return `${baseDesc} Ideal for families, featuring golden sand beaches and shallow waters.`;
+    }
+    
+    if (location.name === "Kastro") {
+      return `${baseDesc} Experience medieval architecture and breathtaking cliff-side views.`;
+    }
+    
+    // Return the base description for other locations
+    return baseDesc;
+  };
   
   return (
     <>
       <SEO 
-        title={pageTitle}
-        description={seoDescription}
+        title={generateSeoTitle()}
+        description={generateSeoDescription()}
         keywords={location.keywords}
         schemaType="TouristDestination"
         canonical={`https://hotelssifnos.com/locations/${slug}`}
