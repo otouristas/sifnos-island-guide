@@ -1,9 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
-import { Search, Filter, ChevronLeft, X, Zap, MessageCircle } from 'lucide-react';
+import { Search, Filter, ChevronLeft, X, MessageCircle } from 'lucide-react';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
 import HotelCard from '@/components/HotelCard';
@@ -382,7 +381,11 @@ export default function HotelsPage() {
                     className="bg-sifnos-deep-blue hover:bg-sifnos-turquoise"
                   >
                     <Link to="/touristas-ai" className="flex items-center">
-                      <Zap size={16} className="mr-1" />
+                      <img 
+                        src="/uploads/touristas-ai-logo.svg" 
+                        alt="Touristas AI" 
+                        className="w-4 h-4 mr-1"
+                      />
                       <span className="sr-only md:not-sr-only">AI</span>
                     </Link>
                   </Button>
@@ -495,7 +498,11 @@ export default function HotelsPage() {
                   size="sm"
                 >
                   <Link to="/touristas-ai" className="flex items-center">
-                    <Zap size={18} className="mr-1" />
+                    <img 
+                      src="/uploads/touristas-ai-logo.svg" 
+                      alt="Touristas AI" 
+                      className="w-4 h-4 mr-1"
+                    />
                     Touristas AI
                   </Link>
                 </Button>
