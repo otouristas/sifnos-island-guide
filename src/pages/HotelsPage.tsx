@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
-import { Search, Filter, ChevronLeft } from 'lucide-react';
+import { Search, Filter, ChevronLeft, X } from 'lucide-react';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
 import HotelCard from '@/components/HotelCard';
@@ -46,6 +45,7 @@ export default function HotelsPage() {
   const [displayedSponsoredHotel, setDisplayedSponsoredHotel] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
@@ -274,8 +274,12 @@ export default function HotelsPage() {
     setFilteredHotels(results);
   }, [hotels, filters, searchQuery]);
 
-  const handleSearch = () => {
+  const handleSearch = (e?: React.FormEvent) => {
+    e?.preventDefault();
     console.log("Searching with query:", searchQuery);
+    if (isMobile) {
+      setIsSearchExpanded(false);
+    }
     // The filtering is already handled by the useEffect that watches searchQuery
   };
 
@@ -295,7 +299,7 @@ export default function HotelsPage() {
         canonical="https://hotelssifnos.com/hotels"
       />
       
-      {/* Hero Section - Fixed padding */}
+      {/* Hero Section */}
       <div className="bg-sifnos-deep-blue">
         <div className="page-container">
           <div className="text-center text-white py-6">
@@ -331,44 +335,55 @@ export default function HotelsPage() {
         </div>
       </div>
       
-      {/* Search Bar - Fixed position for both mobile and desktop */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-md">
-        <div className="page-container py-3">
-          <form 
-            className="flex flex-col md:flex-row gap-4 items-center"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSearch();
-            }}
-          >
-            <div className="w-full md:flex-1 relative">
-              <Input
-                type="text"
-                placeholder="Search for hotels, locations, or amenities"
-                className="pl-10 py-4 h-auto"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            </div>
-            <div className="flex w-full md:w-auto gap-2 justify-between">
-              {isMobile ? (
+      {/* Compact Search Bar for Mobile */}
+      {isMobile && (
+        <div className="sticky top-0 z-50 bg-white shadow-md border-b border-gray-200">
+          <div className="page-container py-3">
+            {isSearchExpanded ? (
+              <form 
+                className="flex items-center"
+                onSubmit={handleSearch}
+              >
+                <Input
+                  type="text"
+                  placeholder="Search hotels, locations, amenities..."
+                  className="rounded-r-none border-r-0"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  autoFocus
+                />
+                <Button 
+                  type="submit"
+                  size="icon"
+                  className="rounded-l-none border border-l-0 border-input h-10"
+                  variant="ghost"
+                  onClick={() => setIsSearchExpanded(false)}
+                >
+                  <X size={20} />
+                </Button>
+              </form>
+            ) : (
+              <div className="flex justify-between items-center gap-2">
+                <div 
+                  className="flex-1 flex items-center gap-2 border rounded-md px-3 py-2 text-gray-500 bg-background cursor-pointer"
+                  onClick={() => setIsSearchExpanded(true)}
+                >
+                  <Search size={18} />
+                  <span className="truncate">Search for hotels, locations...</span>
+                </div>
+
                 <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                   <SheetTrigger asChild>
-                    <Button 
-                      variant="outline" 
-                      className="flex items-center justify-center gap-2 flex-1"
-                    >
-                      <Filter size={16} />
-                      <span>Filters</span>
+                    <Button variant="outline" size="icon" className="shrink-0">
+                      <Filter size={18} />
                       {filterCount > 0 && (
-                        <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-sifnos-turquoise rounded-full">
+                        <span className="absolute -top-1 -right-1 w-5 h-5 text-xs flex items-center justify-center text-white bg-sifnos-turquoise rounded-full">
                           {filterCount}
                         </span>
                       )}
                     </Button>
                   </SheetTrigger>
-                  <SheetContent side="bottom" className="h-[100vh] p-0 max-h-screen">
+                  <SheetContent side="bottom" className="h-screen p-0 max-h-screen">
                     <SheetHeader className="sticky top-0 z-10 bg-white p-4 border-b border-gray-200 flex flex-row items-center justify-between">
                       <Button 
                         variant="ghost" 
@@ -422,17 +437,43 @@ export default function HotelsPage() {
                     </div>
                   </SheetContent>
                 </Sheet>
-              ) : null}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      
+      {/* Desktop Search Bar */}
+      {!isMobile && (
+        <div className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-md">
+          <div className="page-container py-3">
+            <form 
+              className="flex flex-col md:flex-row gap-4 items-center"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSearch();
+              }}
+            >
+              <div className="w-full md:flex-1 relative">
+                <Input
+                  type="text"
+                  placeholder="Search for hotels, locations, or amenities"
+                  className="pl-10 py-4 h-auto"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              </div>
               <Button 
                 type="submit" 
                 className="flex-1 md:flex-auto bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white py-4 h-auto"
               >
                 Search
               </Button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
-      </div>
+      )}
       
       {/* Content Section */}
       <div className="bg-gray-50">
@@ -441,7 +482,7 @@ export default function HotelsPage() {
             {/* Filters Sidebar - Only visible on desktop */}
             {!isMobile && (
               <div className="w-full lg:w-1/4 px-4 mb-8 lg:mb-0">
-                <div className="sticky top-[73px]"> {/* Adjusted top value to account for search bar height */}
+                <div className="sticky top-[73px]">
                   <FilterSidebar 
                     filters={filters} 
                     onFiltersChange={setFilters}
