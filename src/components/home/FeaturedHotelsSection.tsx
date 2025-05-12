@@ -25,7 +25,7 @@ export default function FeaturedHotelsSection() {
             hotel_photos(id, photo_url, is_main_photo)
           `)
           .order('rating', { ascending: false })
-          .limit(3);
+          .limit(6); // Increase limit to ensure we have enough hotels
         
         if (error) {
           console.error('Error fetching featured hotels:', error);
@@ -40,13 +40,14 @@ export default function FeaturedHotelsSection() {
         console.log('Featured hotels loaded:', data?.length || 0, 'hotels');
         logSupabaseResponse('fetch featured hotels', data, error);
         
-        // Process the data and separate sponsored hotels
+        // Process the data and identify sponsored hotels
         const sponsoredHotelsList = [];
-        let otherHotels = [];
+        const allHotels = [...(data || [])];
         
         // Define our sponsored hotels
         const sponsoredHotelNames = ['ALK HOTEL™', 'Morpheas Pension & Apartments', 'Meropi Rooms and Apartments'];
         
+        // Enhance sponsored hotels with special data
         data?.forEach(hotel => {
           if (sponsoredHotelNames.includes(hotel.name)) {
             // Add to sponsored hotels list with appropriate customization
@@ -81,13 +82,13 @@ export default function FeaturedHotelsSection() {
             
             sponsoredHotelsList.push(sponsoredHotel);
             console.log(`Added ${hotel.name} as a sponsored hotel`);
-          } else {
-            otherHotels.push(hotel);
           }
         });
         
         setSponsoredHotels(sponsoredHotelsList);
-        setFeaturedHotels(otherHotels || []);
+        
+        // Set all hotels as featured, limit to 3 for display
+        setFeaturedHotels(allHotels.slice(0, 3) || []);
         
         // Create default sponsored hotels if any are missing
         if (sponsoredHotelsList.length === 0) {

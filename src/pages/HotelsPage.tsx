@@ -70,9 +70,9 @@ export default function HotelsPage() {
         // Define our sponsored hotels
         const sponsoredHotelNames = ['ALK HOTEL™', 'Morpheas Pension & Apartments', 'Meropi Rooms and Apartments'];
         
-        // Separate sponsored hotels
+        // Identify and process sponsored hotels
         const sponsoredHotelsList = [];
-        let otherHotels = [];
+        const allHotels = [...(data || [])];
         
         data?.forEach(hotel => {
           if (sponsoredHotelNames.includes(hotel.name)) {
@@ -104,14 +104,12 @@ export default function HotelsPage() {
             
             sponsoredHotelsList.push(sponsoredHotel);
             console.log(`Added ${hotel.name} as a sponsored hotel`);
-          } else {
-            otherHotels.push(hotel);
           }
         });
         
         setSponsoredHotels(sponsoredHotelsList);
-        setHotels(otherHotels || []);
-        setFilteredHotels(otherHotels || []);
+        setHotels(allHotels || []);
+        setFilteredHotels(allHotels || []);
         
         // Create default sponsored hotels if any are missing
         if (sponsoredHotelsList.length === 0) {
@@ -359,7 +357,7 @@ export default function HotelsPage() {
             <div className="w-full lg:w-3/4 px-4">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="font-montserrat font-semibold text-xl">
-                  {loading ? "Loading hotels..." : `${filteredHotels.length + (displayedSponsoredHotel ? 1 : 0)} hotels found`}
+                  {loading ? "Loading hotels..." : `${filteredHotels.length} hotels found`}
                 </h2>
                 <div className="flex items-center">
                   <span className="mr-2 text-sm">Sort by:</span>
