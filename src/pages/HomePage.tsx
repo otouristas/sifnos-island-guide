@@ -4,14 +4,17 @@ import SEO from '@/components/SEO';
 import TouristasAIBanner from '@/components/TouristasAIBanner';
 import SponsoredHotelCard from '@/components/SponsoredHotelCard';
 
-// Import our newly created component sections
+// Import our component sections
 import HeroSection from '@/components/home/HeroSection';
 import FeaturedHotelsSection from '@/components/home/FeaturedHotelsSection';
 import LocationsSection from '@/components/home/LocationsSection';
+import LocationsIntroSection from '@/components/home/LocationsIntroSection';
 import HotelTypesSection from '@/components/home/HotelTypesSection';
+import HotelTypesIntroSection from '@/components/home/HotelTypesIntroSection';
 import ListYourHotelSection from '@/components/home/ListYourHotelSection';
 import WhyChooseUsSection from '@/components/home/WhyChooseUsSection';
 import SEOSection from '@/components/home/SEOSection';
+import IslandGuideSection from '@/components/home/IslandGuideSection';
 
 export default function HomePage() {
   return (
@@ -34,6 +37,12 @@ export default function HomePage() {
       {/* Featured Hotels Section - Enhanced to show ALK HOTEL and others */}
       <FeaturedHotelsSection />
       
+      {/* Hotel Types Introduction Text */}
+      <HotelTypesIntroSection />
+      
+      {/* Hotel Types Section */}
+      <HotelTypesSection />
+      
       {/* Touristas AI Banner CTA Section */}
       <div className="py-16 bg-white">
         <div className="container mx-auto px-4">
@@ -41,11 +50,14 @@ export default function HomePage() {
         </div>
       </div>
       
+      {/* Locations Introduction Text */}
+      <LocationsIntroSection />
+      
       {/* Locations Section */}
       <LocationsSection />
       
-      {/* Hotel Types Section */}
-      <HotelTypesSection />
+      {/* Island Guide Section */}
+      <IslandGuideSection />
       
       {/* List Your Hotel Section */}
       <ListYourHotelSection />
