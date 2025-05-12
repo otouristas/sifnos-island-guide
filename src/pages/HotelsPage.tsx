@@ -316,9 +316,9 @@ export default function HotelsPage() {
         </div>
       </div>
       
-      {/* Search and Filter Section - Improved for better mobile display */}
-      <div className="bg-white shadow-md sticky top-0 z-10">
-        <div className="page-container py-4">
+      {/* Search and Filter Section - Improved sticky behavior */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+        <div className="page-container py-3">
           <form 
             className="flex flex-col md:flex-row gap-4 items-center"
             onSubmit={(e) => {
@@ -330,7 +330,7 @@ export default function HotelsPage() {
               <Input
                 type="text"
                 placeholder="Search for hotels, locations, or amenities"
-                className="pl-10 py-6 h-auto"
+                className="pl-10 py-5 h-auto"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -346,7 +346,7 @@ export default function HotelsPage() {
               )}
               <Button 
                 type="submit" 
-                className="flex-1 md:flex-auto bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white py-6 h-auto"
+                className="flex-1 md:flex-auto bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white py-5 h-auto"
               >
                 Search
               </Button>
