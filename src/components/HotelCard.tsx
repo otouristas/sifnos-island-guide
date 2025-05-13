@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { generateHotelUrl } from '@/lib/url-utils';
 import { getHotelTypeIcon } from './icons/HotelTypeIcons';
-import HotelImage from './hotel/HotelImage';
 import HotelLogo from './hotel/HotelLogo';
 import HotelDetails from './hotel/HotelDetails';
 import { determineHotelImageUrl, determineHotelLogoUrl } from '@/utils/image-utils';
@@ -39,15 +38,15 @@ const HotelCard = ({ hotel, showLogo = true, ...props }) => {
   const primaryType = hotel.hotel_types && hotel.hotel_types.length > 0 ? hotel.hotel_types[0] : null;
   
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1 w-full">
       <Link to={`/hotels/${hotelSlug}`} className="block">
-        {/* Hotel image with error handling and loading state - using new ProgressiveImage component */}
-        <div className="relative">
+        {/* Hotel image with error handling and loading state - using ProgressiveImage component */}
+        <div className="relative w-full">
           <ProgressiveImage 
             src={imageSrc}
             alt={`${hotel.name} - Sifnos Hotel`}
+            containerClassName="w-full h-48"
             aspectRatio="aspect-[4/3]"
-            containerClassName="h-48"
             width={800}
             height={600}
           />

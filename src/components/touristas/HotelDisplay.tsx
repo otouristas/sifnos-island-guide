@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { MapPin, X, Hotel, ExternalLink } from 'lucide-react';
 import { useMediaQuery } from 'react-responsive';
@@ -139,7 +140,7 @@ export const HotelCard = ({ hotel }: { hotel: HotelType }) => {
   return (
     <div 
       ref={cardRef}
-      className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow border border-gray-100 mx-0.5 sm:mx-1"
+      className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow border border-gray-100 w-full mx-0.5 sm:mx-1"
     >
       <div className="relative w-full h-28 sm:h-40 overflow-hidden bg-gray-100">
         <ProgressiveImage 

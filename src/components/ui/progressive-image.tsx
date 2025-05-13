@@ -58,7 +58,7 @@ export function ProgressiveImage({
     <div 
       ref={setImageRef}
       className={cn(
-        "overflow-hidden bg-muted relative", 
+        "overflow-hidden bg-muted relative w-full", 
         aspectRatio,
         containerClassName
       )}
