@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -111,24 +110,24 @@ const LanguageRoutes = () => {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <LanguageProvider>
-      <TooltipProvider>
-        <SEO 
-          title="Find Your Perfect Stay in Sifnos - Best Hotels & Accommodation"
-          description="Discover Sifnos' premier hotel booking platform with exclusive deals, verified reviews, and local expertise. Compare accommodations across all island locations and find your perfect Greek island getaway with our best price guarantee."
-          keywords={[
-            'sifnos hotels', 'greek islands hotels', 'sifnos accommodation', 
-            'luxury hotels sifnos', 'beach hotels sifnos', 'boutique hotels cyclades',
-            'where to stay in sifnos', 'best hotels sifnos greece'
-          ]}
-          schemaType="Organization"
-          canonical="https://hotelssifnos.com"
-          imageUrl="/uploads/sifnos-og-image.jpg"
-        />
-        <SitemapGenerator />
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
+    <BrowserRouter>
+      <LanguageProvider>
+        <TooltipProvider>
+          <SEO 
+            title="Find Your Perfect Stay in Sifnos - Best Hotels & Accommodation"
+            description="Discover Sifnos' premier hotel booking platform with exclusive deals, verified reviews, and local expertise. Compare accommodations across all island locations and find your perfect Greek island getaway with our best price guarantee."
+            keywords={[
+              'sifnos hotels', 'greek islands hotels', 'sifnos accommodation', 
+              'luxury hotels sifnos', 'beach hotels sifnos', 'boutique hotels cyclades',
+              'where to stay in sifnos', 'best hotels sifnos greece'
+            ]}
+            schemaType="Organization"
+            canonical="https://hotelssifnos.com"
+            imageUrl="/uploads/sifnos-og-image.jpg"
+          />
+          <SitemapGenerator />
+          <Toaster />
+          <Sonner />
           <Suspense fallback={<LoadingSpinner />}>
             <Navigation />
             <main>
@@ -138,9 +137,9 @@ const App = () => (
             <CookieConsent />
             <TouristasAIMiniBubble />
           </Suspense>
-        </BrowserRouter>
-      </TooltipProvider>
-    </LanguageProvider>
+        </TooltipProvider>
+      </LanguageProvider>
+    </BrowserRouter>
   </QueryClientProvider>
 );
 
