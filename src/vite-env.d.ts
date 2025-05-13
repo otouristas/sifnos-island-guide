@@ -28,3 +28,6 @@ declare module 'i18next' {
     }
   }
 }
+
+// Make sure the React types are properly extended for i18next
+/// <reference path="./types/react-i18next.d.ts" />
