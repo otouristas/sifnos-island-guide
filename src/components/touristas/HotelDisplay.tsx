@@ -1,5 +1,5 @@
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { MapPin, X, Hotel, ExternalLink } from 'lucide-react';
 import { useMediaQuery } from 'react-responsive';
 import { Badge } from '@/components/ui/badge';
@@ -12,8 +12,6 @@ import { HotelType } from './utils/chat-utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { generateHotelUrl } from '@/lib/url-utils';
 import { Link } from 'react-router-dom';
-import { ProgressiveImage } from '@/components/ui/progressive-image';
-import { useSwipe } from '@/hooks/use-swipe';
 
 // Separator component
 export const Separator = () => (
@@ -32,11 +30,14 @@ export const HotelContent = ({ hotel }: { hotel: HotelType }) => {
   return (
     <div className="space-y-3 sm:space-y-4">
       <div className="w-full h-40 sm:h-60 overflow-hidden rounded-lg">
-        <ProgressiveImage 
+        <img 
           src={getHotelImageUrl(hotel)}
           alt={hotel.name}
-          containerClassName="w-full h-full"
-          aspectRatio="aspect-video"
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            console.error(`Failed to load image for ${hotel.name}`);
+            (e.target as HTMLImageElement).src = '/placeholder.svg';
+          }}
         />
       </div>
       
@@ -131,24 +132,18 @@ export const HotelCard = ({ hotel }: { hotel: HotelType }) => {
   // Generate the URL for the hotel page
   const hotelSlug = generateHotelUrl(hotel.name);
   
-  // Add swipe reference and handlers
-  const cardRef = useRef<HTMLDivElement>(null);
-  useSwipe(cardRef, {
-    onSwipeUp: () => setIsOpen(true),
-  }, { preventDefault: false });
-  
   return (
-    <div 
-      ref={cardRef}
-      className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow border border-gray-100 mx-0.5 sm:mx-1"
-    >
+    <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow border border-gray-100 mx-0.5 sm:mx-1">
       <div className="relative w-full h-28 sm:h-40 overflow-hidden bg-gray-100">
-        <ProgressiveImage 
+        <img 
           src={getHotelImageUrl(hotel)}
           alt={hotel.name}
-          className="hover:scale-105 transition-transform duration-300"
-          containerClassName="w-full h-full"
-          aspectRatio="aspect-[4/3]"
+          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+          onError={(e) => {
+            console.error(`Failed to load image for ${hotel.name}`);
+            (e.target as HTMLImageElement).src = '/placeholder.svg';
+          }}
+          loading="eager"
         />
         
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2 sm:p-3">
@@ -209,36 +204,18 @@ export const HotelCard = ({ hotel }: { hotel: HotelType }) => {
 export const HotelCarousel = ({ hotels }: { hotels: HotelType[] }) => {
   if (!hotels?.length) return null;
   
-  // Add swipe reference and handlers
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  
-  useSwipe(carouselRef, {
-    onSwipeLeft: () => {
-      if (activeIndex < hotels.length - 1) {
-        setActiveIndex(activeIndex + 1);
-      }
-    },
-    onSwipeRight: () => {
-      if (activeIndex > 0) {
-        setActiveIndex(activeIndex - 1);
-      }
-    }
-  }, { preventDefault: false });
-  
   return (
-    <div ref={carouselRef}>
-      <Carousel className="w-full" defaultIndex={activeIndex} index={activeIndex} onIndexChange={setActiveIndex}>
-        <CarouselContent>
-          {hotels.map((hotel) => (
-            <CarouselItem key={hotel.id} className="basis-full xs:basis-1/2 sm:basis-1/2 md:basis-1/3">
-              <HotelCard hotel={hotel} />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious className="left-1 sm:left-2 bg-white/80 hover:bg-white h-6 w-6 sm:h-8 sm:w-8" />
-        <CarouselNext className="right-1 sm:right-2 bg-white/80 hover:bg-white h-6 w-6 sm:h-8 sm:w-8" />
-      </Carousel>
-    </div>
+    <Carousel className="w-full">
+      <CarouselContent>
+        {hotels.map((hotel) => (
+          <CarouselItem key={hotel.id} className="basis-full xs:basis-1/2 sm:basis-1/2 md:basis-1/3">
+            <HotelCard hotel={hotel} />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious className="left-1 sm:left-2 bg-white/80 hover:bg-white h-6 w-6 sm:h-8 sm:w-8" />
+      <CarouselNext className="right-1 sm:right-2 bg-white/80 hover:bg-white h-6 w-6 sm:h-8 sm:w-8" />
+    </Carousel>
   );
 };
+

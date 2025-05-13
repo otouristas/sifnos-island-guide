@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,7 +8,6 @@ import SEO from "./components/SEO";
 import SitemapGenerator from "./components/SitemapGenerator";
 import CookieConsent from "./components/CookieConsent";
 import { TouristasAIMiniBubble } from "./components/touristas";
-import PageTransition from "./components/PageTransition";
 
 // Pages
 import HomePage from "./pages/HomePage";
@@ -61,41 +61,39 @@ const App = () => (
       <BrowserRouter>
         <Navigation />
         <main>
-          <PageTransition>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/index" element={<Index />} />
-              <Route path="/hotels" element={<HotelsPage />} />
-              {/* Hotel detail route */}
-              <Route path="/hotels/:slug" element={<HotelDetailPage />} />
-              {/* Location routes */}
-              <Route path="/locations" element={<LocationsPage />} />
-              <Route path="/locations/:slug" element={<LocationPage />} />
-              {/* Hotel types routes */}
-              <Route path="/hotel-types" element={<HotelTypesPage />} />
-              <Route path="/hotel-types/:slug" element={<HotelTypePage />} />
-              {/* Blog routes */}
-              <Route path="/blog" element={<BlogPage />} />
-              <Route path="/blog/:slug" element={<BlogPostPage />} />
-              {/* Touristas AI route */}
-              <Route path="/touristas-ai" element={<TouristasAIPage />} />
-              {/* Other routes */}
-              <Route path="/beaches" element={<BeachesPage />} />
-              <Route path="/travel-guide" element={<TravelGuidePage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/about-us" element={<AboutUsPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/faq" element={<FAQPage />} />
-              {/* Pricing and registration */}
-              <Route path="/pricing" element={<PricingPage />} />
-              <Route path="/thank-you" element={<ThankYouPage />} />
-              {/* Legal pages */}
-              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-              <Route path="/terms-of-service" element={<TermsOfServicePage />} />
-              <Route path="/cookie-policy" element={<CookiePolicyPage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </PageTransition>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/index" element={<Index />} />
+            <Route path="/hotels" element={<HotelsPage />} />
+            {/* Hotel detail route */}
+            <Route path="/hotels/:slug" element={<HotelDetailPage />} />
+            {/* Location routes */}
+            <Route path="/locations" element={<LocationsPage />} />
+            <Route path="/locations/:slug" element={<LocationPage />} />
+            {/* Hotel types routes */}
+            <Route path="/hotel-types" element={<HotelTypesPage />} />
+            <Route path="/hotel-types/:slug" element={<HotelTypePage />} />
+            {/* Blog routes */}
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:slug" element={<BlogPostPage />} />
+            {/* Touristas AI route */}
+            <Route path="/touristas-ai" element={<TouristasAIPage />} />
+            {/* Other routes */}
+            <Route path="/beaches" element={<BeachesPage />} />
+            <Route path="/travel-guide" element={<TravelGuidePage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/about-us" element={<AboutUsPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/faq" element={<FAQPage />} />
+            {/* Pricing and registration */}
+            <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/thank-you" element={<ThankYouPage />} />
+            {/* Legal pages */}
+            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+            <Route path="/cookie-policy" element={<CookiePolicyPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </main>
         <Footer />
         <CookieConsent />

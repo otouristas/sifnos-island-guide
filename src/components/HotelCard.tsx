@@ -7,7 +7,6 @@ import HotelImage from './hotel/HotelImage';
 import HotelLogo from './hotel/HotelLogo';
 import HotelDetails from './hotel/HotelDetails';
 import { determineHotelImageUrl, determineHotelLogoUrl } from '@/utils/image-utils';
-import { ProgressiveImage } from './ui/progressive-image';
 
 // Define the HotelCard component that creates proper URLs
 const HotelCard = ({ hotel, showLogo = true, ...props }) => {
@@ -33,6 +32,13 @@ const HotelCard = ({ hotel, showLogo = true, ...props }) => {
     // Determine the appropriate image URL
     const imageUrl = determineHotelImageUrl(hotel, mainPhoto);
     setImageSrc(imageUrl);
+    
+    // Force reload the image by creating a new Image object
+    const img = new Image();
+    img.onload = () => {
+      setImageSrc(img.src);
+    };
+    img.src = imageUrl;
   }, [hotel.name, mainPhoto]);
   
   // Get the first hotel type for icon display (if any)
@@ -41,27 +47,16 @@ const HotelCard = ({ hotel, showLogo = true, ...props }) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1">
       <Link to={`/hotels/${hotelSlug}`} className="block">
-        {/* Hotel image with error handling and loading state - using new ProgressiveImage component */}
+        {/* Hotel image with error handling and loading state */}
         <div className="relative">
-          <ProgressiveImage 
-            src={imageSrc}
-            alt={`${hotel.name} - Sifnos Hotel`}
-            aspectRatio="aspect-[4/3]"
-            containerClassName="h-48"
-            width={800}
-            height={600}
+          <HotelImage 
+            hotel={hotel}
+            imageSrc={imageSrc}
+            primaryType={primaryType}
+            getHotelTypeIcon={getHotelTypeIcon}
           />
           
-          {/* Display hotel type icon if available */}
-          {primaryType && (
-            <div className="absolute top-2 left-2 bg-white/80 backdrop-blur-sm p-1 rounded-full">
-              <div className="w-6 h-6 text-sifnos-turquoise">
-                {getHotelTypeIcon(primaryType)}
-              </div>
-            </div>
-          )}
-          
-          {/* Show prominent hotel logo in top-right if available */}
+          {/* Show prominent hotel logo in top-right if available - Now visible all the time */}
           {showLogo && hotelLogoUrl && (
             <HotelLogo 
               hotel={hotel}
