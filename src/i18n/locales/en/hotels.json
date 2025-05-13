@@ -1,0 +1,26 @@
+
+{
+  "allHotels": "All Hotels",
+  "filter": "Filter",
+  "sortBy": "Sort By",
+  "priceRange": "Price Range",
+  "amenities": "Amenities",
+  "showMore": "Show More",
+  "showLess": "Show Less",
+  "clearFilters": "Clear Filters",
+  "applyFilters": "Apply Filters",
+  "resultsCount": "{{count}} hotels found",
+  "noResults": "No hotels found matching your criteria",
+  "viewOnMap": "View on Map",
+  "sponsored": "Sponsored",
+  "featuredAmenities": "Featured Amenities",
+  "fromPrice": "from {{price}}",
+  "perNight": "per night",
+  "reviewCount": "{{count}} reviews",
+  "excellent": "Excellent",
+  "verygood": "Very Good",
+  "average": "Average",
+  "poor": "Poor",
+  "seeLess": "See Less",
+  "seeMore": "See More"
+}

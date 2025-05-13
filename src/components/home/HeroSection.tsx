@@ -6,12 +6,16 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { sifnosLocations } from '../../data/locations';
+import { useTranslation } from 'react-i18next';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 export default function HeroSection() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLocation, setSelectedLocation] = useState<string>('');
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+  const { t } = useTranslation('home');
+  const { currentLanguage } = useLanguage();
 
   const toggleAmenity = (amenity: string) => {
     setSelectedAmenities(prevAmenities =>
@@ -30,7 +34,7 @@ export default function HeroSection() {
     if (selectedLocation) params.append('location', selectedLocation);
     if (selectedAmenities.length > 0) params.append('amenities', selectedAmenities.join(','));
     
-    navigate(`/hotels?${params.toString()}`);
+    navigate(`/${currentLanguage}/hotels?${params.toString()}`);
   };
 
   return (
@@ -44,10 +48,10 @@ export default function HeroSection() {
       
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
         <h1 className="font-montserrat text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-          Find Your Perfect Stay in Sifnos Island
+          {t('heroTitle')}
         </h1>
         <p className="text-xl md:text-2xl text-white mb-8">
-          Discover the best hotels, villas, and accommodations in the beautiful Cycladic island of Sifnos
+          {t('heroSubtitle')}
         </p>
         
         {/* Minimal Search Form */}
@@ -59,10 +63,10 @@ export default function HeroSection() {
                 onValueChange={setSelectedLocation}
               >
                 <SelectTrigger className="w-full bg-white/90 border-0">
-                  <SelectValue placeholder="Where in Sifnos?" />
+                  <SelectValue placeholder={t('whereInSifnos')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all-locations">Any location</SelectItem>
+                  <SelectItem value="all-locations">{t('anyLocation')}</SelectItem>
                   {sifnosLocations.map((location) => (
                     <SelectItem key={location.id} value={location.slug}>
                       {location.name}
@@ -74,7 +78,7 @@ export default function HeroSection() {
               <div className="relative col-span-1 md:col-span-2">
                 <Input
                   type="text"
-                  placeholder="Search hotels, amenities, or keywords..."
+                  placeholder={t('searchPlaceholder')}
                   className="pl-10 bg-white/90 border-0 w-full"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -104,7 +108,7 @@ export default function HeroSection() {
                 className="bg-white hover:bg-white/90 text-sifnos-deep-blue"
               >
                 <Search className="mr-2 h-4 w-4" />
-                Search Hotels
+                {t('searchButton')}
               </Button>
             </div>
           </form>

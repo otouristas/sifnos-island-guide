@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import SEO from '@/components/SEO';
 import TouristasAIBanner from '@/components/TouristasAIBanner';
 import SponsoredHotelCard from '@/components/SponsoredHotelCard';
@@ -17,11 +18,13 @@ import SEOSection from '@/components/home/SEOSection';
 import IslandGuideSection from '@/components/home/IslandGuideSection';
 
 export default function HomePage() {
+  const { t } = useTranslation('seo');
+  
   return (
     <>
       <SEO 
-        title="Find Your Perfect Stay in Sifnos - Best Hotels & Accommodation 2025"
-        description="Discover Sifnos' finest hotels with our curated selection of luxury resorts, boutique stays, and beachfront villas. Compare facilities, view photos, read verified reviews, and book directly with exclusive online rates. Your perfect Cycladic island getaway starts here."
+        title={t('homepageTitle')}
+        description={t('homepageDescription')}
         keywords={[
           'sifnos hotels', 'greek islands hotels', 'sifnos accommodation', 
           'luxury hotels sifnos', 'beach hotels sifnos', 'boutique hotels cyclades',
@@ -35,7 +38,7 @@ export default function HomePage() {
       {/* Hero Section with Search */}
       <HeroSection />
 
-      {/* Featured Hotels Section - Enhanced to show ALK HOTEL and others */}
+      {/* Featured Hotels Section */}
       <FeaturedHotelsSection />
       
       {/* Hotel Types Introduction Text */}
