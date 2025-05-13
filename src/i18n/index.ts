@@ -42,7 +42,7 @@ const resources = {
 };
 
 // Initialize i18next with proper type declarations
-i18n
+const i18nInstance = i18n
   // Load translations from the server if needed
   .use(Backend)
   // Detect user language
@@ -85,4 +85,4 @@ i18n
     }
   });
 
-export default i18n;
+export default i18nInstance;

@@ -72,7 +72,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   return (
     <LanguageContext.Provider value={{ currentLanguage, setLanguage, languages }}>
-      {children}
+      {children as React.ReactNode}
     </LanguageContext.Provider>
   );
 };
