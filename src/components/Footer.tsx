@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Twitter, Mail, MapPin } from 'lucide-react';
+import NewsletterForm from '@/components/newsletter/NewsletterForm';
 
 export default function Footer() {
   return (
@@ -84,16 +85,11 @@ export default function Footer() {
             {/* Newsletter */}
             <div className="mt-6">
               <h4 className="text-sm font-semibold mb-2">Subscribe to our newsletter</h4>
-              <form className="flex">
-                <input
-                  type="email"
-                  placeholder="Your email"
-                  className="px-4 py-2 w-full rounded-l-md text-gray-800 focus:outline-none"
-                />
-                <button type="submit" className="bg-sifnos-turquoise hover:bg-sifnos-teal transition-colors text-white px-4 py-2 rounded-r-md">
-                  Subscribe
-                </button>
-              </form>
+              <NewsletterForm 
+                horizontal={true}
+                buttonClassName="bg-sifnos-turquoise hover:bg-sifnos-teal text-white"
+                placeholder="Your email"
+              />
             </div>
           </div>
         </div>
