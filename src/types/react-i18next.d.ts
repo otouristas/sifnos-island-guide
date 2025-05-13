@@ -10,4 +10,7 @@ declare module 'react-i18next' {
   export interface TransProps {
     children?: ReactNode;
   }
+  
+  // Make sure that ReactI18NextChildren is properly assignable to ReactNode
+  export type ReactI18NextChildrenType = ReactNode;
 }
