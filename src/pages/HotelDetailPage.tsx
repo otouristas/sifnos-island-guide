@@ -16,6 +16,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ImageGalleryDialog } from '@/components/hotel/ImageGalleryDialog';
+import VillaOliviaAvailability from '@/components/hotel/VillaOliviaAvailability';
 
 export default function HotelDetailPage() {
   const { slug } = useParams();
@@ -687,6 +688,9 @@ export default function HotelDetailPage() {
                   }
                 </div>
               </div>
+              
+              {/* Availability Calendar for Villa Olivia Clara */}
+              {isVillaOliviaClara && <VillaOliviaAvailability />}
               
               {/* Rooms */}
               <div className="cycladic-card p-6 md:p-8">
