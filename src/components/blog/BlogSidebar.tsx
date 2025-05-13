@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { blogPosts } from '@/data/blogPosts';
 import { slugify } from '@/lib/url-utils';
-import NewsletterForm from '@/components/newsletter/NewsletterForm';
+import MailerLiteForm from '@/components/newsletter/MailerLiteForm';
 
 // Extract all unique categories from blog posts
 const getCategories = () => {
@@ -128,10 +128,7 @@ const BlogSidebar = () => {
           <p className="text-gray-600 mb-4 text-sm">
             Get the latest travel tips, hotel offers, and Sifnos insights delivered to your inbox.
           </p>
-          <NewsletterForm 
-            buttonText="Subscribe"
-            buttonClassName="bg-sifnos-turquoise hover:bg-sifnos-teal text-white"
-          />
+          <MailerLiteForm />
         </CardContent>
       </Card>
     </div>
