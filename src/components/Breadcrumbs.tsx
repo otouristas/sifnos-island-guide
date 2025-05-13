@@ -23,7 +23,7 @@ export default function Breadcrumbs({ items = [], currentPage }: BreadcrumbsProp
   
   // Generate schema.org breadcrumb structured data
   const generateBreadcrumbSchema = () => {
-    const itemListElements = [
+    const itemListElement = [
       {
         '@type': 'ListItem',
         'position': 1,
@@ -39,9 +39,9 @@ export default function Breadcrumbs({ items = [], currentPage }: BreadcrumbsProp
       if (item.href) {
         const itemUrl = item.href.startsWith('http') 
           ? item.href 
-          : `https://hotelssifnos.com${item.href}`;
+          : `https://hotelssifnos.com${item.href.startsWith('/') ? item.href : `/${item.href}`}`;
           
-        itemListElements.push({
+        itemListElement.push({
           '@type': 'ListItem',
           'position': position,
           'name': item.label,
@@ -56,7 +56,7 @@ export default function Breadcrumbs({ items = [], currentPage }: BreadcrumbsProp
       // For the last item (current page), ensure we have a valid URL
       const currentPageUrl = `https://hotelssifnos.com${location.pathname}`;
       
-      itemListElements.push({
+      itemListElement.push({
         '@type': 'ListItem',
         'position': position,
         'name': currentPage,
@@ -68,7 +68,7 @@ export default function Breadcrumbs({ items = [], currentPage }: BreadcrumbsProp
     return {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
-      'itemListElement': itemListElements
+      'itemListElement': itemListElement
     };
   };
   
