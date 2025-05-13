@@ -1,6 +1,6 @@
 
 declare module 'i18next-browser-languagedetector' {
-  import { Module, DetectorOptions } from 'i18next';
+  import { Module } from 'i18next';
   
   export interface DetectorOptions {
     order?: string[];

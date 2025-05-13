@@ -44,11 +44,11 @@ const resources = {
 // Initialize i18next with proper type declarations
 const i18nInstance = i18n
   // Load translations from the server if needed
-  .use(Backend as any)
+  .use(Backend)
   // Detect user language
-  .use(LanguageDetector as any)
+  .use(LanguageDetector)
   // Pass i18n instance to react-i18next
-  .use(initReactI18next as any)
+  .use(initReactI18next)
   // Initialize i18next
   .init({
     resources,
