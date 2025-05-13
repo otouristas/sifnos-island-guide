@@ -37,14 +37,14 @@ const addCachePreventionMeta = () => {
   metaLastUpdated.content = new Date().toISOString();
   document.head.appendChild(metaLastUpdated);
   
-  // Force reload cached resources
+  // Force reload cached resources - MODIFY to avoid affecting MailerLite
   const forceReload = document.createElement('script');
   forceReload.textContent = `
     // Force cache refresh
     if ('caches' in window) {
       caches.keys().then(function(names) {
         for (let name of names) {
-          if (name.includes('hotelssifnos') || name.includes('touristas')) {
+          if ((name.includes('hotelssifnos') || name.includes('touristas')) && !name.includes('mailerlite')) {
             caches.delete(name);
           }
         }
@@ -55,7 +55,7 @@ const addCachePreventionMeta = () => {
     window.addEventListener('load', function() {
       setTimeout(function() {
         document.querySelectorAll('img').forEach(function(img) {
-          if (!img.dataset.nocache) { // Skip images with data-nocache attribute
+          if (!img.dataset.nocache && !img.closest('.ml-form-embedContainer')) { // Skip images with data-nocache attribute or within MailerLite forms
             const timestamp = new Date().getTime();
             const randomVal = Math.floor(Math.random() * 1000);
             if (img.src.indexOf('?') === -1) {
@@ -86,6 +86,9 @@ const addCachePreventionMeta = () => {
       }
       document.head.appendChild(link);
     });
+    
+    // Add a flag to indicate that we're ready for MailerLite
+    window.mailerliteReady = true;
   `;
   document.head.appendChild(forceReload);
   

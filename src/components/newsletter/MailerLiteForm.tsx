@@ -15,14 +15,35 @@ const MailerLiteForm = ({
   useEffect(() => {
     // Initialize the form if the ml function exists
     if (window.ml && containerRef.current) {
-      // Small timeout to ensure the element is properly in the DOM
-      setTimeout(() => {
+      try {
+        console.log('Initializing MailerLite form with ID:', formId);
         window.ml('show', {
           embedType: 'embed',
           embedId: formId,
           container: containerRef.current
         });
-      }, 100);
+      } catch (error) {
+        console.error('Error initializing MailerLite form:', error);
+      }
+    } else {
+      console.warn('MailerLite script not loaded or container not found', { 
+        mlExists: !!window.ml, 
+        containerExists: !!containerRef.current 
+      });
+      
+      // Attempt to re-initialize after a delay in case script loads late
+      const timer = setTimeout(() => {
+        if (window.ml && containerRef.current) {
+          console.log('Retry initializing MailerLite form');
+          window.ml('show', {
+            embedType: 'embed',
+            embedId: formId,
+            container: containerRef.current
+          });
+        }
+      }, 2000);
+      
+      return () => clearTimeout(timer);
     }
   }, [formId]);
 
