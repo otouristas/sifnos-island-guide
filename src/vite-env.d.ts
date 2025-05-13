@@ -17,3 +17,14 @@ declare module '*.json' {
   export default value;
 }
 
+declare module 'i18next' {
+  interface CustomTypeOptions {
+    resources: {
+      common: typeof import('./i18n/locales/en/common.json');
+      home: typeof import('./i18n/locales/en/home.json');
+      hotels: typeof import('./i18n/locales/en/hotels.json');
+      navigation: typeof import('./i18n/locales/en/navigation.json');
+      seo: typeof import('./i18n/locales/en/seo.json');
+    }
+  }
+}
