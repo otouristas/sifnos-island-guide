@@ -20,7 +20,6 @@ interface BreadcrumbsProps {
 
 export default function Breadcrumbs({ items = [], currentPage }: BreadcrumbsProps) {
   const location = useLocation();
-  const pathSegments = location.pathname.split('/').filter(Boolean);
   
   // Generate schema.org breadcrumb structured data
   const generateBreadcrumbSchema = () => {
@@ -34,17 +33,19 @@ export default function Breadcrumbs({ items = [], currentPage }: BreadcrumbsProp
     ];
     
     let position = 2;
-    let currentPath = '';
     
     // Add provided items to schema
     items.forEach(item => {
       if (item.href) {
-        currentPath = item.href.startsWith('http') ? item.href : `https://hotelssifnos.com${item.href}`;
+        const itemUrl = item.href.startsWith('http') 
+          ? item.href 
+          : `https://hotelssifnos.com${item.href}`;
+          
         itemListElements.push({
           '@type': 'ListItem',
           'position': position,
           'name': item.label,
-          'item': currentPath
+          'item': itemUrl
         });
         position++;
       }
@@ -52,18 +53,22 @@ export default function Breadcrumbs({ items = [], currentPage }: BreadcrumbsProp
     
     // Add current page if provided
     if (currentPage) {
+      // For the last item (current page), ensure we have a valid URL
+      const currentPageUrl = `https://hotelssifnos.com${location.pathname}`;
+      
       itemListElements.push({
         '@type': 'ListItem',
         'position': position,
         'name': currentPage,
-        'item': `https://hotelssifnos.com${location.pathname}` // Add the required 'item' property
+        'item': currentPageUrl
       });
     }
     
+    // The core schema structure with required itemListElement
     return {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
-      'itemListElements': itemListElements
+      'itemListElement': itemListElements
     };
   };
   
