@@ -1,8 +1,5 @@
 
 import { Helmet } from 'react-helmet';
-import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
-import { supportedLanguages } from '@/i18n';
 
 interface SEOProps {
   title: string;
@@ -48,45 +45,17 @@ export default function SEO({
   noIndex = false,
   hotelData
 }: SEOProps) {
-  const { t, i18n } = useTranslation('seo');
-  const location = useLocation();
-  const currentLanguage = i18n.language;
-  
   // Use the provided image or fall back to the default one
   const ogImage = imageUrl || (hotelData?.imageUrl || 'https://hotelssifnos.com/uploads/sifnos-og-image.jpg');
   
-  // Create canonical URL based on current language
-  const getCanonicalUrl = () => {
-    if (canonical) {
-      return canonical.startsWith('http') ? canonical : `https://hotelssifnos.com${canonical.startsWith('/') ? canonical : `/${canonical}`}`;
-    }
-    
-    // If no canonical is provided, use the current URL
-    const pathWithoutLang = location.pathname.replace(/^\/[a-z]{2}\//, '/');
-    return `https://hotelssifnos.com/${currentLanguage}${pathWithoutLang}`;
-  };
-  
-  const formattedCanonical = getCanonicalUrl();
+  const formattedCanonical = canonical ? 
+    (canonical.startsWith('http') ? canonical : `https://hotelssifnos.com${canonical.startsWith('/') ? canonical : `/${canonical}`}`) 
+    : "https://hotelssifnos.com";
   
   // Generate a timestamp for cache busting
   const timestamp = Date.now();
   const randomValue = Math.floor(Math.random() * 1000);
   const cacheBuster = `${timestamp}-${randomValue}`;
-  
-  // Generate alternate URLs for each supported language
-  const generateAlternateUrls = () => {
-    const pathWithoutLang = location.pathname.replace(/^\/[a-z]{2}\//, '/');
-    
-    return supportedLanguages.map(lang => {
-      const langPath = `/${lang}${pathWithoutLang}`;
-      return {
-        hrefLang: lang,
-        href: `https://hotelssifnos.com${langPath}`
-      };
-    });
-  };
-  
-  const alternateUrls = generateAlternateUrls();
   
   // Check if this is a hotel detail page
   const isHotelPage = formattedCanonical.includes('/hotels/');
@@ -137,7 +106,6 @@ export default function SEO({
       "https://www.instagram.com/hotelssifnos",
       "https://twitter.com/hotelssifnos"
     ],
-    "inLanguage": currentLanguage,
     "address": {
       "@type": "PostalAddress",
       "addressLocality": hotelData?.location || "Sifnos",
@@ -208,12 +176,8 @@ export default function SEO({
   const generateSEOTitle = () => {
     if (hotelData) {
       // Hotel/Villa specific title
-      const propertyType = hotelData.type === 'Villa' ? t('villa') : t('hotel');
-      return t('hotelPageTitle', { 
-        name: hotelData.name, 
-        propertyType, 
-        location: hotelData.location 
-      });
+      const propertyType = hotelData.type === 'Villa' ? 'Villa' : 'Hotel';
+      return `${hotelData.name} - Luxury ${propertyType} in ${hotelData.location}, Sifnos | Hotels Sifnos`;
     }
     
     // If title doesn't already contain "Sifnos", append it to maintain brand consistency
@@ -226,7 +190,7 @@ export default function SEO({
 
   return (
     <Helmet>
-      <html lang={currentLanguage} />
+      <html lang="en" />
       <title>{fullTitle}</title>
       <meta name="description" content={uniqueDescription} />
       {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
@@ -255,26 +219,8 @@ export default function SEO({
       <meta property="og:url" content={formattedCanonical} />
       <meta property="og:image" content={`${ogImage}?v=${cacheBuster}`} />
       <meta property="og:site_name" content="Hotels Sifnos" />
-      <meta property="og:locale" content={currentLanguage === 'el' ? 'el_GR' : 'en_US'} />
-      
-      {/* Add alternate locale meta tags for Open Graph */}
-      {supportedLanguages
-        .filter(lang => lang !== currentLanguage)
-        .map(lang => (
-          <meta 
-            property="og:locale:alternate" 
-            content={lang === 'el' ? 'el_GR' : 'en_US'} 
-            key={`og-locale-${lang}`}
-          />
-        ))
-      }
+      <meta property="og:locale" content="en_US" />
 
-      {/* Hreflang tags for language alternates */}
-      <link rel="alternate" hrefLang="x-default" href={`https://hotelssifnos.com/en${location.pathname.replace(/^\/[a-z]{2}/, '')}`} />
-      {alternateUrls.map(({ hrefLang, href }) => (
-        <link rel="alternate" hrefLang={hrefLang} href={href} key={`hreflang-${hrefLang}`} />
-      ))}
-      
       {/* Twitter Card tags */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@hotelssifnos" />

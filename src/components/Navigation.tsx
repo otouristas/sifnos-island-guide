@@ -2,64 +2,58 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { useLanguage } from '@/i18n/LanguageContext';
-import LanguageSelector from './LanguageSelector';
+
+const mainNavItems = [
+  { name: 'Home', path: '/' },
+  { 
+    name: 'Hotels', 
+    path: '/hotels',
+    dropdown: [
+      { name: 'All Hotels', path: '/hotels' },
+      { name: 'Hotel Types', path: '/hotel-types' },
+      { name: 'Luxury Hotels', path: '/hotel-types/luxury-hotels' },
+      { name: 'Boutique Hotels', path: '/hotel-types/boutique-hotels' },
+      { name: 'Beach Hotels', path: '/hotel-types/beach-hotels' },
+      { name: 'Family-Friendly Hotels', path: '/hotel-types/family-friendly-hotels' },
+      { name: 'Traditional Hotels', path: '/hotel-types/traditional-hotels' },
+      { name: 'Luxury Villas', path: '/hotel-types/villas' },
+    ]
+  },
+  { 
+    name: 'Locations', 
+    path: '/locations',
+    dropdown: [
+      { name: 'All Locations', path: '/locations' },
+      { name: 'Apollonia', path: '/locations/apollonia' },
+      { name: 'Kamares', path: '/locations/kamares' },
+      { name: 'Platis Gialos', path: '/locations/platis-gialos' },
+      { name: 'Kastro', path: '/locations/kastro' },
+      { name: 'Vathi', path: '/locations/vathi' },
+      { name: 'Faros', path: '/locations/faros' },
+    ]
+  },
+  { name: 'Beaches', path: '/beaches' },
+  { name: 'Travel Guide', path: '/travel-guide' },
+  { name: 'About Us', path: '/about-us' },
+  { name: 'FAQ', path: '/faq' },
+  { name: 'Contact', path: '/contact' }
+];
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const location = useLocation();
-  const { t } = useTranslation('navigation');
-  const { currentLanguage } = useLanguage();
 
   const toggleDropdown = (name: string) => {
     setOpenDropdown(openDropdown === name ? null : name);
   };
-
-  // Create main nav items with translations
-  const mainNavItems = [
-    { name: t('home'), path: `/${currentLanguage}` },
-    { 
-      name: t('hotels'), 
-      path: `/${currentLanguage}/hotels`,
-      dropdown: [
-        { name: t('allHotels'), path: `/${currentLanguage}/hotels` },
-        { name: t('hotelTypes'), path: `/${currentLanguage}/hotel-types` },
-        { name: t('luxuryHotels'), path: `/${currentLanguage}/hotel-types/luxury-hotels` },
-        { name: t('boutiqueHotels'), path: `/${currentLanguage}/hotel-types/boutique-hotels` },
-        { name: t('beachHotels'), path: `/${currentLanguage}/hotel-types/beach-hotels` },
-        { name: t('familyFriendlyHotels'), path: `/${currentLanguage}/hotel-types/family-friendly-hotels` },
-        { name: t('traditionalHotels'), path: `/${currentLanguage}/hotel-types/traditional-hotels` },
-        { name: t('luxuryVillas'), path: `/${currentLanguage}/hotel-types/villas` },
-      ]
-    },
-    { 
-      name: t('locations'), 
-      path: `/${currentLanguage}/locations`,
-      dropdown: [
-        { name: t('allLocations'), path: `/${currentLanguage}/locations` },
-        { name: t('apollonia'), path: `/${currentLanguage}/locations/apollonia` },
-        { name: t('kamares'), path: `/${currentLanguage}/locations/kamares` },
-        { name: t('platisGialos'), path: `/${currentLanguage}/locations/platis-gialos` },
-        { name: t('kastro'), path: `/${currentLanguage}/locations/kastro` },
-        { name: t('vathi'), path: `/${currentLanguage}/locations/vathi` },
-        { name: t('faros'), path: `/${currentLanguage}/locations/faros` },
-      ]
-    },
-    { name: t('beaches'), path: `/${currentLanguage}/beaches` },
-    { name: t('travelGuide'), path: `/${currentLanguage}/travel-guide` },
-    { name: t('aboutUs'), path: `/${currentLanguage}/about-us` },
-    { name: t('faq'), path: `/${currentLanguage}/faq` },
-    { name: t('contact'), path: `/${currentLanguage}/contact` }
-  ];
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-3">
-            <Link to={`/${currentLanguage}`} className="flex items-center space-x-2">
+            <Link to="/" className="flex items-center space-x-2">
               <img 
                 src="/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png" 
                 alt="HotelsSifnos Logo" 
@@ -72,8 +66,8 @@ export default function Navigation() {
           </div>
           
           {/* Desktop navigation */}
-          <div className="hidden md:flex items-center">
-            <div className="flex items-center space-x-2 mr-4">
+          <div className="hidden md:block">
+            <div className="ml-10 flex items-center space-x-2">
               {mainNavItems.map((item) => (
                 <div key={item.name} className="relative group">
                   {item.dropdown ? (
@@ -81,7 +75,7 @@ export default function Navigation() {
                       <button
                         onClick={() => toggleDropdown(item.name)}
                         className={`font-montserrat px-3 py-2 text-sm font-medium flex items-center transition-colors duration-200 hover:text-[#1E2E48] ${
-                          location.pathname.includes(item.path.substring(3)) 
+                          location.pathname.startsWith(item.path) 
                           ? 'text-[#1E2E48] border-b-2 border-[#1E2E48]' 
                           : 'text-gray-700'
                         }`}
@@ -110,7 +104,7 @@ export default function Navigation() {
                     <Link
                       to={item.path}
                       className={`font-montserrat px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[#1E2E48] ${
-                        location.pathname === item.path.substring(3) || location.pathname === item.path
+                        location.pathname === item.path 
                         ? 'text-[#1E2E48] border-b-2 border-[#1E2E48]' 
                         : 'text-gray-700'
                       }`}
@@ -121,14 +115,10 @@ export default function Navigation() {
                 </div>
               ))}
             </div>
-            
-            {/* Language Selector */}
-            <LanguageSelector />
           </div>
           
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center space-x-4">
-            <LanguageSelector />
+          <div className="md:hidden">
             <button
               type="button"
               className="p-2 rounded-md text-[#1E2E48]"
@@ -152,7 +142,7 @@ export default function Navigation() {
                     <button
                       onClick={() => toggleDropdown(item.name)}
                       className={`w-full flex justify-between items-center px-3 py-2 rounded-md text-base font-medium ${
-                        location.pathname.includes(item.path.substring(3))
+                        location.pathname.startsWith(item.path)
                         ? 'text-[#1E2E48] bg-[#E3D7C3]/10'
                         : 'text-gray-700 hover:bg-[#E3D7C3]/10 hover:text-[#1E2E48]'
                       }`}
@@ -182,7 +172,7 @@ export default function Navigation() {
                   <Link
                     to={item.path}
                     className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
-                      location.pathname === item.path.substring(3) || location.pathname === item.path
+                      location.pathname === item.path
                       ? 'text-[#1E2E48] bg-[#E3D7C3]/10'
                       : 'text-gray-700 hover:bg-[#E3D7C3]/10 hover:text-[#1E2E48]'
                     }`}
