@@ -7,7 +7,7 @@ declare module 'i18next' {
     use(module: any): i18n;
     language: string;
     changeLanguage(lng: string): Promise<TFunction>;
-    init(options: InitOptions): Promise<TFunction>;
+    init(options: InitOptions): Promise<i18n>;
   }
 
   // Re-export the existing types
