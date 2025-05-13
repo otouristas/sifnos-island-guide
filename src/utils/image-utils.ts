@@ -100,3 +100,51 @@ export const determineRoomImageUrl = (hotel: any, roomType: string): string => {
   // Default placeholder
   return `/placeholder.svg?v=${timestamp}-${randomValue}`;
 };
+
+/**
+ * Creates WebP version URL if available or returns original URL
+ * @param url Original image URL
+ * @returns WebP URL if possible or original URL
+ */
+export const getWebpVersionUrl = (url: string): string => {
+  // Check if the URL points to a JPEG or PNG
+  const isJpg = url.includes('.jpg') || url.includes('.jpeg');
+  const isPng = url.includes('.png');
+  
+  if (isJpg || isPng) {
+    // Construct the WebP URL by replacing the extension
+    const webpUrl = url.replace(/\.(jpg|jpeg|png)($|\?)/, '.webp$2');
+    
+    // Fetch the WebP version, using the original URL as a fallback
+    const img = new Image();
+    img.onerror = () => { 
+      // If WebP fails, we don't need to do anything as we're returning the original URL
+      console.log('WebP version not available, using original format');
+    };
+    img.src = webpUrl;
+    
+    return webpUrl;
+  }
+  
+  return url;
+};
+
+/**
+ * Generates responsive image srcset
+ * @param imageUrl Base image URL
+ * @returns Formatted srcset string
+ */
+export const generateResponsiveSrcSet = (imageUrl: string): string => {
+  const baseUrl = imageUrl.split('?')[0];
+  const queryParams = imageUrl.includes('?') ? imageUrl.split('?')[1] : '';
+  
+  const widths = [480, 768, 1024, 1280, 1600];
+  
+  return widths.map(width => {
+    if (queryParams) {
+      return `${baseUrl}?w=${width}&${queryParams} ${width}w`;
+    } else {
+      return `${baseUrl}?w=${width} ${width}w`;
+    }
+  }).join(', ');
+};

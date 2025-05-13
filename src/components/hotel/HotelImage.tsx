@@ -12,6 +12,32 @@ interface HotelImageProps {
 const HotelImage = ({ hotel, imageSrc, primaryType, getHotelTypeIcon }: HotelImageProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [imageRef, setImageRef] = useState<HTMLDivElement | null>(null);
+
+  // Use Intersection Observer for lazy loading
+  useEffect(() => {
+    if (!imageRef) return;
+    
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      {
+        rootMargin: '200px', // Load images 200px before they enter viewport
+        threshold: 0.1
+      }
+    );
+    
+    observer.observe(imageRef);
+    
+    return () => {
+      if (imageRef) observer.disconnect();
+    };
+  }, [imageRef]);
 
   const handleImageLoad = () => {
     setImageLoaded(true);
@@ -27,21 +53,50 @@ const HotelImage = ({ hotel, imageSrc, primaryType, getHotelTypeIcon }: HotelIma
     e.currentTarget.src = `/placeholder.svg?v=${timestamp}-${randomValue}`;
   };
 
+  // Generate srcset for responsive images
+  const generateSrcSet = (baseUrl: string): string => {
+    const url = new URL(baseUrl, window.location.origin);
+    const params = new URLSearchParams(url.search);
+    
+    // Add timestamp to prevent caching issues
+    const timestamp = Date.now();
+    const randomValue = Math.floor(Math.random() * 1000);
+    params.set('v', `${timestamp}-${randomValue}`);
+    
+    // Create srcset variations for different sizes
+    return [
+      `${url.pathname}?${params.toString()}&w=480 480w`,
+      `${url.pathname}?${params.toString()}&w=800 800w`,
+      `${url.pathname}?${params.toString()}&w=1200 1200w`,
+      `${url.pathname}?${params.toString()}&w=1600 1600w`
+    ].join(', ');
+  };
+
   return (
-    <div className="relative h-48 overflow-hidden">
+    <div
+      className="relative h-48 overflow-hidden bg-gray-100"
+      ref={setImageRef}
+    >
       {!imageLoaded && !imageError && (
         <Skeleton className="absolute inset-0 w-full h-full" />
       )}
-      <img 
-        key={`hotel-image-${hotel.id}-${Date.now()}`}
-        src={imageSrc} 
-        alt={hotel.name} 
-        className={`w-full h-full object-cover ${!imageLoaded && !imageError ? 'opacity-0' : 'opacity-100'}`}
-        onLoad={handleImageLoad}
-        onError={handleImageError}
-        loading="eager"
-        fetchPriority="high"
-      />
+      
+      {isVisible && (
+        <img 
+          src={imageSrc} 
+          srcSet={generateSrcSet(imageSrc)}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          alt={hotel.name} 
+          className={`w-full h-full object-cover transition-opacity duration-300 ${!imageLoaded && !imageError ? 'opacity-0' : 'opacity-100'}`}
+          onLoad={handleImageLoad}
+          onError={handleImageError}
+          loading="lazy"
+          width="800"
+          height="600"
+          decoding="async"
+        />
+      )}
+      
       {/* Display hotel type icon if available */}
       {primaryType && (
         <div className="absolute top-2 left-2 bg-white/80 backdrop-blur-sm p-1 rounded-full">
