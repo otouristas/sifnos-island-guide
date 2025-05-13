@@ -69,6 +69,7 @@ const HotelAvailabilityCalendar: React.FC<AvailabilityProps> = ({
           classNames={{
             day_today: "bg-sifnos-turquoise/10 text-sifnos-deep-blue font-semibold",
             day_selected: "bg-sifnos-turquoise text-white hover:bg-sifnos-turquoise hover:text-white",
+            months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
           }}
           modifiers={{
             booked: (date) => isBooked(date),
@@ -79,6 +80,7 @@ const HotelAvailabilityCalendar: React.FC<AvailabilityProps> = ({
           modifiersClassNames={modifiersClassNames}
           selected={[]}
           disabled={[{ before: new Date() }]}
+          numberOfMonths={2}
         />
       </div>
       
