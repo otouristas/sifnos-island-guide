@@ -1,7 +1,7 @@
 
 // Type definitions for i18next methods not included in the default types
 declare module 'i18next' {
-  import { InitOptions, i18n, Resource, TFunction } from 'i18next';
+  import { InitOptions, Resource, TFunction } from 'i18next';
 
   export interface i18n {
     use(module: any): i18n;
