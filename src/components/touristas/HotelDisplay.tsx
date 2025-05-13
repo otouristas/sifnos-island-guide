@@ -1,5 +1,5 @@
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { MapPin, X, Hotel, ExternalLink } from 'lucide-react';
 import { useMediaQuery } from 'react-responsive';
 import { Badge } from '@/components/ui/badge';
@@ -140,7 +140,7 @@ export const HotelCard = ({ hotel }: { hotel: HotelType }) => {
   return (
     <div 
       ref={cardRef}
-      className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow border border-gray-100 w-full mx-0.5 sm:mx-1"
+      className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow border border-gray-100 mx-0.5 sm:mx-1"
     >
       <div className="relative w-full h-28 sm:h-40 overflow-hidden bg-gray-100">
         <ProgressiveImage 
@@ -212,39 +212,23 @@ export const HotelCarousel = ({ hotels }: { hotels: HotelType[] }) => {
   // Add swipe reference and handlers
   const carouselRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [api, setApi] = useState<any>(null);
   
   useSwipe(carouselRef, {
     onSwipeLeft: () => {
       if (activeIndex < hotels.length - 1) {
         setActiveIndex(activeIndex + 1);
-        api?.scrollNext();
       }
     },
     onSwipeRight: () => {
       if (activeIndex > 0) {
         setActiveIndex(activeIndex - 1);
-        api?.scrollPrev();
       }
     }
   }, { preventDefault: false });
   
-  // Update the carousel position when activeIndex changes
-  useEffect(() => {
-    if (api) {
-      api.scrollTo(activeIndex);
-    }
-  }, [activeIndex, api]);
-  
-  // Handle carousel changes
-  const handleCarouselChange = (api: any) => {
-    const currentIndex = api.selectedScrollSnap();
-    setActiveIndex(currentIndex);
-  };
-  
   return (
     <div ref={carouselRef}>
-      <Carousel className="w-full" setApi={setApi} opts={{ startIndex: activeIndex }}>
+      <Carousel className="w-full" defaultIndex={activeIndex} index={activeIndex} onIndexChange={setActiveIndex}>
         <CarouselContent>
           {hotels.map((hotel) => (
             <CarouselItem key={hotel.id} className="basis-full xs:basis-1/2 sm:basis-1/2 md:basis-1/3">

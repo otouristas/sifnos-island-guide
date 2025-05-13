@@ -59,4 +59,3 @@ export * from "./calendar";
 export * from "./toast";
 export { Toaster, ToastProvider, ToastViewport } from "./toaster"; // Explicitly export to avoid name conflicts
 export * from "./sonner";
-
