@@ -2,7 +2,8 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
-import i18nInstance, { supportedLanguages, defaultLanguage } from './index';
+import i18n from 'i18next'; // Import the base i18n directly
+import { supportedLanguages, defaultLanguage } from './index';
 
 interface LanguageContextType {
   currentLanguage: string;
@@ -16,7 +17,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
-  const [currentLanguage, setCurrentLanguage] = useState(i18nInstance.language || defaultLanguage);
+  const [currentLanguage, setCurrentLanguage] = useState(i18n.language || defaultLanguage);
 
   // Map of language codes to their names (both in their own language)
   const languages = supportedLanguages.map(code => ({
@@ -33,7 +34,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (pathParts.length > 0 && supportedLanguages.includes(pathParts[0])) {
       const langFromPath = pathParts[0];
       if (langFromPath !== currentLanguage) {
-        i18nInstance.changeLanguage(langFromPath);
+        i18n.changeLanguage(langFromPath);
         setCurrentLanguage(langFromPath);
       }
     } else if (path === '/' || !location.pathname.includes(`/${currentLanguage}/`)) {
@@ -51,7 +52,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
 
     // Change i18next language
-    i18nInstance.changeLanguage(lang);
+    i18n.changeLanguage(lang);
     
     // Update current language
     setCurrentLanguage(lang);
