@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -79,30 +80,7 @@ const LanguageRoutes = () => {
       <Route path={`:lang(${langsPattern})/terms-of-service`} element={<TermsOfServicePage />} />
       <Route path={`:lang(${langsPattern})/cookie-policy`} element={<CookiePolicyPage />} />
       
-      {/* Legacy routes - redirect to language prefixed */}
-      <Route path="/index" element={<Navigate to={`/${defaultLanguage}/index`} replace />} />
-      <Route path="/hotels" element={<Navigate to={`/${defaultLanguage}/hotels`} replace />} />
-      <Route path="/hotels/:slug" element={<HotelDetailPage />} />
-      <Route path="/locations" element={<Navigate to={`/${defaultLanguage}/locations`} replace />} />
-      <Route path="/locations/:slug" element={<LocationPage />} />
-      <Route path="/hotel-types" element={<Navigate to={`/${defaultLanguage}/hotel-types`} replace />} />
-      <Route path="/hotel-types/:slug" element={<HotelTypePage />} />
-      <Route path="/blog" element={<Navigate to={`/${defaultLanguage}/blog`} replace />} />
-      <Route path="/blog/:slug" element={<BlogPostPage />} />
-      <Route path="/touristas-ai" element={<Navigate to={`/${defaultLanguage}/touristas-ai`} replace />} />
-      <Route path="/beaches" element={<Navigate to={`/${defaultLanguage}/beaches`} replace />} />
-      <Route path="/travel-guide" element={<Navigate to={`/${defaultLanguage}/travel-guide`} replace />} />
-      <Route path="/about" element={<Navigate to={`/${defaultLanguage}/about`} replace />} />
-      <Route path="/about-us" element={<Navigate to={`/${defaultLanguage}/about-us`} replace />} />
-      <Route path="/contact" element={<Navigate to={`/${defaultLanguage}/contact`} replace />} />
-      <Route path="/faq" element={<Navigate to={`/${defaultLanguage}/faq`} replace />} />
-      <Route path="/pricing" element={<Navigate to={`/${defaultLanguage}/pricing`} replace />} />
-      <Route path="/thank-you" element={<Navigate to={`/${defaultLanguage}/thank-you`} replace />} />
-      <Route path="/privacy-policy" element={<Navigate to={`/${defaultLanguage}/privacy-policy`} replace />} />
-      <Route path="/terms-of-service" element={<Navigate to={`/${defaultLanguage}/terms-of-service`} replace />} />
-      <Route path="/cookie-policy" element={<Navigate to={`/${defaultLanguage}/cookie-policy`} replace />} />
-      
-      {/* Catch all route */}
+      {/* Catch all route for any unmatched paths */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

@@ -2,7 +2,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
-import i18n from 'i18next'; // Import the base i18n directly
+import i18n from './index'; // Import the initialized i18n instance
 import { supportedLanguages, defaultLanguage } from './index';
 
 interface LanguageContextType {
@@ -37,7 +37,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         i18n.changeLanguage(langFromPath);
         setCurrentLanguage(langFromPath);
       }
-    } else if (path === '/' || !location.pathname.includes(`/${currentLanguage}/`)) {
+    } else if (path === '/' || !path.startsWith(`/${currentLanguage}/`)) {
       // Add language prefix to path if at root or missing
       const newPath = `/${currentLanguage}${path === '/' ? '' : path}`;
       navigate(newPath, { replace: true });
@@ -73,7 +73,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   return (
     <LanguageContext.Provider value={{ currentLanguage, setLanguage, languages }}>
-      {children as React.ReactNode}
+      {children}
     </LanguageContext.Provider>
   );
 };
