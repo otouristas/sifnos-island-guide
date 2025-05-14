@@ -368,6 +368,37 @@ export const extractUserPreferencesFromMessage = (message: string): Record<strin
 };
 
 /**
+ * Extract budget range from user message
+ * @param message Message to analyze
+ * @returns Budget range as a string, or empty string if none found
+ */
+export const extractBudgetRangeFromMessage = (message: string): string => {
+  const message_lower = message.toLowerCase();
+  const budgetPatterns = [
+    /(\d+)[\s-]*euro(s)?\s+(?:per night|a night|per day|a day|night|max)/i,
+    /under\s+(\d+)\s+euro/i,
+    /less than\s+(\d+)\s+euro/i,
+    /budget.*?(\d+)\s*-\s*(\d+)/i,
+    /(\d+)\s*-\s*(\d+).*?budget/i,
+    /around\s+(\d+)\s+euro/i,
+    /about\s+(\d+)\s+euro/i,
+    /max(?:imum)?\s+(\d+)\s+euro/i,
+  ];
+  
+  for (const pattern of budgetPatterns) {
+    const match = message_lower.match(pattern);
+    if (match) {
+      if (match[2]) { // If it's a range
+        return `${match[1]}-${match[2]}`;
+      }
+      return match[1];
+    }
+  }
+  
+  return '';
+};
+
+/**
  * Analyze a message to determine its main topic for context tracking
  */
 export const analyzeMessageTopic = (message: string): string => {
@@ -424,11 +455,18 @@ export interface HotelType {
 }
 
 // Type for tracking conversation context
-export type ConversationContext = {
+export interface ConversationContext {
   topic: string;
   summary: string;
   timestamp: number;
-};
+}
+
+// Type for AI Request Message format
+export interface AIRequestMessage {
+  role: MessageRole;
+  content: string;
+  id: string;
+}
 
 import { getFerrySchedules, formatFerryScheduleInfo } from '@/utils/ferry-utils';
 import { parse, isValid } from 'date-fns';

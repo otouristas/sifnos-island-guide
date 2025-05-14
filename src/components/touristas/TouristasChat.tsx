@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,15 +11,15 @@ import {
   extractAmenityFromMessage,
   extractLocationsFromResponse, 
   shouldShowHotelsInResponse,
-  extractUserPreferencesFromMessage 
+  extractUserPreferencesFromMessage,
+  AIRequestMessage,
+  ConversationContext
 } from './utils/chat-utils';
 import { 
-  AIRequestMessage, 
   searchHotels, 
   callTouristasAI, 
   processStreamingResponse,
-  trackConversationContext,
-  ConversationContext
+  trackConversationContext
 } from './services/ChatService';
 
 export default function TouristasChat() {

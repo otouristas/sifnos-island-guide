@@ -1,9 +1,17 @@
-import { Message, MessageRole, analyzeMessageTopic } from '../utils/chat-utils';
+
+import { 
+  Message, 
+  MessageRole, 
+  analyzeMessageTopic, 
+  ConversationContext,
+  AIRequestMessage
+} from '../utils/chat-utils';
 import { 
   extractLocationFromMessage, 
   extractAmenityFromMessage, 
   extractUserPreferencesFromMessage,
-  extractBudgetRangeFromMessage
+  extractBudgetRangeFromMessage,
+  getFerryInfoForResponse
 } from '../utils/chat-utils';
 import { getFerrySchedules } from '@/utils/ferry-utils';
 import { format } from 'date-fns';
