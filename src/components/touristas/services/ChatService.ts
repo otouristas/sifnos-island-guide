@@ -1,4 +1,4 @@
-import { Message, MessageRole, extractUserPreferencesFromMessage, analyzeMessageTopic } from '../utils/chat-utils';
+import { Message, MessageRole, analyzeMessageTopic } from '../utils/chat-utils';
 import { 
   extractLocationFromMessage, 
   extractAmenityFromMessage, 
