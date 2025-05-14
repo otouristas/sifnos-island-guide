@@ -429,3 +429,100 @@ export type ConversationContext = {
   summary: string;
   timestamp: number;
 };
+
+import { getFerrySchedules, formatFerryScheduleInfo } from '@/utils/ferry-utils';
+import { parse, isValid } from 'date-fns';
+
+// Add ferry-related functions to the existing utils
+export const extractDateFromMessage = (message: string): Date | null => {
+  const dateRegex = /(?:\b(?:on|for) )?((?:this |next |coming )?(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)|(?:january|february|march|april|may|june|july|august|september|october|november|december) \d{1,2}(?:st|nd|rd|th)?(?:,? \d{4})?|(?:\d{1,2}(?:st|nd|rd|th)? (?:of )?(?:january|february|march|april|may|june|july|august|september|october|november|december))(?:,? \d{4})?|\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)/i;
+  
+  const dateMatch = message.match(dateRegex);
+  
+  if (!dateMatch) return null;
+  
+  const dateString = dateMatch[1];
+  let parsedDate: Date | null = null;
+  
+  // Try different date formats
+  const formats = [
+    'MMMM d, yyyy',
+    'MMMM d yyyy', 
+    'MMMM d',
+    'M/d/yyyy',
+    'M/d/yy',
+    'M/d'
+  ];
+  
+  for (const format of formats) {
+    const attemptParse = parse(dateString, format, new Date());
+    if (isValid(attemptParse)) {
+      parsedDate = attemptParse;
+      break;
+    }
+  }
+  
+  // Handle day names (Monday, Tuesday, etc.)
+  if (!parsedDate && /(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)/i.test(dateString)) {
+    const today = new Date();
+    const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const mentionedDay = dayNames.findIndex(day => dateString.toLowerCase().includes(day));
+    
+    if (mentionedDay !== -1) {
+      const todayDay = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+      let daysToAdd = mentionedDay - todayDay;
+      
+      if (daysToAdd <= 0) daysToAdd += 7; // Next week if the day has already passed
+      
+      if (dateString.toLowerCase().includes('next')) daysToAdd += 7; // Explicitly next week
+      
+      parsedDate = new Date();
+      parsedDate.setDate(today.getDate() + daysToAdd);
+    }
+  }
+  
+  return parsedDate;
+};
+
+export const isFerryRelatedQuery = (message: string): boolean => {
+  const ferryKeywords = [
+    'ferry', 'ferries', 'boat', 'ship', 'ferryscanner', 'sea travel',
+    'travel by sea', 'ferry ticket', 'boat ticket', 'ferry schedule',
+    'ferry timetable', 'ferry from', 'ferry to'
+  ];
+  
+  const messageLower = message.toLowerCase();
+  return ferryKeywords.some(keyword => messageLower.includes(keyword));
+};
+
+export const extractPortsFromMessage = (message: string): { from?: string, to?: string } => {
+  const ports = {
+    from: undefined,
+    to: undefined
+  };
+  
+  const fromRegex = /(?:from|depart(?:ing|s)? from) (piraeus|athens|rafina|lavrio|kamares|sifnos|milos|serifos|kimolos|paros|naxos|mykonos|santorini|folegandros|ios|syros|kythnos|kea|andros|tinos)/i;
+  const toRegex = /(?:to|arrive(?:s)?(?: at)?) (piraeus|athens|rafina|lavrio|kamares|sifnos|milos|serifos|kimolos|paros|naxos|mykonos|santorini|folegandros|ios|syros|kythnos|kea|andros|tinos)/i;
+  
+  const fromMatch = message.match(fromRegex);
+  const toMatch = message.match(toRegex);
+  
+  if (fromMatch) ports.from = fromMatch[1];
+  if (toMatch) ports.to = toMatch[1];
+  
+  return ports;
+};
+
+export const getFerryInfoForResponse = (message: string): string | null => {
+  if (!isFerryRelatedQuery(message)) return null;
+  
+  const ports = extractPortsFromMessage(message);
+  const date = extractDateFromMessage(message);
+  
+  if (!ports.from && !ports.to) return null;
+  
+  const schedules = getFerrySchedules(ports.from, ports.to, date);
+  if (schedules.length === 0) return null;
+  
+  return formatFerryScheduleInfo(schedules);
+};

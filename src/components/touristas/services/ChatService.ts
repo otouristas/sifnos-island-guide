@@ -1,5 +1,13 @@
-
 import { Message, MessageRole, extractUserPreferencesFromMessage, analyzeMessageTopic } from '../utils/chat-utils';
+import { 
+  extractLocationFromMessage, 
+  extractAmenityFromMessage, 
+  extractUserPreferencesFromMessage,
+  isFerryRelatedQuery,
+  extractPortsFromMessage,
+  extractDateFromMessage,
+  getFerryInfoForResponse
+} from '../utils/chat-utils';
 
 // Use this interface for sending messages to the AI service
 export interface AIRequestMessage {
@@ -15,45 +23,66 @@ export interface ConversationContext {
 }
 
 export const callTouristasAI = async (
-  messages: AIRequestMessage[], 
-  preferences?: Record<string, string>,
-  previousConversations?: ConversationContext[]
+  messages: AIRequestMessage[],
+  preferences: Record<string, string>,
+  conversationContexts: ConversationContext[]
 ): Promise<ReadableStream<Uint8Array> | null> => {
   try {
-    // Hardcoded Supabase URL and anon key - no environment variables needed
-    const supabaseUrl = 'https://wdzlruiekcznbcicjgrz.supabase.co';
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkemxydWlla2N6bmJjaWNqZ3J6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQyODAyNzYsImV4cCI6MjA1OTg1NjI3Nn0.NaoVf3tU3Xz08CWCHpQtq7_9H6G6ES9EjtCvPHa0aRk';
+    // Check if the latest message is ferry related and if we have local data to handle it
+    const latestMessage = messages[messages.length - 1];
+    const ferryInfo = getFerryInfoForResponse(latestMessage.content);
     
-    console.log('Using hardcoded Supabase URL:', supabaseUrl);
-    console.log('Messages for AI:', messages);
+    // If we have ferry data locally, we can use it instead of calling the AI
+    if (ferryInfo) {
+      // Create a simple transform stream to simulate AI response with our ferry data
+      const encoder = new TextEncoder();
+      let responseText = `Here's information about the ferry route you asked about:\n\n${ferryInfo}\n\nWould you like to know about any other ferry routes or have questions about accommodations in Sifnos?`;
+      
+      const stream = new ReadableStream({
+        start(controller) {
+          // Send the response text in chunks to simulate streaming
+          const chunks = responseText.split(' ');
+          let i = 0;
+          
+          function sendNextChunk() {
+            if (i < chunks.length) {
+              controller.enqueue(encoder.encode(chunks[i] + ' '));
+              i++;
+              setTimeout(sendNextChunk, 30); // simulate delay
+            } else {
+              controller.close();
+            }
+          }
+          
+          sendNextChunk();
+        }
+      });
+      
+      return stream;
+    }
     
-    // Extract user preferences if not provided
-    const extractedPreferences = preferences || extractUserPreferencesFromMessage(messages[messages.length - 1].content);
-    
-    // Prepare request payload with enhanced context
-    const requestPayload = {
-      messages,
-      preferences: extractedPreferences,
-      previousConversations
-    };
-    
-    const response = await fetch(`${supabaseUrl}/functions/v1/ai-travel-assistant`, {
+    // Continue with regular AI call if not ferry-related or we don't have local data
+    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-travel-assistant`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${supabaseAnonKey}`
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
       },
-      body: JSON.stringify(requestPayload),
+      body: JSON.stringify({
+        messages,
+        preferences,
+        previousConversations: conversationContexts
+      })
     });
-
+    
     if (!response.ok) {
-      console.error('AI response error:', response.status, response.statusText);
+      console.error('Error calling AI assistant:', await response.text());
       return null;
     }
-
+    
     return response.body;
   } catch (error) {
-    console.error('Error calling AI assistant:', error);
+    console.error('Error in AI chat service:', error);
     return null;
   }
 };

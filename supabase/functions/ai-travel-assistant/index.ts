@@ -89,6 +89,20 @@ serve(async (req) => {
       - Food specialties: Mastelo (lamb or goat cooked in clay pot), chickpea soup, honey pie
       - Weather: Hot dry summers (June-August), mild spring and autumn, rainy winters
       
+      Ferries to Sifnos information:
+      - Main connection: Regular ferries run between Piraeus (Athens main port) and Sifnos
+      - Journey time: Approximately 2.5-5 hours depending on ferry type
+      - Ferry types: Conventional ferries (slower, more stable) and high-speed catamarans (faster but affected by weather)
+      - Main operators: Blue Star Ferries, SeaJets, Aegean Speed Lines, and Zante Ferries
+      - Seasonal variations: More frequent services during summer (May-September), reduced in winter
+      - Popular connections: Sifnos connects with nearby islands including Milos, Serifos, Paros, and others
+      - Schedule examples: 
+        * Piraeus to Sifnos: Daily departures, typically morning (around 07:30) and evening (around 17:00) 
+        * Sifnos to Piraeus: Daily departures, typically morning (around 09:15) and evening (around 19:30)
+        * These times are approximate and users should check current schedules
+      
+      When users ask about ferry schedules or travel to Sifnos, provide helpful information about operators, frequencies, and travel times. You can suggest they visit the ferry tickets page on our website for the most current schedules and booking options.
+      
       Keep your responses conversational, helpful, and focused on helping travelers find their ideal accommodation in Sifnos based on their specified location preferences.
       
       IMPORTANT: When discussing hotels or accommodations, DO NOT list or name specific hotels. Instead, use phrases like "Here are some hotel options that might interest you:" to indicate where hotel listings should appear. Our system will automatically populate the appropriate hotel options from our database. Never generate your own hotel names or descriptions. 
