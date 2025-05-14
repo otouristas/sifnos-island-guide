@@ -42,7 +42,7 @@ export const sendMessage = async (
     if (latestUserMessage) {
       // Extract location, amenities, and other preferences from the message
       const location = extractLocationFromMessage(latestUserMessage.content);
-      const amenity = extractAmenityFromMessage(latestUserMessage.content);
+      const amenities = extractAmenityFromMessage(latestUserMessage.content);
       const budgetRange = extractBudgetRangeFromMessage(latestUserMessage.content);
       const messagePreferences = extractUserPreferencesFromMessage(latestUserMessage.content);
       
@@ -62,7 +62,8 @@ export const sendMessage = async (
       
       // Update user preferences
       if (location) userPreferences.location = location;
-      if (amenity) userPreferences.amenity = amenity;
+      // Store the first amenity as string if any exist
+      if (amenities.length > 0) userPreferences.amenity = amenities[0];
       if (budgetRange) userPreferences.budgetRange = budgetRange;
       
       // Merge new preferences with existing ones
