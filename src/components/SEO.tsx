@@ -1,11 +1,10 @@
-
 import { Helmet } from 'react-helmet';
 
 interface SEOProps {
   title: string;
   description: string;
   keywords?: string[];
-  schemaType?: 'Hotel' | 'Villa' | 'TravelAgency' | 'Organization' | 'Article' | 'TouristDestination';
+  schemaType?: 'Hotel' | 'Villa' | 'TravelAgency' | 'Organization' | 'Article' | 'TouristDestination' | 'Service';
   canonical?: string;
   imageUrl?: string;
   datePublished?: string;
@@ -114,7 +113,21 @@ export default function SEO({
     }
   };
 
-  if (schemaType === 'Article') {
+  if (schemaType === 'Service') {
+    schemaData = {
+      ...schemaData,
+      "description": uniqueDescription,
+      "provider": {
+        "@type": "Organization",
+        "name": "Hotels Sifnos"
+      },
+      "serviceType": "Ferry Booking",
+      "areaServed": {
+        "@type": "Place",
+        "name": "Cyclades Islands"
+      }
+    };
+  } else if (schemaType === 'Article') {
     schemaData = {
       ...schemaData,
       "headline": title,
