@@ -3,89 +3,213 @@ import {
   extractLocationFromMessage, 
   extractAmenityFromMessage, 
   extractUserPreferencesFromMessage,
-  isFerryRelatedQuery,
-  extractPortsFromMessage,
-  extractDateFromMessage,
-  getFerryInfoForResponse
+  extractBudgetRangeFromMessage
 } from '../utils/chat-utils';
+import { getFerrySchedules } from '@/utils/ferry-utils';
+import { format } from 'date-fns';
 
-// Use this interface for sending messages to the AI service
-export interface AIRequestMessage {
-  role: MessageRole;
-  content: string;
-  id: string;
-}
+const apiUrl = import.meta.env.VITE_SUPABASE_URL 
+  ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-travel-assistant`
+  : 'https://hotelssifnos.supabase.co/functions/v1/ai-travel-assistant';
 
-export interface ConversationContext {
+// Store conversation history for the session
+let conversationHistory: {
   topic: string;
   summary: string;
-  timestamp: number;
-}
+}[] = [];
 
-export const callTouristasAI = async (
-  messages: AIRequestMessage[],
-  preferences: Record<string, string>,
-  conversationContexts: ConversationContext[]
-): Promise<ReadableStream<Uint8Array> | null> => {
+// Store user preferences
+let userPreferences: Record<string, string> = {};
+
+export const sendMessage = async (
+  messages: Message[],
+  onChunk: (chunk: string) => void,
+  onError: (error: Error) => void,
+  onComplete: () => void
+): Promise<void> => {
   try {
-    // Check if the latest message is ferry related and if we have local data to handle it
-    const latestMessage = messages[messages.length - 1];
-    const ferryInfo = getFerryInfoForResponse(latestMessage.content);
+    // Extract the latest user message
+    const latestUserMessage = messages.filter(m => m.role === 'user').pop();
     
-    // If we have ferry data locally, we can use it instead of calling the AI
-    if (ferryInfo) {
-      // Create a simple transform stream to simulate AI response with our ferry data
-      const encoder = new TextEncoder();
-      let responseText = `Here's information about the ferry route you asked about:\n\n${ferryInfo}\n\nWould you like to know about any other ferry routes or have questions about accommodations in Sifnos?`;
+    if (latestUserMessage) {
+      // Extract location, amenities, and other preferences from the message
+      const location = extractLocationFromMessage(latestUserMessage.content);
+      const amenity = extractAmenityFromMessage(latestUserMessage.content);
+      const budgetRange = extractBudgetRangeFromMessage(latestUserMessage.content);
+      const messagePreferences = extractUserPreferencesFromMessage(latestUserMessage.content);
       
-      const stream = new ReadableStream({
-        start(controller) {
-          // Send the response text in chunks to simulate streaming
-          const chunks = responseText.split(' ');
-          let i = 0;
-          
-          function sendNextChunk() {
-            if (i < chunks.length) {
-              controller.enqueue(encoder.encode(chunks[i] + ' '));
-              i++;
-              setTimeout(sendNextChunk, 30); // simulate delay
-            } else {
-              controller.close();
-            }
-          }
-          
-          sendNextChunk();
+      // Check if the message is about ferries, and if so, enhance with ferry data
+      const isFerryRelated = isFerryQuestion(latestUserMessage.content);
+      
+      if (isFerryRelated) {
+        const ferryInfo = extractFerryQueryDetails(latestUserMessage.content);
+        if (ferryInfo) {
+          // Add ferry information to user preferences
+          userPreferences = {
+            ...userPreferences,
+            ...ferryInfo
+          };
         }
-      });
+      }
       
-      return stream;
+      // Update user preferences
+      if (location) userPreferences.location = location;
+      if (amenity) userPreferences.amenity = amenity;
+      if (budgetRange) userPreferences.budgetRange = budgetRange;
+      
+      // Merge new preferences with existing ones
+      userPreferences = {
+        ...userPreferences,
+        ...messagePreferences
+      };
+      
+      // Analyze the topic of the message for history tracking
+      const topic = analyzeMessageTopic(latestUserMessage.content);
+      
+      // Add to conversation history if we have a meaningful topic
+      if (topic && topic !== 'general') {
+        // Check if we already have this topic
+        const existingTopicIndex = conversationHistory.findIndex(h => h.topic === topic);
+        
+        if (existingTopicIndex >= 0) {
+          // Update existing topic
+          conversationHistory[existingTopicIndex] = {
+            topic,
+            summary: latestUserMessage.content.substring(0, 100) + '...'
+          };
+        } else {
+          // Add new topic
+          conversationHistory.push({
+            topic,
+            summary: latestUserMessage.content.substring(0, 100) + '...'
+          });
+        }
+        
+        // Keep history limited to last 5 topics
+        if (conversationHistory.length > 5) {
+          conversationHistory = conversationHistory.slice(-5);
+        }
+      }
     }
-    
-    // Continue with regular AI call if not ferry-related or we don't have local data
-    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-travel-assistant`, {
+
+    // Make API request to AI assistant function
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
       },
       body: JSON.stringify({
         messages,
-        preferences,
-        previousConversations: conversationContexts
-      })
+        preferences: userPreferences,
+        previousConversations: conversationHistory
+      }),
     });
-    
+
     if (!response.ok) {
-      console.error('Error calling AI assistant:', await response.text());
-      return null;
+      throw new Error(`API request failed with status: ${response.status}`);
     }
-    
-    return response.body;
+
+    // Handle streaming response
+    const reader = response.body?.getReader();
+    if (!reader) {
+      throw new Error('Response body is not readable');
+    }
+
+    const decoder = new TextDecoder();
+    let done = false;
+    let accumulatedResponse = '';
+
+    while (!done) {
+      const { value, done: doneReading } = await reader.read();
+      done = doneReading;
+      
+      if (done) {
+        onComplete();
+        break;
+      }
+      
+      const chunk = decoder.decode(value, { stream: true });
+      accumulatedResponse += chunk;
+      onChunk(chunk);
+    }
+
   } catch (error) {
-    console.error('Error in AI chat service:', error);
-    return null;
+    console.error('Error in chat service:', error);
+    onError(error instanceof Error ? error : new Error('Unknown error in chat service'));
   }
 };
+
+// Helper function to determine if a message is about ferries
+function isFerryQuestion(message: string): boolean {
+  const ferryKeywords = [
+    'ferry', 'ferries', 'boat', 'ship', 'sea travel', 'sea journey',
+    'schedule', 'timetable', 'departure', 'arrival', 'sail',
+    'piraeus', 'port', 'seajets', 'blue star', 'golden star', 'aegean'
+  ];
+  
+  const lowerMessage = message.toLowerCase();
+  return ferryKeywords.some(keyword => lowerMessage.includes(keyword.toLowerCase()));
+}
+
+// Extract ferry query details from a message
+function extractFerryQueryDetails(message: string): Record<string, string> | null {
+  const preferences: Record<string, string> = {};
+  const lowerMessage = message.toLowerCase();
+  
+  // Extract origin/destination
+  if (lowerMessage.includes('from piraeus') || lowerMessage.includes('piraeus to')) {
+    preferences.ferryOrigin = 'Piraeus';
+  }
+  
+  if (lowerMessage.includes('to sifnos') || lowerMessage.includes('sifnos from')) {
+    preferences.ferryDestination = 'Sifnos';
+  }
+  
+  if (lowerMessage.includes('from sifnos') || lowerMessage.includes('sifnos to')) {
+    preferences.ferryOrigin = 'Sifnos';
+  }
+  
+  // Extract date hints
+  const today = new Date();
+  const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  const monthNames = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+  
+  // Check for day of week mentions
+  for (let i = 0; i < dayNames.length; i++) {
+    if (lowerMessage.includes(dayNames[i])) {
+      preferences.ferryDayOfWeek = dayNames[i].charAt(0).toUpperCase() + dayNames[i].slice(1);
+      break;
+    }
+  }
+  
+  // Check for month mentions
+  for (let i = 0; i < monthNames.length; i++) {
+    if (lowerMessage.includes(monthNames[i])) {
+      preferences.ferryMonth = monthNames[i].charAt(0).toUpperCase() + monthNames[i].slice(1);
+      break;
+    }
+  }
+  
+  // Check for specific date patterns (e.g., May 28)
+  const datePattern = /(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?) \d{1,2}/i;
+  const dateMatch = lowerMessage.match(datePattern);
+  
+  if (dateMatch) {
+    preferences.ferrySpecificDate = dateMatch[0];
+  }
+  
+  // Check if the query includes specified ferry companies
+  const companies = ['Blue Star', 'SeaJets', 'Aegean Speed Lines', 'Zante Ferries', 'Hellenic Seaways'];
+  for (const company of companies) {
+    if (lowerMessage.includes(company.toLowerCase())) {
+      preferences.ferryCompany = company;
+      break;
+    }
+  }
+  
+  // Return null if we couldn't extract any meaningful ferry information
+  return Object.keys(preferences).length > 0 ? preferences : null;
+}
 
 export const searchHotels = async (query: string, preferences?: Record<string, string>): Promise<any[]> => {
   try {
@@ -420,4 +544,69 @@ export const trackConversationContext = (messages: Message[]): ConversationConte
   }
   
   return contexts;
+};
+
+export const callTouristasAI = async (
+  messages: AIRequestMessage[],
+  preferences: Record<string, string>,
+  conversationContexts: ConversationContext[]
+): Promise<ReadableStream<Uint8Array> | null> => {
+  try {
+    // Check if the latest message is ferry related and if we have local data to handle it
+    const latestMessage = messages[messages.length - 1];
+    const ferryInfo = getFerryInfoForResponse(latestMessage.content);
+    
+    // If we have ferry data locally, we can use it instead of calling the AI
+    if (ferryInfo) {
+      // Create a simple transform stream to simulate AI response with our ferry data
+      const encoder = new TextEncoder();
+      let responseText = `Here's information about the ferry route you asked about:\n\n${ferryInfo}\n\nWould you like to know about any other ferry routes or have questions about accommodations in Sifnos?`;
+      
+      const stream = new ReadableStream({
+        start(controller) {
+          // Send the response text in chunks to simulate streaming
+          const chunks = responseText.split(' ');
+          let i = 0;
+          
+          function sendNextChunk() {
+            if (i < chunks.length) {
+              controller.enqueue(encoder.encode(chunks[i] + ' '));
+              i++;
+              setTimeout(sendNextChunk, 30); // simulate delay
+            } else {
+              controller.close();
+            }
+          }
+          
+          sendNextChunk();
+        }
+      });
+      
+      return stream;
+    }
+    
+    // Continue with regular AI call if not ferry-related or we don't have local data
+    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-travel-assistant`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+      },
+      body: JSON.stringify({
+        messages,
+        preferences,
+        previousConversations: conversationContexts
+      })
+    });
+    
+    if (!response.ok) {
+      console.error('Error calling AI assistant:', await response.text());
+      return null;
+    }
+    
+    return response.body;
+  } catch (error) {
+    console.error('Error in AI chat service:', error);
+    return null;
+  }
 };

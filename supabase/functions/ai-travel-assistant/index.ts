@@ -91,15 +91,38 @@ serve(async (req) => {
       
       Ferries to Sifnos information:
       - Main connection: Regular ferries run between Piraeus (Athens main port) and Sifnos
-      - Journey time: Approximately 2.5-5 hours depending on ferry type
+      - Journey time: Approximately 2.5-5.5 hours depending on ferry type
       - Ferry types: Conventional ferries (slower, more stable) and high-speed catamarans (faster but affected by weather)
       - Main operators: Blue Star Ferries, SeaJets, Aegean Speed Lines, and Zante Ferries
       - Seasonal variations: More frequent services during summer (May-September), reduced in winter
       - Popular connections: Sifnos connects with nearby islands including Milos, Serifos, Paros, and others
-      - Schedule examples: 
-        * Piraeus to Sifnos: Daily departures, typically morning (around 07:30) and evening (around 17:00) 
-        * Sifnos to Piraeus: Daily departures, typically morning (around 09:15) and evening (around 19:30)
-        * These times are approximate and users should check current schedules
+      
+      Detailed Ferry Schedules to/from Sifnos:
+      - Piraeus to Sifnos: 
+        * Monday: 07:30 (Blue Star Ferries, 5h), 17:00 (SeaJets, 2.5h)
+        * Tuesday: 07:30 (Blue Star Ferries, 5h)
+        * Wednesday: 17:00 (SeaJets, 2.5h)
+        * Thursday: 07:30 (Blue Star Ferries, 5h)
+        * Friday: 07:30 (Blue Star Ferries, 5h), 17:00 (SeaJets, 2.5h)
+        * Saturday: 07:30 (Aegean Speed Lines, 4h)
+        * Sunday: 15:30 (Zante Ferries, 5.5h)
+      
+      - Sifnos to Piraeus:
+        * Monday: 09:15 (Blue Star Ferries, 5h), 19:30 (SeaJets, 2.5h)
+        * Tuesday: 09:15 (Blue Star Ferries, 5h)
+        * Wednesday: 19:30 (SeaJets, 2.5h)
+        * Thursday: 09:15 (Blue Star Ferries, 5h)
+        * Friday: 09:15 (Blue Star Ferries, 5h), 19:30 (SeaJets, 2.5h)
+        * Saturday: 14:00 (Aegean Speed Lines, 4h)
+        * Sunday: 18:30 (Zante Ferries, 5.5h)
+      
+      - Milos to Sifnos: Common departures at 10:45 on Tuesday, Thursday, Saturday (Aegean Speed Lines, 1-1.5h)
+      - Sifnos to Milos: Common departures at 13:30 on Monday, Wednesday, Friday (SeaJets, 1-1.5h)
+      
+      - Serifos to Sifnos: Common departures at 09:30 on Monday, Wednesday, Friday (Aegean Speed Lines, 30-60min)
+      - Sifnos to Serifos: Common departures at 16:45 on Tuesday, Thursday, Sunday (Zante Ferries, 30-60min)
+      
+      If users ask about specific dates, explain that these are typical schedules and actual times may vary. Always recommend checking the most current schedules on the Ferryscanner website or our ferry tickets page. If they ask about a specific day of the week, you can provide the typical schedule for that day.
       
       When users ask about ferry schedules or travel to Sifnos, provide helpful information about operators, frequencies, and travel times. You can suggest they visit the ferry tickets page on our website for the most current schedules and booking options.
       

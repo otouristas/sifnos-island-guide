@@ -11,7 +11,7 @@ import {
   SelectValue
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Ship, Calendar, Clock } from "lucide-react";
+import { ArrowRight, Ship, Calendar, Clock, Map, Info, Ticket } from "lucide-react";
 import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,6 +19,7 @@ import * as z from "zod";
 import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getFerrySchedules } from "@/utils/ferry-utils";
 
 interface Port {
   name: string;
@@ -71,28 +72,29 @@ const portGroups = {
 // Form schema
 const formSchema = z.object({
   origin: z.string().min(1, "Origin port is required"),
-  destination: z.string().min(1, "Destination port is required")
+  destination: z.string().min(1, "Destination port is required"),
+  date: z.string().optional()
 });
 
 // Predefined popular routes to and from Sifnos
 const popularRoutes = {
   toSifnos: [
-    { from: "Piraeus", fromAbbr: "PIR", to: "Sifnos", toAbbr: "SIF", duration: "2.5-5 hrs", operators: ["Blue Star Ferries", "SeaJets", "Aegean Speed Lines"] },
-    { from: "Milos", fromAbbr: "MLO", to: "Sifnos", toAbbr: "SIF", duration: "1-2 hrs", operators: ["Aegean Speed Lines", "SeaJets"] },
-    { from: "Serifos", fromAbbr: "SER", to: "Sifnos", toAbbr: "SIF", duration: "30-60 min", operators: ["Aegean Speed Lines", "SeaJets"] },
-    { from: "Kimolos", fromAbbr: "KMS", to: "Sifnos", toAbbr: "SIF", duration: "1-1.5 hrs", operators: ["Aegean Speed Lines"] },
-    { from: "Paros", fromAbbr: "PAS", to: "Sifnos", toAbbr: "SIF", duration: "1.5-2.5 hrs", operators: ["Blue Star Ferries", "SeaJets"] }
+    { from: "Piraeus", fromAbbr: "PIR", to: "Sifnos", toAbbr: "SIF", duration: "2.5-5.5 hrs", operators: ["Blue Star Ferries", "SeaJets", "Aegean Speed Lines", "Zante Ferries"] },
+    { from: "Milos", fromAbbr: "MLO", to: "Sifnos", toAbbr: "SIF", duration: "1-1.5 hrs", operators: ["Aegean Speed Lines", "SeaJets"] },
+    { from: "Serifos", fromAbbr: "SER", to: "Sifnos", toAbbr: "SIF", duration: "30-60 min", operators: ["Aegean Speed Lines", "SeaJets", "Zante Ferries"] },
+    { from: "Kimolos", fromAbbr: "KMS", to: "Sifnos", toAbbr: "SIF", duration: "2-2.5 hrs", operators: ["Aegean Speed Lines", "Zante Ferries"] },
+    { from: "Naxos", fromAbbr: "JNX", to: "Sifnos", toAbbr: "SIF", duration: "1.5-2 hrs", operators: ["SeaJets", "Hellenic Seaways"] }
   ],
   fromSifnos: [
-    { from: "Sifnos", fromAbbr: "SIF", to: "Piraeus", toAbbr: "PIR", duration: "2.5-5 hrs", operators: ["Blue Star Ferries", "SeaJets", "Aegean Speed Lines"] },
-    { from: "Sifnos", fromAbbr: "SIF", to: "Milos", toAbbr: "MLO", duration: "1-2 hrs", operators: ["Aegean Speed Lines", "SeaJets"] },
-    { from: "Sifnos", fromAbbr: "SIF", to: "Serifos", toAbbr: "SER", duration: "30-60 min", operators: ["Aegean Speed Lines", "SeaJets"] },
-    { from: "Sifnos", fromAbbr: "SIF", to: "Folegandros", toAbbr: "FOL", duration: "1.5-2 hrs", operators: ["SeaJets"] },
-    { from: "Sifnos", fromAbbr: "SIF", to: "Santorini", toAbbr: "JTR", duration: "2-3.5 hrs", operators: ["SeaJets"] }
+    { from: "Sifnos", fromAbbr: "SIF", to: "Piraeus", toAbbr: "PIR", duration: "2.5-5.5 hrs", operators: ["Blue Star Ferries", "SeaJets", "Aegean Speed Lines", "Zante Ferries"] },
+    { from: "Sifnos", fromAbbr: "SIF", to: "Milos", toAbbr: "MLO", duration: "1-1.5 hrs", operators: ["Aegean Speed Lines", "SeaJets"] },
+    { from: "Sifnos", fromAbbr: "SIF", to: "Serifos", toAbbr: "SER", duration: "30-60 min", operators: ["Aegean Speed Lines", "SeaJets", "Zante Ferries"] },
+    { from: "Sifnos", fromAbbr: "SIF", to: "Folegandros", toAbbr: "FOL", duration: "3-4 hrs", operators: ["SeaJets", "Hellenic Seaways"] },
+    { from: "Sifnos", fromAbbr: "SIF", to: "Mykonos", toAbbr: "JMK", duration: "2-3 hrs", operators: ["SeaJets", "Hellenic Seaways"] }
   ]
 };
 
-// Weekly schedule data (simplified example)
+// Weekly schedule data
 const weeklySchedules = {
   "PIR-SIF": [
     { day: "Monday", departures: ["07:30", "17:00"] },
@@ -123,13 +125,14 @@ const FerryTicketsPage = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       origin: "PIR",
-      destination: "SIF"
+      destination: "SIF",
+      date: undefined
     }
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     // Create the Ferryscanner URL with the selected ports
-    const ferryUrl = `https://ferryscanner.com/en/search?${values.origin}_${values.destination}`;
+    const ferryUrl = `https://www.ferryscanner.com/en/search?${values.origin}_${values.destination}`;
     
     // Open in new tab
     window.open(ferryUrl, "_blank");
@@ -160,7 +163,7 @@ const FerryTicketsPage = () => {
         title="Ferry Tickets to Sifnos - Book Greek Island Ferry Tickets Online"
         description="Book ferry tickets to and from Sifnos and other Greek islands. Compare routes, prices, and timetables for all ferry operators. Easy online booking with instant confirmation."
         keywords={['sifnos ferry tickets', 'greek island ferries', 'book ferry greece', 'cyclades ferries', 'piraeus to sifnos']}
-        schemaType="Service"
+        schemaType="Organization"
         canonical="https://hotelssifnos.com/ferry-tickets"
       />
       
@@ -175,9 +178,9 @@ const FerryTicketsPage = () => {
           <div className="flex items-center space-x-3">
             <p className="text-sm text-gray-600">Powered by</p>
             <img 
-              src="/uploads/Booking.com.svg" 
+              src="https://www.ferryscanner.com/_next/static/media/logo.f9964f3a.svg" 
               alt="Ferryscanner" 
-              className="h-6" 
+              className="h-8" 
             />
           </div>
         </div>
@@ -272,7 +275,7 @@ const FerryTicketsPage = () => {
               </div>
               
               <Button type="submit" className="w-full md:w-auto" size="lg">
-                Search Ferry Tickets <ArrowRight className="ml-2" />
+                Search Ferry Tickets <Ticket className="ml-2 h-4 w-4" />
               </Button>
             </form>
           </Form>
@@ -408,19 +411,74 @@ const FerryTicketsPage = () => {
         </div>
         
         <div className="space-y-8">
-          <div>
-            <h2 className="text-2xl font-semibold mb-4">Ferry Travel to Sifnos</h2>
-            <p className="mb-4">
-              Sifnos is accessible by ferry from Athens (Piraeus port) and nearby islands in the Cyclades. Ferry services are more frequent during the summer season (May to September).
-            </p>
-            <ul className="list-disc pl-6 space-y-2 mb-4">
-              <li><strong>From Athens (Piraeus):</strong> The journey takes approximately 2.5 to 5 hours depending on the type of ferry (high-speed or conventional).</li>
-              <li><strong>From other Cyclades islands:</strong> Frequent connections to/from Milos, Serifos, Kimolos, Paros, and other nearby islands.</li>
-              <li><strong>Ferry operators:</strong> Several companies operate on these routes, including Blue Star Ferries, Aegean Speed Lines, SeaJets, and Zante Ferries.</li>
-            </ul>
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-2xl font-semibold mb-4">All About Sifnos</h2>
+            <div className="prose max-w-none">
+              <p className="mb-4">
+                Sifnos is a fairy-tale island that exudes the magical essence of the Cyclades, from its stunning landscapes to its picturesque villages and traditional cuisine. 
+                Sifnos lies between Serifos and Milos in the south-western Cyclades and is a medium-sized island with a population of about 2,500 permanent residents and a stunning 70-kilometer coastline.
+              </p>
+              <p className="mb-4">
+                Here, you will find quintessential whitewashed villages, over 300 iconic churches, charming hand-crafted pottery workshops, exceptional local gastronomy, and over 200 kilometers of scenic walking trails.
+              </p>
+              <p className="mb-4">
+                The island once enjoyed great prosperity as far back as the 3rd millennium BCE due to its gold and silver mines. 
+                The rich clay veins, the abundance of sunshine, and the mild climate have today made Sifnos the pottery capital of the Aegean. 
+                A network of walking trails will lead you to the sites of an ancient acropolis, temple, and fort, as well as allowing you to take in the wonderful seascapes that spread out before you.
+              </p>
+            </div>
           </div>
           
-          <div>
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-2xl font-semibold mb-4 flex items-center">
+              <Ship className="h-5 w-5 mr-2 text-sifnos-deep-blue" />
+              Routes and Ferries to Sifnos
+            </h2>
+            <div className="prose max-w-none">
+              <p className="mb-4">
+                You can book your ferry tickets to Sifnos with Ferryscanner and sail from the port of Piraeus in Athens in 5 hours and 30 minutes with Zante Ferries throughout the year. 
+                There are also ferry connections with other islands in the Cyclades and you can book your ferry tickets to Sifnos in high season with lines like Seajets and Hellenic Seaways and sail from:
+              </p>
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li>Amorgos (4.25 hrs)</li>
+                <li>Andros (6.35 hrs.)</li>
+                <li>Folegandros (3.55 hrs)</li>
+                <li>Ios (5.20 hrs)</li>
+                <li>Kimolos (2.30 hrs)</li>
+                <li>Koufonisia (4.10 hrs)</li>
+                <li>Kythnos (2.15 hrs)</li>
+                <li>Milos (1.20 hrs)</li>
+                <li>Mykonos (2.25 hrs)</li>
+                <li>Naxos (1.35 hrs)</li>
+              </ul>
+              <p className="mb-4">
+                If you are arriving at Athens International airport and book your ferry tickets for Sifnos from Piraeus, you can travel to the port by taking the X96 express bus, which departs every 30-40 minutes. 
+                Taxis are available on arrival at the airport to take you to Piraeus and you can also catch a train to the port if you are already in the city center.
+              </p>
+              <p className="mb-4">
+                Sifnos doesn't have an airport but you can fly to Milos, which is the nearest airport, and book your ferry tickets from there for Sifnos with Ferryscanner and enjoy a one-hour trip.
+              </p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-2xl font-semibold mb-4 flex items-center">
+              <Map className="h-5 w-5 mr-2 text-sifnos-deep-blue" />
+              Port of Sifnos
+            </h2>
+            <div className="prose max-w-none">
+              <p className="mb-4">
+                Kamares is the port of Sifnos and lies about 5 km away from the capital village of Apollonia. It serves all of the shipping lines bringing visitors to the island and is a pretty coastal settlement that gets very busy in high season. 
+                Use Ferryscanner to compare prices, routes, ferry companies and book ferry tickets to Sifnos.
+              </p>
+              <p className="mb-4">
+                You will find plenty of hotels, restaurants, shops, bakeries, and pottery workshops on the waterfront, as well as some of the island's oldest churches and a lovely sandy beach lined by lush reed banks and small lagoons. 
+                Several hiking routes begin at Kamares that will take you to landmarks such as the Black Cave, and hidden inland villages.
+              </p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-2xl font-semibold mb-4">Travel Tips</h2>
             <ul className="list-disc pl-6 space-y-2">
               <li><strong>Book in advance:</strong> During peak season (July-August), ferries can fill up quickly. We recommend booking at least a few weeks in advance.</li>
@@ -428,6 +486,8 @@ const FerryTicketsPage = () => {
               <li><strong>Port arrival:</strong> It's advised to arrive at the port at least 45 minutes before departure.</li>
               <li><strong>Luggage allowance:</strong> There are no strict limitations, but be reasonable with the amount of luggage you bring.</li>
               <li><strong>Vehicle transport:</strong> If you're bringing a car or motorcycle, make sure to book well in advance as vehicle spots are limited.</li>
+              <li><strong>Getting to the port:</strong> From Athens Airport, take the X96 bus to Piraeus port (runs every 30-40 minutes).</li>
+              <li><strong>Alternative routes:</strong> Consider flying to Milos and taking a short 1-hour ferry to Sifnos.</li>
             </ul>
           </div>
         </div>
