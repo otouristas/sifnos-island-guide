@@ -13,9 +13,9 @@ interface SponsoredHotelCardProps {
 const SponsoredHotelCard = ({ hotel }: SponsoredHotelCardProps) => {
   const hotelSlug = generateHotelUrl(hotel.name);
   
-  // Special styling for ALK Hotel
-  const mainPhotoUrl = determineHotelImageUrl(hotel, 'alk-hotel-sifnos/alk-hotel-feature.jpeg');
-  const logoUrl = determineHotelLogoUrl(hotel) || 'uploads/hotels/alk-hotel-sifnos/logo.png';
+  // Get image and logo URLs using our utility functions
+  const mainPhotoUrl = determineHotelImageUrl(hotel);
+  const logoUrl = determineHotelLogoUrl(hotel);
   
   // Get rating stars
   const renderStars = (rating: number) => {
