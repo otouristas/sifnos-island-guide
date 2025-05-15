@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -40,6 +39,7 @@ export default function TouristasChat() {
   const { toast } = useToast();
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   
   useEffect(() => {
     scrollToBottom();
@@ -58,6 +58,13 @@ export default function TouristasChat() {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = 0;
     }
+    
+    // Focus on the input field after load
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, 500);
   }, []);
   
   const scrollToBottom = () => {
@@ -65,9 +72,10 @@ export default function TouristasChat() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    // Critical: Prevent default form submission behavior
     e.preventDefault();
     
-    // Prevent default scroll behavior
+    // Ensure default navigation doesn't happen
     e.stopPropagation();
     
     if (!input.trim()) return;
@@ -146,8 +154,9 @@ export default function TouristasChat() {
       const reader = response.getReader();
       const fullContent = await processStreamingResponse(reader, assistantId, setMessages);
       
-      // Ensure we maintain focus on the chat area
+      // Ensure we maintain focus on the chat area and don't scroll to another section
       if (chatContainerRef.current) {
+        chatContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         chatContainerRef.current.focus();
       }
       
@@ -219,9 +228,13 @@ export default function TouristasChat() {
             )
           );
           
-          // Ensure we scroll to view the hotels
+          // Ensure we scroll to view the hotels within the chat container only
           setTimeout(() => {
             scrollToBottom();
+            // Keep focus on the chat container
+            if (chatContainerRef.current) {
+              chatContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
           }, 200);
         }
       }
@@ -258,13 +271,10 @@ export default function TouristasChat() {
     } finally {
       setIsLoading(false);
       
-      // Ensure we're focused on the input after sending
+      // Focus on the input field after sending
       setTimeout(() => {
-        if (formRef.current) {
-          const inputElement = formRef.current.querySelector('input');
-          if (inputElement) {
-            inputElement.focus();
-          }
+        if (inputRef.current) {
+          inputRef.current.focus();
         }
       }, 100);
     }
@@ -274,27 +284,58 @@ export default function TouristasChat() {
     <div 
       ref={chatContainerRef}
       className="flex flex-col h-[calc(100vh-200px)] min-h-[600px] rounded-xl overflow-hidden bg-gradient-to-b from-white to-gray-50 border border-gray-200 shadow-xl"
-      tabIndex={-1} // Make div focusable but not in tab order
+      tabIndex={0} // Make div focusable with tab order
+      onClick={(e) => {
+        // Keep focus within the chat when clicking inside
+        e.stopPropagation();
+        if (chatContainerRef.current) {
+          chatContainerRef.current.focus();
+        }
+      }}
     >
       {/* Chat Messages */}
       <ChatMessages messages={messages} messagesEndRef={messagesEndRef} />
       
       {/* Input Form */}
       <div className="border-t border-gray-200 p-4 bg-white/90 backdrop-blur-sm">
-        <form ref={formRef} onSubmit={handleSubmit} className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+        <form 
+          ref={formRef} 
+          onSubmit={(e) => {
+            // Extra prevention of default form submission behavior
+            handleSubmit(e);
+            return false; // Additional prevention
+          }} 
+          className="flex gap-2" 
+          onClick={(e) => e.stopPropagation()}
+        >
           <Input
+            ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about hotels in Platis Gialos, Apollonia, etc..."
             className="flex-1 border-gray-300 focus-visible:ring-sifnos-deep-blue rounded-full pl-4"
             disabled={isLoading}
             onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => {
+              // Prevent form submission on Enter key with these modifications
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                if (!isLoading && input.trim()) {
+                  handleSubmit(e);
+                }
+              }
+            }}
           />
           <Button 
             type="submit" 
             disabled={isLoading} 
             className="bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 rounded-full w-10 h-10 p-0 flex items-center justify-center"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!isLoading && input.trim()) {
+                handleSubmit(e);
+              }
+            }}
           >
             {isLoading ? 
               <Loader2 className="h-5 w-5 animate-spin" /> : 

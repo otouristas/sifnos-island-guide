@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 import { Bot, Search, MessageSquare, Hotel, MapPin, Star, Sparkles, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
@@ -14,20 +15,32 @@ export default function TouristasAIPage() {
   const pageTopRef = useRef<HTMLDivElement>(null);
   const chatSectionRef = useRef<HTMLDivElement>(null);
   
-  // Scroll to top on initial page load
+  // Scroll to top on initial page load with a delay to ensure proper scrolling
   useEffect(() => {
-    window.scrollTo(0, 0);
+    const timer = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      
+      if (pageTopRef.current) {
+        pageTopRef.current.scrollIntoView({ behavior: 'auto', block: 'start' });
+      }
+      
+      // If URL hash includes 'chat', scroll to chat section
+      if (window.location.hash === '#chat' && chatSectionRef.current) {
+        chatSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
     
-    if (pageTopRef.current) {
-      pageTopRef.current.scrollIntoView({ behavior: 'auto' });
-    }
+    return () => clearTimeout(timer);
   }, []);
 
   // Auto-focus chat when clicking the chat buttons
   const scrollToChat = () => {
     if (chatSectionRef.current) {
-      chatSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+      chatSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       setActiveSection('chat');
+      
+      // Update URL hash without causing a page refresh
+      window.history.replaceState(null, '', '#chat');
     }
   };
 
@@ -42,7 +55,7 @@ export default function TouristasAIPage() {
       />
       
       {/* Reference for top of page */}
-      <div ref={pageTopRef} />
+      <div ref={pageTopRef} id="page-top" />
       
       {/* Beta Notice Alert */}
       <div className="bg-amber-50 border-b border-amber-200">
