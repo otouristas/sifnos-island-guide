@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,15 +36,36 @@ export default function TouristasChat() {
   ]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [userPreferences, setUserPreferences] = useState<Record<string, string>>({});
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   
+  // Debounced scroll to bottom for better performance
+  const scrollToBottom = useCallback(() => {
+    if (!messagesEndRef.current) return;
+    
+    // Use requestAnimationFrame for smoother scrolling
+    requestAnimationFrame(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    });
+  }, []);
+  
+  // Use a separate effect to handle scroll position updates
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, scrollToBottom]);
   
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  // Prevent input field from causing scroll jumps
+  const handleInputFocus = useCallback(() => {
+    // Prevent auto-scrolling when input is focused
+    if (chatContainerRef.current) {
+      const currentScroll = chatContainerRef.current.scrollTop;
+      setTimeout(() => {
+        if (chatContainerRef.current) {
+          chatContainerRef.current.scrollTop = currentScroll;
+        }
+      }, 10);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,6 +107,11 @@ export default function TouristasChat() {
       console.log('Location from query:', locationFromQuery);
       console.log('Amenities from query:', amenitiesFromQuery);
       console.log('Should show hotels:', shouldShowHotels);
+      
+      // Update preferences with amenities if any were found
+      if (amenitiesFromQuery.length > 0) {
+        updatedPreferences.amenity = amenitiesFromQuery[0]; // Use the first amenity found
+      }
       
       // Only search for hotels if it's a hotel-related query
       if (shouldShowHotels) {
@@ -222,7 +249,9 @@ export default function TouristasChat() {
   return (
     <div className="flex flex-col h-[calc(100vh-200px)] min-h-[600px] rounded-xl overflow-hidden bg-white border border-gray-200 shadow-xl">
       {/* Chat Messages */}
-      <ChatMessages messages={messages} messagesEndRef={messagesEndRef} />
+      <div ref={chatContainerRef} className="flex-1 overflow-y-auto">
+        <ChatMessages messages={messages} messagesEndRef={messagesEndRef} />
+      </div>
       
       {/* Input Form */}
       <div className="border-t border-gray-200 p-4 bg-white">
@@ -230,6 +259,7 @@ export default function TouristasChat() {
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            onFocus={handleInputFocus}
             placeholder="Ask about hotels in Platis Gialos, Apollonia, etc..."
             className="flex-1 border-gray-300 focus-visible:ring-sifnos-deep-blue"
             disabled={isLoading}

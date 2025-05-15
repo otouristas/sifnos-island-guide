@@ -19,7 +19,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, messagesEndRef })
           className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
         >
           <div 
-            className={`flex gap-2 sm:gap-3 max-w-[95%] sm:max-w-[90%] md:max-w-[85%] ${
+            className={`flex gap-2 sm:gap-3 max-w-[85%] sm:max-w-[80%] md:max-w-[70%] ${
               message.role === 'user' 
                 ? 'flex-row-reverse' 
                 : 'flex-row'
