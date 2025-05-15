@@ -1,5 +1,4 @@
-
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,18 +22,6 @@ import {
   trackConversationContext
 } from './services/ChatService';
 
-// Debounce function to prevent too many scroll events
-function debounce<F extends (...args: any[]) => any>(func: F, wait: number): (...args: Parameters<F>) => void {
-  let timeout: ReturnType<typeof setTimeout> | null = null;
-  
-  return function(...args: Parameters<F>) {
-    if (timeout) {
-      clearTimeout(timeout);
-    }
-    timeout = setTimeout(() => func(...args), wait);
-  };
-}
-
 export default function TouristasChat() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -48,53 +35,15 @@ export default function TouristasChat() {
   ]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [userPreferences, setUserPreferences] = useState<Record<string, string>>({});
-  const chatContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const inputRef = useRef<HTMLInputElement>(null);
-  const isAutoScrolling = useRef<boolean>(false);
   
-  // Improved scroll to bottom for better performance
-  const scrollToBottom = useCallback(() => {
-    if (!messagesEndRef.current || isAutoScrolling.current) return;
-    
-    isAutoScrolling.current = true;
-    
-    // Use requestAnimationFrame for smoother scrolling
-    requestAnimationFrame(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-      
-      // Reset the flag after animation completes
-      setTimeout(() => {
-        isAutoScrolling.current = false;
-      }, 100);
-    });
-  }, []);
-  
-  // Debounced version for scroll events
-  const debouncedScrollToBottom = useCallback(
-    debounce(() => {
-      scrollToBottom();
-    }, 50),
-    [scrollToBottom]
-  );
-  
-  // Use a separate effect to handle scroll position updates
   useEffect(() => {
-    debouncedScrollToBottom();
-  }, [messages, debouncedScrollToBottom]);
+    scrollToBottom();
+  }, [messages]);
   
-  // Prevent input field from causing scroll jumps
-  const handleInputFocus = useCallback(() => {
-    // Prevent auto-scrolling when input is focused
-    if (chatContainerRef.current) {
-      const currentScroll = chatContainerRef.current.scrollTop;
-      setTimeout(() => {
-        if (chatContainerRef.current) {
-          chatContainerRef.current.scrollTop = currentScroll;
-        }
-      }, 10);
-    }
-  }, []);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,11 +85,6 @@ export default function TouristasChat() {
       console.log('Location from query:', locationFromQuery);
       console.log('Amenities from query:', amenitiesFromQuery);
       console.log('Should show hotels:', shouldShowHotels);
-      
-      // Update preferences with amenities if any were found
-      if (amenitiesFromQuery.length > 0) {
-        updatedPreferences.amenity = amenitiesFromQuery[0]; // Use the first amenity found
-      }
       
       // Only search for hotels if it's a hotel-related query
       if (shouldShowHotels) {
@@ -278,18 +222,14 @@ export default function TouristasChat() {
   return (
     <div className="flex flex-col h-[calc(100vh-200px)] min-h-[600px] rounded-xl overflow-hidden bg-white border border-gray-200 shadow-xl">
       {/* Chat Messages */}
-      <div ref={chatContainerRef} className="flex-1 overflow-y-auto scroll-smooth">
-        <ChatMessages messages={messages} messagesEndRef={messagesEndRef} />
-      </div>
+      <ChatMessages messages={messages} messagesEndRef={messagesEndRef} />
       
       {/* Input Form */}
       <div className="border-t border-gray-200 p-4 bg-white">
         <form onSubmit={handleSubmit} className="flex gap-2">
           <Input
-            ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onFocus={handleInputFocus}
             placeholder="Ask about hotels in Platis Gialos, Apollonia, etc..."
             className="flex-1 border-gray-300 focus-visible:ring-sifnos-deep-blue"
             disabled={isLoading}
