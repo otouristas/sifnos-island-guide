@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { AIRequestMessage, ConversationContext } from '../utils/chat-utils';
 
@@ -150,14 +151,15 @@ export const searchHotels = async (query: string, preferences: Record<string, st
         query.toLowerCase().includes('swimming') || 
         preferences.amenity?.toLowerCase().includes('pool')) {
       
-      // Use the rpc method with correct typing
+      // Use the rpc method with correct type parameters
       const { data, error: poolError } = await supabase
-        .rpc('get_hotels_with_amenity', { 
-          amenity_name: 'pool' 
-        });
+        .rpc<GetHotelsWithAmenityParams>(
+          'get_hotels_with_amenity', 
+          { amenity_name: 'pool' }
+        );
       
-      // Ensure poolHotels is always an array with the correct type
-      const poolHotels = (data as HotelWithAmenity[]) || [];
+      // Cast the returned data to the correct type
+      const poolHotels = (data as unknown as HotelWithAmenity[]) || [];
       
       if (poolError) {
         console.error("Error finding hotels with pools:", poolError);
