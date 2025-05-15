@@ -33,33 +33,55 @@ const FerryTicketsPage = () => {
       <FerryHero />
       
       {/* Company Logos Section */}
-      <section className="py-8 bg-white">
+      <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-montserrat font-semibold text-center mb-6">Trusted Ferry Companies</h2>
+          <motion.h2 
+            className="text-2xl md:text-3xl font-montserrat font-bold text-center mb-10 pb-3 border-b-2 border-[#0EA5E9]/30 inline-block mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            Trusted Ferry Companies
+          </motion.h2>
           <FerryCompanyLogos />
         </div>
       </section>
       
       {/* Ferry Schedules Section */}
-      <section className="py-12 bg-gray-50">
+      <section className="py-12 md:py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="section-title text-center mx-auto">2025 Ferry Schedules</h2>
-          <p className="text-center mb-8 max-w-3xl mx-auto">
-            Plan your journey to or from Sifnos with our comprehensive ferry schedule. 
-            We've gathered all the routes, times, and companies to help you find the perfect connection.
-          </p>
+          <motion.div
+            className="text-center max-w-3xl mx-auto mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-montserrat font-bold mb-6 pb-3 border-b-2 border-[#0EA5E9]/30 inline-block">
+              2025 Ferry Schedules
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Plan your journey to or from Sifnos with our comprehensive ferry schedule. 
+              We've gathered all the routes, times, and companies to help you find the perfect connection.
+            </p>
+          </motion.div>
           
           <Tabs 
             defaultValue="to-sifnos" 
             value={activeTab}
             onValueChange={setActiveTab}
-            className="w-full max-w-4xl mx-auto"
+            className="w-full max-w-5xl mx-auto"
           >
-            <TabsList className="grid grid-cols-2 mb-8">
-              <TabsTrigger value="to-sifnos" className="py-3">
+            <TabsList className="grid grid-cols-2 mb-8 bg-white shadow-sm rounded-xl p-1">
+              <TabsTrigger 
+                value="to-sifnos" 
+                className="py-3 text-sm md:text-base font-medium data-[state=active]:bg-[#0EA5E9] data-[state=active]:text-white data-[state=active]:shadow-sm"
+              >
                 Ferries TO Sifnos
               </TabsTrigger>
-              <TabsTrigger value="from-sifnos" className="py-3">
+              <TabsTrigger 
+                value="from-sifnos" 
+                className="py-3 text-sm md:text-base font-medium data-[state=active]:bg-[#0EA5E9] data-[state=active]:text-white data-[state=active]:shadow-sm"
+              >
                 Ferries FROM Sifnos
               </TabsTrigger>
             </TabsList>
@@ -88,66 +110,125 @@ const FerryTicketsPage = () => {
       </section>
       
       {/* Price Examples Section */}
-      <section className="py-12 bg-white">
+      <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="section-title text-center mx-auto">Sample Ticket Prices</h2>
-          <p className="text-center mb-8 max-w-3xl mx-auto">
-            Here are some examples of ticket prices for common routes. 
-            Actual prices may vary based on seasonality, class type, and availability.
-          </p>
+          <motion.div
+            className="text-center max-w-3xl mx-auto mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-montserrat font-bold mb-6 pb-3 border-b-2 border-[#0EA5E9]/30 inline-block">
+              Sample Ticket Prices
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Here are some examples of ticket prices for common routes. 
+              Actual prices may vary based on seasonality, class type, and availability.
+            </p>
+          </motion.div>
           
           <FerryPriceExamples />
         </div>
       </section>
       
       {/* Why Book With Us */}
-      <section className="py-12 bg-[#1E2E48] text-white">
+      <section className="py-12 md:py-16 bg-[#1A1F2C] text-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-montserrat font-bold mb-8 text-center">
-            Why Book Ferries via <span className="text-[#E3D7C3]">HotelsSifnos.com</span>
-          </h2>
+          <motion.h2 
+            className="text-3xl md:text-4xl font-montserrat font-bold mb-12 pb-3 text-center border-b-2 border-[#0EA5E9]/30 inline-block mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            Why Book Ferries via <span className="text-[#0EA5E9]">HotelsSifnos.com</span>
+          </motion.h2>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm">
-              <h3 className="text-xl font-semibold mb-3 text-[#E3D7C3]">No Hidden Fees</h3>
-              <p>The price you see is the price you pay. We believe in transparent pricing with no surprises.</p>
-            </div>
+            <motion.div 
+              className="bg-white/10 p-7 rounded-xl backdrop-blur-sm hover:bg-white/15 transition-colors"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              whileHover={{ y: -5 }}
+            >
+              <h3 className="text-xl font-semibold mb-3 text-[#0EA5E9]">No Hidden Fees</h3>
+              <p className="text-gray-300">The price you see is the price you pay. We believe in transparent pricing with no surprises.</p>
+            </motion.div>
             
-            <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm">
-              <h3 className="text-xl font-semibold mb-3 text-[#E3D7C3]">Instant Booking</h3>
-              <p>Secure your ferry tickets instantly with our fast checkout process and receive immediate confirmation.</p>
-            </div>
+            <motion.div 
+              className="bg-white/10 p-7 rounded-xl backdrop-blur-sm hover:bg-white/15 transition-colors"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              whileHover={{ y: -5 }}
+            >
+              <h3 className="text-xl font-semibold mb-3 text-[#0EA5E9]">Instant Booking</h3>
+              <p className="text-gray-300">Secure your ferry tickets instantly with our fast checkout process and receive immediate confirmation.</p>
+            </motion.div>
             
-            <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm">
-              <h3 className="text-xl font-semibold mb-3 text-[#E3D7C3]">Vehicle Options</h3>
-              <p>Bringing a car, motorcycle or bicycle? We make it easy to book passage for your vehicle too.</p>
-            </div>
+            <motion.div 
+              className="bg-white/10 p-7 rounded-xl backdrop-blur-sm hover:bg-white/15 transition-colors"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              whileHover={{ y: -5 }}
+            >
+              <h3 className="text-xl font-semibold mb-3 text-[#0EA5E9]">Vehicle Options</h3>
+              <p className="text-gray-300">Bringing a car, motorcycle or bicycle? We make it easy to book passage for your vehicle too.</p>
+            </motion.div>
             
-            <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm">
-              <h3 className="text-xl font-semibold mb-3 text-[#E3D7C3]">Live Schedules</h3>
-              <p>Our ferry schedules are constantly updated with the latest information for the 2025 season.</p>
-            </div>
+            <motion.div 
+              className="bg-white/10 p-7 rounded-xl backdrop-blur-sm hover:bg-white/15 transition-colors"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              whileHover={{ y: -5 }}
+            >
+              <h3 className="text-xl font-semibold mb-3 text-[#0EA5E9]">Live Schedules</h3>
+              <p className="text-gray-300">Our ferry schedules are constantly updated with the latest information for the 2025 season.</p>
+            </motion.div>
             
-            <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm">
-              <h3 className="text-xl font-semibold mb-3 text-[#E3D7C3]">Local Expertise</h3>
-              <p>Our team knows the Greek islands inside and out and can help you plan the perfect island-hopping adventure.</p>
-            </div>
+            <motion.div 
+              className="bg-white/10 p-7 rounded-xl backdrop-blur-sm hover:bg-white/15 transition-colors"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              whileHover={{ y: -5 }}
+            >
+              <h3 className="text-xl font-semibold mb-3 text-[#0EA5E9]">Local Expertise</h3>
+              <p className="text-gray-300">Our team knows the Greek islands inside and out and can help you plan the perfect island-hopping adventure.</p>
+            </motion.div>
             
-            <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm">
-              <h3 className="text-xl font-semibold mb-3 text-[#E3D7C3]">Touristas AI</h3>
-              <p>Powered by intelligent travel planning technology to suggest the best routes and connections.</p>
-            </div>
+            <motion.div 
+              className="bg-white/10 p-7 rounded-xl backdrop-blur-sm hover:bg-white/15 transition-colors"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              whileHover={{ y: -5 }}
+            >
+              <h3 className="text-xl font-semibold mb-3 text-[#0EA5E9]">Touristas AI</h3>
+              <p className="text-gray-300">Powered by intelligent travel planning technology to suggest the best routes and connections.</p>
+            </motion.div>
           </div>
         </div>
       </section>
       
       {/* Travel Tips */}
-      <section className="py-12 bg-gray-50">
+      <section className="py-12 md:py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="section-title text-center mx-auto">Travel Tips for Sifnos Ferries</h2>
-          <p className="text-center mb-8 max-w-3xl mx-auto">
-            Make your ferry journey smoother with these practical tips from locals and seasoned travelers.
-          </p>
+          <motion.div
+            className="text-center max-w-3xl mx-auto mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-montserrat font-bold mb-6 pb-3 border-b-2 border-[#0EA5E9]/30 inline-block">
+              Travel Tips for Sifnos Ferries
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Make your ferry journey smoother with these practical tips from locals and seasoned travelers.
+            </p>
+          </motion.div>
           
           <FerryTravelTips />
         </div>

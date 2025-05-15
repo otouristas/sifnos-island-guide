@@ -1,4 +1,6 @@
 
+import { motion } from 'framer-motion';
+
 const companies = [
   {
     name: "Aegean Sea Lines",
@@ -34,22 +36,33 @@ const companies = [
 
 const FerryCompanyLogos = () => {
   return (
-    <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-      {companies.map((company) => (
-        <div 
-          key={company.name} 
-          className="group relative flex items-center justify-center h-16 md:h-20"
-        >
-          <img 
-            src={company.logoPath} 
-            alt={`${company.name} logo`} 
-            className="h-full object-contain max-w-[150px] transition-opacity hover:opacity-80"
-          />
-          <span className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity">
-            {company.name}
-          </span>
-        </div>
-      ))}
+    <div className="max-w-6xl mx-auto">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+        {companies.map((company, index) => (
+          <motion.a 
+            key={company.name}
+            href={company.website}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 p-4 flex items-center justify-center h-28"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+            whileHover={{ y: -5 }}
+          >
+            <div className="flex flex-col items-center gap-2">
+              <img 
+                src={company.logoPath} 
+                alt={`${company.name} logo`} 
+                className="h-12 object-contain max-w-[120px]"
+              />
+              <span className="text-xs text-gray-600 font-medium text-center">
+                {company.name}
+              </span>
+            </div>
+          </motion.a>
+        ))}
+      </div>
     </div>
   );
 };

@@ -1,4 +1,5 @@
 
+import { motion } from 'framer-motion';
 import { Ship, Clock, Calendar, Wind, FileText } from 'lucide-react';
 
 const tips = [
@@ -26,17 +27,24 @@ const tips = [
 
 const FerryTravelTips = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-5xl mx-auto">
       {tips.map((tip, index) => (
-        <div key={index} className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md">
+        <motion.div 
+          key={index} 
+          className="bg-white rounded-xl shadow-md hover:shadow-lg border border-gray-100 p-7 transition-all"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: index * 0.1 }}
+          whileHover={{ y: -5 }}
+        >
           <div className="flex flex-col items-center text-center">
-            <div className="w-12 h-12 rounded-full bg-[#1E2E48]/10 flex items-center justify-center mb-4 text-[#1E2E48]">
+            <div className="w-14 h-14 rounded-full bg-[#0EA5E9]/10 flex items-center justify-center mb-5 text-[#0EA5E9]">
               {tip.icon}
             </div>
-            <h3 className="font-montserrat font-semibold text-lg mb-2">{tip.title}</h3>
+            <h3 className="font-montserrat font-semibold text-xl mb-3">{tip.title}</h3>
             <p className="text-gray-600">{tip.description}</p>
           </div>
-        </div>
+        </motion.div>
       ))}
     </div>
   );
