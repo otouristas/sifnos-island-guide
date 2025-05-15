@@ -1,3 +1,4 @@
+
 import { Ship, Clock, Info, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from "@/lib/utils";
@@ -287,11 +288,11 @@ const FerryTicketsTable = ({ direction }: FerryTicketsTableProps) => {
           transition={{ duration: 0.3, delay: index * 0.1 }}
           className={cn(
             "rounded-xl overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300",
-            route.recommended ? "border-[#0EA5E9] bg-sky-50" : "bg-white"
+            route.recommended ? "border-[#1E2E48] bg-[#E3D7C3]/10" : "bg-white"
           )}
         >
           {route.recommended && (
-            <div className="bg-[#0995d3] text-white text-xs font-semibold px-3 py-1">
+            <div className="bg-[#1E2E48] text-white text-xs font-semibold px-3 py-1">
               Recommended
             </div>
           )}
@@ -352,7 +353,7 @@ const FerryTicketsTable = ({ direction }: FerryTicketsTableProps) => {
                       Fastest
                     </span>
                   )}
-                  <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-800">
+                  <span className="inline-flex items-center rounded-full bg-[#E3D7C3] px-2.5 py-1 text-xs font-medium text-[#1E2E48]">
                     <Calendar className="h-3 w-3 mr-1" />
                     {route.availability}
                   </span>
@@ -384,7 +385,7 @@ const FerryTicketsTable = ({ direction }: FerryTicketsTableProps) => {
                   href={ferryBookingUrl}
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="inline-block mt-2 bg-[#0EA5E9] hover:bg-[#0995d3] text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors"
+                  className="inline-block mt-2 bg-[#1E2E48] hover:bg-[#1E2E48]/80 text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors"
                 >
                   Book Now
                 </a>

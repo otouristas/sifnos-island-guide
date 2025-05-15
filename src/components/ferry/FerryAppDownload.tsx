@@ -42,9 +42,9 @@ const FerryAppDownload = () => {
                 <div className="relative w-20 h-20">
                   <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-full">
                     <svg width="60" height="60" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="qr-placeholder">
-                      <rect x="50" y="50" width="100" height="100" fill="#333" />
+                      <rect x="50" y="50" width="100" height="100" fill="#1E2E48" />
                       <rect x="65" y="65" width="70" height="70" fill="white" />
-                      <rect x="80" y="80" width="40" height="40" fill="#333" />
+                      <rect x="80" y="80" width="40" height="40" fill="#1E2E48" />
                     </svg>
                   </div>
                   <div className="absolute inset-0 flex items-center justify-center text-xs font-medium text-gray-600">
@@ -64,7 +64,7 @@ const FerryAppDownload = () => {
           >
             <div>
               <motion.div 
-                className="text-sm font-semibold text-[#0EA5E9] mb-2"
+                className="text-sm font-semibold text-[#1E2E48] mb-2"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
@@ -79,7 +79,7 @@ const FerryAppDownload = () => {
                 transition={{ duration: 0.4, delay: 0.1 }}
               >
                 Download The New<br />
-                <span className="text-[#0EA5E9]">Ferryscanner App!</span>
+                <span className="text-[#1E2E48]">Ferryscanner App!</span>
               </motion.h2>
             </div>
 
@@ -103,10 +103,10 @@ const FerryAppDownload = () => {
             {/* Features list */}
             <div className="mt-8 space-y-5">
               {[
-                { icon: <Map className="h-5 w-5 text-[#0EA5E9]" />, title: "Explore and Book with Ease", description: "Use our interactive map to find and book ferry trips effortlessly." },
-                { icon: <Search className="h-5 w-5 text-[#0EA5E9]" />, title: "Quick Search", description: "Prefer a more classic approach? Input your details and find trips in seconds." },
-                { icon: <User className="h-5 w-5 text-[#0EA5E9]" />, title: "Personalize Your Experience", description: "Sign up to save preferences, passengers, and payment details." },
-                { icon: <Ticket className="h-5 w-5 text-[#0EA5E9]" />, title: "Travel Paper-Free", description: "Book your ferry and store your ticket right on your phone for a smooth journey." }
+                { icon: <Map className="h-5 w-5 text-[#1E2E48]" />, title: "Explore and Book with Ease", description: "Use our interactive map to find and book ferry trips effortlessly." },
+                { icon: <Search className="h-5 w-5 text-[#1E2E48]" />, title: "Quick Search", description: "Prefer a more classic approach? Input your details and find trips in seconds." },
+                { icon: <User className="h-5 w-5 text-[#1E2E48]" />, title: "Personalize Your Experience", description: "Sign up to save preferences, passengers, and payment details." },
+                { icon: <Ticket className="h-5 w-5 text-[#1E2E48]" />, title: "Travel Paper-Free", description: "Book your ferry and store your ticket right on your phone for a smooth journey." }
               ].map((feature, i) => (
                 <motion.div 
                   key={feature.title}
@@ -116,11 +116,11 @@ const FerryAppDownload = () => {
                   animate="visible"
                   variants={featureVariants}
                 >
-                  <div className="p-2 bg-sky-50 rounded-lg">
+                  <div className="p-2 bg-[#E3D7C3]/50 rounded-lg">
                     {feature.icon}
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-1 flex items-center gap-1 group-hover:text-[#0EA5E9] transition-colors">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-1 flex items-center gap-1 group-hover:text-[#1E2E48] transition-colors">
                       {feature.title}
                       <ChevronRight className="h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                     </h3>

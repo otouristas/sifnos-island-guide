@@ -37,7 +37,7 @@ const FerryTicketsPage = () => {
       <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
           <motion.h2 
-            className="text-2xl md:text-3xl font-montserrat font-bold text-center mb-10 pb-3 border-b-2 border-[#0EA5E9]/30 inline-block mx-auto"
+            className="text-2xl md:text-3xl font-montserrat font-bold text-center mb-10 pb-3 border-b-2 border-[#1E2E48]/30 inline-block mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -57,7 +57,7 @@ const FerryTicketsPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl md:text-4xl font-montserrat font-bold mb-6 pb-3 border-b-2 border-[#0EA5E9]/30 inline-block">
+            <h2 className="text-3xl md:text-4xl font-montserrat font-bold mb-6 pb-3 border-b-2 border-[#1E2E48]/30 inline-block">
               2025 Ferry Schedules
             </h2>
             <p className="text-gray-700 text-lg">
@@ -75,13 +75,13 @@ const FerryTicketsPage = () => {
             <TabsList className="grid grid-cols-2 mb-8 bg-white shadow-md rounded-xl p-2.5 h-auto">
               <TabsTrigger 
                 value="to-sifnos" 
-                className="py-4 px-6 text-sm md:text-base font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-[#0EA5E9] data-[state=active]:text-white data-[state=active]:shadow-md data-[state=inactive]:text-gray-700 data-[state=inactive]:hover:bg-gray-50"
+                className="py-4 px-6 text-sm md:text-base font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-[#1E2E48] data-[state=active]:text-white data-[state=active]:shadow-md data-[state=inactive]:text-gray-700 data-[state=inactive]:hover:bg-gray-50"
               >
                 Ferries TO Sifnos
               </TabsTrigger>
               <TabsTrigger 
                 value="from-sifnos" 
-                className="py-4 px-6 text-sm md:text-base font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-[#0EA5E9] data-[state=active]:text-white data-[state=active]:shadow-md data-[state=inactive]:text-gray-700 data-[state=inactive]:hover:bg-gray-50"
+                className="py-4 px-6 text-sm md:text-base font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-[#1E2E48] data-[state=active]:text-white data-[state=active]:shadow-md data-[state=inactive]:text-gray-700 data-[state=inactive]:hover:bg-gray-50"
               >
                 Ferries FROM Sifnos
               </TabsTrigger>
@@ -122,7 +122,7 @@ const FerryTicketsPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl md:text-4xl font-montserrat font-bold mb-6 pb-3 border-b-2 border-[#0EA5E9]/30 inline-block">
+            <h2 className="text-3xl md:text-4xl font-montserrat font-bold mb-6 pb-3 border-b-2 border-[#1E2E48]/30 inline-block">
               Sample Ticket Prices
             </h2>
             <p className="text-gray-600 text-lg">
@@ -136,15 +136,15 @@ const FerryTicketsPage = () => {
       </section>
       
       {/* Why Book With Us */}
-      <section className="py-12 md:py-16 bg-[#1A1F2C] text-white">
+      <section className="py-12 md:py-16 bg-[#1E2E48] text-white">
         <div className="container mx-auto px-4">
           <motion.h2 
-            className="text-3xl md:text-4xl font-montserrat font-bold mb-12 pb-3 text-center border-b-2 border-[#0EA5E9]/30 inline-block mx-auto"
+            className="text-3xl md:text-4xl font-montserrat font-bold mb-12 pb-3 text-center border-b-2 border-[#E3D7C3]/30 inline-block mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            Why Book Ferries via <span className="text-[#0EA5E9]">HotelsSifnos.com</span>
+            Why Book Ferries via <span className="text-[#E3D7C3]">HotelsSifnos.com</span>
           </motion.h2>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -155,7 +155,7 @@ const FerryTicketsPage = () => {
               transition={{ duration: 0.5, delay: 0.1 }}
               whileHover={{ y: -5 }}
             >
-              <h3 className="text-xl font-semibold mb-3 text-[#0EA5E9]">No Hidden Fees</h3>
+              <h3 className="text-xl font-semibold mb-3 text-[#E3D7C3]">No Hidden Fees</h3>
               <p className="text-gray-300">The price you see is the price you pay. We believe in transparent pricing with no surprises.</p>
             </motion.div>
             
@@ -226,7 +226,7 @@ const FerryTicketsPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl md:text-4xl font-montserrat font-bold mb-6 pb-3 border-b-2 border-[#0EA5E9]/30 inline-block">
+            <h2 className="text-3xl md:text-4xl font-montserrat font-bold mb-6 pb-3 border-b-2 border-[#1E2E48]/30 inline-block">
               Travel Tips for Sifnos Ferries
             </h2>
             <p className="text-gray-600 text-lg">
