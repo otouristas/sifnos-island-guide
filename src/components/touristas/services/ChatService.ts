@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { AIRequestMessage, ConversationContext } from '../utils/chat-utils';
 
@@ -117,7 +116,8 @@ export const trackConversationContext = (messages: any[]): ConversationContext[]
   
   return recentMessages.map(msg => ({
     topic: msg.role === 'user' ? 'User Query' : 'AI Response',
-    summary: msg.content
+    summary: msg.content,
+    timestamp: new Date() // Add timestamp to match the ConversationContext interface
   }));
 };
 
@@ -155,16 +155,16 @@ export const searchHotels = async (query: string, preferences: Record<string, st
       // Use RPC function to find hotels with pool amenities
       const { data, error } = await supabase
         .rpc<GetHotelsWithAmenityParams, HotelWithAmenity[]>(
-          'get_hotels_with_amenity', 
+          'get_hotels_with_amenity',
           { amenity_name: 'pool' }
         );
       
       if (error) {
         console.error("Error finding hotels with pools:", error);
         // Fallback to filtering after fetch if RPC fails
-      } else if (data && data.length > 0) {
+      } else if (data && Array.isArray(data) && data.length > 0) {
         // We have pool hotels from RPC, use their IDs to filter
-        const poolHotelIds = data.map(hotel => hotel.id);
+        const poolHotelIds = data.map((hotel: HotelWithAmenity) => hotel.id);
         supabaseQuery = supabaseQuery.in('id', poolHotelIds);
       }
     }

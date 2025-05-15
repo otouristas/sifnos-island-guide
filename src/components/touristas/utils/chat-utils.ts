@@ -458,7 +458,7 @@ export interface HotelType {
 export interface ConversationContext {
   topic: string;
   summary: string;
-  timestamp: number;
+  timestamp?: Date; // Make timestamp optional so existing code works
 }
 
 // Type for AI Request Message format
