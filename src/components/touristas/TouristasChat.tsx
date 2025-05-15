@@ -39,6 +39,7 @@ export default function TouristasChat() {
   const [userPreferences, setUserPreferences] = useState<Record<string, string>>({});
   const { toast } = useToast();
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   
   useEffect(() => {
     scrollToBottom();
@@ -65,6 +66,9 @@ export default function TouristasChat() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Prevent default scroll behavior
+    e.stopPropagation();
     
     if (!input.trim()) return;
     
@@ -142,6 +146,11 @@ export default function TouristasChat() {
       const reader = response.getReader();
       const fullContent = await processStreamingResponse(reader, assistantId, setMessages);
       
+      // Ensure we maintain focus on the chat area
+      if (chatContainerRef.current) {
+        chatContainerRef.current.focus();
+      }
+      
       // Only AFTER the AI text response is complete, search for hotels if needed
       let relevantHotels: any[] = [];
       
@@ -209,6 +218,11 @@ export default function TouristasChat() {
                 : msg
             )
           );
+          
+          // Ensure we scroll to view the hotels
+          setTimeout(() => {
+            scrollToBottom();
+          }, 200);
         }
       }
       
@@ -243,6 +257,16 @@ export default function TouristasChat() {
       ]);
     } finally {
       setIsLoading(false);
+      
+      // Ensure we're focused on the input after sending
+      setTimeout(() => {
+        if (formRef.current) {
+          const inputElement = formRef.current.querySelector('input');
+          if (inputElement) {
+            inputElement.focus();
+          }
+        }
+      }, 100);
     }
   };
 
@@ -250,24 +274,27 @@ export default function TouristasChat() {
     <div 
       ref={chatContainerRef}
       className="flex flex-col h-[calc(100vh-200px)] min-h-[600px] rounded-xl overflow-hidden bg-gradient-to-b from-white to-gray-50 border border-gray-200 shadow-xl"
+      tabIndex={-1} // Make div focusable but not in tab order
     >
       {/* Chat Messages */}
       <ChatMessages messages={messages} messagesEndRef={messagesEndRef} />
       
       {/* Input Form */}
       <div className="border-t border-gray-200 p-4 bg-white/90 backdrop-blur-sm">
-        <form onSubmit={handleSubmit} className="flex gap-2">
+        <form ref={formRef} onSubmit={handleSubmit} className="flex gap-2" onClick={(e) => e.stopPropagation()}>
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about hotels in Platis Gialos, Apollonia, etc..."
             className="flex-1 border-gray-300 focus-visible:ring-sifnos-deep-blue rounded-full pl-4"
             disabled={isLoading}
+            onClick={(e) => e.stopPropagation()}
           />
           <Button 
             type="submit" 
             disabled={isLoading} 
             className="bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 rounded-full w-10 h-10 p-0 flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
           >
             {isLoading ? 
               <Loader2 className="h-5 w-5 animate-spin" /> : 

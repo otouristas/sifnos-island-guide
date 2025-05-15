@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 import { Bot, Search, MessageSquare, Hotel, MapPin, Star, Sparkles, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
@@ -13,15 +12,24 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 export default function TouristasAIPage() {
   const [activeSection, setActiveSection] = useState<string>('chat');
   const pageTopRef = useRef<HTMLDivElement>(null);
+  const chatSectionRef = useRef<HTMLDivElement>(null);
   
   // Scroll to top on initial page load
   useEffect(() => {
     window.scrollTo(0, 0);
     
     if (pageTopRef.current) {
-      pageTopRef.current.scrollIntoView();
+      pageTopRef.current.scrollIntoView({ behavior: 'auto' });
     }
   }, []);
+
+  // Auto-focus chat when clicking the chat buttons
+  const scrollToChat = () => {
+    if (chatSectionRef.current) {
+      chatSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+      setActiveSection('chat');
+    }
+  };
 
   return (
     <>
@@ -84,10 +92,7 @@ export default function TouristasAIPage() {
           <Button 
             size="lg" 
             className="bg-white hover:bg-white/90 text-sifnos-deep-blue font-medium px-6 py-6 rounded-full"
-            onClick={() => {
-              document.getElementById('ai-assistant-section')?.scrollIntoView({ behavior: 'smooth' });
-              setActiveSection('chat');
-            }}
+            onClick={scrollToChat}
           >
             <MessageSquare className="mr-2 h-5 w-5" />
             Start a Conversation
@@ -97,7 +102,7 @@ export default function TouristasAIPage() {
       </div>
       
       {/* AI Assistant Section - Positioned right after hero */}
-      <div id="ai-assistant-section" className="py-20 bg-white">
+      <div id="ai-assistant-section" ref={chatSectionRef} className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
             <Badge className="mb-4 px-3 py-1.5 bg-gradient-to-r from-sifnos-deep-blue to-sifnos-deep-blue/70 text-white hover:from-sifnos-deep-blue/90 hover:to-sifnos-deep-blue/60">
@@ -372,10 +377,7 @@ export default function TouristasAIPage() {
           <Button 
             size="lg" 
             className="bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 text-white font-medium px-8 py-6 rounded-full"
-            onClick={() => {
-              document.getElementById('ai-assistant-section')?.scrollIntoView({ behavior: 'smooth' });
-              setActiveSection('chat');
-            }}
+            onClick={scrollToChat}
           >
             <MessageSquare className="mr-2 h-5 w-5" />
             Start Chatting with Touristas AI
