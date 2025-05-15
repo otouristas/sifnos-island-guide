@@ -1,4 +1,3 @@
-
 import { Ship, Clock, Info, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from "@/lib/utils";
@@ -275,6 +274,9 @@ const FerryTicketsTable = ({ direction }: FerryTicketsTableProps) => {
     return { short: shortName, full: companyName };
   };
 
+  // The ferry booking URL
+  const ferryBookingUrl = "https://www.ferryscanner.com/en/ferry/?ref=ztdimtue&utm_source=georgekasiotis&utm_campaign=Ferryscanner+affiliate+program+EN";
+
   return (
     <div className="space-y-4">
       {routes.map((route, index) => (
@@ -306,7 +308,6 @@ const FerryTicketsTable = ({ direction }: FerryTicketsTableProps) => {
                   />
                 </div>
                 <div>
-                  {/* Use helper function to get company display name */}
                   {(() => {
                     const { short, full } = getCompanyDisplayName(route.companies[0]);
                     return (
@@ -379,9 +380,14 @@ const FerryTicketsTable = ({ direction }: FerryTicketsTableProps) => {
               <div className="md:col-span-1 text-right">
                 <div className="font-bold text-lg text-gray-800">{route.priceFrom}</div>
                 <div className="text-xs text-gray-600">{route.refundable || "Standard Fare"}</div>
-                <button className="mt-2 bg-[#0EA5E9] hover:bg-[#0995d3] text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors">
+                <a 
+                  href={ferryBookingUrl}
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-block mt-2 bg-[#0EA5E9] hover:bg-[#0995d3] text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors"
+                >
                   Book Now
-                </button>
+                </a>
               </div>
             </div>
           </div>
