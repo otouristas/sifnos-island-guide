@@ -1,3 +1,4 @@
+
 import { Ship, Clock, Info, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from "@/lib/utils";
@@ -251,6 +252,29 @@ interface FerryTicketsTableProps {
 const FerryTicketsTable = ({ direction }: FerryTicketsTableProps) => {
   const routes = direction === 'to' ? toSifnosRoutes : fromSifnosRoutes;
 
+  // Helper function to get the correct company logo
+  const getCompanyLogo = (companyName: string) => {
+    const normalizedName = companyName.toLowerCase();
+    
+    if (normalizedName.includes('seajet')) return "/uploads/ferries/seajets.png";
+    if (normalizedName.includes('blue star')) return "/uploads/ferries/blue-star-ferries.png";
+    if (normalizedName.includes('fast')) return "/uploads/ferries/fast-ferries.png";
+    if (normalizedName.includes('magic')) return "/uploads/ferries/magic-ferries.png";
+    if (normalizedName.includes('zante')) return "/uploads/ferries/zante.png";
+    if (normalizedName.includes('aegean')) return "/uploads/ferries/aegean-sea-lines.png";
+    
+    // Default case if no match is found
+    return "/uploads/ferries/seajets.png"; // Use a default logo or placeholder
+  };
+
+  // Helper function to get the company display name
+  const getCompanyDisplayName = (companyName: string) => {
+    // Extract first part for short name and use full for full name
+    const parts = companyName.split(' ');
+    const shortName = parts[0];
+    return { short: shortName, full: companyName };
+  };
+
   return (
     <div className="space-y-4">
       {routes.map((route, index) => (
@@ -275,35 +299,30 @@ const FerryTicketsTable = ({ direction }: FerryTicketsTableProps) => {
               {/* Ferry Company */}
               <div className="md:col-span-1 flex items-center space-x-3">
                 <div className="h-14 w-14 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
-                  {route.companies[0] === "SeaJets" && (
-                    <img src="/uploads/ferries/seajets.png" alt="SeaJets" className="h-10 w-10 object-contain" />
-                  )}
-                  {route.companies[0] === "Blue Star Ferries" && (
-                    <img src="/uploads/ferries/blue-star-ferries.png" alt="Blue Star Ferries" className="h-10 w-10 object-contain" />
-                  )}
-                  {route.companies[0] === "Fast Ferries" && (
-                    <img src="/uploads/ferries/fast-ferries.png" alt="Fast Ferries" className="h-10 w-10 object-contain" />
-                  )}
-                  {route.companies[0] === "Magic Sea Ferries" && (
-                    <img src="/uploads/ferries/magic-ferries.png" alt="Magic Sea Ferries" className="h-10 w-10 object-contain" />
-                  )}
-                  {route.companies[0] === "Zante Ferries" && (
-                    <img src="/uploads/ferries/zante.png" alt="Zante Ferries" className="h-10 w-10 object-contain" />
-                  )}
-                  {route.companies[0] === "Aegean Sea Lines" && (
-                    <img src="/uploads/ferries/aegean-sea-lines.png" alt="Aegean Sea Lines" className="h-10 w-10 object-contain" />
-                  )}
+                  <img 
+                    src={getCompanyLogo(route.companies[0])} 
+                    alt={`${route.companies[0]} logo`} 
+                    className="h-10 w-10 object-contain" 
+                  />
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-800">{route.companies[0].split(' ')[0]} {route.companies[0].split(' ')[1]}</p>
-                  <p className="text-xs text-gray-500">{route.companies[0]}</p>
+                  {/* Use helper function to get company display name */}
+                  {(() => {
+                    const { short, full } = getCompanyDisplayName(route.companies[0]);
+                    return (
+                      <>
+                        <p className="font-semibold text-gray-800">{short}</p>
+                        <p className="text-xs text-gray-500">{full}</p>
+                      </>
+                    );
+                  })()}
                 </div>
               </div>
               
               {/* Time Details */}
               <div className="md:col-span-2 flex items-center justify-between">
                 <div className="text-center">
-                  <p className="text-lg font-semibold">{route.departureTime}</p>
+                  <p className="text-lg font-semibold">{route.departureTime || "--:--"}</p>
                 </div>
                 
                 <div className="flex-1 px-4 flex flex-col items-center">
@@ -320,14 +339,14 @@ const FerryTicketsTable = ({ direction }: FerryTicketsTableProps) => {
                 </div>
                 
                 <div className="text-center">
-                  <p className="text-lg font-semibold">{route.arrivalTime}</p>
+                  <p className="text-lg font-semibold">{route.arrivalTime || "--:--"}</p>
                 </div>
               </div>
               
               {/* Duration Badge */}
               <div className="md:col-span-1 flex justify-center">
                 <div className="flex space-x-2">
-                  {route.companies[0] === "SeaJets" && (
+                  {route.companies[0].toLowerCase().includes('seajet') && (
                     <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-1 text-xs font-medium text-green-800">
                       Fastest
                     </span>
@@ -359,7 +378,7 @@ const FerryTicketsTable = ({ direction }: FerryTicketsTableProps) => {
               {/* Price */}
               <div className="md:col-span-1 text-right">
                 <div className="font-bold text-lg text-gray-900">{route.priceFrom}</div>
-                <div className="text-xs text-gray-500">{route.refundable}</div>
+                <div className="text-xs text-gray-500">{route.refundable || "Standard Fare"}</div>
                 <button className="mt-2 bg-[#0EA5E9] hover:bg-[#0EA5E9]/90 text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors">
                   Book Now
                 </button>
