@@ -1,5 +1,6 @@
+
 import { supabase } from '@/integrations/supabase/client';
-import { Message } from '../utils/chat-utils';
+import { Message, extractUserPreferencesFromMessage, analyzeMessageTopic } from '../utils/chat-utils';
 
 // Use this interface for sending messages to the AI service
 export type AIRequestMessage = {

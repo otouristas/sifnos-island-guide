@@ -181,8 +181,6 @@ export const isHotelRelatedQuery = (message: string): boolean => {
     'villa', 'pension', 'hotel', 'apartments', 'studios', 'rooms'
   ];
   
-  const messageLower = message.toLowerCase();
-  
   // Check for specific hotel names
   if ((messageLower.includes('villa') || 
        messageLower.includes('pension') || 
@@ -380,11 +378,11 @@ export const shouldShowHotelsInResponse = (response: string): boolean => {
  * @returns Object with extracted preferences
  */
 export const extractUserPreferencesFromMessage = (message: string): Record<string, string> => {
-  const message_lower = message.toLowerCase();
+  const messageLower = message.toLowerCase();
   const preferences: Record<string, string> = {};
   
   // Extract location preferences
-  const location = extractLocationFromMessage(message_lower);
+  const location = extractLocationFromMessage(messageLower);
   if (location) {
     preferences.location = location;
   }
@@ -399,7 +397,7 @@ export const extractUserPreferencesFromMessage = (message: string): Record<strin
   };
   
   for (const [type, keywords] of Object.entries(travelerTypes)) {
-    if (keywords.some(keyword => message_lower.includes(keyword))) {
+    if (keywords.some(keyword => messageLower.includes(keyword))) {
       preferences.travelerType = type;
       break; // Only one traveler type at a time
     }
@@ -407,11 +405,11 @@ export const extractUserPreferencesFromMessage = (message: string): Record<strin
   
   // Extract beach proximity preference
   if (
-    message_lower.includes('beach') || 
-    message_lower.includes('by the sea') || 
-    message_lower.includes('sea view') || 
-    message_lower.includes('ocean view') ||
-    message_lower.includes('near water')
+    messageLower.includes('beach') || 
+    messageLower.includes('by the sea') || 
+    messageLower.includes('sea view') || 
+    messageLower.includes('ocean view') ||
+    messageLower.includes('near water')
   ) {
     preferences.beachProximity = 'true';
   }
@@ -425,7 +423,7 @@ export const extractUserPreferencesFromMessage = (message: string): Record<strin
   };
   
   for (const [interest, keywords] of Object.entries(activityInterests)) {
-    if (keywords.some(keyword => message_lower.includes(keyword))) {
+    if (keywords.some(keyword => messageLower.includes(keyword))) {
       preferences.activityInterest = interest;
       break; // Only one main activity interest at a time
     }
@@ -438,7 +436,7 @@ export const extractUserPreferencesFromMessage = (message: string): Record<strin
  * Analyze a message to determine its main topic for context tracking
  */
 export const analyzeMessageTopic = (message: string): string => {
-  const message_lower = message.toLowerCase();
+  const messageLower = message.toLowerCase();
   
   const topics = {
     'hotel_query': ['hotel', 'stay', 'accommodation', 'room', 'place to stay'],
@@ -450,7 +448,7 @@ export const analyzeMessageTopic = (message: string): string => {
   };
   
   for (const [topic, keywords] of Object.entries(topics)) {
-    if (keywords.some(keyword => message_lower.includes(keyword))) {
+    if (keywords.some(keyword => messageLower.includes(keyword))) {
       return topic;
     }
   }
