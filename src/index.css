@@ -155,3 +155,23 @@
 .animate-fade-up {
   animation: fadeUp 0.5s ease-out forwards;
 }
+
+/* Glassmorphism effects */
+.glass-card {
+  @apply backdrop-blur-lg bg-white/20 border border-white/30 shadow-lg;
+}
+
+.glass-effect {
+  @apply backdrop-filter backdrop-blur-md bg-opacity-20 bg-white border border-white/20 shadow-md;
+}
+
+/* Additional screen size */
+@screen xs {
+  .xs\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  .xs\:flex-row {
+    flex-direction: row;
+  }
+}
