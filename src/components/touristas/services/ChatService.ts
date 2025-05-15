@@ -1,5 +1,6 @@
+
 import { supabase } from '@/integrations/supabase/client';
-import { AIRequestMessage, ConversationContext } from '../touristas/utils/chat-utils';
+import { AIRequestMessage, ConversationContext } from '../utils/chat-utils';
 
 /**
  * Call the Touristas AI function to get travel recommendations
@@ -147,7 +148,7 @@ export const searchHotels = async (query: string, preferences: Record<string, st
         // Fallback to filtering after fetch if RPC fails
       } else if (poolHotels && poolHotels.length > 0) {
         // We have pool hotels from RPC, use their IDs to filter
-        const poolHotelIds = poolHotels.map(hotel => hotel.id);
+        const poolHotelIds = poolHotels.map((hotel: any) => hotel.id);
         supabaseQuery = supabaseQuery.in('id', poolHotelIds);
       }
     }
@@ -179,7 +180,7 @@ export const searchHotels = async (query: string, preferences: Record<string, st
         preferences.amenity?.toLowerCase().includes('pool')) {
       
       // Secondary filter to check hotel amenities directly
-      return hotels.filter(hotel => {
+      return hotels.filter((hotel: any) => {
         return hotel.hotel_amenities?.some((amenity: any) => 
           amenity.amenity?.toLowerCase().includes('pool') ||
           amenity.amenity?.toLowerCase().includes('swimming')
