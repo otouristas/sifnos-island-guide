@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 import { Bot, Search, MessageSquare, Hotel, MapPin, Star, Sparkles, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -12,6 +12,16 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export default function TouristasAIPage() {
   const [activeSection, setActiveSection] = useState<string>('chat');
+  const pageTopRef = useRef<HTMLDivElement>(null);
+  
+  // Scroll to top on initial page load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    
+    if (pageTopRef.current) {
+      pageTopRef.current.scrollIntoView();
+    }
+  }, []);
 
   return (
     <>
@@ -22,6 +32,9 @@ export default function TouristasAIPage() {
         schemaType="TravelAgency"
         canonical="/touristas-ai"
       />
+      
+      {/* Reference for top of page */}
+      <div ref={pageTopRef} />
       
       {/* Beta Notice Alert */}
       <div className="bg-amber-50 border-b border-amber-200">

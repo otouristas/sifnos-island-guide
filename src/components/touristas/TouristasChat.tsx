@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -37,10 +38,26 @@ export default function TouristasChat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [userPreferences, setUserPreferences] = useState<Record<string, string>>({});
   const { toast } = useToast();
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     scrollToBottom();
+    
+    // Scroll to top on initial load
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = 0;
+    }
   }, [messages]);
+  
+  // Auto scroll to top on page load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    
+    // Focus on chat container
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = 0;
+    }
+  }, []);
   
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -76,7 +93,6 @@ export default function TouristasChat() {
       
       // Check if this is a hotel-related query
       const shouldShowHotels = isHotelRelatedQuery(input);
-      let relevantHotels: any[] = [];
       
       // Extract location, amenities, and specific hotel name from user query
       const locationFromQuery = extractLocationFromMessage(input);
@@ -88,6 +104,46 @@ export default function TouristasChat() {
       console.log('Amenities from query:', amenitiesFromQuery);
       console.log('Hotel name from query:', hotelNameFromQuery);
       console.log('Should show hotels:', shouldShowHotels);
+      
+      // Add temporary assistant message - WITHOUT HOTELS INITIALLY
+      const assistantId = (Date.now() + 1).toString();
+      setMessages((prev) => [...prev, { 
+        id: assistantId, 
+        role: 'assistant', 
+        content: '', 
+        preferences: updatedPreferences
+      }]);
+      
+      // Prepare messages for the AI service with correct format
+      const aiMessages: AIRequestMessage[] = messages.map(msg => ({
+        role: msg.role,
+        content: msg.content,
+        id: msg.id
+      }));
+      
+      // Add the current user message
+      aiMessages.push({
+        role: userMessage.role,
+        content: userMessage.content,
+        id: userMessage.id
+      });
+      
+      // Track conversation context for better continuity
+      const conversationContexts: ConversationContext[] = trackConversationContext([...messages, userMessage]);
+      
+      // Call the AI travel assistant function with preferences and context
+      const response = await callTouristasAI(aiMessages, updatedPreferences, conversationContexts);
+      
+      if (!response) {
+        throw new Error("Failed to get response from AI");
+      }
+      
+      // Process the streaming response
+      const reader = response.getReader();
+      const fullContent = await processStreamingResponse(reader, assistantId, setMessages);
+      
+      // Only AFTER the AI text response is complete, search for hotels if needed
+      let relevantHotels: any[] = [];
       
       // Only search for hotels if it's a hotel-related query
       if (shouldShowHotels) {
@@ -121,120 +177,26 @@ export default function TouristasChat() {
         }
         
         // Handle specific villa request
-        if (hotelNameFromQuery === 'villa' || hotelNameFromQuery.includes('Villa')) {
+        if (hotelNameFromQuery === 'villa' || (hotelNameFromQuery && hotelNameFromQuery.includes('Villa'))) {
           console.log("Filtering for villas only");
           relevantHotels = relevantHotels.filter(hotel => 
             hotel.name.toLowerCase().includes('villa')
           );
           console.log("After villa filter:", relevantHotels.length);
         }
-      }
-
-      // Add temporary assistant message
-      const assistantId = (Date.now() + 1).toString();
-      setMessages((prev) => [...prev, { 
-        id: assistantId, 
-        role: 'assistant', 
-        content: '', 
-        location: locationFromQuery, 
-        hotels: shouldShowHotels && relevantHotels.length > 0 ? relevantHotels : undefined,
-        showHotels: shouldShowHotels && relevantHotels.length > 0,
-        preferences: updatedPreferences
-      }]);
-      
-      // Prepare messages for the AI service with correct format
-      const aiMessages: AIRequestMessage[] = messages.map(msg => ({
-        role: msg.role,
-        content: msg.content,
-        id: msg.id
-      }));
-      
-      // Add the current user message
-      aiMessages.push({
-        role: userMessage.role,
-        content: userMessage.content,
-        id: userMessage.id
-      });
-      
-      // Track conversation context for better continuity
-      const conversationContexts: ConversationContext[] = trackConversationContext([...messages, userMessage]);
-      
-      // Call the AI travel assistant function with preferences and context
-      const response = await callTouristasAI(aiMessages, updatedPreferences, conversationContexts);
-      
-      if (!response) {
-        throw new Error("Failed to get response from AI");
-      }
-      
-      // Process the streaming response
-      const reader = response.getReader();
-      const fullContent = await processStreamingResponse(reader, assistantId, setMessages);
-      
-      // After getting the full response, check if we should show hotels
-      const locationsInResponse = extractLocationsFromResponse(fullContent);
-      const showHotelsByTrigger = shouldShowHotelsInResponse(fullContent);
-      
-      // Set the location to show for hotels - prioritize location from user query, then locations from response
-      let locationToShow = locationFromQuery;
-      if (!locationToShow && locationsInResponse.length === 1) {
-        locationToShow = locationsInResponse[0];
-      }
-      
-      // Handle cases where original search didn't include hotels but the response suggests hotels
-      if ((locationsInResponse.length > 0 || showHotelsByTrigger || amenitiesFromQuery.length > 0) && !shouldShowHotels) {
-        let searchTerm = input;
         
-        // Prioritize location from query, then from response
-        if (locationToShow) {
-          // Add explicit location query to ensure correct results
-          searchTerm = `hotels in ${locationToShow}`;
+        // After getting the full response, check if we should show hotels
+        const locationsInResponse = extractLocationsFromResponse(fullContent);
+        const showHotelsByTrigger = shouldShowHotelsInResponse(fullContent);
+        
+        // Set the location to show for hotels - prioritize location from user query, then locations from response
+        let locationToShow = locationFromQuery;
+        if (!locationToShow && locationsInResponse.length === 1) {
+          locationToShow = locationsInResponse[0];
         }
         
-        // If amenities were mentioned in the question, add them to the search
-        if (amenitiesFromQuery.length > 0) {
-          searchTerm = `${searchTerm} ${amenitiesFromQuery.join(' ')}`;
-        }
-        
-        // If hotel name was specified, prioritize that
-        if (hotelNameFromQuery) {
-          searchTerm = hotelNameFromQuery;
-        }
-        
-        console.log("Second search with term:", searchTerm);
-        
-        // Perform hotel search with enhanced query
-        relevantHotels = await searchHotels(searchTerm, {
-          ...updatedPreferences,
-          location: locationToShow, // Ensure location is explicitly set in preferences
-          amenities: amenitiesFromQuery.length > 0 ? amenitiesFromQuery.join(',') : undefined,
-          hotelName: hotelNameFromQuery || undefined
-        });
-        
-        console.log("Second search found hotels:", relevantHotels.length);
-        
-        // Additional filtering for pool amenity if specifically requested
-        if (amenitiesFromQuery.includes('pool')) {
-          console.log("Filtering second search by pool amenity");
-          relevantHotels = relevantHotels.filter(hotel => 
-            hotel.hotel_amenities?.some(a => 
-              a.amenity.toLowerCase().includes('pool') || 
-              a.amenity.toLowerCase().includes('swimming')
-            )
-          );
-          console.log("After pool filter (second search):", relevantHotels.length);
-        }
-        
-        // Handle specific villa request
-        if (hotelNameFromQuery === 'villa' || hotelNameFromQuery.includes('Villa')) {
-          console.log("Filtering second search for villas only");
-          relevantHotels = relevantHotels.filter(hotel => 
-            hotel.name.toLowerCase().includes('villa')
-          );
-          console.log("After villa filter (second search):", relevantHotels.length);
-        }
-        
+        // If we have hotels to show after all filtering, update the message with hotels
         if (relevantHotels.length > 0) {
-          // Update message to include hotels
           setMessages((prev) => 
             prev.map(msg => 
               msg.id === assistantId 
@@ -252,8 +214,8 @@ export default function TouristasChat() {
       
       // If no content was received, show fallback message
       if (!fullContent) {
-        const fallbackMessage = locationToShow
-          ? `I found some hotel options in ${locationToShow} that might interest you. Feel free to ask me more about them!`
+        const fallbackMessage = locationFromQuery
+          ? `I found some hotel options in ${locationFromQuery} that might interest you. Feel free to ask me more about them!`
           : "I found some hotel options in Sifnos that might interest you. Feel free to ask me more about them!";
           
         setMessages((prev) => 
@@ -285,24 +247,27 @@ export default function TouristasChat() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-200px)] min-h-[600px] rounded-xl overflow-hidden bg-white border border-gray-200 shadow-xl">
+    <div 
+      ref={chatContainerRef}
+      className="flex flex-col h-[calc(100vh-200px)] min-h-[600px] rounded-xl overflow-hidden bg-gradient-to-b from-white to-gray-50 border border-gray-200 shadow-xl"
+    >
       {/* Chat Messages */}
       <ChatMessages messages={messages} messagesEndRef={messagesEndRef} />
       
       {/* Input Form */}
-      <div className="border-t border-gray-200 p-4 bg-white">
+      <div className="border-t border-gray-200 p-4 bg-white/90 backdrop-blur-sm">
         <form onSubmit={handleSubmit} className="flex gap-2">
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about hotels in Platis Gialos, Apollonia, etc..."
-            className="flex-1 border-gray-300 focus-visible:ring-sifnos-deep-blue"
+            className="flex-1 border-gray-300 focus-visible:ring-sifnos-deep-blue rounded-full pl-4"
             disabled={isLoading}
           />
           <Button 
             type="submit" 
             disabled={isLoading} 
-            className="bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90"
+            className="bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 rounded-full w-10 h-10 p-0 flex items-center justify-center"
           >
             {isLoading ? 
               <Loader2 className="h-5 w-5 animate-spin" /> : 

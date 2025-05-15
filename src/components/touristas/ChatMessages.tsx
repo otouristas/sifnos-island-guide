@@ -1,9 +1,8 @@
 
 import React from 'react';
-import { Bot, User } from 'lucide-react';
+import { Bot, User, Hotel } from 'lucide-react';
 import { Message } from './utils/chat-utils';
 import { HotelCarousel, Separator } from './HotelDisplay';
-import { Hotel } from 'lucide-react';
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -12,55 +11,56 @@ interface ChatMessagesProps {
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, messagesEndRef }) => {
   return (
-    <div className="flex-1 overflow-y-auto p-2 sm:p-4 space-y-4 sm:space-y-6">
+    <div className="flex-1 overflow-y-auto p-3 sm:p-5 space-y-5 sm:space-y-7">
       {messages.map((message) => (
         <div 
           key={message.id} 
           className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
         >
           <div 
-            className={`flex gap-2 sm:gap-3 max-w-[95%] sm:max-w-[90%] md:max-w-[85%] ${
+            className={`flex gap-3 max-w-[95%] sm:max-w-[85%] ${
               message.role === 'user' 
                 ? 'flex-row-reverse' 
                 : 'flex-row'
             }`}
           >
             {message.role === 'user' ? (
-              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-gradient-to-br from-sifnos-deep-blue to-blue-700 text-white flex items-center justify-center flex-shrink-0">
-                <User className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gradient-to-br from-sifnos-deep-blue to-blue-700 text-white flex items-center justify-center flex-shrink-0 shadow-md">
+                <User className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
             ) : (
-              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center flex-shrink-0">
-                <Bot className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center flex-shrink-0 shadow-md">
+                <Bot className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
             )}
             
             <div 
-              className={`rounded-2xl p-2.5 sm:p-3.5 shadow-sm ${
+              className={`rounded-2xl shadow-sm backdrop-blur-sm ${
                 message.role === 'user' 
-                  ? 'bg-sifnos-deep-blue text-white break-words' 
-                  : 'bg-white border border-gray-200 break-words'
-              }`}
+                  ? 'bg-gradient-to-r from-sifnos-deep-blue to-blue-700 text-white' 
+                  : 'bg-white/95 border border-gray-100 shadow-md'
+              } overflow-hidden`}
             >
-              <div className="whitespace-pre-wrap text-xs sm:text-sm md:text-base break-words">
+              {/* Text content - Always render this part first */}
+              <div className="whitespace-pre-wrap text-sm md:text-base break-words p-3 sm:p-4">
                 {message.content}
               </div>
               
-              {/* Hotel Recommendations Carousel - only show when specifically asked about hotels */}
+              {/* Hotel Recommendations - Only after text content is shown */}
               {message.showHotels && message.hotels && message.hotels.length > 0 && (
-                <div className="mt-3 sm:mt-4 space-y-3 sm:space-y-4 max-w-full overflow-hidden">
+                <div className="mt-1 space-y-3 max-w-full overflow-hidden">
                   <Separator />
                   
-                  <div className="font-medium text-center px-2 py-1 mb-2 sm:mb-3 text-sm sm:text-base">
+                  <div className="font-medium text-center px-2 py-2 text-sm sm:text-base">
                     {message.location ? (
-                      <div className="flex items-center justify-center gap-1 sm:gap-2">
-                        <Hotel className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                        <span>Recommended Hotels in {message.location.charAt(0).toUpperCase() + message.location.slice(1)}</span>
+                      <div className="flex items-center justify-center gap-2">
+                        <Hotel className="h-4 w-4 sm:h-5 sm:w-5" />
+                        <span>Hotels in {message.location.charAt(0).toUpperCase() + message.location.slice(1)}</span>
                       </div>
                     ) : (
-                      <div className="flex items-center justify-center gap-1 sm:gap-2">
-                        <Hotel className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                        <span>Top Recommended Hotels in Sifnos</span>
+                      <div className="flex items-center justify-center gap-2">
+                        <Hotel className="h-4 w-4 sm:h-5 sm:w-5" />
+                        <span>Recommended Hotels</span>
                       </div>
                     )}
                   </div>
