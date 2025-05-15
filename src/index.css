@@ -98,6 +98,20 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-montserrat font-semibold;
   }
+  
+  /* Improve select/combobox contrast */
+  [role="combobox"] {
+    @apply border-gray-400 text-gray-800;
+  }
+  
+  [role="combobox"] > svg {
+    @apply opacity-70;
+  }
+  
+  [role="combobox"]:hover > svg,
+  [role="combobox"]:focus > svg {
+    @apply opacity-100;
+  }
 }
 
 /* Custom styles */

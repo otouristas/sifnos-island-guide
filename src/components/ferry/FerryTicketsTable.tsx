@@ -1,4 +1,3 @@
-
 import { Ship, Clock, Info, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from "@/lib/utils";
@@ -379,7 +378,10 @@ const FerryTicketsTable = ({ direction }: FerryTicketsTableProps) => {
               
               {/* Price */}
               <div className="md:col-span-1 text-right">
-                <div className="font-bold text-lg text-gray-800">{route.priceFrom}</div>
+                <div className="font-bold text-lg text-gray-800">
+                  <span className="text-sm font-medium text-gray-600">from </span>
+                  {route.priceFrom}
+                </div>
                 <div className="text-xs text-gray-600">{route.refundable || "Standard Fare"}</div>
                 <a 
                   href={ferryBookingUrl}
