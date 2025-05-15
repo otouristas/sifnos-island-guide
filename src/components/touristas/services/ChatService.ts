@@ -66,8 +66,8 @@ export const searchHotels = async (query: string, preferences: Record<string, an
       if (['Villa Olivia Clara', 'Filadaki Villas', 'Meropi Rooms and Apartments', 'ALK HOTEL™', 'Morpheas Pension & Apartments'].includes(preferences.hotelName)) {
         // Exact hotel name match
         supabaseQuery = supabaseQuery.eq('name', preferences.hotelName);
-      } else if (preferences.hotelName === 'villa') {
-        // Generic villa type
+      } else if (preferences.hotelName === 'villa' || preferences.hotelName.includes('villa')) {
+        // Generic villa type - use ILIKE for case-insensitive matching
         supabaseQuery = supabaseQuery.ilike('name', '%villa%');
       } else if (preferences.hotelName === 'hotel') {
         // Generic hotel type
@@ -79,6 +79,13 @@ export const searchHotels = async (query: string, preferences: Record<string, an
         // Partial name match
         supabaseQuery = supabaseQuery.ilike('name', `%${preferences.hotelName}%`);
       }
+    }
+    
+    // Special handling for "villas in sifnos" or similar queries
+    if ((queryLower.includes('villa') || queryLower.includes('villas')) && 
+        !preferences.hotelName) {
+      console.log('Villa search detected in query:', queryLower);
+      supabaseQuery = supabaseQuery.ilike('name', '%villa%');
     }
     
     // Execute the query
@@ -114,6 +121,16 @@ export const searchHotels = async (query: string, preferences: Record<string, an
       } else if (preferences.travelerType === 'budget') {
         filteredHotels = filteredHotels.filter(hotel => hotel.price <= 150);
       }
+    }
+    
+    // Additional filter for villa searches if the results don't already have "villa" in the name
+    if ((queryLower.includes('villa') || queryLower.includes('villas')) && 
+        !preferences.hotelName) {
+      console.log('Applying post-query villa filter');
+      filteredHotels = filteredHotels.filter(hotel => 
+        hotel.name.toLowerCase().includes('villa')
+      );
+      console.log('After villa filter, hotels count:', filteredHotels.length);
     }
     
     // Limit results to maximum 3 hotels
