@@ -176,6 +176,21 @@ export const isHotelRelatedQuery = (message: string): boolean => {
     return true;  
   }
   
+  // Check for exact hotel name queries - new functionality
+  const hotelNameTerms = [
+    'villa', 'pension', 'hotel', 'apartments', 'studios', 'rooms'
+  ];
+  
+  const messageLower = message.toLowerCase();
+  
+  // Check for specific hotel names
+  if ((messageLower.includes('villa') || 
+       messageLower.includes('pension') || 
+       messageLower.includes('hotel name')) && 
+      !messageLower.includes('any')) {
+    return true;
+  }
+  
   return false;
 };
 
@@ -252,12 +267,64 @@ export const extractAmenityFromMessage = (message: string): string[] => {
   const result: string[] = [];
   
   for (const [amenity, keywords] of Object.entries(amenities)) {
-    if (keywords.some(keyword => message_lower.includes(keyword))) {
+    // More rigorous check for amenity mentions
+    const hasAmenity = keywords.some(keyword => {
+      // Check for exact word matches or phrases
+      const pattern = new RegExp(`\\b${keyword}\\b|hotels? with ${keyword}|${keyword} hotels?`, 'i');
+      return pattern.test(message_lower);
+    });
+    
+    if (hasAmenity) {
       result.push(amenity);
     }
   }
   
   return result;
+};
+
+/**
+ * New function to extract specific hotel name patterns from a message
+ * @param message The user message
+ * @returns Hotel name match if found
+ */
+export const extractHotelNameFromMessage = (message: string): string => {
+  const message_lower = message.toLowerCase();
+  
+  // Look for specific hotel name patterns
+  if (message_lower.includes('villa olivia') || message_lower.includes('olivia clara')) {
+    return 'Villa Olivia Clara';
+  }
+  
+  if (message_lower.includes('filadaki')) {
+    return 'Filadaki Villas';
+  }
+  
+  if (message_lower.includes('meropi')) {
+    return 'Meropi Rooms and Apartments';
+  }
+  
+  if (message_lower.includes('alk hotel') || message_lower.includes('alk')) {
+    return 'ALK HOTEL™';
+  }
+  
+  if (message_lower.includes('morpheas') || message_lower.includes('morpheas pension')) {
+    return 'Morpheas Pension & Apartments';
+  }
+  
+  // Generic hotel type matches
+  if (message_lower.includes(' villa') && !message_lower.includes('villas')) {
+    return 'villa';
+  }
+  
+  if (message_lower.includes('pension')) {
+    return 'pension';
+  }
+  
+  if (message_lower.includes('hotel') && !message_lower.includes('hotels')) {
+    return 'hotel';
+  }
+  
+  return '';
 };
 
 /**

@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,7 +11,8 @@ import {
   extractAmenityFromMessage,
   extractLocationsFromResponse, 
   shouldShowHotelsInResponse,
-  extractUserPreferencesFromMessage 
+  extractUserPreferencesFromMessage,
+  extractHotelNameFromMessage
 } from './utils/chat-utils';
 import { 
   AIRequestMessage, 
@@ -78,20 +78,56 @@ export default function TouristasChat() {
       const shouldShowHotels = isHotelRelatedQuery(input);
       let relevantHotels: any[] = [];
       
-      // Extract location and amenities from user query
+      // Extract location, amenities, and specific hotel name from user query
       const locationFromQuery = extractLocationFromMessage(input);
       const amenitiesFromQuery = extractAmenityFromMessage(input);
+      const hotelNameFromQuery = extractHotelNameFromMessage(input);
       
       console.log('Extracted preferences:', updatedPreferences);
       console.log('Location from query:', locationFromQuery);
       console.log('Amenities from query:', amenitiesFromQuery);
+      console.log('Hotel name from query:', hotelNameFromQuery);
       console.log('Should show hotels:', shouldShowHotels);
       
       // Only search for hotels if it's a hotel-related query
       if (shouldShowHotels) {
+        // Build the search query with all the extracted information
+        let searchQuery = input;
+        
+        // If a specific hotel name was mentioned, prioritize that in search
+        if (hotelNameFromQuery) {
+          searchQuery = hotelNameFromQuery;
+        }
+        
         // Search for hotels based on user query and preferences
-        relevantHotels = await searchHotels(input, updatedPreferences);
+        relevantHotels = await searchHotels(searchQuery, {
+          ...updatedPreferences,
+          amenities: amenitiesFromQuery.length > 0 ? amenitiesFromQuery.join(',') : undefined,
+          hotelName: hotelNameFromQuery || undefined
+        });
+        
         console.log("Found relevant hotels:", relevantHotels.length);
+        
+        // Filter hotels by exact amenity match if specifically requested
+        if (amenitiesFromQuery.includes('pool')) {
+          console.log("Filtering hotels by pool amenity");
+          relevantHotels = relevantHotels.filter(hotel => 
+            hotel.hotel_amenities?.some(a => 
+              a.amenity.toLowerCase().includes('pool') || 
+              a.amenity.toLowerCase().includes('swimming')
+            )
+          );
+          console.log("After pool filter:", relevantHotels.length);
+        }
+        
+        // Handle specific villa request
+        if (hotelNameFromQuery === 'villa' || hotelNameFromQuery.includes('Villa')) {
+          console.log("Filtering for villas only");
+          relevantHotels = relevantHotels.filter(hotel => 
+            hotel.name.toLowerCase().includes('villa')
+          );
+          console.log("After villa filter:", relevantHotels.length);
+        }
       }
 
       // Add temporary assistant message
@@ -159,15 +195,43 @@ export default function TouristasChat() {
           searchTerm = `${searchTerm} ${amenitiesFromQuery.join(' ')}`;
         }
         
+        // If hotel name was specified, prioritize that
+        if (hotelNameFromQuery) {
+          searchTerm = hotelNameFromQuery;
+        }
+        
         console.log("Second search with term:", searchTerm);
         
         // Perform hotel search with enhanced query
         relevantHotels = await searchHotels(searchTerm, {
           ...updatedPreferences,
-          location: locationToShow // Ensure location is explicitly set in preferences
+          location: locationToShow, // Ensure location is explicitly set in preferences
+          amenities: amenitiesFromQuery.length > 0 ? amenitiesFromQuery.join(',') : undefined,
+          hotelName: hotelNameFromQuery || undefined
         });
         
         console.log("Second search found hotels:", relevantHotels.length);
+        
+        // Additional filtering for pool amenity if specifically requested
+        if (amenitiesFromQuery.includes('pool')) {
+          console.log("Filtering second search by pool amenity");
+          relevantHotels = relevantHotels.filter(hotel => 
+            hotel.hotel_amenities?.some(a => 
+              a.amenity.toLowerCase().includes('pool') || 
+              a.amenity.toLowerCase().includes('swimming')
+            )
+          );
+          console.log("After pool filter (second search):", relevantHotels.length);
+        }
+        
+        // Handle specific villa request
+        if (hotelNameFromQuery === 'villa' || hotelNameFromQuery.includes('Villa')) {
+          console.log("Filtering second search for villas only");
+          relevantHotels = relevantHotels.filter(hotel => 
+            hotel.name.toLowerCase().includes('villa')
+          );
+          console.log("After villa filter (second search):", relevantHotels.length);
+        }
         
         if (relevantHotels.length > 0) {
           // Update message to include hotels
