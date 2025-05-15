@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { AIRequestMessage, ConversationContext } from '../utils/chat-utils';
 
@@ -140,15 +141,18 @@ export const searchHotels = async (query: string, preferences: Record<string, st
         preferences.amenity?.toLowerCase().includes('pool')) {
       
       // Use RPC function to find hotels with pool amenities
+      // Define the expected response type for the RPC call
+      type HotelWithAmenity = { id: string; [key: string]: any };
+      
       const { data: poolHotels, error: poolError } = await supabase
-        .rpc('get_hotels_with_amenity', { amenity_name: 'pool' });
+        .rpc<HotelWithAmenity>('get_hotels_with_amenity', { amenity_name: 'pool' as string });
       
       if (poolError) {
         console.error("Error finding hotels with pools:", poolError);
         // Fallback to filtering after fetch if RPC fails
       } else if (poolHotels && Array.isArray(poolHotels) && poolHotels.length > 0) {
         // We have pool hotels from RPC, use their IDs to filter
-        const poolHotelIds = poolHotels.map((hotel: any) => hotel.id);
+        const poolHotelIds = poolHotels.map((hotel: HotelWithAmenity) => hotel.id);
         supabaseQuery = supabaseQuery.in('id', poolHotelIds);
       }
     }
