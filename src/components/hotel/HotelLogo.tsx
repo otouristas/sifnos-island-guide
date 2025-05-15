@@ -34,11 +34,13 @@ const HotelLogo = ({ hotel, hotelLogoUrl, position }: HotelLogoProps) => {
   const handleLogoError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     console.error(`Failed to load ${position} logo for ${hotel.name}: ${hotelLogoUrl}`);
     
-    // Special handling for Villa Olivia Clara logo which has a non-standard path
-    if (hotel.name === "Villa Olivia Clara" && retries < 1) {
-      console.log(`Trying alternative path for Villa Olivia Clara logo`);
+    // Special handling for Villa Olivia Clara logo
+    if (hotel.name === "Villa Olivia Clara") {
+      // Use the correct direct path without any conditionals
+      console.log(`Forcing direct path for Villa Olivia Clara logo`);
       const timestamp = Date.now();
       const randomValue = Math.floor(Math.random() * 1000);
+      // Use the absolute direct path that we know works
       e.currentTarget.src = `/uploads/hotels/villa-olivia-clara/logo-villa-olivia.png?v=${timestamp}-${randomValue}`;
       setRetries(prevRetries => prevRetries + 1);
       return;
@@ -69,7 +71,9 @@ const HotelLogo = ({ hotel, hotelLogoUrl, position }: HotelLogoProps) => {
       <div className="absolute top-2 right-2 bg-white/90 p-1 rounded-md shadow-sm">
         <img 
           key={`hotel-big-logo-${hotel.id}-${Date.now()}`}
-          src={hotelLogoUrl}
+          src={hotel.name === "Villa Olivia Clara" ? 
+               `/uploads/hotels/villa-olivia-clara/logo-villa-olivia.png?v=${Date.now()}-${Math.floor(Math.random() * 1000)}` : 
+               hotelLogoUrl}
           alt={`${hotel.name} logo`} 
           className={`h-8 w-auto max-w-[80px] object-contain ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
           onLoad={handleLogoLoad}
@@ -84,7 +88,9 @@ const HotelLogo = ({ hotel, hotelLogoUrl, position }: HotelLogoProps) => {
     <div className="flex-shrink-0 w-7 h-7 bg-white rounded-full p-0.5 shadow-sm border border-gray-100 overflow-hidden">
       <img 
         key={`hotel-small-logo-${hotel.id}-${Date.now()}`}
-        src={hotelLogoUrl}
+        src={hotel.name === "Villa Olivia Clara" ? 
+             `/uploads/hotels/villa-olivia-clara/logo-villa-olivia.png?v=${Date.now()}-${Math.floor(Math.random() * 1000)}` : 
+             hotelLogoUrl}
         alt={`${hotel.name} logo`}
         className={`w-full h-full object-contain ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
         onLoad={handleLogoLoad}

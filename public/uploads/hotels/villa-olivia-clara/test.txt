@@ -1,1 +1,4 @@
-test.txt
+
+Updated test file to confirm the directory structure is correct.
+The logo file for Villa Olivia Clara should be located at:
+/uploads/hotels/villa-olivia-clara/logo-villa-olivia.png

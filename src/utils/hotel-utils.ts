@@ -1,4 +1,3 @@
-
 // Hotel utility functions
 
 /**
@@ -98,7 +97,7 @@ export const getHotelLogoUrl = (hotel: any): string => {
   }
   
   if (hotel.name === 'Villa Olivia Clara') {
-    // Fix the Villa Olivia Clara logo path - update to correct path
+    // Always use this direct path for Villa Olivia Clara logo
     return `/uploads/hotels/villa-olivia-clara/logo-villa-olivia.png${cacheBuster}`;
   }
   
