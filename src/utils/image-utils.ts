@@ -1,4 +1,3 @@
-
 /**
  * Generates an image URL with cache busting parameters
  * @param path Base path of the image
