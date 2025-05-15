@@ -171,7 +171,7 @@ const fromSifnosRoutes: FerryRoute[] = [
     duration: "40m",
     availability: "Jan – Dec",
     frequency: "4–7 days/week",
-    companies: ["Blue Star Ferries", "Fast Ferries", "SeaJets", "Zante Ferries"],
+    companies: ["Aegean Sea Lines", "Blue Star Ferries", "Fast Ferries", "SeaJets", "Zante Ferries"],
     priceFrom: "€6.50"
   },
   {
@@ -179,7 +179,7 @@ const fromSifnosRoutes: FerryRoute[] = [
     duration: "20m",
     availability: "Jan – Dec",
     frequency: "4–7 days/week",
-    companies: ["Aegean Sea Lines", "SeaJets", "Magic Sea Ferries"],
+    companies: ["Aegean Sea Lines", "Blue Star Ferries", "Fast Ferries", "SeaJets", "Magic Sea Ferries", "Zante Ferries"],
     priceFrom: "€6.00"
   },
   {
@@ -219,7 +219,7 @@ const fromSifnosRoutes: FerryRoute[] = [
     duration: "35m",
     availability: "Jan – Dec",
     frequency: "4–7 days/week",
-    companies: ["Aegean Sea Lines", "Fast Ferries", "Zante Ferries"],
+    companies: ["Aegean Sea Lines", "Blue Star Ferries", "Fast Ferries", "Zante Ferries"],
     priceFrom: "€6.00"
   },
   {
@@ -258,7 +258,7 @@ const fromSifnosRoutes: FerryRoute[] = [
     route: "Sifnos → Katapola",
     duration: "4h 20m",
     availability: "May – Oct",
-    frequency: "Daily",
+    frequency: "Every day",
     companies: ["SeaJets"],
     priceFrom: "€96.70"
   },
@@ -274,7 +274,7 @@ const fromSifnosRoutes: FerryRoute[] = [
     route: "Sifnos → Koufonisia",
     duration: "3h 40m",
     availability: "May – Oct",
-    frequency: "Daily",
+    frequency: "Every day",
     companies: ["SeaJets"],
     priceFrom: "€107.70"
   },
@@ -283,7 +283,7 @@ const fromSifnosRoutes: FerryRoute[] = [
     duration: "2h 10m",
     availability: "Jan – Dec",
     frequency: "3–7 days/week",
-    companies: ["Blue Star Ferries", "Fast Ferries", "Zante Ferries"],
+    companies: ["Fast Ferries", "Blue Star Ferries", "Zante Ferries"],
     priceFrom: "€8.00"
   },
   {
