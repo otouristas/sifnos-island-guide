@@ -33,7 +33,6 @@ import ThankYouPage from "./pages/ThankYouPage";
 import TouristasAIPage from "./pages/TouristasAIPage";
 import BlogPage from "./pages/BlogPage";
 import BlogPostPage from "./pages/BlogPostPage";
-import FerryTicketsPage from "./pages/FerryTicketsPage";
 
 // Components
 import Navigation from "./components/Navigation";
@@ -79,8 +78,6 @@ const App = () => (
             <Route path="/blog/:slug" element={<BlogPostPage />} />
             {/* Touristas AI route */}
             <Route path="/touristas-ai" element={<TouristasAIPage />} />
-            {/* Ferry tickets route - kept but hidden from navigation */}
-            <Route path="/ferry-tickets" element={<FerryTicketsPage />} />
             {/* Other routes */}
             <Route path="/beaches" element={<BeachesPage />} />
             <Route path="/travel-guide" element={<TravelGuidePage />} />
