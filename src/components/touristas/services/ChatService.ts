@@ -1,5 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
-import { AIRequestMessage, ConversationContext } from '../utils/chat-utils';
+import { AIRequestMessage, ConversationContext } from '../touristas/utils/chat-utils';
 
 /**
  * Call the Touristas AI function to get travel recommendations
@@ -103,21 +103,9 @@ export const trackConversationContext = (messages: any[]): ConversationContext[]
   
   return recentMessages.map(msg => ({
     topic: msg.role === 'user' ? 'User Query' : 'AI Response',
-    summary: msg.content,
-    timestamp: Date.now() // Add the timestamp property required by ConversationContext
+    summary: msg.content
   }));
 };
-
-// Define the proper types for our data
-interface HotelWithAmenity {
-  id: string;
-  [key: string]: any;
-}
-
-// Define the proper type for RPC function parameters
-interface GetHotelsWithAmenityParams {
-  amenity_name: string;
-}
 
 /**
  * Search for hotels based on user query and preferences
@@ -150,22 +138,16 @@ export const searchHotels = async (query: string, preferences: Record<string, st
         query.toLowerCase().includes('swimming') || 
         preferences.amenity?.toLowerCase().includes('pool')) {
       
-      // Use the rpc method with correct type parameters - both input and output types
-      const { data, error: poolError } = await supabase
-        .rpc<GetHotelsWithAmenityParams, HotelWithAmenity[]>(
-          'get_hotels_with_amenity', 
-          { amenity_name: 'pool' }
-        );
-      
-      // No need for explicit casting since types are properly set
-      const poolHotels = data || [];
+      // Use RPC function to find hotels with pool amenities
+      const { data: poolHotels, error: poolError } = await supabase
+        .rpc('get_hotels_with_amenity', { amenity_name: 'pool' });
       
       if (poolError) {
         console.error("Error finding hotels with pools:", poolError);
         // Fallback to filtering after fetch if RPC fails
       } else if (poolHotels && poolHotels.length > 0) {
         // We have pool hotels from RPC, use their IDs to filter
-        const poolHotelIds = poolHotels.map((hotel) => hotel.id);
+        const poolHotelIds = poolHotels.map(hotel => hotel.id);
         supabaseQuery = supabaseQuery.in('id', poolHotelIds);
       }
     }
@@ -197,7 +179,7 @@ export const searchHotels = async (query: string, preferences: Record<string, st
         preferences.amenity?.toLowerCase().includes('pool')) {
       
       // Secondary filter to check hotel amenities directly
-      return hotels.filter((hotel: any) => {
+      return hotels.filter(hotel => {
         return hotel.hotel_amenities?.some((amenity: any) => 
           amenity.amenity?.toLowerCase().includes('pool') ||
           amenity.amenity?.toLowerCase().includes('swimming')
