@@ -31,17 +31,17 @@ const FerryTravelTips = () => {
       {tips.map((tip, index) => (
         <motion.div 
           key={index} 
-          className="bg-white rounded-xl shadow-md hover:shadow-lg border border-gray-100 p-7 transition-all"
+          className="bg-white rounded-xl shadow-md hover:shadow-lg border border-gray-100 p-8 transition-all"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 }}
           whileHover={{ y: -5 }}
         >
           <div className="flex flex-col items-center text-center">
-            <div className="w-14 h-14 rounded-full bg-[#0EA5E9]/10 flex items-center justify-center mb-5 text-[#0EA5E9]">
+            <div className="w-16 h-16 rounded-full bg-[#0EA5E9]/10 flex items-center justify-center mb-6 text-[#0EA5E9]">
               {tip.icon}
             </div>
-            <h3 className="font-montserrat font-semibold text-xl mb-3">{tip.title}</h3>
+            <h3 className="font-montserrat font-semibold text-xl mb-4">{tip.title}</h3>
             <p className="text-gray-600">{tip.description}</p>
           </div>
         </motion.div>

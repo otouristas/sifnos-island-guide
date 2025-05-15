@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import SEO from '@/components/SEO';
@@ -71,16 +70,16 @@ const FerryTicketsPage = () => {
             onValueChange={setActiveTab}
             className="w-full max-w-5xl mx-auto"
           >
-            <TabsList className="grid grid-cols-2 mb-8 bg-white shadow-sm rounded-xl p-1">
+            <TabsList className="grid grid-cols-2 mb-8 bg-white shadow-md rounded-xl p-1.5 h-auto">
               <TabsTrigger 
                 value="to-sifnos" 
-                className="py-3 text-sm md:text-base font-medium data-[state=active]:bg-[#0EA5E9] data-[state=active]:text-white data-[state=active]:shadow-sm"
+                className="py-4 px-6 text-sm md:text-base font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-[#0EA5E9] data-[state=active]:text-white data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
               >
                 Ferries TO Sifnos
               </TabsTrigger>
               <TabsTrigger 
                 value="from-sifnos" 
-                className="py-3 text-sm md:text-base font-medium data-[state=active]:bg-[#0EA5E9] data-[state=active]:text-white data-[state=active]:shadow-sm"
+                className="py-4 px-6 text-sm md:text-base font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-[#0EA5E9] data-[state=active]:text-white data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
               >
                 Ferries FROM Sifnos
               </TabsTrigger>
