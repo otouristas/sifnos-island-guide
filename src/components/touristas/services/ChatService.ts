@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { AIRequestMessage, ConversationContext } from '../utils/chat-utils';
 
@@ -109,6 +108,12 @@ export const trackConversationContext = (messages: any[]): ConversationContext[]
   }));
 };
 
+// Define the proper types for our RPC function
+interface HotelWithAmenity {
+  id: string;
+  [key: string]: any;
+}
+
 /**
  * Search for hotels based on user query and preferences
  * @param query User's query text
@@ -140,14 +145,13 @@ export const searchHotels = async (query: string, preferences: Record<string, st
         query.toLowerCase().includes('swimming') || 
         preferences.amenity?.toLowerCase().includes('pool')) {
       
-      // Define types for our RPC function - move these outside the function for clarity
-      type HotelWithAmenity = { id: string; [key: string]: any };
-      
-      // Use the rpc method without explicit type parameters - let TypeScript infer them
-      const { data: poolHotels, error: poolError } = await supabase
+      // Use the rpc method with proper typing
+      const { data, error: poolError } = await supabase
         .rpc('get_hotels_with_amenity', { 
           amenity_name: 'pool' 
-        });
+        }) as { data: HotelWithAmenity[] | null, error: any };
+      
+      const poolHotels = data;
       
       if (poolError) {
         console.error("Error finding hotels with pools:", poolError);
