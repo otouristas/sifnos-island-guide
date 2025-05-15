@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import SEO from '@/components/SEO';
@@ -7,7 +8,8 @@ import {
   FerryTicketsTable, 
   FerryCompanyLogos,
   FerryPriceExamples,
-  FerryTravelTips
+  FerryTravelTips,
+  FerryAppDownload
 } from '@/components/ferry';
 
 const FerryTicketsPage = () => {
@@ -107,6 +109,9 @@ const FerryTicketsPage = () => {
           </Tabs>
         </div>
       </section>
+      
+      {/* App Download Section */}
+      <FerryAppDownload />
       
       {/* Price Examples Section */}
       <section className="py-12 md:py-16 bg-white">
