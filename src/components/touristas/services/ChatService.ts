@@ -152,11 +152,11 @@ export const searchHotels = async (query: string, preferences: Record<string, st
         query.toLowerCase().includes('swimming') || 
         preferences.amenity?.toLowerCase().includes('pool')) {
       
-      // Use generic RPC function call that properly handles the parameters
+      // Use supabase.rpc with type assertion to fix TypeScript error
       const { data, error } = await supabase
         .rpc('get_hotels_with_amenity', { 
           amenity_name: 'pool' 
-        });
+        }) as unknown as { data: HotelWithAmenity[] | null, error: any };
       
       if (error) {
         console.error("Error finding hotels with pools:", error);
