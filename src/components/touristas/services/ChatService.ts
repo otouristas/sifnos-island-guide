@@ -142,8 +142,8 @@ export const searchHotels = async (query: string, preferences: Record<string, an
     
     console.log(`Found ${filteredHotels.length} hotels matching the criteria`);
     
-    // Limit results to maximum 3 hotels
-    return filteredHotels.slice(0, 3);
+    // Return all filtered hotels without limiting to 3
+    return filteredHotels;
   } catch (error) {
     console.error('Error in hotel search:', error);
     return [];
