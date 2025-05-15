@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { AIRequestMessage, ConversationContext } from '../utils/chat-utils';
 
@@ -153,11 +154,11 @@ export const searchHotels = async (query: string, preferences: Record<string, st
         preferences.amenity?.toLowerCase().includes('pool')) {
       
       // Use RPC function to find hotels with pool amenities
+      // Fix the type parameters to match what Supabase expects
       const { data, error } = await supabase
-        .rpc<GetHotelsWithAmenityParams, HotelWithAmenity[]>(
-          'get_hotels_with_amenity',
-          { amenity_name: 'pool' }
-        );
+        .rpc('get_hotels_with_amenity', { 
+          amenity_name: 'pool' 
+        }) as { data: HotelWithAmenity[] | null, error: Error | null };
       
       if (error) {
         console.error("Error finding hotels with pools:", error);
@@ -212,7 +213,7 @@ export const searchHotels = async (query: string, preferences: Record<string, st
     console.error("Error in searchHotels:", error);
     return [];
   }
-}
+};
 
 /**
  * Extract location from user messages like "hotels in Platis Gialos"
