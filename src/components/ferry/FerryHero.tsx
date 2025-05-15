@@ -1,10 +1,61 @@
 
-import { Search, Ship } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useState } from 'react';
+
+// Port data type
+type Port = {
+  name: string;
+  abbr: string;
+};
+
+// Define ports data
+const ports: Port[] = [
+  { name: "Aegiali, Amorgos", abbr: "AIG" },
+  { name: "Katapola, Amorgos", abbr: "AMO" },
+  { name: "Amorgos (All Ports)", abbr: "AMR" },
+  { name: "Anafi", abbr: "ANA" },
+  { name: "Andros", abbr: "AND" },
+  { name: "Antiparos", abbr: "ANP" },
+  { name: "Donousa", abbr: "DON" },
+  { name: "Folegandros", abbr: "FOL" },
+  { name: "Ios", abbr: "IOS" },
+  { name: "Irakleia", abbr: "IRK" },
+  { name: "Mykonos", abbr: "JMK" },
+  { name: "Naxos", abbr: "JNX" },
+  { name: "Syros", abbr: "JSY" },
+  { name: "Santorini (Thera)", abbr: "JTR" },
+  { name: "Kea (Tzia)", abbr: "KEA" },
+  { name: "Kimolos", abbr: "KMS" },
+  { name: "Koufonisi", abbr: "KOU" },
+  { name: "Kythnos", abbr: "KYT" },
+  { name: "Milos", abbr: "MLO" },
+  { name: "Oia, Santorini", abbr: "OIA" },
+  { name: "Paros", abbr: "PAS" },
+  { name: "Serifos", abbr: "SER" },
+  { name: "Sifnos", abbr: "SIF" },
+  { name: "Sikinos", abbr: "SIK" },
+  { name: "Schinoussa", abbr: "SXI" },
+  { name: "Tinos", abbr: "TIN" },
+  { name: "Thirasia", abbr: "TRS" },
+  { name: "Piraeus", abbr: "PIR" },
+  { name: "Rafina", abbr: "RAF" },
+  { name: "Lavrio", abbr: "LAV" },
+  { name: "Athens (all ports)", abbr: "ATH" }
+];
 
 const FerryHero = () => {
+  const [fromPort, setFromPort] = useState("PIR");
+  const [toPort, setToPort] = useState("PAS");
+  const [departureDate, setDepartureDate] = useState("2025-05-22");
+  
+  // Create the ferry search URL
+  const buildFerrySearchUrl = () => {
+    return `https://www.ferryscanner.com/en/ferry/results?ref=ztdimtue&utm_source=georgekasiotis&utm_campaign=Ferryscanner+affiliate+program+EN#search/dep/${fromPort}/arr/${toPort}/date/${departureDate}`;
+  };
+
   return (
     <div className="relative bg-[#1E2E48] text-white overflow-hidden">
       {/* Background pattern and overlay */}
@@ -40,49 +91,65 @@ const FerryHero = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               <div className="lg:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">From</label>
-                <Select defaultValue="piraeus">
+                <Select 
+                  defaultValue={fromPort}
+                  onValueChange={(value) => setFromPort(value)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select departure port" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="piraeus">Piraeus (Athens)</SelectItem>
-                    <SelectItem value="lavrio">Lavrio (Athens)</SelectItem>
-                    <SelectItem value="milos">Milos (Adamantas)</SelectItem>
-                    <SelectItem value="serifos">Serifos</SelectItem>
-                    <SelectItem value="paros">Paros</SelectItem>
-                    <SelectItem value="santorini">Santorini</SelectItem>
+                  <SelectContent className="max-h-[300px] overflow-y-auto">
+                    {ports.map((port) => (
+                      <SelectItem key={port.abbr} value={port.abbr}>
+                        {port.name} ({port.abbr})
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
               
               <div className="lg:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">To</label>
-                <Select defaultValue="sifnos">
+                <Select 
+                  defaultValue={toPort}
+                  onValueChange={(value) => setToPort(value)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select arrival port" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="sifnos">Sifnos</SelectItem>
-                    <SelectItem value="piraeus">Piraeus (Athens)</SelectItem>
-                    <SelectItem value="milos">Milos (Adamantas)</SelectItem>
-                    <SelectItem value="serifos">Serifos</SelectItem>
-                    <SelectItem value="paros">Paros</SelectItem>
-                    <SelectItem value="santorini">Santorini</SelectItem>
+                  <SelectContent className="max-h-[300px] overflow-y-auto">
+                    {ports.map((port) => (
+                      <SelectItem key={port.abbr} value={port.abbr}>
+                        {port.name} ({port.abbr})
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                <Input type="date" className="w-full" />
+                <Input 
+                  type="date" 
+                  className="w-full"
+                  defaultValue={departureDate}
+                  onChange={(e) => setDepartureDate(e.target.value)}
+                />
               </div>
             </div>
             
             <div className="mt-6 flex items-center gap-4">
-              <Button size="lg" className="bg-[#1E2E48] hover:bg-[#1E2E48]/80 text-white w-full md:w-auto">
-                <Search className="mr-2 h-4 w-4" />
-                Search Ferries
-              </Button>
+              <a 
+                href={buildFerrySearchUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block"
+              >
+                <Button size="lg" className="bg-[#1E2E48] hover:bg-[#1E2E48]/80 text-white w-full md:w-auto">
+                  <Search className="mr-2 h-4 w-4" />
+                  Search Ferries
+                </Button>
+              </a>
               <span className="text-xs text-gray-500">Powered by FerriesScanner.com</span>
             </div>
           </div>
