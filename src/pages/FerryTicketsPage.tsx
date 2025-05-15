@@ -24,7 +24,7 @@ const FerryTicketsPage = () => {
           'piraeus to sifnos ferry', 'athens to sifnos boat', 'island hopping sifnos',
           'cyclades ferry routes', 'greek islands ferries'
         ]}
-        schemaType="Service"
+        schemaType="TravelAgency"
         canonical="https://hotelssifnos.com/ferry-tickets"
         imageUrl="/uploads/ferries/ferry-hero.jpg"
       />
