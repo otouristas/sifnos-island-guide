@@ -19,85 +19,296 @@ type FerryRoute = {
 const toSifnosRoutes: FerryRoute[] = [
   {
     route: "Piraeus → Sifnos",
-    departureTime: "07:00",
-    arrivalTime: "10:40",
-    duration: "3h 40m",
+    duration: "2h 30m",
     availability: "Jan – Dec",
     frequency: "5–7 days/week",
-    companies: ["SeaJets"],
-    priceFrom: "€62.70",
-    recommended: true,
-    refundable: "Non Refundable"
-  },
-  {
-    route: "Piraeus → Sifnos",
-    departureTime: "07:25",
-    arrivalTime: "12:45",
-    duration: "5h 20m",
-    availability: "Jan – Dec",
-    frequency: "5–7 days/week",
-    companies: ["Blue Star Ferries"],
-    priceFrom: "€52.50",
-    refundable: "Non Refundable"
-  },
-  {
-    route: "Piraeus → Sifnos",
-    departureTime: "09:15",
-    arrivalTime: "13:35",
-    duration: "4h 20m",
-    availability: "Jan – Dec",
-    frequency: "5–7 days/week",
-    companies: ["SeaJets"],
-    priceFrom: "€64.70",
-    refundable: "Non Refundable"
-  },
-  {
-    route: "Piraeus → Sifnos",
-    departureTime: "18:30",
-    arrivalTime: "00:20",
-    duration: "5h 50m",
-    availability: "Jan – Dec",
-    frequency: "5–7 days/week",
-    companies: ["Blue Star Ferries"],
-    priceFrom: "€52.50",
-    refundable: "Partially Refundable"
+    companies: ["Aegean Sea Lines", "Fast Ferries", "SeaJets", "Zante Ferries"],
+    priceFrom: "€40.50",
+    recommended: true
   },
   {
     route: "Lavrio → Sifnos",
-    departureTime: "07:30",
-    arrivalTime: "10:25",
     duration: "2h 55m",
     availability: "May – Sep",
     frequency: "3–7 days/week",
     companies: ["Magic Sea Ferries"],
-    priceFrom: "€44.00",
-    refundable: "Non Refundable"
+    priceFrom: "€44.00"
+  },
+  {
+    route: "Adamantas → Sifnos",
+    duration: "40m",
+    availability: "Jan – Dec",
+    frequency: "5–7 days/week",
+    companies: ["Aegean Sea Lines", "Blue Star Ferries", "Fast Ferries", "SeaJets", "Zante Ferries"],
+    priceFrom: "€6.50"
+  },
+  {
+    route: "Serifos → Sifnos",
+    duration: "20m",
+    availability: "Jan – Dec",
+    frequency: "6–7 days/week",
+    companies: ["Aegean Sea Lines", "Blue Star Ferries", "Fast Ferries", "SeaJets", "Magic Sea Ferries", "Zante Ferries"],
+    priceFrom: "€6.00"
+  },
+  {
+    route: "Paros → Sifnos",
+    duration: "55m",
+    availability: "Jan – Dec",
+    frequency: "2–7 days/week",
+    companies: ["Blue Star Ferries", "SeaJets"],
+    priceFrom: "€4.50"
+  },
+  {
+    route: "Folegandros → Sifnos",
+    duration: "1h 30m",
+    availability: "Jan – Dec",
+    frequency: "4–7 days/week",
+    companies: ["Fast Ferries", "SeaJets", "Zante Ferries"],
+    priceFrom: "€8.00"
+  },
+  {
+    route: "Santorini → Sifnos",
+    duration: "33m",
+    availability: "Jan – Dec",
+    frequency: "4–7 days/week",
+    companies: ["Fast Ferries", "SeaJets", "Zante Ferries"],
+    priceFrom: "€12.50"
+  },
+  {
+    route: "Mykonos → Sifnos",
+    duration: "23m",
+    availability: "Mar – Nov",
+    frequency: "2–7 days/week",
+    companies: ["SeaJets"],
+    priceFrom: "€108.70"
+  },
+  {
+    route: "Kimolos → Sifnos",
+    duration: "40m",
+    availability: "Jan – Dec",
+    frequency: "3–7 days/week",
+    companies: ["Aegean Sea Lines", "Blue Star Ferries", "Fast Ferries", "Zante Ferries"],
+    priceFrom: "€6.00"
+  },
+  {
+    route: "Naxos → Sifnos",
+    duration: "1h 40m",
+    availability: "Mar – Oct",
+    frequency: "5–7 days/week",
+    companies: ["SeaJets"],
+    priceFrom: "€94.70"
+  },
+  {
+    route: "Syros → Sifnos",
+    duration: "3h",
+    availability: "Jan – Dec",
+    frequency: "2–3 days/week",
+    companies: ["Blue Star Ferries"],
+    priceFrom: "€8.50"
+  },
+  {
+    route: "Kythnos → Sifnos",
+    duration: "1h 25m",
+    availability: "May – Nov",
+    frequency: "1–7 days/week",
+    companies: ["Magic Sea Ferries", "SeaJets", "Aegean Sea Lines", "Zante Ferries"],
+    priceFrom: "€8.00"
+  },
+  {
+    route: "Ios → Sifnos",
+    duration: "2h 55m",
+    availability: "Jan – Dec",
+    frequency: "3–7 days/week",
+    companies: ["Fast Ferries", "SeaJets", "Zante Ferries"],
+    priceFrom: "€11.50"
+  },
+  {
+    route: "Katapola → Sifnos",
+    duration: "4h 40m",
+    availability: "May – Oct",
+    frequency: "Every day",
+    companies: ["SeaJets"],
+    priceFrom: "€96.70"
+  },
+  {
+    route: "Koufonisia → Sifnos",
+    duration: "4h 5m",
+    availability: "May – Oct",
+    frequency: "Every day",
+    companies: ["SeaJets"],
+    priceFrom: "€107.70"
+  },
+  {
+    route: "Sikinos → Sifnos",
+    duration: "2h 15m",
+    availability: "Jan – Dec",
+    frequency: "3–6 days/week",
+    companies: ["Fast Ferries", "Zante Ferries"],
+    priceFrom: "€9.50"
+  },
+  {
+    route: "Kea → Sifnos",
+    duration: "2h 40m",
+    availability: "Jul – Sep",
+    frequency: "3–4 days/week",
+    companies: ["Magic Sea Ferries"],
+    priceFrom: "€60.00"
   }
 ];
 
 const fromSifnosRoutes: FerryRoute[] = [
   {
     route: "Sifnos → Piraeus",
-    departureTime: "14:00",
-    arrivalTime: "17:30",
-    duration: "3h 30m",
+    duration: "2h 30m",
     availability: "Jan – Dec",
     frequency: "4–7 days/week",
-    companies: ["SeaJets"],
-    priceFrom: "€62.70",
-    recommended: true,
-    refundable: "Non Refundable"
+    companies: ["Aegean Sea Lines", "Fast Ferries", "SeaJets", "Zante Ferries"],
+    priceFrom: "€40.50",
+    recommended: true
   },
   {
-    route: "Sifnos → Piraeus",
-    departureTime: "15:30",
-    arrivalTime: "21:00",
-    duration: "5h 30m",
+    route: "Sifnos → Adamantas",
+    duration: "40m",
     availability: "Jan – Dec",
     frequency: "4–7 days/week",
+    companies: ["Blue Star Ferries", "Fast Ferries", "SeaJets", "Zante Ferries"],
+    priceFrom: "€6.50"
+  },
+  {
+    route: "Sifnos → Serifos",
+    duration: "20m",
+    availability: "Jan – Dec",
+    frequency: "4–7 days/week",
+    companies: ["Aegean Sea Lines", "SeaJets", "Magic Sea Ferries"],
+    priceFrom: "€6.00"
+  },
+  {
+    route: "Sifnos → Paros",
+    duration: "55m",
+    availability: "Jan – Dec",
+    frequency: "3–7 days/week",
+    companies: ["Blue Star Ferries", "SeaJets"],
+    priceFrom: "€4.50"
+  },
+  {
+    route: "Sifnos → Mykonos",
+    duration: "24m",
+    availability: "Mar – Nov",
+    frequency: "2–7 days/week",
+    companies: ["SeaJets"],
+    priceFrom: "€108.70"
+  },
+  {
+    route: "Sifnos → Lavrio",
+    duration: "2h 45m",
+    availability: "May – Sep",
+    frequency: "3–7 days/week",
+    companies: ["Magic Sea Ferries"],
+    priceFrom: "€54.00"
+  },
+  {
+    route: "Sifnos → Naxos",
+    duration: "2h 55m",
+    availability: "Jan – Dec",
+    frequency: "1–7 days/week",
+    companies: ["Blue Star Ferries", "SeaJets"],
+    priceFrom: "€12.50"
+  },
+  {
+    route: "Sifnos → Kimolos",
+    duration: "35m",
+    availability: "Jan – Dec",
+    frequency: "4–7 days/week",
+    companies: ["Aegean Sea Lines", "Fast Ferries", "Zante Ferries"],
+    priceFrom: "€6.00"
+  },
+  {
+    route: "Sifnos → Folegandros",
+    duration: "1h 30m",
+    availability: "Jan – Dec",
+    frequency: "4–7 days/week",
+    companies: ["Blue Star Ferries", "Fast Ferries", "SeaJets", "Zante Ferries"],
+    priceFrom: "€5.50"
+  },
+  {
+    route: "Sifnos → Santorini",
+    duration: "33m",
+    availability: "Jan – Dec",
+    frequency: "4–7 days/week",
+    companies: ["Fast Ferries", "SeaJets", "Zante Ferries"],
+    priceFrom: "€12.50"
+  },
+  {
+    route: "Sifnos → Syros",
+    duration: "3h 15m",
+    availability: "Jan – Dec",
+    frequency: "2–4 days/week",
     companies: ["Blue Star Ferries"],
-    priceFrom: "€52.50",
-    refundable: "Non Refundable"
+    priceFrom: "€8.50"
+  },
+  {
+    route: "Sifnos → Ios",
+    duration: "2h 50m",
+    availability: "Jan – Dec",
+    frequency: "3–7 days/week",
+    companies: ["Blue Star Ferries", "Fast Ferries", "SeaJets", "Zante Ferries"],
+    priceFrom: "€10.00"
+  },
+  {
+    route: "Sifnos → Katapola",
+    duration: "4h 20m",
+    availability: "May – Oct",
+    frequency: "Daily",
+    companies: ["SeaJets"],
+    priceFrom: "€96.70"
+  },
+  {
+    route: "Sifnos → Kythnos",
+    duration: "1h 20m",
+    availability: "May – Dec",
+    frequency: "1–7 days/week",
+    companies: ["Magic Sea Ferries", "SeaJets", "Zante Ferries"],
+    priceFrom: "€8.00"
+  },
+  {
+    route: "Sifnos → Koufonisia",
+    duration: "3h 40m",
+    availability: "May – Oct",
+    frequency: "Daily",
+    companies: ["SeaJets"],
+    priceFrom: "€107.70"
+  },
+  {
+    route: "Sifnos → Sikinos",
+    duration: "2h 10m",
+    availability: "Jan – Dec",
+    frequency: "3–7 days/week",
+    companies: ["Blue Star Ferries", "Fast Ferries", "Zante Ferries"],
+    priceFrom: "€8.00"
+  },
+  {
+    route: "Sifnos → Tinos",
+    duration: "4h 25m",
+    availability: "Jun – Dec",
+    frequency: "Once/week",
+    companies: ["Blue Star Ferries"],
+    priceFrom: "€12.50"
+  },
+  {
+    route: "Sifnos → Kea",
+    duration: "2h 25m",
+    availability: "Jul – Sep",
+    frequency: "4–5 days/week",
+    companies: ["Magic Sea Ferries"],
+    priceFrom: "€60.00"
+  },
+  {
+    route: "Sifnos → Andros",
+    duration: "6h 34m",
+    availability: "Jun – Dec",
+    frequency: "Once/week",
+    companies: ["Blue Star Ferries"],
+    priceFrom: "€12.00"
   }
 ];
 
@@ -177,31 +388,21 @@ const FerryTicketsTable = ({ direction }: FerryTicketsTableProps) => {
                 </div>
               </div>
               
-              {/* Time Details */}
+              {/* Route Details */}
               <div className="md:col-span-2 flex items-center justify-between">
-                <div className="text-center">
-                  <p className="text-lg font-semibold text-gray-800">{route.departureTime}</p>
-                </div>
-                
-                <div className="flex-1 px-4 flex flex-col items-center">
-                  <div className="w-full flex items-center justify-center">
-                    <div className="h-[2px] flex-1 bg-gray-300 relative">
-                      <div className="absolute w-1 h-1 rounded-full bg-gray-500 left-0 top-1/2 -translate-y-1/2"></div>
-                      <div className="absolute w-1 h-1 rounded-full bg-gray-500 right-0 top-1/2 -translate-y-1/2"></div>
-                    </div>
+                <div className="text-center flex-1">
+                  <p className="text-base font-semibold text-gray-800 mb-1">{route.route}</p>
+                  
+                  <div className="flex items-center justify-center">
+                    <span className="text-xs text-gray-600 flex items-center">
+                      <Clock className="inline-block h-3 w-3 mr-1" />
+                      {route.duration}
+                    </span>
                   </div>
-                  <span className="text-xs text-gray-600 mt-1">
-                    <Clock className="inline-block h-3 w-3 mr-1" />
-                    {route.duration}
-                  </span>
-                </div>
-                
-                <div className="text-center">
-                  <p className="text-lg font-semibold text-gray-800">{route.arrivalTime}</p>
                 </div>
               </div>
               
-              {/* Duration Badge */}
+              {/* Availability Badge */}
               <div className="md:col-span-1 flex justify-center">
                 <div className="flex space-x-2">
                   {route.companies[0].toLowerCase().includes('seajet') && (
@@ -216,20 +417,10 @@ const FerryTicketsTable = ({ direction }: FerryTicketsTableProps) => {
                 </div>
               </div>
               
-              {/* Services */}
-              <div className="md:col-span-1 flex items-center justify-center space-x-2">
-                <span className="h-5 w-5 bg-green-100 rounded-full flex items-center justify-center">
-                  <Ship className="h-3 w-3 text-green-700" />
-                </span>
-                <span className="h-5 w-5 bg-blue-100 rounded-full flex items-center justify-center">
-                  <svg className="h-3 w-3 text-blue-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 6v12m-8-6h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                  </svg>
-                </span>
-                <span className="h-5 w-5 bg-purple-100 rounded-full flex items-center justify-center">
-                  <svg className="h-3 w-3 text-purple-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+              {/* Frequency */}
+              <div className="md:col-span-1 flex items-center justify-center">
+                <span className="text-sm text-gray-700 font-medium">
+                  {route.frequency}
                 </span>
               </div>
               
