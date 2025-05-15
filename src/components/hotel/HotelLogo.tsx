@@ -9,18 +9,21 @@ interface HotelLogoProps {
 
 const HotelLogo = ({ hotel, hotelLogoUrl, position }: HotelLogoProps) => {
   const [logoLoaded, setLogoLoaded] = useState(false);
+  const [logoError, setLogoError] = useState(false);
   
   if (!hotelLogoUrl) return null;
 
   const handleLogoLoad = () => {
     setLogoLoaded(true);
+    setLogoError(false);
     if (position === 'corner') {
       console.log(`Logo loaded successfully for ${hotel.name}: ${hotelLogoUrl}`);
     }
   };
 
   const handleLogoError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    console.error(`Failed to load ${position} logo for ${hotel.name}`);
+    console.error(`Failed to load ${position} logo for ${hotel.name}: ${hotelLogoUrl}`);
+    setLogoError(true);
     e.currentTarget.style.display = 'none';
   };
 
@@ -31,9 +34,10 @@ const HotelLogo = ({ hotel, hotelLogoUrl, position }: HotelLogoProps) => {
           key={`hotel-big-logo-${hotel.id}-${Date.now()}`}
           src={hotelLogoUrl}
           alt={`${hotel.name} logo`} 
-          className="h-8 w-auto max-w-[80px] object-contain"
+          className={`h-8 w-auto max-w-[80px] object-contain ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
           onLoad={handleLogoLoad}
           onError={handleLogoError}
+          style={logoError ? { display: 'none' } : undefined}
         />
       </div>
     );
@@ -45,9 +49,10 @@ const HotelLogo = ({ hotel, hotelLogoUrl, position }: HotelLogoProps) => {
         key={`hotel-small-logo-${hotel.id}-${Date.now()}`}
         src={hotelLogoUrl}
         alt={`${hotel.name} logo`}
-        className="w-full h-full object-contain"
+        className={`w-full h-full object-contain ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
         onLoad={handleLogoLoad}
         onError={handleLogoError}
+        style={logoError ? { display: 'none' } : undefined}
       />
     </div>
   );
