@@ -289,7 +289,7 @@ const FerryTicketsTable = ({ direction }: FerryTicketsTableProps) => {
           )}
         >
           {route.recommended && (
-            <div className="bg-[#0EA5E9] text-white text-xs font-semibold px-3 py-1">
+            <div className="bg-[#0995d3] text-white text-xs font-semibold px-3 py-1">
               Recommended
             </div>
           )}
@@ -312,7 +312,7 @@ const FerryTicketsTable = ({ direction }: FerryTicketsTableProps) => {
                     return (
                       <>
                         <p className="font-semibold text-gray-800">{short}</p>
-                        <p className="text-xs text-gray-500">{full}</p>
+                        <p className="text-xs text-gray-600">{full}</p>
                       </>
                     );
                   })()}
@@ -322,24 +322,24 @@ const FerryTicketsTable = ({ direction }: FerryTicketsTableProps) => {
               {/* Time Details */}
               <div className="md:col-span-2 flex items-center justify-between">
                 <div className="text-center">
-                  <p className="text-lg font-semibold">{route.departureTime || "--:--"}</p>
+                  <p className="text-lg font-semibold text-gray-800">{route.departureTime || "--:--"}</p>
                 </div>
                 
                 <div className="flex-1 px-4 flex flex-col items-center">
                   <div className="w-full flex items-center justify-center">
                     <div className="h-[2px] flex-1 bg-gray-300 relative">
-                      <div className="absolute w-1 h-1 rounded-full bg-gray-400 left-0 top-1/2 -translate-y-1/2"></div>
-                      <div className="absolute w-1 h-1 rounded-full bg-gray-400 right-0 top-1/2 -translate-y-1/2"></div>
+                      <div className="absolute w-1 h-1 rounded-full bg-gray-500 left-0 top-1/2 -translate-y-1/2"></div>
+                      <div className="absolute w-1 h-1 rounded-full bg-gray-500 right-0 top-1/2 -translate-y-1/2"></div>
                     </div>
                   </div>
-                  <span className="text-xs text-gray-500 mt-1">
+                  <span className="text-xs text-gray-600 mt-1">
                     <Clock className="inline-block h-3 w-3 mr-1" />
                     {route.duration}
                   </span>
                 </div>
                 
                 <div className="text-center">
-                  <p className="text-lg font-semibold">{route.arrivalTime || "--:--"}</p>
+                  <p className="text-lg font-semibold text-gray-800">{route.arrivalTime || "--:--"}</p>
                 </div>
               </div>
               
@@ -361,15 +361,15 @@ const FerryTicketsTable = ({ direction }: FerryTicketsTableProps) => {
               {/* Services */}
               <div className="md:col-span-1 flex items-center justify-center space-x-2">
                 <span className="h-5 w-5 bg-green-100 rounded-full flex items-center justify-center">
-                  <Ship className="h-3 w-3 text-green-600" />
+                  <Ship className="h-3 w-3 text-green-700" />
                 </span>
                 <span className="h-5 w-5 bg-blue-100 rounded-full flex items-center justify-center">
-                  <svg className="h-3 w-3 text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg className="h-3 w-3 text-blue-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 6v12m-8-6h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                   </svg>
                 </span>
                 <span className="h-5 w-5 bg-purple-100 rounded-full flex items-center justify-center">
-                  <svg className="h-3 w-3 text-purple-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg className="h-3 w-3 text-purple-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </span>
@@ -377,9 +377,9 @@ const FerryTicketsTable = ({ direction }: FerryTicketsTableProps) => {
               
               {/* Price */}
               <div className="md:col-span-1 text-right">
-                <div className="font-bold text-lg text-gray-900">{route.priceFrom}</div>
-                <div className="text-xs text-gray-500">{route.refundable || "Standard Fare"}</div>
-                <button className="mt-2 bg-[#0EA5E9] hover:bg-[#0EA5E9]/90 text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors">
+                <div className="font-bold text-lg text-gray-800">{route.priceFrom}</div>
+                <div className="text-xs text-gray-600">{route.refundable || "Standard Fare"}</div>
+                <button className="mt-2 bg-[#0EA5E9] hover:bg-[#0995d3] text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors">
                   Book Now
                 </button>
               </div>

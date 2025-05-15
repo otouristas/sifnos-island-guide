@@ -58,7 +58,7 @@ const FerryTicketsPage = () => {
             <h2 className="text-3xl md:text-4xl font-montserrat font-bold mb-6 pb-3 border-b-2 border-[#0EA5E9]/30 inline-block">
               2025 Ferry Schedules
             </h2>
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-700 text-lg">
               Plan your journey to or from Sifnos with our comprehensive ferry schedule. 
               We've gathered all the routes, times, and companies to help you find the perfect connection.
             </p>
@@ -70,16 +70,16 @@ const FerryTicketsPage = () => {
             onValueChange={setActiveTab}
             className="w-full max-w-5xl mx-auto"
           >
-            <TabsList className="grid grid-cols-2 mb-8 bg-white shadow-md rounded-xl p-1.5 h-auto">
+            <TabsList className="grid grid-cols-2 mb-8 bg-white shadow-md rounded-xl p-2.5 h-auto">
               <TabsTrigger 
                 value="to-sifnos" 
-                className="py-4 px-6 text-sm md:text-base font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-[#0EA5E9] data-[state=active]:text-white data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
+                className="py-4 px-6 text-sm md:text-base font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-[#0EA5E9] data-[state=active]:text-white data-[state=active]:shadow-md data-[state=inactive]:text-gray-700 data-[state=inactive]:hover:bg-gray-50"
               >
                 Ferries TO Sifnos
               </TabsTrigger>
               <TabsTrigger 
                 value="from-sifnos" 
-                className="py-4 px-6 text-sm md:text-base font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-[#0EA5E9] data-[state=active]:text-white data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
+                className="py-4 px-6 text-sm md:text-base font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-[#0EA5E9] data-[state=active]:text-white data-[state=active]:shadow-md data-[state=inactive]:text-gray-700 data-[state=inactive]:hover:bg-gray-50"
               >
                 Ferries FROM Sifnos
               </TabsTrigger>

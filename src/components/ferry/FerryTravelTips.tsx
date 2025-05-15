@@ -38,11 +38,11 @@ const FerryTravelTips = () => {
           whileHover={{ y: -5 }}
         >
           <div className="flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-full bg-[#0EA5E9]/10 flex items-center justify-center mb-6 text-[#0EA5E9]">
+            <div className="w-16 h-16 rounded-full bg-[#0EA5E9]/10 flex items-center justify-center mb-6 text-[#0995d3]">
               {tip.icon}
             </div>
-            <h3 className="font-montserrat font-semibold text-xl mb-4">{tip.title}</h3>
-            <p className="text-gray-600">{tip.description}</p>
+            <h3 className="font-montserrat font-semibold text-xl mb-4 text-gray-800">{tip.title}</h3>
+            <p className="text-gray-700">{tip.description}</p>
           </div>
         </motion.div>
       ))}
