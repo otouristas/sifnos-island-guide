@@ -8,6 +8,7 @@ import SEO from "./components/SEO";
 import SitemapGenerator from "./components/SitemapGenerator";
 import CookieConsent from "./components/CookieConsent";
 import { TouristasAIMiniBubble } from "./components/touristas";
+import ScrollToTop from "./components/ScrollToTop";
 
 // Pages
 import HomePage from "./pages/HomePage";
@@ -59,6 +60,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <Navigation />
         <main>
           <Routes>

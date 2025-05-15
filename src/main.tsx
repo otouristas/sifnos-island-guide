@@ -112,6 +112,9 @@ if (!isSSR) {
       // Here you would normally initialize real performance monitoring
       // like Google Analytics, New Relic, etc.
     }
+
+    // Set initial scroll position
+    window.scrollTo(0, 0);
     
     // Render with optional Strict Mode based on environment
     const StrictModeWrapper = process.env.NODE_ENV === 'development' 

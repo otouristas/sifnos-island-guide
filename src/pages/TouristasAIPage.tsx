@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 import { Bot, Search, MessageSquare, Hotel, MapPin, Star, Sparkles, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
@@ -12,25 +11,21 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export default function TouristasAIPage() {
   const [activeSection, setActiveSection] = useState<string>('chat');
-  const pageTopRef = useRef<HTMLDivElement>(null);
   const chatSectionRef = useRef<HTMLDivElement>(null);
   
-  // Scroll to top on initial page load with a delay to ensure proper scrolling
+  // Scroll to top on initial page load
   useEffect(() => {
-    const timer = setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'auto' });
-      
-      if (pageTopRef.current) {
-        pageTopRef.current.scrollIntoView({ behavior: 'auto', block: 'start' });
-      }
-      
-      // If URL hash includes 'chat', scroll to chat section
-      if (window.location.hash === '#chat' && chatSectionRef.current) {
-        chatSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 100);
+    // Initial scroll to top
+    window.scrollTo({ top: 0, behavior: 'auto' });
     
-    return () => clearTimeout(timer);
+    // If URL hash includes 'chat', scroll to chat section after a brief delay
+    if (window.location.hash === '#chat' && chatSectionRef.current) {
+      const timer = setTimeout(() => {
+        chatSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   // Auto-focus chat when clicking the chat buttons
@@ -53,9 +48,6 @@ export default function TouristasAIPage() {
         schemaType="TravelAgency"
         canonical="/touristas-ai"
       />
-      
-      {/* Reference for top of page */}
-      <div ref={pageTopRef} id="page-top" />
       
       {/* Beta Notice Alert */}
       <div className="bg-amber-50 border-b border-amber-200">
