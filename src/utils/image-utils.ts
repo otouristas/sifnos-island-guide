@@ -61,7 +61,7 @@ export const determineHotelLogoUrl = (hotel: any): string | null => {
   if (hotel.name === "Meropi Rooms and Apartments") {
     return `/uploads/hotels/meropi-logo.svg?v=${timestamp}-${randomValue}`;
   } else if (hotel.name === "Villa Olivia Clara") {
-    // Fix the logo path for Villa Olivia Clara - use the correct path
+    // Fix the logo path for Villa Olivia Clara - use the correct path with directory
     return `/uploads/hotels/villa-olivia-clara/logo-villa-olivia.png?v=${timestamp}-${randomValue}`;
   } else if (hotel.name === "Filadaki Villas") {
     return `/uploads/hotels/filadaki-studios/filadaki-logo.png?v=${timestamp}-${randomValue}`;

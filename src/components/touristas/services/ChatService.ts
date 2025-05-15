@@ -1,5 +1,19 @@
+
 import { supabase } from '@/integrations/supabase/client';
-import { AIRequestMessage, ConversationContext } from '../touristas/utils/chat-utils';
+import { AIRequestMessage, ConversationContext } from '../utils/chat-utils';
+
+// Define interface for hotel with amenities
+interface HotelWithAmenity {
+  id: string;
+  name: string;
+  amenity?: string;
+  [key: string]: any;
+}
+
+// Define params for RPC function
+interface GetHotelsWithAmenityParams {
+  amenity_name: string;
+}
 
 /**
  * Call the Touristas AI function to get travel recommendations
@@ -139,15 +153,18 @@ export const searchHotels = async (query: string, preferences: Record<string, st
         preferences.amenity?.toLowerCase().includes('pool')) {
       
       // Use RPC function to find hotels with pool amenities
-      const { data: poolHotels, error: poolError } = await supabase
-        .rpc('get_hotels_with_amenity', { amenity_name: 'pool' });
+      const { data, error } = await supabase
+        .rpc<GetHotelsWithAmenityParams, HotelWithAmenity[]>(
+          'get_hotels_with_amenity', 
+          { amenity_name: 'pool' }
+        );
       
-      if (poolError) {
-        console.error("Error finding hotels with pools:", poolError);
+      if (error) {
+        console.error("Error finding hotels with pools:", error);
         // Fallback to filtering after fetch if RPC fails
-      } else if (poolHotels && poolHotels.length > 0) {
+      } else if (data && data.length > 0) {
         // We have pool hotels from RPC, use their IDs to filter
-        const poolHotelIds = poolHotels.map(hotel => hotel.id);
+        const poolHotelIds = data.map(hotel => hotel.id);
         supabaseQuery = supabaseQuery.in('id', poolHotelIds);
       }
     }
@@ -179,12 +196,15 @@ export const searchHotels = async (query: string, preferences: Record<string, st
         preferences.amenity?.toLowerCase().includes('pool')) {
       
       // Secondary filter to check hotel amenities directly
-      return hotels.filter(hotel => {
+      const filteredHotels = hotels.filter(hotel => {
         return hotel.hotel_amenities?.some((amenity: any) => 
           amenity.amenity?.toLowerCase().includes('pool') ||
           amenity.amenity?.toLowerCase().includes('swimming')
         );
       });
+      
+      console.log(`Found ${filteredHotels.length} hotels with pools out of ${hotels.length} total`);
+      return filteredHotels;
     }
     
     return hotels || [];

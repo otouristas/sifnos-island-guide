@@ -23,6 +23,18 @@ import {
   trackConversationContext
 } from './services/ChatService';
 
+// Debounce function to prevent too many scroll events
+function debounce<F extends (...args: any[]) => any>(func: F, wait: number): (...args: Parameters<F>) => void {
+  let timeout: ReturnType<typeof setTimeout> | null = null;
+  
+  return function(...args: Parameters<F>) {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
+
 export default function TouristasChat() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -38,21 +50,38 @@ export default function TouristasChat() {
   const [userPreferences, setUserPreferences] = useState<Record<string, string>>({});
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const isAutoScrolling = useRef<boolean>(false);
   
-  // Debounced scroll to bottom for better performance
+  // Improved scroll to bottom for better performance
   const scrollToBottom = useCallback(() => {
-    if (!messagesEndRef.current) return;
+    if (!messagesEndRef.current || isAutoScrolling.current) return;
+    
+    isAutoScrolling.current = true;
     
     // Use requestAnimationFrame for smoother scrolling
     requestAnimationFrame(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      
+      // Reset the flag after animation completes
+      setTimeout(() => {
+        isAutoScrolling.current = false;
+      }, 100);
     });
   }, []);
   
+  // Debounced version for scroll events
+  const debouncedScrollToBottom = useCallback(
+    debounce(() => {
+      scrollToBottom();
+    }, 50),
+    [scrollToBottom]
+  );
+  
   // Use a separate effect to handle scroll position updates
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, scrollToBottom]);
+    debouncedScrollToBottom();
+  }, [messages, debouncedScrollToBottom]);
   
   // Prevent input field from causing scroll jumps
   const handleInputFocus = useCallback(() => {
@@ -249,7 +278,7 @@ export default function TouristasChat() {
   return (
     <div className="flex flex-col h-[calc(100vh-200px)] min-h-[600px] rounded-xl overflow-hidden bg-white border border-gray-200 shadow-xl">
       {/* Chat Messages */}
-      <div ref={chatContainerRef} className="flex-1 overflow-y-auto">
+      <div ref={chatContainerRef} className="flex-1 overflow-y-auto scroll-smooth">
         <ChatMessages messages={messages} messagesEndRef={messagesEndRef} />
       </div>
       
@@ -257,6 +286,7 @@ export default function TouristasChat() {
       <div className="border-t border-gray-200 p-4 bg-white">
         <form onSubmit={handleSubmit} className="flex gap-2">
           <Input
+            ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onFocus={handleInputFocus}
