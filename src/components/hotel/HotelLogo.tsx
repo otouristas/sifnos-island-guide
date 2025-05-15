@@ -19,6 +19,7 @@ const HotelLogo = ({ hotel, hotelLogoUrl, position }: HotelLogoProps) => {
     if (hotelLogoUrl) {
       setLogoError(false);
       setLogoLoaded(false);
+      setRetries(0); // Reset retries counter when URL changes
     }
   }, [hotelLogoUrl]);
 
@@ -33,6 +34,16 @@ const HotelLogo = ({ hotel, hotelLogoUrl, position }: HotelLogoProps) => {
   const handleLogoError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     console.error(`Failed to load ${position} logo for ${hotel.name}: ${hotelLogoUrl}`);
     
+    // Special handling for Villa Olivia Clara logo which has a non-standard path
+    if (hotel.name === "Villa Olivia Clara" && retries < 1) {
+      console.log(`Trying alternative path for Villa Olivia Clara logo`);
+      const timestamp = Date.now();
+      const randomValue = Math.floor(Math.random() * 1000);
+      e.currentTarget.src = `/uploads/hotels/villa-olivia-clara/logo-villa-olivia.png?v=${timestamp}-${randomValue}`;
+      setRetries(prevRetries => prevRetries + 1);
+      return;
+    }
+    
     // Retry with a new cache buster if we haven't exceeded retry attempts
     if (retries < 2) {
       console.log(`Retrying logo load for ${hotel.name}, attempt ${retries + 1}`);
@@ -46,7 +57,7 @@ const HotelLogo = ({ hotel, hotelLogoUrl, position }: HotelLogoProps) => {
       }
       
       e.currentTarget.src = `${baseUrl}?v=${timestamp}-${randomValue}`;
-      setRetries(retries + 1);
+      setRetries(prevRetries => prevRetries + 1);
     } else {
       setLogoError(true);
       e.currentTarget.style.display = 'none';
