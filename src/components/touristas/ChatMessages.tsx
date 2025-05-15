@@ -55,12 +55,12 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, messagesEndRef })
                     {message.location ? (
                       <div className="flex items-center justify-center gap-2">
                         <Hotel className="h-4 w-4 sm:h-5 sm:w-5" />
-                        <span>Hotels in {message.location.charAt(0).toUpperCase() + message.location.slice(1)}</span>
+                        <span>Accommodation in {message.location.charAt(0).toUpperCase() + message.location.slice(1)}</span>
                       </div>
                     ) : (
                       <div className="flex items-center justify-center gap-2">
                         <Hotel className="h-4 w-4 sm:h-5 sm:w-5" />
-                        <span>Recommended Hotels</span>
+                        <span>Recommended Accommodation</span>
                       </div>
                     )}
                   </div>

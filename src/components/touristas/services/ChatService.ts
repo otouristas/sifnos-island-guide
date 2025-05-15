@@ -85,7 +85,7 @@ export const searchHotels = async (query: string, preferences: Record<string, an
     if ((queryLower.includes('villa') || queryLower.includes('villas')) && 
         !preferences.hotelName) {
       console.log('Villa search detected in query:', queryLower);
-      supabaseQuery = supabaseQuery.ilike('name', '%villa%');
+      supabaseQuery = supabaseQuery.or('name.ilike.%villa%,name.ilike.%Villa%');
     }
     
     // Execute the query
@@ -127,6 +127,7 @@ export const searchHotels = async (query: string, preferences: Record<string, an
     if ((queryLower.includes('villa') || queryLower.includes('villas')) && 
         !preferences.hotelName) {
       console.log('Applying post-query villa filter');
+      // Improved villa filtering to capture both lowercase and uppercase "Villa"/"villa"
       filteredHotels = filteredHotels.filter(hotel => 
         hotel.name.toLowerCase().includes('villa')
       );
