@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -215,6 +216,7 @@ export default function TouristasChat() {
         // Search for hotels based on user query and preferences
         relevantHotels = await searchHotels(searchQuery, {
           ...updatedPreferences,
+          location: locationFromQuery || undefined,
           amenities: amenitiesFromQuery.length > 0 ? amenitiesFromQuery.join(',') : undefined,
           hotelName: hotelNameFromQuery || undefined
         });
@@ -225,7 +227,7 @@ export default function TouristasChat() {
         if (amenitiesFromQuery.includes('pool')) {
           console.log("Filtering hotels by pool amenity");
           relevantHotels = relevantHotels.filter(hotel => 
-            hotel.hotel_amenities?.some(a => 
+            hotel.hotel_amenities?.some((a: any) => 
               a.amenity.toLowerCase().includes('pool') || 
               a.amenity.toLowerCase().includes('swimming')
             )
@@ -252,8 +254,14 @@ export default function TouristasChat() {
           locationToShow = locationsInResponse[0];
         }
         
+        console.log("Final hotels to show:", relevantHotels.length, "for location:", locationToShow);
+        
+        // Force showing hotels if the query explicitly asks for hotels with pool
+        const forceShowHotels = input.toLowerCase().includes('pool') && relevantHotels.length > 0;
+        
         // If we have hotels to show after all filtering, update the message with hotels
         if (relevantHotels.length > 0) {
+          console.log("Updating message with hotels");
           setMessages((prev) => 
             prev.map(msg => 
               msg.id === assistantId 
@@ -267,8 +275,10 @@ export default function TouristasChat() {
             )
           );
           
-          // Ensure we scroll to view the hotels within the chat container only
-          setTimeout(scrollToBottom, 100);
+          // Ensure we scroll to view the hotels
+          setTimeout(scrollToBottom, 150);
+        } else {
+          console.log("No hotels found to display");
         }
       }
       
@@ -313,6 +323,9 @@ export default function TouristasChat() {
         if (chatContainerRef.current) {
           chatContainerRef.current.scrollIntoView({ behavior: 'auto', block: 'start' });
         }
+        
+        // Final scroll to bottom to show everything
+        setTimeout(scrollToBottom, 200);
       }, 100);
     }
   };

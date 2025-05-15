@@ -88,6 +88,12 @@ export const searchHotels = async (query: string, preferences: Record<string, an
       supabaseQuery = supabaseQuery.or('name.ilike.%villa%,name.ilike.%Villa%');
     }
     
+    // Special case for "pool" queries
+    if (queryLower.includes('pool')) {
+      console.log('Pool search detected');
+      // Will filter results after the query
+    }
+    
     // Execute the query
     const { data: hotels, error } = await supabaseQuery;
     
@@ -100,7 +106,7 @@ export const searchHotels = async (query: string, preferences: Record<string, an
     let filteredHotels = hotels || [];
     
     // Filter by pool if specifically requested
-    if (preferences.amenities && preferences.amenities.includes('pool')) {
+    if (preferences.amenities?.includes('pool') || queryLower.includes('pool')) {
       filteredHotels = filteredHotels.filter(hotel => 
         hotel.hotel_amenities?.some((a: any) => 
           a.amenity.toLowerCase().includes('pool') || 
@@ -133,6 +139,8 @@ export const searchHotels = async (query: string, preferences: Record<string, an
       );
       console.log('After villa filter, hotels count:', filteredHotels.length);
     }
+    
+    console.log(`Found ${filteredHotels.length} hotels matching the criteria`);
     
     // Limit results to maximum 3 hotels
     return filteredHotels.slice(0, 3);

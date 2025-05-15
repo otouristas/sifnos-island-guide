@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Bot, User, Hotel } from 'lucide-react';
 import { Message } from './utils/chat-utils';
 import { HotelCarousel, Separator } from './HotelDisplay';
@@ -10,6 +10,15 @@ interface ChatMessagesProps {
 }
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, messagesEndRef }) => {
+  // Debug log to check if we're correctly showing hotel results
+  useEffect(() => {
+    messages.forEach(msg => {
+      if (msg.hotels && msg.hotels.length > 0) {
+        console.log(`Message ${msg.id} has ${msg.hotels.length} hotels and showHotels=${msg.showHotels}`);
+      }
+    });
+  }, [messages]);
+
   return (
     <div className="flex-1 overflow-y-auto p-3 sm:p-5 space-y-5 sm:space-y-7">
       {messages.map((message) => (
