@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { AIRequestMessage, ConversationContext } from '../utils/chat-utils';
 
@@ -104,7 +103,8 @@ export const trackConversationContext = (messages: any[]): ConversationContext[]
   
   return recentMessages.map(msg => ({
     topic: msg.role === 'user' ? 'User Query' : 'AI Response',
-    summary: msg.content
+    summary: msg.content,
+    timestamp: Date.now() // Add the timestamp property required by ConversationContext
   }));
 };
 
@@ -146,7 +146,7 @@ export const searchHotels = async (query: string, preferences: Record<string, st
       if (poolError) {
         console.error("Error finding hotels with pools:", poolError);
         // Fallback to filtering after fetch if RPC fails
-      } else if (poolHotels && poolHotels.length > 0) {
+      } else if (poolHotels && Array.isArray(poolHotels) && poolHotels.length > 0) {
         // We have pool hotels from RPC, use their IDs to filter
         const poolHotelIds = poolHotels.map((hotel: any) => hotel.id);
         supabaseQuery = supabaseQuery.in('id', poolHotelIds);
