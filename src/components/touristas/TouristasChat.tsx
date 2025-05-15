@@ -41,42 +41,66 @@ export default function TouristasChat() {
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   
+  // Effect to scroll to bottom when messages update
   useEffect(() => {
-    scrollToBottom();
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
     
-    // Scroll to top on initial load
+    // Keep focus within the chat container
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = 0;
+      chatContainerRef.current.focus();
     }
   }, [messages]);
   
-  // Auto scroll to top on page load
+  // Auto focus and scroll management on page load
   useEffect(() => {
-    window.scrollTo(0, 0);
-    
-    // Focus on chat container
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = 0;
-    }
-    
     // Focus on the input field after load
     setTimeout(() => {
       if (inputRef.current) {
         inputRef.current.focus();
       }
-    }, 500);
+      
+      // Ensure we're at the correct scroll position within the chat
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
+      }
+    }, 300);
+    
+    // Set up click handler to keep focus in chat
+    const handleOutsideClick = (e: MouseEvent) => {
+      // If we click inside the chat, do nothing special
+      if (chatContainerRef.current?.contains(e.target as Node)) {
+        return;
+      }
+      
+      // If we click outside, prevent any scroll changes
+      e.preventDefault();
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    };
+
+    document.addEventListener('click', handleOutsideClick);
+    return () => document.removeEventListener('click', handleOutsideClick);
   }, []);
   
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    // Critical: Prevent default form submission behavior
+    // Critical: Prevent ALL default form behavior
     e.preventDefault();
-    
-    // Ensure default navigation doesn't happen
     e.stopPropagation();
+    
+    // Prevent any scrolling of the page
+    window.scrollTo({
+      top: window.scrollY,
+      behavior: 'auto'
+    });
     
     if (!input.trim()) return;
     
@@ -94,6 +118,18 @@ export default function TouristasChat() {
     
     // Loading state
     setIsLoading(true);
+    
+    // Keep focus on input
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+      
+      // Ensure we stay in the chat container
+      if (chatContainerRef.current) {
+        chatContainerRef.current.scrollIntoView({ block: 'start', behavior: 'auto' });
+      }
+    }, 50);
     
     try {
       // Extract user preferences from the message
@@ -126,6 +162,9 @@ export default function TouristasChat() {
         preferences: updatedPreferences
       }]);
       
+      // Process scrolling after adding message
+      setTimeout(scrollToBottom, 50);
+      
       // Prepare messages for the AI service with correct format
       const aiMessages: AIRequestMessage[] = messages.map(msg => ({
         role: msg.role,
@@ -154,9 +193,9 @@ export default function TouristasChat() {
       const reader = response.getReader();
       const fullContent = await processStreamingResponse(reader, assistantId, setMessages);
       
-      // Ensure we maintain focus on the chat area and don't scroll to another section
+      // Ensure we maintain focus in the chat area after response
       if (chatContainerRef.current) {
-        chatContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        chatContainerRef.current.scrollIntoView({ behavior: 'auto', block: 'start' });
         chatContainerRef.current.focus();
       }
       
@@ -229,21 +268,15 @@ export default function TouristasChat() {
           );
           
           // Ensure we scroll to view the hotels within the chat container only
-          setTimeout(() => {
-            scrollToBottom();
-            // Keep focus on the chat container
-            if (chatContainerRef.current) {
-              chatContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-          }, 200);
+          setTimeout(scrollToBottom, 100);
         }
       }
       
       // If no content was received, show fallback message
       if (!fullContent) {
         const fallbackMessage = locationFromQuery
-          ? `I found some hotel options in ${locationFromQuery} that might interest you. Feel free to ask me more about them!`
-          : "I found some hotel options in Sifnos that might interest you. Feel free to ask me more about them!";
+          ? `I found some accommodation options in ${locationFromQuery} that might interest you. Feel free to ask me more about them!`
+          : "I found some accommodation options in Sifnos that might interest you. Feel free to ask me more about them!";
           
         setMessages((prev) => 
           prev.map(msg => 
@@ -271,10 +304,14 @@ export default function TouristasChat() {
     } finally {
       setIsLoading(false);
       
-      // Focus on the input field after sending
+      // Focus on the input field after sending and ensure we're in the chat area
       setTimeout(() => {
         if (inputRef.current) {
           inputRef.current.focus();
+        }
+        
+        if (chatContainerRef.current) {
+          chatContainerRef.current.scrollIntoView({ behavior: 'auto', block: 'start' });
         }
       }, 100);
     }
@@ -284,12 +321,15 @@ export default function TouristasChat() {
     <div 
       ref={chatContainerRef}
       className="flex flex-col h-[calc(100vh-200px)] min-h-[600px] rounded-xl overflow-hidden bg-gradient-to-b from-white to-gray-50 border border-gray-200 shadow-xl"
-      tabIndex={0} // Make div focusable with tab order
+      tabIndex={-1} // Make div focusable, but not in the tab order
       onClick={(e) => {
-        // Keep focus within the chat when clicking inside
+        // Prevent any default scroll behavior when clicking inside chat
+        e.preventDefault();
         e.stopPropagation();
-        if (chatContainerRef.current) {
-          chatContainerRef.current.focus();
+        
+        // Keep focus within the chat
+        if (inputRef.current) {
+          inputRef.current.focus();
         }
       }}
     >
@@ -301,12 +341,14 @@ export default function TouristasChat() {
         <form 
           ref={formRef} 
           onSubmit={(e) => {
-            // Extra prevention of default form submission behavior
             handleSubmit(e);
-            return false; // Additional prevention
+            return false; // Additional prevention of submission
           }} 
-          className="flex gap-2" 
-          onClick={(e) => e.stopPropagation()}
+          className="flex gap-2"
+          onClick={(e) => {
+            // Prevent propagation to keep event within form
+            e.stopPropagation();
+          }}
         >
           <Input
             ref={inputRef}
@@ -315,14 +357,21 @@ export default function TouristasChat() {
             placeholder="Ask about hotels in Platis Gialos, Apollonia, etc..."
             className="flex-1 border-gray-300 focus-visible:ring-sifnos-deep-blue rounded-full pl-4"
             disabled={isLoading}
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              // Prevent any scroll changes
+              e.stopPropagation();
+            }}
             onKeyDown={(e) => {
-              // Prevent form submission on Enter key with these modifications
               if (e.key === 'Enter') {
                 e.preventDefault();
                 if (!isLoading && input.trim()) {
                   handleSubmit(e);
                 }
+                // Prevent any scroll behavior
+                if (chatContainerRef.current) {
+                  chatContainerRef.current.scrollIntoView({ behavior: 'auto', block: 'start' });
+                }
+                return false;
               }
             }}
           />
@@ -331,10 +380,16 @@ export default function TouristasChat() {
             disabled={isLoading} 
             className="bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90 rounded-full w-10 h-10 p-0 flex items-center justify-center"
             onClick={(e) => {
+              // Prevent default behavior and stop propagation
+              e.preventDefault();
               e.stopPropagation();
+              
               if (!isLoading && input.trim()) {
                 handleSubmit(e);
               }
+              
+              // Prevent any scroll changes
+              return false;
             }}
           >
             {isLoading ? 
