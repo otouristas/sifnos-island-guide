@@ -33,7 +33,7 @@ const mainNavItems = [
     ]
   },
   { name: 'Beaches', path: '/beaches' },
-  { name: 'Ferry Tickets', path: '/ferry-tickets' },
+  // Ferry Tickets link removed
   { name: 'Travel Guide', path: '/travel-guide' },
   { name: 'About Us', path: '/about-us' },
   { name: 'FAQ', path: '/faq' },

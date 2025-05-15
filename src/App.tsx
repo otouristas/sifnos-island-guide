@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -78,7 +79,7 @@ const App = () => (
             <Route path="/blog/:slug" element={<BlogPostPage />} />
             {/* Touristas AI route */}
             <Route path="/touristas-ai" element={<TouristasAIPage />} />
-            {/* Ferry tickets route */}
+            {/* Ferry tickets route - kept but hidden from navigation */}
             <Route path="/ferry-tickets" element={<FerryTicketsPage />} />
             {/* Other routes */}
             <Route path="/beaches" element={<BeachesPage />} />
