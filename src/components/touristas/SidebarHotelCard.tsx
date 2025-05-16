@@ -1,25 +1,17 @@
 
 import { Link } from 'react-router-dom';
-import { MapPin, Star, ExternalLink } from 'lucide-react';
+import { MapPin, Star } from 'lucide-react';
 import { getHotelImageUrl } from '@/utils/hotel-utils';
 import { generateHotelUrl } from '@/lib/url-utils';
 import { HotelType } from './utils/chat-utils';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
 
 type SidebarHotelCardProps = {
   hotel: HotelType;
   className?: string;
-  compact?: boolean;
-  showViewButton?: boolean;
 };
 
-export const SidebarHotelCard = ({ 
-  hotel, 
-  className = '',
-  compact = false,
-  showViewButton = false
-}: SidebarHotelCardProps) => {
+export const SidebarHotelCard = ({ hotel, className = '' }: SidebarHotelCardProps) => {
   // Generate the URL for the hotel page
   const hotelSlug = generateHotelUrl(hotel.name);
   
@@ -35,22 +27,10 @@ export const SidebarHotelCard = ({
   };
 
   return (
-    <Link 
-      to={`/hotels/${hotelSlug}`} 
-      className={cn(
-        "block transition-all hover:transform hover:translate-y-[-2px]",
-        className
-      )}
-    >
-      <div className={cn(
-        "bg-white rounded-md overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col h-full",
-        compact ? "p-0" : ""
-      )}>
+    <Link to={`/hotels/${hotelSlug}`} className={`block ${className}`}>
+      <div className="bg-white rounded-md overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col h-full">
         {/* Image Container */}
-        <div className={cn(
-          "relative overflow-hidden bg-gray-100",
-          compact ? "h-20" : "h-24"
-        )}>
+        <div className="relative h-24 overflow-hidden bg-gray-100">
           <img 
             src={getHotelImageUrl(hotel)}
             alt={hotel.name}
@@ -71,10 +51,7 @@ export const SidebarHotelCard = ({
         </div>
         
         {/* Hotel info */}
-        <div className={cn(
-          "flex-grow flex flex-col justify-between",
-          compact ? "p-1.5" : "p-2"
-        )}>
+        <div className="p-2 flex-grow flex flex-col justify-between">
           <div>
             <h3 className="font-medium text-xs truncate">{hotel.name}</h3>
             {hotel.hotel_types && (
@@ -83,19 +60,11 @@ export const SidebarHotelCard = ({
           </div>
           
           {/* Rating */}
-          <div className="flex items-center justify-between mt-1">
-            {hotel.rating && (
-              <div className="flex items-center">
-                {renderStarRating(hotel.rating)}
-              </div>
-            )}
-            
-            {showViewButton && (
-              <div className="text-xs text-sifnos-deep-blue flex items-center">
-                View <ExternalLink size={10} className="ml-0.5" />
-              </div>
-            )}
-          </div>
+          {hotel.rating && (
+            <div className="flex items-center mt-1.5">
+              {renderStarRating(hotel.rating)}
+            </div>
+          )}
         </div>
       </div>
     </Link>
