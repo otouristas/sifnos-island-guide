@@ -218,4 +218,3 @@ export const HotelCarousel = ({ hotels }: { hotels: HotelType[] }) => {
     </Carousel>
   );
 };
-

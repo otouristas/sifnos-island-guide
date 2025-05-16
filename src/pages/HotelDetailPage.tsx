@@ -17,6 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ImageGalleryDialog } from '@/components/hotel/ImageGalleryDialog';
 import VillaOliviaAvailability from '@/components/hotel/VillaOliviaAvailability';
+import { HotelCard } from '@/components/touristas/HotelDisplay';
 
 export default function HotelDetailPage() {
   const { slug } = useParams();
@@ -26,6 +27,7 @@ export default function HotelDetailPage() {
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [openFaqIndex, setOpenFaqIndex] = useState(-1);
+  const [similarHotels, setSimilarHotels] = useState([]);
   const { toast } = useToast();
   const isMobile = useIsMobile();
   
@@ -254,6 +256,23 @@ export default function HotelDetailPage() {
           setActiveImage(`/uploads/hotels/${photoUrl}`);
           setActiveImageIndex(mainPhoto ? hotelData.hotel_photos.indexOf(mainPhoto) : 0);
         }
+        
+        // Fetch similar hotels based on hotel type
+        if (hotelData?.hotel_types?.length > 0) {
+          const { data: similarHotelsData, error } = await supabase
+            .from('hotels')
+            .select('*, hotel_photos(*)')
+            .neq('id', hotelData.id) // Exclude current hotel
+            .contains('hotel_types', [hotelData.hotel_types[0]]) // Match the first hotel type
+            .limit(4);
+          
+          if (error) {
+            console.error('Error fetching similar hotels:', error);
+          } else if (similarHotelsData?.length > 0) {
+            console.log('Similar hotels found:', similarHotelsData.length);
+            setSimilarHotels(similarHotelsData);
+          }
+        }
       } catch (error) {
         console.error('Error fetching hotel details:', error);
         toast({
@@ -468,6 +487,28 @@ export default function HotelDetailPage() {
               Linen changes weekly
             </li>
           </ul>
+        </div>
+      </div>
+    );
+  };
+
+  // Add the Similar Hotels section just before the closing fragment
+  const renderSimilarHotels = () => {
+    if (!similarHotels || similarHotels.length === 0) return null;
+    
+    return (
+      <div className="py-8 bg-gray-50">
+        <div className="page-container">
+          <h2 className="text-2xl font-montserrat font-semibold mb-5">Similar Hotels You May Like</h2>
+          <p className="text-gray-600 mb-6">Explore other {hotel?.hotel_types?.[0]?.toLowerCase()} in Sifnos</p>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {similarHotels.map((similarHotel) => (
+              <div key={similarHotel.id} className="w-full">
+                <HotelCard hotel={similarHotel} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -999,6 +1040,9 @@ export default function HotelDetailPage() {
           </div>
         </div>
       </div>
+      
+      {/* Add the similar hotels section just before the closing tag */}
+      {renderSimilarHotels()}
     </>
   );
 }

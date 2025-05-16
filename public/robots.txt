@@ -10,6 +10,10 @@ Disallow: /*.json$
 Disallow: /*?*filter=
 Disallow: /*?*sort=
 
+# Hotel pages - ensure they're properly crawled for SEO
+Allow: /hotels/
+Allow: /hotel-types/
+
 # Allow access to specific images
 Allow: /lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png
 Allow: /uploads/sifnos-og-image.jpg
