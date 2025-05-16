@@ -17,7 +17,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ImageGalleryDialog } from '@/components/hotel/ImageGalleryDialog';
 import VillaOliviaAvailability from '@/components/hotel/VillaOliviaAvailability';
-import { HotelCard } from '@/components/touristas/HotelDisplay';
+import { HotelCard, SidebarHotelCard } from '@/components/touristas/HotelDisplay';
+import { getBookingPlatformLogo, getSimilarHotels } from '@/utils/hotel-utils';
 
 export default function HotelDetailPage() {
   const { slug } = useParams();
@@ -259,18 +260,18 @@ export default function HotelDetailPage() {
         
         // Fetch similar hotels based on hotel type
         if (hotelData?.hotel_types?.length > 0) {
-          const { data: similarHotelsData, error } = await supabase
+          const { data: allHotels, error } = await supabase
             .from('hotels')
-            .select('*, hotel_photos(*)')
-            .neq('id', hotelData.id) // Exclude current hotel
-            .contains('hotel_types', [hotelData.hotel_types[0]]) // Match the first hotel type
-            .limit(4);
+            .select('*, hotel_photos(*), hotel_amenities(*)')
+            .limit(20);
           
           if (error) {
-            console.error('Error fetching similar hotels:', error);
-          } else if (similarHotelsData?.length > 0) {
-            console.log('Similar hotels found:', similarHotelsData.length);
-            setSimilarHotels(similarHotelsData);
+            console.error('Error fetching hotels for similar hotels:', error);
+          } else if (allHotels?.length > 0) {
+            // Use the utility function to get similar hotels
+            const filteredSimilarHotels = getSimilarHotels(hotelData, allHotels, 3);
+            console.log('Similar hotels found:', filteredSimilarHotels.length);
+            setSimilarHotels(filteredSimilarHotels);
           }
         }
       } catch (error) {
@@ -1043,6 +1044,24 @@ export default function HotelDetailPage() {
       
       {/* Add the similar hotels section just before the closing tag */}
       {renderSimilarHotels()}
+      
+      {/* Add similar hotels grid section for mobile users */}
+      {similarHotels.length > 0 && isMobile && (
+        <div className="bg-gray-50 py-8">
+          <div className="page-container">
+            <h2 className="text-2xl font-montserrat font-semibold mb-5">Similar Hotels You May Like</h2>
+            <p className="text-gray-600 mb-6">Explore other {hotel?.hotel_types?.[0]?.toLowerCase()} in Sifnos</p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {similarHotels.map((similarHotel) => (
+                <div key={similarHotel.id}>
+                  <HotelCard hotel={similarHotel} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

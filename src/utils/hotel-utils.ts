@@ -1,3 +1,4 @@
+
 // Hotel utility functions
 
 /**
@@ -120,4 +121,75 @@ export const getHotelLogoUrl = (hotel: any): string => {
   
   // Final fallback to placeholder
   return '/placeholder.svg';
+};
+
+/**
+ * Get booking platform logo URL
+ * @param platform Booking platform name (e.g., 'booking.com', 'airbnb')
+ * @returns URL string for the platform logo
+ */
+export const getBookingPlatformLogo = (platform: string | undefined): string | null => {
+  if (!platform) return null;
+  
+  switch(platform.toLowerCase()) {
+    case 'booking.com':
+      return '/uploads/Booking.com.svg';
+    case 'airbnb':
+      return '/uploads/misc/airbnb-logo.png';
+    case 'expedia':
+      return '/uploads/misc/expedia-logo.png';
+    default:
+      return null;
+  }
+};
+
+/**
+ * Get similar hotels based on type and location
+ * @param currentHotel The current hotel object
+ * @param allHotels Array of all hotel objects
+ * @param limit Maximum number of similar hotels to return
+ * @returns Array of similar hotel objects
+ */
+export const getSimilarHotels = (currentHotel: any, allHotels: any[], limit: number = 3): any[] => {
+  if (!currentHotel || !allHotels?.length) return [];
+  
+  // Filter out the current hotel
+  const otherHotels = allHotels.filter(hotel => hotel.id !== currentHotel.id);
+  
+  // Get hotels with the same primary type
+  let sameTypeHotels = [];
+  if (currentHotel.hotel_types?.length > 0) {
+    const primaryType = currentHotel.hotel_types[0];
+    sameTypeHotels = otherHotels.filter(hotel => 
+      hotel.hotel_types?.some((type: string) => type === primaryType)
+    );
+  }
+  
+  // Get hotels in the same location if we don't have enough with the same type
+  let sameLocationHotels = [];
+  if (sameTypeHotels.length < limit && currentHotel.location) {
+    sameLocationHotels = otherHotels.filter(hotel => 
+      hotel.location === currentHotel.location && 
+      !sameTypeHotels.some(typeHotel => typeHotel.id === hotel.id)
+    );
+  }
+  
+  // Combine and limit the results
+  const combinedHotels = [...sameTypeHotels, ...sameLocationHotels];
+  
+  // If we still don't have enough, add some random hotels
+  if (combinedHotels.length < limit) {
+    const remainingHotels = otherHotels.filter(hotel => 
+      !combinedHotels.some(combinedHotel => combinedHotel.id === hotel.id)
+    );
+    
+    // Sort by rating if available
+    const sortedRemaining = remainingHotels.sort((a, b) => 
+      (b.rating || 0) - (a.rating || 0)
+    );
+    
+    combinedHotels.push(...sortedRemaining.slice(0, limit - combinedHotels.length));
+  }
+  
+  return combinedHotels.slice(0, limit);
 };

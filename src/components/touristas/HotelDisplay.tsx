@@ -200,6 +200,21 @@ export const HotelCard = ({ hotel }: { hotel: HotelType }) => {
   );
 };
 
+// Similar Hotels Grid Component
+export const SimilarHotelsGrid = ({ hotels, className = '' }: { hotels: HotelType[], className?: string }) => {
+  if (!hotels?.length) return null;
+  
+  return (
+    <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 ${className}`}>
+      {hotels.map((hotel) => (
+        <div key={hotel.id}>
+          <HotelCard hotel={hotel} />
+        </div>
+      ))}
+    </div>
+  );
+};
+
 // Hotel Carousel Component
 export const HotelCarousel = ({ hotels }: { hotels: HotelType[] }) => {
   if (!hotels?.length) return null;
@@ -218,3 +233,6 @@ export const HotelCarousel = ({ hotels }: { hotels: HotelType[] }) => {
     </Carousel>
   );
 };
+
+// Export SidebarHotelCard for use in other components
+export { SidebarHotelCard } from './SidebarHotelCard';
