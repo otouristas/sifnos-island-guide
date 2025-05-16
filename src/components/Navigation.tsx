@@ -40,8 +40,15 @@ const mainNavItems = [
   { name: 'Contact', path: '/contact' }
 ];
 
+// Define prop types for the DesktopNavItems component
+interface NavItemProps {
+  location: ReturnType<typeof useLocation>;
+  openDropdown: string | null;
+  toggleDropdown: (name: string | null) => void;
+}
+
 // Memoize the desktop nav items to prevent unnecessary re-renders
-const DesktopNavItems = memo(({ location, openDropdown, toggleDropdown }) => (
+const DesktopNavItems = memo(({ location, openDropdown, toggleDropdown }: NavItemProps) => (
   <div className="hidden md:block">
     <div className="ml-10 flex items-center space-x-2">
       {mainNavItems.map((item) => (
@@ -94,8 +101,14 @@ const DesktopNavItems = memo(({ location, openDropdown, toggleDropdown }) => (
   </div>
 ));
 
+// Define prop types for the MobileMenu component
+interface MobileMenuProps extends NavItemProps {
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 // Memoize the mobile menu to prevent unnecessary re-renders
-const MobileMenu = memo(({ isOpen, location, openDropdown, toggleDropdown, setIsOpen }) => {
+const MobileMenu = memo(({ isOpen, location, openDropdown, toggleDropdown, setIsOpen }: MobileMenuProps) => {
   if (!isOpen) return null;
   
   return (
