@@ -1,4 +1,3 @@
-
 // Hotel utility functions
 
 /**
@@ -144,7 +143,7 @@ export const getBookingPlatformLogo = (platform: string | undefined): string | n
 };
 
 /**
- * Get similar hotels based on type and location
+ * Get similar hotels based on type and location with improved filtering
  * @param currentHotel The current hotel object
  * @param allHotels Array of all hotel objects
  * @param limit Maximum number of similar hotels to return
@@ -156,39 +155,52 @@ export const getSimilarHotels = (currentHotel: any, allHotels: any[], limit: num
   // Filter out the current hotel
   const otherHotels = allHotels.filter(hotel => hotel.id !== currentHotel.id);
   
-  // Get hotels with the same primary type
+  // Get hotels with matching types (prioritizing the primary type)
   let sameTypeHotels = [];
   if (currentHotel.hotel_types?.length > 0) {
     const primaryType = currentHotel.hotel_types[0];
-    sameTypeHotels = otherHotels.filter(hotel => 
-      hotel.hotel_types?.some((type: string) => type === primaryType)
+    
+    // First, find hotels that have the same primary type (first in their array)
+    const primaryTypeMatches = otherHotels.filter(hotel => 
+      hotel.hotel_types?.length > 0 && hotel.hotel_types[0] === primaryType
     );
+    
+    // Then, find hotels that have the type in their array but not as primary
+    const secondaryTypeMatches = otherHotels.filter(hotel => 
+      hotel.hotel_types?.some((type: string) => type === primaryType) &&
+      !primaryTypeMatches.some(match => match.id === hotel.id)
+    );
+    
+    sameTypeHotels = [...primaryTypeMatches, ...secondaryTypeMatches];
   }
   
   // Get hotels in the same location if we don't have enough with the same type
   let sameLocationHotels = [];
   if (sameTypeHotels.length < limit && currentHotel.location) {
+    // Find hotels that are in the exact same location but don't match by type
     sameLocationHotels = otherHotels.filter(hotel => 
       hotel.location === currentHotel.location && 
       !sameTypeHotels.some(typeHotel => typeHotel.id === hotel.id)
     );
   }
   
-  // Combine and limit the results
-  const combinedHotels = [...sameTypeHotels, ...sameLocationHotels];
+  // Combine and sort by rating (highest first)
+  const combinedHotels = [...sameTypeHotels, ...sameLocationHotels].sort((a, b) => 
+    (b.rating || 0) - (a.rating || 0)
+  );
   
-  // If we still don't have enough, add some random hotels
+  // If we still don't have enough, add some top-rated hotels
   if (combinedHotels.length < limit) {
     const remainingHotels = otherHotels.filter(hotel => 
       !combinedHotels.some(combinedHotel => combinedHotel.id === hotel.id)
     );
     
     // Sort by rating if available
-    const sortedRemaining = remainingHotels.sort((a, b) => 
+    const topRatedRemaining = remainingHotels.sort((a, b) => 
       (b.rating || 0) - (a.rating || 0)
     );
     
-    combinedHotels.push(...sortedRemaining.slice(0, limit - combinedHotels.length));
+    combinedHotels.push(...topRatedRemaining.slice(0, limit - combinedHotels.length));
   }
   
   return combinedHotels.slice(0, limit);
