@@ -481,7 +481,7 @@ export default function HotelDetailPage() {
       </div>
       
       {/* Add the similar hotels section just before the closing tag */}
-      
+      {renderSimilarHotels()}
       
       {/* Add similar hotels grid section for mobile users */}
       {similarHotels.length > 0 && isMobile && (

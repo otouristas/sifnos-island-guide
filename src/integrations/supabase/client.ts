@@ -22,56 +22,6 @@ export function logSupabaseResponse(operation: string, data: any, error: any) {
   return { data, error };
 }
 
-/**
- * Get hotel details by URL slug
- * @param slug The URL-friendly slug for the hotel
- * @returns Hotel data with photos and amenities
- */
-export async function getHotelBySlug(slug: string) {
-  try {
-    // Convert slug to a hotel name format (replace hyphens with spaces and capitalize words)
-    const possibleHotelName = slug
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
-
-    console.log(`Looking for hotel with name similar to: ${possibleHotelName}`);
-
-    // Query the hotels table for a hotel with a matching name
-    const { data: hotels, error } = await supabase
-      .from('hotels')
-      .select('*, hotel_photos(*), hotel_amenities(*)')
-      .ilike('name', `%${possibleHotelName}%`)
-      .limit(1);
-
-    if (error) {
-      console.error('Error fetching hotel by slug:', error);
-      return null;
-    }
-
-    if (hotels && hotels.length > 0) {
-      return hotels[0];
-    }
-
-    // If not found, try a broader search without exact matching
-    const { data: fallbackHotels, error: fallbackError } = await supabase
-      .from('hotels')
-      .select('*, hotel_photos(*), hotel_amenities(*)')
-      .limit(1);
-
-    if (fallbackError) {
-      console.error('Error in fallback hotel fetch:', fallbackError);
-      return null;
-    }
-
-    // Return the first hotel as a fallback or null if no hotels found
-    return fallbackHotels && fallbackHotels.length > 0 ? fallbackHotels[0] : null;
-  } catch (error) {
-    console.error('Unexpected error in getHotelBySlug:', error);
-    return null;
-  }
-}
-
 // Helper function to generate dynamic room image paths with improved caching
 export function getHotelRoomImagePath(photoUrl: string | undefined, hotelName: string | undefined): string {
   if (!photoUrl) {
