@@ -1,6 +1,7 @@
 
 import SEO from '../components/SEO';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import SchemaGenerator from '@/components/SchemaGenerator';
 
 export default function FAQPage() {
   const faqs = [
@@ -50,6 +51,14 @@ export default function FAQPage() {
         keywords={['sifnos faq', 'sifnos travel questions', 'sifnos accommodation faq', 'how to get to sifnos', 'best time to visit sifnos', 'sifnos travel tips']}
         schemaType="Organization"
         canonical="https://hotelssifnos.com/faq"
+      />
+      
+      {/* Add FAQ Schema */}
+      <SchemaGenerator 
+        pageType="FAQ"
+        data={{
+          faq: faqs
+        }}
       />
       
       {/* Hero Section */}

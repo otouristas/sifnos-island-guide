@@ -1,6 +1,8 @@
+
 import SEO from '../components/SEO';
 import { Link } from 'react-router-dom';
 import { MapPin, Calendar, Compass, Utensils, Sun, Anchor, Waves, Umbrella, Ship } from 'lucide-react';
+import SchemaGenerator from '@/components/SchemaGenerator';
 
 export default function TravelGuidePage() {
   // Sample travel guide categories with updated image paths
@@ -51,6 +53,16 @@ export default function TravelGuidePage() {
         keywords={['sifnos travel guide', 'sifnos tourism', 'things to do sifnos', 'sifnos beaches', 'sifnos restaurants', 'sifnos local tips', 'best time to visit sifnos']}
         schemaType="TouristDestination"
         canonical="https://hotelssifnos.com/travel-guide"
+      />
+      
+      {/* Add TouristDestination Schema */}
+      <SchemaGenerator 
+        pageType="TravelGuide"
+        data={{
+          name: "Sifnos Island Travel Guide",
+          description: "Comprehensive guide to exploring the authentic beauty, rich traditions, and hidden gems of Sifnos Island",
+          image: "/uploads/beaches/faros.webp"
+        }}
       />
       
       {/* Hero Section - Improved vertical padding */}

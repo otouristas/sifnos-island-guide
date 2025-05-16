@@ -27,6 +27,11 @@ const prerender = (): Plugin => {
         '/beaches',
         '/touristas-ai',
         '/faq',
+        '/contact',
+        '/pricing',
+        '/privacy-policy',
+        '/terms-of-service',
+        '/cookie-policy'
       ];
       
       // Output directory
@@ -60,8 +65,8 @@ const prerender = (): Plugin => {
           // Navigate to the page
           await page.goto(`file://${htmlPath}`, { waitUntil: 'networkidle0' });
           
-          // Wait for all content to load properly
-          await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 1000)));
+          // Wait for all content to load properly (fix for timeout issues)
+          await page.waitForTimeout(2000);
           
           // Get the prerendered HTML
           const html = await page.content();
