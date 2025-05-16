@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback, memo } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
@@ -499,7 +500,7 @@ export default function HotelsPage() {
       
       {/* Compact Search Bar for Mobile - Optimized with memo component */}
       {isMobile && (
-        <div className="sticky top-0 z-40 bg-white shadow-md border-b border-gray-200">
+        <div className="sticky top-16 z-50 bg-white shadow-md border-b border-gray-200">
           <div className="page-container py-3">
             <div className="flex justify-between items-center gap-2">
               <SearchBar 
@@ -526,7 +527,7 @@ export default function HotelsPage() {
       
       {/* Desktop Search Bar - Performance optimized */}
       {!isMobile && (
-        <div className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-md will-change-transform">
+        <div className="bg-white border-b border-gray-200 sticky top-16 z-40 shadow-md will-change-transform">
           <div className="page-container py-3">
             <form 
               className="flex flex-col md:flex-row gap-4 items-center"
@@ -581,7 +582,7 @@ export default function HotelsPage() {
             {/* Filters Sidebar - Only visible on desktop */}
             {!isMobile && (
               <div className="w-full lg:w-1/4 px-4 mb-8 lg:mb-0">
-                <div className="sticky top-[73px]">
+                <div className="sticky top-[112px]">
                   <FilterSidebar 
                     filters={filters} 
                     onFiltersChange={setFilters}
@@ -720,3 +721,4 @@ export default function HotelsPage() {
     </>
   );
 }
+
