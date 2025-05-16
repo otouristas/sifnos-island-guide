@@ -493,7 +493,7 @@ export default function HotelDetailPage() {
     );
   };
 
-  // Add the Similar Hotels section just before the closing fragment
+  // Add the Similar Hotels section
   const renderSimilarHotels = () => {
     if (!similarHotels || similarHotels.length === 0) return null;
     
@@ -1042,26 +1042,8 @@ export default function HotelDetailPage() {
         </div>
       </div>
       
-      {/* Add the similar hotels section just before the closing tag */}
+      {/* Add the similar hotels section */}
       {renderSimilarHotels()}
-      
-      {/* Add similar hotels grid section for mobile users */}
-      {similarHotels.length > 0 && isMobile && (
-        <div className="bg-gray-50 py-8">
-          <div className="page-container">
-            <h2 className="text-2xl font-montserrat font-semibold mb-5">Similar Hotels You May Like</h2>
-            <p className="text-gray-600 mb-6">Explore other {hotel?.hotel_types?.[0]?.toLowerCase()} in Sifnos</p>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {similarHotels.map((similarHotel) => (
-                <div key={similarHotel.id}>
-                  <HotelCard hotel={similarHotel} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }
