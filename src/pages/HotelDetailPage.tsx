@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, ExternalLink } from 'lucide-react';
+import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, ExternalLink, Hotel } from 'lucide-react';
 import { supabase, logSupabaseResponse, getHotelRoomImagePath } from '@/integrations/supabase/client';
 import SEO from '../components/SEO';
 import { useToast } from "@/hooks/use-toast";
@@ -15,6 +15,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { ImageGalleryDialog } from '@/components/hotel/ImageGalleryDialog';
 import VillaOliviaAvailability from '@/components/hotel/VillaOliviaAvailability';
 import { SidebarHotelCard } from '@/components/touristas/HotelDisplay';
+import { getBookingPlatformLogo } from '@/utils/hotel-utils';
 
 export default function HotelDetailPage() {
   const { slug } = useParams();
