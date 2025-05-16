@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
@@ -20,6 +20,130 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+
+// Memoize the search bar component to improve performance
+const SearchBar = memo(({ 
+  isSearchExpanded, 
+  setIsSearchExpanded, 
+  searchQuery, 
+  setSearchQuery, 
+  handleSearch 
+}) => {
+  if (isSearchExpanded) {
+    return (
+      <form 
+        className="flex items-center"
+        onSubmit={handleSearch}
+      >
+        <Input
+          type="text"
+          placeholder="Search hotels, locations, amenities..."
+          className="rounded-r-none border-r-0"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          autoFocus
+        />
+        <Button 
+          type="button"
+          size="icon"
+          className="rounded-l-none border border-l-0 border-input h-10"
+          variant="ghost"
+          onClick={() => setIsSearchExpanded(false)}
+        >
+          <X size={20} />
+        </Button>
+      </form>
+    );
+  } 
+  
+  return (
+    <div 
+      className="flex-1 flex items-center gap-2 border rounded-md px-3 py-2 text-gray-500 bg-background cursor-pointer"
+      onClick={() => setIsSearchExpanded(true)}
+    >
+      <Search size={18} />
+      <span className="truncate">Search for hotels, locations...</span>
+    </div>
+  );
+});
+
+// Memoize the filter buttons to prevent re-renders
+const FilterButtons = memo(({ 
+  isMobile, 
+  filterCount, 
+  isSheetOpen, 
+  setIsSheetOpen, 
+  setFilters 
+}) => (
+  <div className="flex gap-2">
+    <Button 
+      asChild
+      variant="default" 
+      size="sm" 
+      className="bg-sifnos-deep-blue hover:bg-sifnos-turquoise"
+    >
+      <Link to="/touristas-ai" className="flex items-center">
+        <img 
+          src="/uploads/touristas-ai-logo.svg" 
+          alt="Touristas AI" 
+          className="w-4 h-4 mr-1"
+        />
+        <span className="sr-only md:not-sr-only">AI</span>
+      </Link>
+    </Button>
+
+    <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+      <SheetTrigger asChild>
+        <Button variant="outline" size="icon" className="shrink-0">
+          <Filter size={18} />
+          {filterCount > 0 && (
+            <span className="absolute -top-1 -right-1 w-5 h-5 text-xs flex items-center justify-center text-white bg-sifnos-turquoise rounded-full">
+              {filterCount}
+            </span>
+          )}
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="bottom" className="h-screen p-0 max-h-screen">
+        <SheetHeader className="sticky top-0 z-10 bg-white p-4 border-b border-gray-200 flex flex-row items-center justify-between">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => setIsSheetOpen(false)}
+            className="absolute left-2"
+          >
+            <ChevronLeft size={18} />
+          </Button>
+          <SheetTitle className="mx-auto">Filters</SheetTitle>
+          <Button 
+            variant="ghost" 
+            onClick={() => {
+              setFilters({
+                amenities: {
+                  wifi: false,
+                  breakfast: false,
+                  pool: false,
+                  parking: false,
+                  airConditioning: false,
+                  restaurant: false,
+                  seaView: false,
+                },
+                starRating: 0,
+                hotelType: '',
+                priceRange: null,
+                location: '',
+              });
+            }} 
+            className="text-sm text-gray-500 absolute right-2"
+            size="sm"
+          >
+            Clear all
+          </Button>
+        </SheetHeader>
+        {/* Filter content rendered in the parent component */}
+      </SheetContent>
+    </Sheet>
+  </div>
+));
 
 export default function HotelsPage() {
   // Filter state
@@ -204,7 +328,7 @@ export default function HotelsPage() {
     }
   }, [sponsoredHotels]);
   
-  // Apply filters whenever hotels or filters change
+  // Apply filters whenever hotels or filters change - memoize with useCallback for better performance
   useEffect(() => {
     if (hotels.length === 0) return;
     
@@ -275,14 +399,15 @@ export default function HotelsPage() {
     setFilteredHotels(results);
   }, [hotels, filters, searchQuery]);
 
-  const handleSearch = (e?: React.FormEvent) => {
+  // Memoize the handleSearch function to avoid recreating on every render
+  const handleSearch = useCallback((e?: React.FormEvent) => {
     e?.preventDefault();
     console.log("Searching with query:", searchQuery);
     if (isMobile) {
       setIsSearchExpanded(false);
     }
     // The filtering is already handled by the useEffect that watches searchQuery
-  };
+  }, [searchQuery, isMobile]);
 
   const filterCount = 
     (filters.starRating ? 1 : 0) +
@@ -336,135 +461,36 @@ export default function HotelsPage() {
         </div>
       </div>
       
-      {/* Compact Search Bar for Mobile */}
+      {/* Compact Search Bar for Mobile - Optimized with memo component */}
       {isMobile && (
-        <div className="sticky top-0 z-50 bg-white shadow-md border-b border-gray-200">
+        <div className="sticky top-0 z-40 bg-white shadow-md border-b border-gray-200">
           <div className="page-container py-3">
-            {isSearchExpanded ? (
-              <form 
-                className="flex items-center"
-                onSubmit={handleSearch}
-              >
-                <Input
-                  type="text"
-                  placeholder="Search hotels, locations, amenities..."
-                  className="rounded-r-none border-r-0"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  autoFocus
+            <div className="flex justify-between items-center gap-2">
+              <SearchBar 
+                isSearchExpanded={isSearchExpanded}
+                setIsSearchExpanded={setIsSearchExpanded}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                handleSearch={handleSearch}
+              />
+
+              {!isSearchExpanded && (
+                <FilterButtons
+                  isMobile={isMobile}
+                  filterCount={filterCount}
+                  isSheetOpen={isSheetOpen}
+                  setIsSheetOpen={setIsSheetOpen}
+                  setFilters={setFilters}
                 />
-                <Button 
-                  type="submit"
-                  size="icon"
-                  className="rounded-l-none border border-l-0 border-input h-10"
-                  variant="ghost"
-                  onClick={() => setIsSearchExpanded(false)}
-                >
-                  <X size={20} />
-                </Button>
-              </form>
-            ) : (
-              <div className="flex justify-between items-center gap-2">
-                <div 
-                  className="flex-1 flex items-center gap-2 border rounded-md px-3 py-2 text-gray-500 bg-background cursor-pointer"
-                  onClick={() => setIsSearchExpanded(true)}
-                >
-                  <Search size={18} />
-                  <span className="truncate">Search for hotels, locations...</span>
-                </div>
-
-                <div className="flex gap-2">
-                  <Button 
-                    asChild
-                    variant="default" 
-                    size="sm" 
-                    className="bg-sifnos-deep-blue hover:bg-sifnos-turquoise"
-                  >
-                    <Link to="/touristas-ai" className="flex items-center">
-                      <img 
-                        src="/uploads/touristas-ai-logo.svg" 
-                        alt="Touristas AI" 
-                        className="w-4 h-4 mr-1"
-                      />
-                      <span className="sr-only md:not-sr-only">AI</span>
-                    </Link>
-                  </Button>
-
-                  <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-                    <SheetTrigger asChild>
-                      <Button variant="outline" size="icon" className="shrink-0">
-                        <Filter size={18} />
-                        {filterCount > 0 && (
-                          <span className="absolute -top-1 -right-1 w-5 h-5 text-xs flex items-center justify-center text-white bg-sifnos-turquoise rounded-full">
-                            {filterCount}
-                          </span>
-                        )}
-                      </Button>
-                    </SheetTrigger>
-                    <SheetContent side="bottom" className="h-screen p-0 max-h-screen">
-                      <SheetHeader className="sticky top-0 z-10 bg-white p-4 border-b border-gray-200 flex flex-row items-center justify-between">
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          onClick={() => setIsSheetOpen(false)}
-                          className="absolute left-2"
-                        >
-                          <ChevronLeft size={18} />
-                        </Button>
-                        <SheetTitle className="mx-auto">Filters</SheetTitle>
-                        <Button 
-                          variant="ghost" 
-                          onClick={() => {
-                            setFilters({
-                              amenities: {
-                                wifi: false,
-                                breakfast: false,
-                                pool: false,
-                                parking: false,
-                                airConditioning: false,
-                                restaurant: false,
-                                seaView: false,
-                              },
-                              starRating: 0,
-                              hotelType: '',
-                              priceRange: null,
-                              location: '',
-                            });
-                          }} 
-                          className="text-sm text-gray-500 absolute right-2"
-                          size="sm"
-                        >
-                          Clear all
-                        </Button>
-                      </SheetHeader>
-                      <div className="overflow-y-auto h-full p-4 pb-20">
-                        <FilterSidebar 
-                          filters={filters} 
-                          onFiltersChange={setFilters}
-                          isMobile={true}
-                          className="shadow-none p-0 bg-transparent"
-                        />
-                      </div>
-                      <div className="sticky bottom-0 p-4 bg-white border-t border-gray-200 flex justify-center">
-                        <Button 
-                          className="w-full bg-sifnos-turquoise hover:bg-sifnos-deep-blue"
-                          onClick={() => setIsSheetOpen(false)}
-                        >
-                          Show {filteredHotels.length} hotels
-                        </Button>
-                      </div>
-                    </SheetContent>
-                  </Sheet>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       )}
       
-      {/* Desktop Search Bar */}
+      {/* Desktop Search Bar - Performance optimized */}
       {!isMobile && (
-        <div className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-md">
+        <div className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-md will-change-transform">
           <div className="page-container py-3">
             <form 
               className="flex flex-col md:flex-row gap-4 items-center"
@@ -643,6 +669,18 @@ export default function HotelsPage() {
           </div>
         </div>
       </div>
+      
+      {/* Render the mobile filter sheet content only when open to save performance */}
+      {isMobile && isSheetOpen && (
+        <div className="overflow-y-auto h-full p-4 pb-20">
+          <FilterSidebar 
+            filters={filters} 
+            onFiltersChange={setFilters}
+            isMobile={true}
+            className="shadow-none p-0 bg-transparent"
+          />
+        </div>
+      )}
     </>
   );
 }

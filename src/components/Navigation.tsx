@@ -172,6 +172,7 @@ export default function Navigation() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const location = useLocation();
   const [isMounted, setIsMounted] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Prevent animating on initial render
   useEffect(() => {
@@ -190,13 +191,32 @@ export default function Navigation() {
       document.body.style.overflow = 'auto';
     };
   }, [isOpen]);
+  
+  // Use a passive scroll listener to improve performance
+  useEffect(() => {
+    const handleScroll = () => {
+      // Use requestAnimationFrame to optimize scroll performance
+      requestAnimationFrame(() => {
+        setIsScrolled(window.scrollY > 10);
+      });
+    };
+
+    // Add passive scrolling for better performance
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const toggleDropdown = (name: string | null) => {
     setOpenDropdown(openDropdown === name ? null : name);
   };
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
+    <nav className={`bg-white shadow-md sticky top-0 z-50 transition-shadow ${
+      isScrolled ? 'shadow-lg' : 'shadow-md'
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-3">
@@ -205,6 +225,7 @@ export default function Navigation() {
                 src="/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png" 
                 alt="HotelsSifnos Logo" 
                 className="h-8 w-8"
+                loading="eager"
               />
               <span className="font-montserrat font-bold text-[#1E2E48] text-xl">
                 Hotels<span className="text-[#E3D7C3]">Sifnos</span>
