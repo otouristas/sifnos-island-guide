@@ -20,6 +20,16 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Dispatch, FormEvent, SetStateAction } from 'react';
+
+// Define interface for SearchBar component props
+interface SearchBarProps {
+  isSearchExpanded: boolean;
+  setIsSearchExpanded: Dispatch<SetStateAction<boolean>>;
+  searchQuery: string;
+  setSearchQuery: Dispatch<SetStateAction<string>>;
+  handleSearch: (e?: FormEvent) => void;
+}
 
 // Memoize the search bar component to improve performance
 const SearchBar = memo(({ 
@@ -28,7 +38,7 @@ const SearchBar = memo(({
   searchQuery, 
   setSearchQuery, 
   handleSearch 
-}) => {
+}: SearchBarProps) => {
   if (isSearchExpanded) {
     return (
       <form 
@@ -67,6 +77,32 @@ const SearchBar = memo(({
   );
 });
 
+// Define interface for filter state
+interface FilterState {
+  amenities: {
+    wifi: boolean;
+    breakfast: boolean;
+    pool: boolean;
+    parking: boolean;
+    airConditioning: boolean;
+    restaurant: boolean;
+    seaView: boolean;
+  };
+  starRating: number;
+  hotelType: string;
+  priceRange: [number, number] | null;
+  location: string;
+}
+
+// Define interface for FilterButtons component props
+interface FilterButtonsProps {
+  isMobile: boolean;
+  filterCount: number;
+  isSheetOpen: boolean;
+  setIsSheetOpen: Dispatch<SetStateAction<boolean>>;
+  setFilters: Dispatch<SetStateAction<FilterState>>;
+}
+
 // Memoize the filter buttons to prevent re-renders
 const FilterButtons = memo(({ 
   isMobile, 
@@ -74,7 +110,7 @@ const FilterButtons = memo(({
   isSheetOpen, 
   setIsSheetOpen, 
   setFilters 
-}) => (
+}: FilterButtonsProps) => (
   <div className="flex gap-2">
     <Button 
       asChild
@@ -147,7 +183,7 @@ const FilterButtons = memo(({
 
 export default function HotelsPage() {
   // Filter state
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<FilterState>({
     amenities: {
       wifi: false,
       breakfast: false,
@@ -159,7 +195,7 @@ export default function HotelsPage() {
     },
     starRating: 0,
     hotelType: '',
-    priceRange: null as [number, number] | null,
+    priceRange: null,
     location: '',
   });
 
