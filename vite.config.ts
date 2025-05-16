@@ -5,21 +5,88 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { Plugin } from 'vite';
 import fs from 'fs';
+import puppeteer from 'puppeteer';
 
-// Enhanced prerender plugin for SEO
+// Enhanced prerender plugin with Puppeteer for SEO optimization
 const prerender = (): Plugin => {
   return {
     name: 'prerender',
     apply: 'build',
     async closeBundle() {
-      console.log('Prerendering key pages for SEO optimization...');
+      console.log('Starting advanced prerendering for SEO optimization...');
       
-      // Add comprehensive prerendering logic here
-      // In a real implementation, this would use tools like Puppeteer
-      // to generate static HTML for key routes
+      // Key routes that should be prerendered for SEO
+      const routes = [
+        '/',
+        '/hotels',
+        '/locations',
+        '/hotel-types',
+        '/blog',
+        '/about',
+        '/travel-guide',
+        '/beaches',
+        '/touristas-ai',
+        '/faq',
+      ];
       
-      // Log completion
-      console.log('Prerendering completed for key SEO routes');
+      // Output directory
+      const outputDir = path.resolve(__dirname, 'dist');
+      
+      try {
+        // Launch puppeteer
+        const browser = await puppeteer.launch({
+          headless: 'new',
+          args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        });
+        
+        for (const route of routes) {
+          console.log(`Prerendering route: ${route}`);
+          
+          // Create page
+          const page = await browser.newPage();
+          
+          // Set viewport
+          await page.setViewport({ width: 1200, height: 800 });
+          
+          // We're building a static file, so we'll use file:// protocol
+          const htmlPath = path.join(outputDir, route === '/' ? 'index.html' : `${route.substring(1)}/index.html`);
+          
+          // Check if HTML file exists
+          if (!fs.existsSync(htmlPath)) {
+            console.log(`Skipping ${route} - HTML file not found at ${htmlPath}`);
+            continue;
+          }
+          
+          // Navigate to the page
+          await page.goto(`file://${htmlPath}`, { waitUntil: 'networkidle0' });
+          
+          // Wait for all content to load properly
+          await page.waitForTimeout(1000);
+          
+          // Get the prerendered HTML
+          const html = await page.content();
+          
+          // Create the directory path if it doesn't exist
+          const dirPath = path.dirname(htmlPath);
+          if (!fs.existsSync(dirPath)) {
+            fs.mkdirSync(dirPath, { recursive: true });
+          }
+          
+          // Write the file
+          fs.writeFileSync(htmlPath, html);
+          
+          console.log(`✅ Prerendered ${route}`);
+          
+          // Close page
+          await page.close();
+        }
+        
+        // Close browser
+        await browser.close();
+        console.log('Prerendering completed successfully!');
+      } catch (error) {
+        console.error('Error during prerendering:', error);
+      }
     }
   };
 };

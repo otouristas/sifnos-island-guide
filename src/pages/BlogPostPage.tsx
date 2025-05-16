@@ -9,6 +9,7 @@ import SEO from '@/components/SEO';
 import { blogPosts } from '@/data/blogPosts';
 import { slugify } from '@/lib/url-utils';
 import { toast } from "sonner";
+import SchemaGenerator from '@/components/SchemaGenerator';
 
 const BlogPostPage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -110,6 +111,26 @@ const BlogPostPage = () => {
         author={post?.author || "Touristas AI"}
         keywords={post?.categories.map(category => category.toLowerCase()) || ['sifnos travel', 'greek islands']}
       />
+      
+      {/* Enhanced Schema.org JSON-LD */}
+      {post && (
+        <SchemaGenerator 
+          pageType="BlogPost"
+          data={{
+            name: post.title,
+            description: generateSeoDescription(),
+            image: post.featuredImage,
+            datePublished: post.date,
+            dateModified: post.lastUpdated || post.date,
+            author: post.author,
+            breadcrumbs: [
+              { name: "Home", item: "https://hotelssifnos.com/" },
+              { name: "Blog", item: "https://hotelssifnos.com/blog" },
+              { name: post.title, item: `https://hotelssifnos.com/blog/${post.slug}` }
+            ]
+          }}
+        />
+      )}
       
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-sifnos-beige to-blue-50 py-16 border-b border-gray-200">

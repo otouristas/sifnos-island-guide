@@ -1,0 +1,153 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- Home Page Images -->
+  <url>
+    <loc>https://hotelssifnos.com/</loc>
+    <image:image>
+      <image:loc>https://hotelssifnos.com/uploads/sifnos-hero.jpg</image:loc>
+      <image:title>Sifnos Island Beautiful View</image:title>
+      <image:caption>Panoramic view of the beautiful Cycladic landscape of Sifnos Island</image:caption>
+      <image:geo_location>Sifnos, Greece</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://hotelssifnos.com/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png</image:loc>
+      <image:title>Hotels Sifnos Logo</image:title>
+      <image:caption>Official logo of Hotels Sifnos</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- ALK Hotel Sifnos Images -->
+  <url>
+    <loc>https://hotelssifnos.com/hotels/alk-hotel-sifnos</loc>
+    <image:image>
+      <image:loc>https://hotelssifnos.com/uploads/hotels/alk-hotel-sifnos/alk-hotel-feature.jpeg</image:loc>
+      <image:title>ALK Hotel Sifnos Main View</image:title>
+      <image:caption>Exterior view of ALK Hotel in Sifnos, a luxury accommodation option</image:caption>
+      <image:geo_location>Kamares, Sifnos, Greece</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://hotelssifnos.com/uploads/hotels/alk-hotel-sifnos/superior-sea-view.jpeg</image:loc>
+      <image:title>ALK Hotel Superior Sea View Room</image:title>
+      <image:caption>Luxurious superior room with sea view at ALK Hotel Sifnos</image:caption>
+      <image:geo_location>Kamares, Sifnos, Greece</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://hotelssifnos.com/uploads/hotels/alk-hotel-sifnos/comfort-room.webp</image:loc>
+      <image:title>ALK Hotel Comfort Room</image:title>
+      <image:caption>Comfortable and modern room accommodation at ALK Hotel</image:caption>
+      <image:geo_location>Kamares, Sifnos, Greece</image:geo_location>
+    </image:image>
+  </url>
+  
+  <!-- Meropi Rooms and Apartments Images -->
+  <url>
+    <loc>https://hotelssifnos.com/hotels/meropi-rooms-and-apartments</loc>
+    <image:image>
+      <image:loc>https://hotelssifnos.com/uploads/hotels/meropirooms-hero.webp</image:loc>
+      <image:title>Meropi Rooms and Apartments</image:title>
+      <image:caption>Beautiful accommodations at Meropi Rooms and Apartments in Sifnos</image:caption>
+      <image:geo_location>Apollonia, Sifnos, Greece</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://hotelssifnos.com/uploads/hotels/meropirooms-bath.webp</image:loc>
+      <image:title>Meropi Bathroom</image:title>
+      <image:caption>Modern bathroom facilities at Meropi Rooms and Apartments</image:caption>
+      <image:geo_location>Apollonia, Sifnos, Greece</image:geo_location>
+    </image:image>
+  </url>
+  
+  <!-- Filadaki Villas Images -->
+  <url>
+    <loc>https://hotelssifnos.com/hotels/filadaki-villas</loc>
+    <image:image>
+      <image:loc>https://hotelssifnos.com/uploads/hotels/filadaki-studios/home-page_1441.jpg.jpeg</image:loc>
+      <image:title>Filadaki Villas Exterior</image:title>
+      <image:caption>Stunning exterior view of Filadaki Villas in Sifnos</image:caption>
+      <image:geo_location>Platis Gialos, Sifnos, Greece</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://hotelssifnos.com/uploads/hotels/filadaki-studios/maistros_3967.webp</image:loc>
+      <image:title>Filadaki Villas Maistros Suite</image:title>
+      <image:caption>Luxurious Maistros suite at Filadaki Villas with sea views</image:caption>
+      <image:geo_location>Platis Gialos, Sifnos, Greece</image:geo_location>
+    </image:image>
+  </url>
+  
+  <!-- Morpheas Pension Images -->
+  <url>
+    <loc>https://hotelssifnos.com/hotels/morpheas-pension-apartments</loc>
+    <image:image>
+      <image:loc>https://hotelssifnos.com/uploads/hotels/morpheas-pension/sifnos-pension-morfeas.jpg.jpeg</image:loc>
+      <image:title>Morpheas Pension Exterior</image:title>
+      <image:caption>Traditional Cycladic architecture of Morpheas Pension in Sifnos</image:caption>
+      <image:geo_location>Vathi, Sifnos, Greece</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://hotelssifnos.com/uploads/hotels/morpheas-pension/apartment-5person.webp</image:loc>
+      <image:title>Morpheas Pension Family Apartment</image:title>
+      <image:caption>Spacious 5-person family apartment at Morpheas Pension</image:caption>
+      <image:geo_location>Vathi, Sifnos, Greece</image:geo_location>
+    </image:image>
+  </url>
+  
+  <!-- Villa Olivia Clara Images -->
+  <url>
+    <loc>https://hotelssifnos.com/hotels/villa-olivia-clara</loc>
+    <image:image>
+      <image:loc>https://hotelssifnos.com/uploads/hotels/villa-olivia-clara/feature-image.jpeg</image:loc>
+      <image:title>Villa Olivia Clara Exterior</image:title>
+      <image:caption>Luxurious Villa Olivia Clara with private pool and sea views</image:caption>
+      <image:geo_location>Kastro, Sifnos, Greece</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://hotelssifnos.com/uploads/hotels/villa-olivia-clara/villa-olivia-clara-master-bedroo.webp</image:loc>
+      <image:title>Villa Olivia Clara Master Bedroom</image:title>
+      <image:caption>Elegant master bedroom at Villa Olivia Clara with premium furnishings</image:caption>
+      <image:geo_location>Kastro, Sifnos, Greece</image:geo_location>
+    </image:image>
+  </url>
+  
+  <!-- Location Images -->
+  <url>
+    <loc>https://hotelssifnos.com/locations</loc>
+    <image:image>
+      <image:loc>https://hotelssifnos.com/uploads/beaches/apollonia.webp</image:loc>
+      <image:title>Apollonia - Sifnos Capital</image:title>
+      <image:caption>The charming capital of Sifnos island, Apollonia village</image:caption>
+      <image:geo_location>Apollonia, Sifnos, Greece</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://hotelssifnos.com/uploads/beaches/kamares.webp</image:loc>
+      <image:title>Kamares Beach and Port</image:title>
+      <image:caption>The main port of Sifnos with its beautiful sandy beach</image:caption>
+      <image:geo_location>Kamares, Sifnos, Greece</image:geo_location>
+    </image:image>
+  </url>
+  
+  <!-- Beach Images -->
+  <url>
+    <loc>https://hotelssifnos.com/beaches</loc>
+    <image:image>
+      <image:loc>https://hotelssifnos.com/uploads/beaches/plats-gialos.webp</image:loc>
+      <image:title>Platis Gialos Beach</image:title>
+      <image:caption>The longest sandy beach on Sifnos island</image:caption>
+      <image:geo_location>Platis Gialos, Sifnos, Greece</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://hotelssifnos.com/uploads/beaches/vathi.webp</image:loc>
+      <image:title>Vathi Beach</image:title>
+      <image:caption>Protected sandy bay with crystal clear waters</image:caption>
+      <image:geo_location>Vathi, Sifnos, Greece</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://hotelssifnos.com/uploads/beaches/faros.webp</image:loc>
+      <image:title>Faros Beach</image:title>
+      <image:caption>Picturesque fishing village with family-friendly beach</image:caption>
+      <image:geo_location>Faros, Sifnos, Greece</image:geo_location>
+    </image:image>
+  </url>
+  
+</urlset>

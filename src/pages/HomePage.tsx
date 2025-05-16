@@ -3,6 +3,7 @@ import { useState } from 'react';
 import SEO from '@/components/SEO';
 import TouristasAIBanner from '@/components/TouristasAIBanner';
 import SponsoredHotelCard from '@/components/SponsoredHotelCard';
+import SchemaGenerator from '@/components/SchemaGenerator';
 
 // Import our component sections
 import HeroSection from '@/components/home/HeroSection';
@@ -30,6 +31,19 @@ export default function HomePage() {
         schemaType="Organization"
         canonical="https://hotelssifnos.com"
         imageUrl="/uploads/sifnos-hero.jpg"
+      />
+      
+      {/* Enhanced Schema.org JSON-LD for Homepage */}
+      <SchemaGenerator 
+        pageType="Homepage"
+        data={{
+          breadcrumbs: [
+            {
+              name: "Home",
+              item: "https://hotelssifnos.com/"
+            }
+          ]
+        }}
       />
       
       {/* Hero Section with Search */}

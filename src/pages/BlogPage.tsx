@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import SEO from '@/components/SEO';
 import { blogPosts } from '@/data/blogPosts';
 import BlogPageContent from '@/components/blog/BlogPageContent';
+import SchemaGenerator from '@/components/SchemaGenerator';
 
 const BlogPage = () => {
   // Create schema markup for the blog posts
@@ -52,6 +53,17 @@ const BlogPage = () => {
         keywords={['sifnos blog', 'sifnos travel guide', 'sifnos hotels guide', 'where to stay in sifnos', 'sifnos beaches', 'greek island travel']}
         schemaType="Article"
         canonical="/blog"
+      />
+      
+      {/* Enhanced Schema.org JSON-LD */}
+      <SchemaGenerator 
+        pageType="Blog"
+        data={{
+          breadcrumbs: [
+            { name: "Home", item: "https://hotelssifnos.com/" },
+            { name: "Blog", item: "https://hotelssifnos.com/blog" }
+          ]
+        }}
       />
       
       <Helmet>

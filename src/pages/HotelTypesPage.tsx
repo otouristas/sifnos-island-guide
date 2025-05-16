@@ -4,6 +4,7 @@ import { hotelTypes } from '../data/hotelTypes';
 import HotelTypeCard from '../components/HotelTypeCard';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
+import SchemaGenerator from '@/components/SchemaGenerator';
 
 export default function HotelTypesPage() {
   useEffect(() => {
@@ -13,11 +14,22 @@ export default function HotelTypesPage() {
   return (
     <>
       <SEO 
-        title="Hotel Types in Sifnos - Find Your Perfect Accommodation Style" 
+        title="Hotel Types in Sifnos - Find Your Perfect Accommodation Style | Hotels Sifnos" 
         description="Explore Sifnos' diverse accommodation styles from luxurious cliff-top villas and intimate boutique hotels to family-friendly resorts and traditional Cycladic guesthouses. Find the perfect setting for your island escape with our expert accommodation guide."
         keywords={['sifnos hotel types', 'luxury hotels sifnos', 'boutique hotels sifnos', 'beach hotels sifnos', 'family friendly hotels sifnos', 'traditional hotels sifnos', 'types of accommodation sifnos']}
         schemaType="Hotel"
         canonical="https://hotelssifnos.com/hotel-types"
+      />
+      
+      {/* Enhanced Schema.org JSON-LD */}
+      <SchemaGenerator 
+        pageType="HotelListing"
+        data={{
+          breadcrumbs: [
+            { name: "Home", item: "https://hotelssifnos.com/" },
+            { name: "Hotel Types", item: "https://hotelssifnos.com/hotel-types" }
+          ]
+        }}
       />
       
       <div className="container mx-auto px-4">

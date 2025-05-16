@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { generateHotelUrl } from '@/lib/url-utils';
@@ -10,6 +11,12 @@ interface SitemapURL {
   lastmod: string;
   changefreq: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
   priority: number;
+  images?: Array<{
+    loc: string;
+    title?: string;
+    caption?: string;
+    geo_location?: string;
+  }>;
 }
 
 export default function SitemapGenerator() {
@@ -24,7 +31,20 @@ export default function SitemapGenerator() {
           loc: `${baseURL}/`,
           lastmod: currentDate,
           changefreq: 'weekly',
-          priority: 1.0
+          priority: 1.0,
+          images: [
+            {
+              loc: `${baseURL}/uploads/sifnos-hero.jpg`,
+              title: 'Sifnos Island Panorama',
+              caption: 'Beautiful panoramic view of Sifnos Island in the Cyclades',
+              geo_location: 'Sifnos, Greece'
+            },
+            {
+              loc: `${baseURL}/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png`,
+              title: 'Hotels Sifnos Logo',
+              caption: 'Official logo of Hotels Sifnos website'
+            }
+          ]
         },
         {
           loc: `${baseURL}/hotels`,
@@ -42,7 +62,21 @@ export default function SitemapGenerator() {
           loc: `${baseURL}/beaches`,
           lastmod: currentDate,
           changefreq: 'weekly',
-          priority: 0.8
+          priority: 0.8,
+          images: [
+            {
+              loc: `${baseURL}/uploads/beaches/plats-gialos.webp`,
+              title: 'Platis Gialos Beach Sifnos',
+              caption: 'The longest sandy beach on the island of Sifnos',
+              geo_location: 'Platis Gialos, Sifnos, Greece'
+            },
+            {
+              loc: `${baseURL}/uploads/beaches/vathi.webp`,
+              title: 'Vathi Beach Sifnos',
+              caption: 'Protected sandy bay with crystal clear waters',
+              geo_location: 'Vathi, Sifnos, Greece'
+            }
+          ]
         },
         {
           loc: `${baseURL}/travel-guide`,
@@ -102,19 +136,33 @@ export default function SitemapGenerator() {
         }
       ];
       
-      // Blog pages - enhanced to automatically include all blog posts
+      // Blog pages - enhanced to automatically include all blog posts with images
       const blogPages: SitemapURL[] = [
         {
           loc: `${baseURL}/blog`,
           lastmod: currentDate,
           changefreq: 'weekly',
-          priority: 0.8
+          priority: 0.8,
+          images: [
+            {
+              loc: `${baseURL}/uploads/sifnos-og-image.jpg`,
+              title: 'Sifnos Travel Blog',
+              caption: 'Discover the best of Sifnos with our travel guides'
+            }
+          ]
         },
         ...blogPosts.map(post => ({
           loc: `${baseURL}/blog/${post.slug}`,
-          lastmod: post.date,
+          lastmod: post.lastUpdated || post.date,
           changefreq: 'monthly' as const,
-          priority: post.categories.includes('Featured') ? 0.9 : 0.8
+          priority: post.categories.includes('Featured') ? 0.9 : 0.8,
+          images: [
+            {
+              loc: `${baseURL}${post.featuredImage}`,
+              title: post.title,
+              caption: post.excerpt
+            }
+          ]
         }))
       ];
       
@@ -124,13 +172,33 @@ export default function SitemapGenerator() {
           loc: `${baseURL}/locations`,
           lastmod: currentDate,
           changefreq: 'weekly',
-          priority: 0.8
+          priority: 0.8,
+          images: [
+            {
+              loc: `${baseURL}/uploads/beaches/apollonia.webp`,
+              title: 'Apollonia - Capital of Sifnos',
+              geo_location: 'Apollonia, Sifnos, Greece'
+            },
+            {
+              loc: `${baseURL}/uploads/beaches/kastro.webp`,
+              title: 'Kastro - Medieval Village of Sifnos',
+              geo_location: 'Kastro, Sifnos, Greece'
+            }
+          ]
         },
         ...sifnosLocations.map(location => ({
           loc: `${baseURL}/locations/${location.slug}`,
           lastmod: currentDate,
           changefreq: 'weekly' as const,
-          priority: 0.7
+          priority: 0.7,
+          images: [
+            {
+              loc: `${baseURL}${location.imageUrl}`,
+              title: `${location.name} - Sifnos Island`,
+              caption: location.shortDescription,
+              geo_location: `${location.name}, Sifnos, Greece`
+            }
+          ]
         }))
       ];
       
@@ -146,7 +214,14 @@ export default function SitemapGenerator() {
           loc: `${baseURL}/hotel-types/${type.slug}`,
           lastmod: currentDate,
           changefreq: 'weekly' as const,
-          priority: 0.7
+          priority: 0.7,
+          images: [
+            {
+              loc: `${baseURL}${type.imageUrl}`,
+              title: `${type.title} in Sifnos`,
+              caption: type.shortDescription
+            }
+          ]
         }))
       ];
       
@@ -155,18 +230,30 @@ export default function SitemapGenerator() {
       try {
         const { data: hotels, error } = await supabase
           .from('hotels')
-          .select('id, name, updated_at, hotel_types, rating')
+          .select('id, name, updated_at, hotel_types, rating, images')
           .order('rating', { ascending: false });
         
         if (!error && hotels) {
           // Create sitemap entries for each hotel
-          hotelPages = hotels.map(hotel => ({
-            loc: `${baseURL}/hotels/${generateHotelUrl(hotel.name)}`,
-            lastmod: new Date(hotel.updated_at).toISOString().split('T')[0],
-            changefreq: 'weekly' as const,
-            // Use optional chaining and nullish coalescing to safely handle missing rating
-            priority: (hotel.rating >= 4) ? 0.8 : 0.7
-          }));
+          hotelPages = hotels.map(hotel => {
+            // Extract and process hotel images if available
+            const hotelImages = hotel.images 
+              ? (Array.isArray(hotel.images) ? hotel.images : [])
+              : [];
+            
+            return {
+              loc: `${baseURL}/hotels/${generateHotelUrl(hotel.name)}`,
+              lastmod: new Date(hotel.updated_at).toISOString().split('T')[0],
+              changefreq: 'weekly' as const,
+              // Use optional chaining and nullish coalescing to safely handle missing rating
+              priority: (hotel.rating >= 4) ? 0.8 : 0.7,
+              images: hotelImages.map((imgUrl: string, index: number) => ({
+                loc: imgUrl.startsWith('http') ? imgUrl : `${baseURL}${imgUrl}`,
+                title: `${hotel.name} - Image ${index+1}`,
+                caption: `${hotel.name} - ${hotel.hotel_types || 'Accommodation'} in Sifnos`
+              }))
+            };
+          });
           
           // Add featured hotels with higher priority
           const featuredHotels = [
@@ -224,15 +311,11 @@ export default function SitemapGenerator() {
       // Combine all pages
       const allPages = [...staticPages, ...blogPages, ...locationPages, ...hotelTypePages, ...hotelPages];
 
-      const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${allPages.map(page => `  <url>
-    <loc>${page.loc}</loc>
-    <lastmod>${page.lastmod}</lastmod>
-    <changefreq>${page.changefreq}</changefreq>
-    <priority>${page.priority}</priority>
-  </url>`).join('\n')}
-</urlset>`;
+      // Generate standard sitemap
+      const sitemapContent = generateStandardSitemap(allPages);
+      
+      // Generate image sitemap
+      const imageSitemapContent = generateImageSitemap(allPages);
 
       // In a browser environment, we can't write to the file system directly
       if (typeof window === 'undefined') {
@@ -245,14 +328,51 @@ ${allPages.map(page => `  <url>
         // For development purposes, output the sitemap to console
         if (import.meta.env.DEV) {
           console.log('Sitemap content:', sitemapContent);
+          console.log('Image sitemap content:', imageSitemapContent);
         }
       }
 
-      return sitemapContent;
+      return {
+        standard: sitemapContent,
+        image: imageSitemapContent
+      };
     };
 
     generateSitemap();
   }, []);
+  
+  // Function to generate standard sitemap
+  const generateStandardSitemap = (pages: SitemapURL[]) => {
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${pages.map(page => `  <url>
+    <loc>${page.loc}</loc>
+    <lastmod>${page.lastmod}</lastmod>
+    <changefreq>${page.changefreq}</changefreq>
+    <priority>${page.priority}</priority>
+  </url>`).join('\n')}
+</urlset>`;
+  };
+  
+  // Function to generate image sitemap
+  const generateImageSitemap = (pages: SitemapURL[]) => {
+    // Only include pages with images
+    const pagesWithImages = pages.filter(page => page.images && page.images.length > 0);
+    
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+${pagesWithImages.map(page => `  <url>
+    <loc>${page.loc}</loc>
+${page.images?.map(image => `    <image:image>
+      <image:loc>${image.loc}</image:loc>
+      ${image.title ? `<image:title>${image.title}</image:title>` : ''}
+      ${image.caption ? `<image:caption>${image.caption}</image:caption>` : ''}
+      ${image.geo_location ? `<image:geo_location>${image.geo_location}</image:geo_location>` : ''}
+    </image:image>`).join('\n')}
+  </url>`).join('\n')}
+</urlset>`;
+  };
 
   return null;
 }

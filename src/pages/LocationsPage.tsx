@@ -4,6 +4,7 @@ import { sifnosLocations } from '../data/locations';
 import LocationCard from '../components/LocationCard';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
+import SchemaGenerator from '@/components/SchemaGenerator';
 
 export default function LocationsPage() {
   useEffect(() => {
@@ -13,11 +14,24 @@ export default function LocationsPage() {
   return (
     <>
       <SEO 
-        title="Sifnos Locations Guide - Where to Stay on the Island" 
+        title="Sifnos Locations Guide - Where to Stay on the Island | Hotels Sifnos 2025" 
         description="Insider's guide to Sifnos' distinct areas - from lively Apollonia and beachside Kamares to tranquil Vathi and historic Kastro. Compare neighborhoods by amenities, atmosphere, and accessibility to find your perfect base for exploring this Cycladic gem."
         keywords={['sifnos locations', 'where to stay sifnos', 'best areas sifnos', 'sifnos villages', 'sifnos accommodation locations', 'apollonia sifnos', 'kamares sifnos', 'platis gialos sifnos']}
         schemaType="TouristDestination"
         canonical="https://hotelssifnos.com/locations"
+      />
+      
+      {/* Enhanced Schema.org JSON-LD */}
+      <SchemaGenerator 
+        pageType="Location"
+        data={{
+          name: "Sifnos Island",
+          description: "Guide to all locations and areas in Sifnos island for your perfect vacation stay",
+          breadcrumbs: [
+            { name: "Home", item: "https://hotelssifnos.com/" },
+            { name: "Locations", item: "https://hotelssifnos.com/locations" }
+          ]
+        }}
       />
       
       <div className="container mx-auto px-4">
