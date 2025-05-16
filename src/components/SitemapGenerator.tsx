@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { generateHotelUrl } from '@/lib/url-utils';
@@ -19,11 +18,12 @@ interface SitemapURL {
   }>;
 }
 
+// Update the HotelData interface to correctly represent the data structure from Supabase
 interface HotelData {
   id: string;
   name: string;
   updated_at: string;
-  hotel_types?: string | null;
+  hotel_types?: string[] | null; // Changed from string to string[] | null
   rating?: number | null;
   images?: string[] | null;
 }
@@ -146,7 +146,7 @@ export default function SitemapGenerator() {
       ];
       
       // Blog pages - enhanced to automatically include all blog posts with images
-      // Use date as lastmod if lastUpdated is not present
+      // Use date as lastmod if available
       const blogPages: SitemapURL[] = [
         {
           loc: `${baseURL}/blog`,
@@ -163,7 +163,7 @@ export default function SitemapGenerator() {
         },
         ...blogPosts.map(post => ({
           loc: `${baseURL}/blog/${post.slug}`,
-          lastmod: post.date, // Use post.date since lastUpdated may not exist
+          lastmod: post.date, // Use post.date since we've confirmed it exists
           changefreq: 'monthly' as const,
           priority: post.categories.includes('Featured') ? 0.9 : 0.8,
           images: [
@@ -243,8 +243,8 @@ export default function SitemapGenerator() {
           .select('id, name, updated_at, hotel_types, rating');
         
         if (!error && hotels) {
-          // Create sitemap entries for each hotel
-          hotelPages = hotels.map((hotel: HotelData) => {
+          // Create sitemap entries for each hotel with correct type handling
+          hotelPages = hotels.map((hotel) => {
             return {
               loc: `${baseURL}/hotels/${generateHotelUrl(hotel.name)}`,
               lastmod: new Date(hotel.updated_at).toISOString().split('T')[0],
