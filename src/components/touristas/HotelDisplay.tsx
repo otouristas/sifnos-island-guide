@@ -200,6 +200,38 @@ export const HotelCard = ({ hotel }: { hotel: HotelType }) => {
   );
 };
 
+// Small Sidebar Hotel Card Component for Similar Hotels
+export const SidebarHotelCard = ({ hotel }: { hotel: HotelType }) => {
+  // Generate the URL for the hotel page
+  const hotelSlug = generateHotelUrl(hotel.name);
+  
+  return (
+    <Link to={`/hotels/${hotelSlug}`} className="block">
+      <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex items-center mb-2">
+        <div className="w-16 h-16 overflow-hidden bg-gray-100 flex-shrink-0">
+          <img 
+            src={getHotelImageUrl(hotel)}
+            alt={hotel.name}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              console.error(`Failed to load image for ${hotel.name}`);
+              (e.target as HTMLImageElement).src = '/placeholder.svg';
+            }}
+            loading="eager"
+          />
+        </div>
+        <div className="p-2 flex-grow">
+          <h4 className="font-medium text-xs truncate">{hotel.name}</h4>
+          <div className="flex items-center">
+            <MapPin className="h-3 w-3 text-sifnos-turquoise mr-1" />
+            <span className="text-xs text-gray-500 truncate">{hotel.location}</span>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+};
+
 // Hotel Carousel Component
 export const HotelCarousel = ({ hotels }: { hotels: HotelType[] }) => {
   if (!hotels?.length) return null;
