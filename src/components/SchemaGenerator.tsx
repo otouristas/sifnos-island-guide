@@ -29,9 +29,22 @@ interface SchemaGeneratorProps {
   };
 }
 
+// Define a more flexible schema type that allows for various properties
+interface SchemaObject {
+  "@context"?: string;
+  "@type": string;
+  "@id"?: string;
+  [key: string]: any; // Allow for any additional properties
+}
+
+interface BaseSchema {
+  "@context": string;
+  "@graph": SchemaObject[];
+}
+
 const SchemaGenerator: React.FC<SchemaGeneratorProps> = ({ pageType, data = {} }) => {
   // Base schema with WebSite information
-  const baseSchema = {
+  const baseSchema: BaseSchema = {
     "@context": "https://schema.org",
     "@graph": [
       {
@@ -69,7 +82,7 @@ const SchemaGenerator: React.FC<SchemaGeneratorProps> = ({ pageType, data = {} }
   };
 
   // Generate breadcrumb schema
-  let breadcrumbSchema = null;
+  let breadcrumbSchema: SchemaObject | null = null;
   if (data.breadcrumbs && data.breadcrumbs.length > 0) {
     breadcrumbSchema = {
       "@type": "BreadcrumbList",
@@ -94,9 +107,11 @@ const SchemaGenerator: React.FC<SchemaGeneratorProps> = ({ pageType, data = {} }
         "url": "https://hotelssifnos.com/",
         "logo": {
           "@type": "ImageObject",
+          "@id": "https://hotelssifnos.com/#logo",
           "url": "https://hotelssifnos.com/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png",
           "width": 240,
-          "height": 80
+          "height": 80,
+          "caption": "Hotels Sifnos"
         },
         "sameAs": [
           "https://www.facebook.com/hotelssifnos",
@@ -115,7 +130,7 @@ const SchemaGenerator: React.FC<SchemaGeneratorProps> = ({ pageType, data = {} }
 
     case 'Hotel':
       if (data.hotel) {
-        const hotelSchema = {
+        const hotelSchema: SchemaObject = {
           "@type": "Hotel",
           "@id": `https://hotelssifnos.com/hotels/${data.hotel.name.toLowerCase().replace(/\s+/g, '-')}#hotel`,
           "name": data.hotel.name,
@@ -164,7 +179,11 @@ const SchemaGenerator: React.FC<SchemaGeneratorProps> = ({ pageType, data = {} }
         if (data.hotel.images && data.hotel.images.length > 0) {
           hotelSchema["photo"] = data.hotel.images.map(image => ({
             "@type": "ImageObject",
-            "url": image
+            "@id": image,
+            "url": image,
+            "width": 800,
+            "height": 600,
+            "caption": `${data.hotel.name} - Image`
           }));
         }
         
@@ -253,7 +272,11 @@ const SchemaGenerator: React.FC<SchemaGeneratorProps> = ({ pageType, data = {} }
           "name": "Hotels Sifnos",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://hotelssifnos.com/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png"
+            "@id": "https://hotelssifnos.com/logo",
+            "url": "https://hotelssifnos.com/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png",
+            "width": 240,
+            "height": 80,
+            "caption": "Hotels Sifnos"
           }
         },
         "datePublished": data.datePublished || new Date().toISOString(),

@@ -121,7 +121,7 @@ const BlogPostPage = () => {
             description: generateSeoDescription(),
             image: post.featuredImage,
             datePublished: post.date,
-            dateModified: post.lastUpdated || post.date,
+            dateModified: post.date, // Use date instead of lastUpdated which doesn't exist in BlogPost type
             author: post.author,
             breadcrumbs: [
               { name: "Home", item: "https://hotelssifnos.com/" },

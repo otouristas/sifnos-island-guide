@@ -19,6 +19,15 @@ interface SitemapURL {
   }>;
 }
 
+interface HotelData {
+  id: string;
+  name: string;
+  updated_at: string;
+  hotel_types?: string | null;
+  rating?: number | null;
+  images?: string[] | null;
+}
+
 export default function SitemapGenerator() {
   useEffect(() => {
     const generateSitemap = async () => {
@@ -137,6 +146,7 @@ export default function SitemapGenerator() {
       ];
       
       // Blog pages - enhanced to automatically include all blog posts with images
+      // Use date as lastmod if lastUpdated is not present
       const blogPages: SitemapURL[] = [
         {
           loc: `${baseURL}/blog`,
@@ -153,7 +163,7 @@ export default function SitemapGenerator() {
         },
         ...blogPosts.map(post => ({
           loc: `${baseURL}/blog/${post.slug}`,
-          lastmod: post.lastUpdated || post.date,
+          lastmod: post.date, // Use post.date since lastUpdated may not exist
           changefreq: 'monthly' as const,
           priority: post.categories.includes('Featured') ? 0.9 : 0.8,
           images: [
@@ -230,28 +240,17 @@ export default function SitemapGenerator() {
       try {
         const { data: hotels, error } = await supabase
           .from('hotels')
-          .select('id, name, updated_at, hotel_types, rating, images')
-          .order('rating', { ascending: false });
+          .select('id, name, updated_at, hotel_types, rating');
         
         if (!error && hotels) {
           // Create sitemap entries for each hotel
-          hotelPages = hotels.map(hotel => {
-            // Extract and process hotel images if available
-            const hotelImages = hotel.images 
-              ? (Array.isArray(hotel.images) ? hotel.images : [])
-              : [];
-            
+          hotelPages = hotels.map((hotel: HotelData) => {
             return {
               loc: `${baseURL}/hotels/${generateHotelUrl(hotel.name)}`,
               lastmod: new Date(hotel.updated_at).toISOString().split('T')[0],
               changefreq: 'weekly' as const,
               // Use optional chaining and nullish coalescing to safely handle missing rating
-              priority: (hotel.rating >= 4) ? 0.8 : 0.7,
-              images: hotelImages.map((imgUrl: string, index: number) => ({
-                loc: imgUrl.startsWith('http') ? imgUrl : `${baseURL}${imgUrl}`,
-                title: `${hotel.name} - Image ${index+1}`,
-                caption: `${hotel.name} - ${hotel.hotel_types || 'Accommodation'} in Sifnos`
-              }))
+              priority: (hotel.rating && hotel.rating >= 4) ? 0.8 : 0.7
             };
           });
           

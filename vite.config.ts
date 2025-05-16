@@ -35,7 +35,7 @@ const prerender = (): Plugin => {
       try {
         // Launch puppeteer
         const browser = await puppeteer.launch({
-          headless: 'new',
+          headless: true,
           args: ['--no-sandbox', '--disable-setuid-sandbox'],
         });
         
@@ -61,7 +61,7 @@ const prerender = (): Plugin => {
           await page.goto(`file://${htmlPath}`, { waitUntil: 'networkidle0' });
           
           // Wait for all content to load properly
-          await page.waitForTimeout(1000);
+          await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 1000)));
           
           // Get the prerendered HTML
           const html = await page.content();
