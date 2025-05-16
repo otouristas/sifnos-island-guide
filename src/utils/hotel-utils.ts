@@ -121,27 +121,3 @@ export const getHotelLogoUrl = (hotel: any): string => {
   // Final fallback to placeholder
   return '/placeholder.svg';
 };
-
-/**
- * Returns the logo URL for a specific booking platform
- * @param platform Booking platform name
- * @returns Path to the platform's logo
- */
-export const getBookingPlatformLogo = (platform: string): string => {
-  switch (platform?.toLowerCase()) {
-    case 'booking.com':
-      return '/uploads/Booking.com.svg';
-    case 'airbnb':
-      return '/placeholder.svg'; // Replace with actual Airbnb logo when available
-    case 'vrbo':
-      return '/placeholder.svg'; // Replace with actual VRBO logo when available
-    case 'expedia':
-      return '/placeholder.svg'; // Replace with actual Expedia logo when available
-    case 'hotels.com':
-      return '/placeholder.svg'; // Replace with actual Hotels.com logo when available
-    case 'tripadvisor':
-      return '/placeholder.svg'; // Replace with actual TripAdvisor logo when available
-    default:
-      return '/placeholder.svg';
-  }
-};
