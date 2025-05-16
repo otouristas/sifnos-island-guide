@@ -66,7 +66,8 @@ const prerender = (): Plugin => {
           await page.goto(`file://${htmlPath}`, { waitUntil: 'networkidle0' });
           
           // Wait for all content to load properly (fix for timeout issues)
-          await page.waitForTimeout(2000);
+          // Using setTimeout instead of waitForTimeout which isn't available in this Puppeteer version
+          await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 2000)));
           
           // Get the prerendered HTML
           const html = await page.content();
