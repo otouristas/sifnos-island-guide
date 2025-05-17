@@ -150,7 +150,7 @@ const FerryHero = () => {
                   Search Ferries
                 </Button>
               </a>
-              <span className="text-xs text-gray-600 font-medium">Powered by FerriesScanner.com</span>
+              <span className="text-xs text-gray-600 font-medium">Powered by FerryScanner.com</span>
             </div>
           </div>
         </div>
