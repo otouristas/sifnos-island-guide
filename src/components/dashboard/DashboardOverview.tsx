@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Building2, BedDouble, Calendar, Users } from 'lucide-react';
-import { DashboardHeader } from './DashboardHeader';
 
 interface DashboardOverviewProps {
   userId: string;
@@ -89,12 +88,6 @@ export const DashboardOverview = ({ userId }: DashboardOverviewProps) => {
 
   return (
     <div className="space-y-6">
-      <DashboardHeader 
-        title="Dashboard Overview" 
-        subtitle="Welcome to your hotel management dashboard"
-        user={{} as any}
-      />
-      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -148,7 +141,7 @@ export const DashboardOverview = ({ userId }: DashboardOverviewProps) => {
         <CardContent>
           <div className="text-sm text-gray-600">
             {stats.totalHotels === 0 ? (
-              <p>Get started by adding your first hotel in the Hotels section.</p>
+              <p>Get started by adding your first hotel in the Hotels tab.</p>
             ) : (
               <p>You have {stats.totalHotels} hotel(s) with {stats.totalRooms} room(s) total.</p>
             )}

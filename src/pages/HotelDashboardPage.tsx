@@ -9,7 +9,7 @@ import { HotelManagement } from '@/components/dashboard/HotelManagement';
 import { RoomManagement } from '@/components/dashboard/RoomManagement';
 import { CalendarManagement } from '@/components/dashboard/CalendarManagement';
 import { BookingManagement } from '@/components/dashboard/BookingManagement';
-import { Routes, Route } from 'react-router-dom';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function HotelDashboardPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -50,13 +50,39 @@ export default function HotelDashboardPage() {
 
   return (
     <DashboardLayout user={user}>
-      <Routes>
-        <Route path="/" element={<DashboardOverview userId={user.id} />} />
-        <Route path="/hotels" element={<HotelManagement userId={user.id} />} />
-        <Route path="/rooms" element={<RoomManagement userId={user.id} />} />
-        <Route path="/calendar" element={<CalendarManagement userId={user.id} />} />
-        <Route path="/bookings" element={<BookingManagement userId={user.id} />} />
-      </Routes>
+      <div className="container mx-auto px-4 py-6">
+        <h1 className="text-3xl font-bold mb-6">Hotel Dashboard</h1>
+        
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="grid w-full grid-cols-5">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="hotels">Hotels</TabsTrigger>
+            <TabsTrigger value="rooms">Rooms</TabsTrigger>
+            <TabsTrigger value="calendar">Calendar</TabsTrigger>
+            <TabsTrigger value="bookings">Bookings</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="overview" className="mt-6">
+            <DashboardOverview userId={user.id} />
+          </TabsContent>
+          
+          <TabsContent value="hotels" className="mt-6">
+            <HotelManagement userId={user.id} />
+          </TabsContent>
+          
+          <TabsContent value="rooms" className="mt-6">
+            <RoomManagement userId={user.id} />
+          </TabsContent>
+          
+          <TabsContent value="calendar" className="mt-6">
+            <CalendarManagement userId={user.id} />
+          </TabsContent>
+          
+          <TabsContent value="bookings" className="mt-6">
+            <BookingManagement userId={user.id} />
+          </TabsContent>
+        </Tabs>
+      </div>
     </DashboardLayout>
   );
 }
