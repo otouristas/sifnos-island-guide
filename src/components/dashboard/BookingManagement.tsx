@@ -30,8 +30,8 @@ interface Booking {
   special_requests?: string;
   created_at: string;
   hotel_rooms: {
-    room_number: string;
-    room_type: string;
+    name: string;
+    hotel_id: string;
     hotels: {
       name: string;
     };
@@ -40,8 +40,7 @@ interface Booking {
 
 interface Room {
   id: string;
-  room_number: string;
-  room_type: string;
+  name: string;
   hotel_id: string;
   hotels: {
     name: string;
@@ -94,8 +93,7 @@ export const BookingManagement = ({ userId }: BookingManagementProps) => {
         .select(`
           *,
           hotel_rooms!inner(
-            room_number,
-            room_type,
+            name,
             hotel_id,
             hotels!inner(name)
           )
@@ -128,8 +126,7 @@ export const BookingManagement = ({ userId }: BookingManagementProps) => {
         .from('hotel_rooms')
         .select(`
           id,
-          room_number,
-          room_type,
+          name,
           hotel_id,
           hotels!inner(name)
         `)
@@ -278,7 +275,7 @@ export const BookingManagement = ({ userId }: BookingManagementProps) => {
                     <SelectContent>
                       {rooms.map((room) => (
                         <SelectItem key={room.id} value={room.id}>
-                          {room.hotels.name} - Room {room.room_number} ({room.room_type})
+                          {room.hotels.name} - {room.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -429,7 +426,7 @@ export const BookingManagement = ({ userId }: BookingManagementProps) => {
                       </Badge>
                     </CardTitle>
                     <CardDescription>
-                      {booking.hotel_rooms.hotels.name} - Room {booking.hotel_rooms.room_number}
+                      {booking.hotel_rooms.hotels.name} - {booking.hotel_rooms.name}
                     </CardDescription>
                   </div>
                   <div className="flex gap-2">
