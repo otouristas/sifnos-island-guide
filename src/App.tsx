@@ -35,13 +35,21 @@ import TouristasAIPage from "./pages/TouristasAIPage";
 import BlogPage from "./pages/BlogPage";
 import BlogPostPage from "./pages/BlogPostPage";
 import FerryTicketsPage from "./pages/FerryTicketsPage";
-import ProfilePage from "./pages/ProfilePage"; // Import new profile page
-import FavoritesPage from "./pages/FavoritesPage"; // Import new favorites page
-import SettingsPage from "./pages/SettingsPage"; // Import new settings page
+import ProfilePage from "./pages/ProfilePage";
+import FavoritesPage from "./pages/FavoritesPage";
+import SettingsPage from "./pages/SettingsPage";
+
+// Dashboard Pages
+import DashboardLayout from "./layouts/DashboardLayout";
+import DashboardOverview from "./pages/dashboard/DashboardOverview";
+import MyHotels from "./pages/dashboard/MyHotels";
+import DashboardMessages from "./pages/dashboard/DashboardMessages";
+import DashboardSettings from "./pages/dashboard/DashboardSettings";
 
 // Components
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -66,49 +74,300 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
-          <Navigation />
-          <main>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/index" element={<Index />} />
-              <Route path="/hotels" element={<HotelsPage />} />
-              {/* Hotel detail route */}
-              <Route path="/hotels/:slug" element={<HotelDetailPage />} />
-              {/* Location routes */}
-              <Route path="/locations" element={<LocationsPage />} />
-              <Route path="/locations/:slug" element={<LocationPage />} />
-              {/* Hotel types routes */}
-              <Route path="/hotel-types" element={<HotelTypesPage />} />
-              <Route path="/hotel-types/:slug" element={<HotelTypePage />} />
-              {/* Blog routes */}
-              <Route path="/blog" element={<BlogPage />} />
-              <Route path="/blog/:slug" element={<BlogPostPage />} />
-              {/* Ferry tickets route */}
-              <Route path="/ferry-tickets" element={<FerryTicketsPage />} />
-              {/* Touristas AI route */}
-              <Route path="/touristas-ai" element={<TouristasAIPage />} />
-              {/* Other routes */}
-              <Route path="/beaches" element={<BeachesPage />} />
-              <Route path="/travel-guide" element={<TravelGuidePage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/about-us" element={<AboutUsPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/faq" element={<FAQPage />} />
-              {/* Pricing and registration */}
-              <Route path="/pricing" element={<PricingPage />} />
-              <Route path="/thank-you" element={<ThankYouPage />} />
-              {/* Legal pages */}
-              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-              <Route path="/terms-of-service" element={<TermsOfServicePage />} />
-              <Route path="/cookie-policy" element={<CookiePolicyPage />} />
-              {/* User account pages */}
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/favorites" element={<FavoritesPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          <Footer />
+          <Routes>
+            {/* Dashboard Routes - Protected */}
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <DashboardLayout />
+              </ProtectedRoute>
+            }>
+              <Route index element={<DashboardOverview />} />
+              <Route path="hotels" element={<MyHotels />} />
+              <Route path="messages" element={<DashboardMessages />} />
+              <Route path="settings" element={<DashboardSettings />} />
+            </Route>
+            
+            {/* Public Routes */}
+            <Route path="/" element={
+              <>
+                <Navigation />
+                <main>
+                  <HomePage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            <Route path="/index" element={
+              <>
+                <Navigation />
+                <main>
+                  <Index />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            <Route path="/hotels" element={
+              <>
+                <Navigation />
+                <main>
+                  <HotelsPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            {/* Hotel detail route */}
+            <Route path="/hotels/:slug" element={
+              <>
+                <Navigation />
+                <main>
+                  <HotelDetailPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            {/* Location routes */}
+            <Route path="/locations" element={
+              <>
+                <Navigation />
+                <main>
+                  <LocationsPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            <Route path="/locations/:slug" element={
+              <>
+                <Navigation />
+                <main>
+                  <LocationPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            {/* Hotel types routes */}
+            <Route path="/hotel-types" element={
+              <>
+                <Navigation />
+                <main>
+                  <HotelTypesPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            <Route path="/hotel-types/:slug" element={
+              <>
+                <Navigation />
+                <main>
+                  <HotelTypePage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            {/* Blog routes */}
+            <Route path="/blog" element={
+              <>
+                <Navigation />
+                <main>
+                  <BlogPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            <Route path="/blog/:slug" element={
+              <>
+                <Navigation />
+                <main>
+                  <BlogPostPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            {/* Ferry tickets route */}
+            <Route path="/ferry-tickets" element={
+              <>
+                <Navigation />
+                <main>
+                  <FerryTicketsPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            {/* Touristas AI route */}
+            <Route path="/touristas-ai" element={
+              <>
+                <Navigation />
+                <main>
+                  <TouristasAIPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            {/* Other routes */}
+            <Route path="/beaches" element={
+              <>
+                <Navigation />
+                <main>
+                  <BeachesPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            <Route path="/travel-guide" element={
+              <>
+                <Navigation />
+                <main>
+                  <TravelGuidePage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            <Route path="/about" element={
+              <>
+                <Navigation />
+                <main>
+                  <AboutPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            <Route path="/about-us" element={
+              <>
+                <Navigation />
+                <main>
+                  <AboutUsPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            <Route path="/contact" element={
+              <>
+                <Navigation />
+                <main>
+                  <ContactPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            <Route path="/faq" element={
+              <>
+                <Navigation />
+                <main>
+                  <FAQPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            {/* Pricing and registration */}
+            <Route path="/pricing" element={
+              <>
+                <Navigation />
+                <main>
+                  <PricingPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            <Route path="/thank-you" element={
+              <>
+                <Navigation />
+                <main>
+                  <ThankYouPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            {/* Legal pages */}
+            <Route path="/privacy-policy" element={
+              <>
+                <Navigation />
+                <main>
+                  <PrivacyPolicyPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            <Route path="/terms-of-service" element={
+              <>
+                <Navigation />
+                <main>
+                  <TermsOfServicePage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            <Route path="/cookie-policy" element={
+              <>
+                <Navigation />
+                <main>
+                  <CookiePolicyPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            {/* User account pages */}
+            <Route path="/profile" element={
+              <>
+                <Navigation />
+                <main>
+                  <ProfilePage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            <Route path="/favorites" element={
+              <>
+                <Navigation />
+                <main>
+                  <FavoritesPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            <Route path="/settings" element={
+              <>
+                <Navigation />
+                <main>
+                  <SettingsPage />
+                </main>
+                <Footer />
+              </>
+            } />
+            
+            <Route path="*" element={
+              <>
+                <Navigation />
+                <main>
+                  <NotFound />
+                </main>
+                <Footer />
+              </>
+            } />
+          </Routes>
           <CookieConsent />
           <TouristasAIMiniBubble />
         </BrowserRouter>

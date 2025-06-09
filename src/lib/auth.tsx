@@ -18,6 +18,8 @@ export type AuthContextType = {
   toggleFavorite: (hotelId: string) => Promise<boolean>;
   getFavorites: () => Promise<string[]>;
   checkIsFavorite: (hotelId: string) => Promise<boolean>;
+  isHotelOwner: () => Promise<boolean>;
+  getOwnedHotels: () => Promise<string[]>;
 };
 
 // Define user profile type
@@ -373,6 +375,55 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return false;
     }
   };
+  
+  // Check if the user is a hotel owner
+  const isHotelOwner = async (): Promise<boolean> => {
+    try {
+      if (!user) {
+        return false;
+      }
+      
+      const { data, error } = await supabase
+        .from('hotel_owners')
+        .select('id')
+        .eq('user_id', user.id)
+        .limit(1);
+        
+      if (error) {
+        console.error('Error checking hotel owner status:', error);
+        return false;
+      }
+      
+      return data && data.length > 0;
+    } catch (error) {
+      console.error('Error in isHotelOwner:', error);
+      return false;
+    }
+  };
+  
+  // Get hotels owned by the user
+  const getOwnedHotels = async (): Promise<string[]> => {
+    try {
+      if (!user) {
+        return [];
+      }
+      
+      const { data, error } = await supabase
+        .from('hotel_owners')
+        .select('hotel_id')
+        .eq('user_id', user.id);
+        
+      if (error) {
+        console.error('Error fetching owned hotels:', error);
+        return [];
+      }
+      
+      return data.map(item => item.hotel_id);
+    } catch (error) {
+      console.error('Error in getOwnedHotels:', error);
+      return [];
+    }
+  };
 
   // Provide auth context to children
   return (
@@ -388,7 +439,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updateProfile,
       toggleFavorite,
       getFavorites,
-      checkIsFavorite
+      checkIsFavorite,
+      isHotelOwner,
+      getOwnedHotels
     }}>
       {children}
     </AuthContext.Provider>
