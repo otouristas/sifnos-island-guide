@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import { componentTagger } from "lovable-tagger";
 import { Plugin } from 'vite';
 import fs from 'fs';
 import puppeteer from 'puppeteer';
@@ -191,8 +190,6 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     directoryResolver(), // Add our directory resolver plugin
-    mode === 'development' &&
-    componentTagger(),
     mode === 'production' && prerender(),
     clearCache(), // Run in all modes to prevent caching issues
   ].filter(Boolean),
