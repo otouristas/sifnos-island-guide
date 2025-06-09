@@ -101,6 +101,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
   
+  // Helper function to get user-friendly error messages
+  const getAuthErrorMessage = (error: AuthError): string => {
+    switch (error.message) {
+      case 'Invalid login credentials':
+        return 'The email or password you entered is incorrect. Please check your credentials and try again.';
+      case 'Email not confirmed':
+        return 'Please check your email and click the confirmation link before signing in.';
+      case 'Too many requests':
+        return 'Too many sign-in attempts. Please wait a moment before trying again.';
+      case 'User not found':
+        return 'No account found with this email address. Please check your email or sign up for a new account.';
+      default:
+        return error.message;
+    }
+  };
+  
   // Sign in with email and password
   const signIn = async (email: string, password: string) => {
     try {
@@ -109,7 +125,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) {
         toast({
           title: "Sign in failed",
-          description: error.message,
+          description: getAuthErrorMessage(error),
           variant: "destructive"
         });
         return { error };
@@ -145,7 +161,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) {
         toast({
           title: "Sign up failed",
-          description: error.message,
+          description: getAuthErrorMessage(error),
           variant: "destructive"
         });
         return { error, data: null };
@@ -190,7 +206,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) {
         toast({
           title: "Password reset failed",
-          description: error.message,
+          description: getAuthErrorMessage(error),
           variant: "destructive"
         });
         return { error };
