@@ -1,7 +1,7 @@
-
 import { useState, useEffect, memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown } from 'lucide-react';
+import UserMenu from './auth/UserMenu'; // Import the UserMenu component
 
 const mainNavItems = [
   { name: 'Home', path: '/' },
@@ -240,8 +240,14 @@ export default function Navigation() {
             toggleDropdown={toggleDropdown}
           />
           
+          {/* User Menu - Add this */}
+          <div className="hidden md:flex items-center">
+            <UserMenu />
+          </div>
+          
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center">
+            <UserMenu />
             <button
               type="button"
               className="p-2 rounded-md text-[#1E2E48]"

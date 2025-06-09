@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { generateHotelUrl } from '@/lib/url-utils';
@@ -7,6 +6,7 @@ import HotelImage from './hotel/HotelImage';
 import HotelLogo from './hotel/HotelLogo';
 import HotelDetails from './hotel/HotelDetails';
 import { determineHotelImageUrl, determineHotelLogoUrl } from '@/utils/image-utils';
+import FavoriteButton from './auth/FavoriteButton'; // Import FavoriteButton
 
 // Define the HotelCard component that creates proper URLs
 const HotelCard = ({ hotel, showLogo = true, ...props }) => {
@@ -64,6 +64,15 @@ const HotelCard = ({ hotel, showLogo = true, ...props }) => {
               position="corner"
             />
           )}
+          
+          {/* Add favorite button */}
+          <div className="absolute top-2 left-2">
+            <FavoriteButton 
+              hotelId={hotel.id} 
+              variant="ghost"
+              className="bg-white/80 hover:bg-white/90"
+            />
+          </div>
         </div>
         
         {/* Hotel details section */}
