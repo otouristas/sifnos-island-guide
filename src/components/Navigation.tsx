@@ -4,7 +4,6 @@ import { Menu, X, ChevronDown } from 'lucide-react';
 import UserMenu from './auth/UserMenu'; // Import the UserMenu component
 
 const mainNavItems = [
-  { name: 'Home', path: '/' },
   { 
     name: 'Hotels', 
     path: '/hotels',
@@ -35,9 +34,6 @@ const mainNavItems = [
   { name: 'Ferry Tickets', path: '/ferry-tickets' },
   { name: 'Beaches', path: '/beaches' },
   { name: 'Travel Guide', path: '/travel-guide' },
-  { name: 'About Us', path: '/about-us' },
-  { name: 'FAQ', path: '/faq' },
-  { name: 'Contact', path: '/contact' }
 ];
 
 // Define prop types for the DesktopNavItems component
