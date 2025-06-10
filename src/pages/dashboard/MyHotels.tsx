@@ -263,7 +263,7 @@ export default function MyHotels() {
       <Alert className="bg-blue-50 border-blue-200">
         <AlertCircle className="h-4 w-4 text-blue-600" />
         <AlertDescription className="text-blue-700">
-          Need help managing your hotel listing? <Link to="/dashboard/help" className="font-medium underline">View our guide</Link> or <Link to="/dashboard/support" className=\"font-medium underline">contact support</Link>.
+          Need help managing your hotel listing? <Link to="/dashboard/help" className="font-medium underline">View our guide</Link> or <Link to="/dashboard/support" className="font-medium underline">contact support</Link>.
         </AlertDescription>
       </Alert>
     </div>
