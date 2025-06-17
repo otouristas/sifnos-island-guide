@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -143,7 +144,7 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent>
                   {error && (
-                    <Alert variant="destructive\" className="mb-4">
+                    <Alert variant="destructive" className="mb-4">
                       <AlertCircle className="h-4 w-4" />
                       <AlertTitle>Error</AlertTitle>
                       <AlertDescription>{error}</AlertDescription>
