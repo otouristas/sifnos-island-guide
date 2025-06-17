@@ -16,12 +16,12 @@ import {
 } from './utils/chat-utils';
 import { 
   AIRequestMessage, 
-  searchHotels, 
   callTouristasAI, 
   processStreamingResponse,
   trackConversationContext,
   ConversationContext
 } from './services/ChatService';
+import { searchHotelsUnified, extractDatesFromMessage } from './services/UnifiedHotelSearchService';
 
 export default function TouristasChat() {
   const [input, setInput] = useState('');
@@ -30,7 +30,7 @@ export default function TouristasChat() {
     {
       id: 'welcome',
       role: 'assistant',
-      content: 'Γεια σου! 👋 I\'m your Sifnos travel assistant. Tell me what location in Sifnos you\'re interested in staying - like Platis Gialos, Apollonia, Kamares, or Vathi. Or ask me general questions about Sifnos and its accommodations!',
+      content: 'Γεια σου! 👋 I\'m your Sifnos travel assistant. I can help you find hotels, check availability, and provide travel advice for Sifnos. Ask me about specific locations like Platis Gialos, Apollonia, Kamares, or search for hotels with specific dates!',
       showHotels: false
     }
   ]);
@@ -132,11 +132,17 @@ export default function TouristasChat() {
     }, 50);
     
     try {
-      // Extract user preferences from the message
+      // Extract user preferences and dates from the message
       const newPreferences = extractUserPreferencesFromMessage(input);
+      const datesFromMessage = extractDatesFromMessage(input);
       
-      // Update user preferences with new information
-      const updatedPreferences = { ...userPreferences, ...newPreferences };
+      // Update user preferences with new information including dates
+      const updatedPreferences = { 
+        ...userPreferences, 
+        ...newPreferences,
+        ...(datesFromMessage.checkInDate && { checkInDate: datesFromMessage.checkInDate }),
+        ...(datesFromMessage.checkOutDate && { checkOutDate: datesFromMessage.checkOutDate })
+      };
       setUserPreferences(updatedPreferences);
       
       // Check if this is a hotel-related query
@@ -153,7 +159,7 @@ export default function TouristasChat() {
       console.log('Hotel name from query:', hotelNameFromQuery);
       console.log('Should show hotels:', shouldShowHotels);
       
-      // Add temporary assistant message - WITHOUT HOTELS INITIALLY
+      // Add temporary assistant message
       const assistantId = (Date.now() + 1).toString();
       setMessages((prev) => [...prev, { 
         id: assistantId, 
@@ -162,17 +168,15 @@ export default function TouristasChat() {
         preferences: updatedPreferences
       }]);
       
-      // Process scrolling after adding message
-      setTimeout(scrollToBottom, 50);
+      setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 50);
       
-      // Prepare messages for the AI service with correct format
+      // Prepare messages for the AI service
       const aiMessages: AIRequestMessage[] = messages.map(msg => ({
         role: msg.role,
         content: msg.content,
         id: msg.id
       }));
       
-      // Add the current user message
       aiMessages.push({
         role: userMessage.role,
         content: userMessage.content,
@@ -182,7 +186,7 @@ export default function TouristasChat() {
       // Track conversation context for better continuity
       const conversationContexts: ConversationContext[] = trackConversationContext([...messages, userMessage]);
       
-      // Call the AI travel assistant function with preferences and context
+      // Call the AI travel assistant function
       const response = await callTouristasAI(aiMessages, updatedPreferences, conversationContexts);
       
       if (!response) {
@@ -193,44 +197,48 @@ export default function TouristasChat() {
       const reader = response.getReader();
       const fullContent = await processStreamingResponse(reader, assistantId, setMessages);
       
-      // Ensure we maintain focus in the chat area after response
       if (chatContainerRef.current) {
         chatContainerRef.current.scrollIntoView({ behavior: 'auto', block: 'start' });
         chatContainerRef.current.focus();
       }
       
-      // Only AFTER the AI text response is complete, search for hotels if needed
+      // Search for hotels using unified search if needed
       let relevantHotels: any[] = [];
       
-      // Only search for hotels if it's a hotel-related query
       if (shouldShowHotels) {
-        // Build the search query with all the extracted information
         let searchQuery = input;
         
-        // If a specific hotel name was mentioned, prioritize that in search
         if (hotelNameFromQuery) {
           searchQuery = hotelNameFromQuery;
         }
         
-        // Search for hotels based on user query and preferences
-        relevantHotels = await searchHotels(searchQuery, {
+        // Search for hotels using unified search with enhanced preferences
+        const searchPreferences = {
           ...updatedPreferences,
           location: locationFromQuery || undefined,
           amenities: amenitiesFromQuery.length > 0 ? amenitiesFromQuery.join(',') : undefined,
           hotelName: hotelNameFromQuery || undefined
-        });
+        };
+        
+        console.log('Searching with preferences:', searchPreferences);
+        
+        relevantHotels = await searchHotelsUnified(searchQuery, searchPreferences);
         
         console.log("Found relevant hotels:", relevantHotels.length);
         
         // Filter hotels by exact amenity match if specifically requested
         if (amenitiesFromQuery.includes('pool')) {
           console.log("Filtering hotels by pool amenity");
-          relevantHotels = relevantHotels.filter(hotel => 
-            hotel.hotel_amenities?.some((a: any) => 
-              a.amenity.toLowerCase().includes('pool') || 
-              a.amenity.toLowerCase().includes('swimming')
-            )
-          );
+          relevantHotels = relevantHotels.filter(hotel => {
+            if (hotel.source === 'local') {
+              return hotel.hotel_amenities?.some((a: any) => 
+                a.amenity.toLowerCase().includes('pool') || 
+                a.amenity.toLowerCase().includes('swimming')
+              );
+            }
+            // For Agoda hotels, we don't have detailed amenity data in this implementation
+            return true;
+          });
           console.log("After pool filter:", relevantHotels.length);
         }
         
@@ -243,11 +251,9 @@ export default function TouristasChat() {
           console.log("After villa filter:", relevantHotels.length);
         }
         
-        // After getting the full response, check if we should show hotels
         const locationsInResponse = extractLocationsFromResponse(fullContent);
         const showHotelsByTrigger = shouldShowHotelsInResponse(fullContent);
         
-        // Set the location to show for hotels - prioritize location from user query, then locations from response
         let locationToShow = locationFromQuery;
         if (!locationToShow && locationsInResponse.length === 1) {
           locationToShow = locationsInResponse[0];
@@ -255,12 +261,8 @@ export default function TouristasChat() {
         
         console.log("Final hotels to show:", relevantHotels.length, "for location:", locationToShow);
         
-        // Force showing hotels if the query explicitly asks for hotels with pool
-        const forceShowHotels = input.toLowerCase().includes('pool') && relevantHotels.length > 0;
-        
-        // If we have hotels to show after all filtering, update the message with hotels
         if (relevantHotels.length > 0) {
-          console.log("Updating message with hotels");
+          console.log("Updating message with unified hotels");
           setMessages((prev) => 
             prev.map(msg => 
               msg.id === assistantId 
@@ -274,8 +276,7 @@ export default function TouristasChat() {
             )
           );
           
-          // Ensure we scroll to view the hotels
-          setTimeout(scrollToBottom, 150);
+          setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 150);
         } else {
           console.log("No hotels found to display");
         }
@@ -366,7 +367,7 @@ export default function TouristasChat() {
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about hotels in Platis Gialos, Apollonia, etc..."
+            placeholder="Ask about hotels in Platis Gialos, check availability for specific dates..."
             className="flex-1 border-gray-300 focus-visible:ring-sifnos-deep-blue rounded-full pl-4"
             disabled={isLoading}
             onClick={(e) => {

@@ -9,6 +9,78 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      agoda_hotels: {
+        Row: {
+          agoda_hotel_id: number
+          cached_at: string
+          check_in_date: string
+          check_out_date: string
+          created_at: string
+          crossed_out_rate: number | null
+          currency: string | null
+          daily_rate: number | null
+          discount_percentage: number | null
+          expires_at: string
+          free_wifi: boolean | null
+          id: string
+          image_url: string | null
+          include_breakfast: boolean | null
+          landing_url: string | null
+          name: string
+          number_of_adults: number | null
+          number_of_children: number | null
+          review_count: number | null
+          review_score: number | null
+          star_rating: number | null
+        }
+        Insert: {
+          agoda_hotel_id: number
+          cached_at?: string
+          check_in_date: string
+          check_out_date: string
+          created_at?: string
+          crossed_out_rate?: number | null
+          currency?: string | null
+          daily_rate?: number | null
+          discount_percentage?: number | null
+          expires_at?: string
+          free_wifi?: boolean | null
+          id?: string
+          image_url?: string | null
+          include_breakfast?: boolean | null
+          landing_url?: string | null
+          name: string
+          number_of_adults?: number | null
+          number_of_children?: number | null
+          review_count?: number | null
+          review_score?: number | null
+          star_rating?: number | null
+        }
+        Update: {
+          agoda_hotel_id?: number
+          cached_at?: string
+          check_in_date?: string
+          check_out_date?: string
+          created_at?: string
+          crossed_out_rate?: number | null
+          currency?: string | null
+          daily_rate?: number | null
+          discount_percentage?: number | null
+          expires_at?: string
+          free_wifi?: boolean | null
+          id?: string
+          image_url?: string | null
+          include_breakfast?: boolean | null
+          landing_url?: string | null
+          name?: string
+          number_of_adults?: number | null
+          number_of_children?: number | null
+          review_count?: number | null
+          review_score?: number | null
+          star_rating?: number | null
+        }
+        Relationships: []
+      }
       hotel_amenities: {
         Row: {
           amenity: string
@@ -25,6 +97,38 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "hotel_amenities_hotel_id_fkey"
+            columns: ["hotel_id"]
+            isOneToOne: false
+            referencedRelation: "hotels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_owners: {
+        Row: {
+          created_at: string
+          hotel_id: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          hotel_id: string
+          id?: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          hotel_id?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_owners_hotel_id_fkey"
             columns: ["hotel_id"]
             isOneToOne: false
             referencedRelation: "hotels"
@@ -245,6 +349,7 @@ export type Database = {
           social_facebook: string | null
           social_instagram: string | null
           social_twitter: string | null
+          source: string | null
           updated_at: string
           website: string | null
         }
@@ -268,6 +373,7 @@ export type Database = {
           social_facebook?: string | null
           social_instagram?: string | null
           social_twitter?: string | null
+          source?: string | null
           updated_at?: string
           website?: string | null
         }
@@ -291,8 +397,166 @@ export type Database = {
           social_facebook?: string | null
           social_instagram?: string | null
           social_twitter?: string | null
+          source?: string | null
           updated_at?: string
           website?: string | null
+        }
+        Relationships: []
+      }
+      room_availability: {
+        Row: {
+          created_at: string
+          date: string
+          id: string
+          is_available: boolean
+          min_stay: number | null
+          price: number | null
+          room_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          id?: string
+          is_available?: boolean
+          min_stay?: number | null
+          price?: number | null
+          room_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          id?: string
+          is_available?: boolean
+          min_stay?: number | null
+          price?: number | null
+          room_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_availability_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      room_bookings: {
+        Row: {
+          booking_status: string
+          check_in: string
+          check_out: string
+          created_at: string
+          guest_email: string
+          guest_name: string
+          guest_phone: string | null
+          id: string
+          room_id: string
+          special_requests: string | null
+          total_price: number
+          updated_at: string
+        }
+        Insert: {
+          booking_status?: string
+          check_in: string
+          check_out: string
+          created_at?: string
+          guest_email: string
+          guest_name: string
+          guest_phone?: string | null
+          id?: string
+          room_id: string
+          special_requests?: string | null
+          total_price: number
+          updated_at?: string
+        }
+        Update: {
+          booking_status?: string
+          check_in?: string
+          check_out?: string
+          created_at?: string
+          guest_email?: string
+          guest_name?: string
+          guest_phone?: string | null
+          id?: string
+          room_id?: string
+          special_requests?: string | null
+          total_price?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_bookings_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_favorites: {
+        Row: {
+          created_at: string
+          hotel_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          hotel_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          hotel_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_favorites_hotel_id_fkey"
+            columns: ["hotel_id"]
+            isOneToOne: false
+            referencedRelation: "hotels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_favorites_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          first_name: string | null
+          id: string
+          last_name: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          first_name?: string | null
+          id: string
+          last_name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
