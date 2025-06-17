@@ -1,3 +1,4 @@
+
 import { UnifiedHotel } from '@/services/hotelSearch';
 
 export interface Message {
@@ -8,6 +9,20 @@ export interface Message {
   hotels?: UnifiedHotel[];
   location?: string;
   preferences?: Record<string, string>;
+}
+
+// Export HotelType interface for backward compatibility
+export interface HotelType {
+  id: string;
+  name: string;
+  location: string;
+  rating?: number;
+  description?: string;
+  short_description?: string;
+  hotel_types?: string[];
+  hotel_amenities?: Array<{ amenity: string }>;
+  hotel_photos?: Array<{ id: string; photo_url: string; is_main_photo: boolean }>;
+  price?: number;
 }
 
 export const isHotelRelatedQuery = (message: string): boolean => {
@@ -138,4 +153,34 @@ export const extractHotelNameFromMessage = (message: string): string | null => {
   
   // Add more specific hotel name extractions as needed
   return null;
+};
+
+// Add the missing analyzeMessageTopic function
+export const analyzeMessageTopic = (message: string): string => {
+  const lowerMessage = message.toLowerCase();
+  
+  // Analyze message content to determine topic
+  if (isHotelRelatedQuery(message)) {
+    if (lowerMessage.includes('villa') || lowerMessage.includes('villas')) {
+      return 'villa search';
+    } else if (lowerMessage.includes('luxury') || lowerMessage.includes('expensive')) {
+      return 'luxury accommodation';
+    } else if (lowerMessage.includes('budget') || lowerMessage.includes('cheap')) {
+      return 'budget accommodation';
+    } else if (lowerMessage.includes('family')) {
+      return 'family accommodation';
+    } else if (lowerMessage.includes('beach')) {
+      return 'beach accommodation';
+    } else {
+      return 'general accommodation';
+    }
+  }
+  
+  // Check for location-related queries
+  if (extractLocationFromMessage(message)) {
+    return 'location inquiry';
+  }
+  
+  // Default topic
+  return 'general inquiry';
 };
