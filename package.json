@@ -50,6 +50,7 @@
     "embla-carousel-react": "^8.3.0",
     "framer-motion": "^12.10.3",
     "input-otp": "^1.2.4",
+    "lovable-tagger": "^1.1.8",
     "lucide-react": "^0.507.0",
     "next-themes": "^0.3.0",
     "puppeteer": "^24.8.2",

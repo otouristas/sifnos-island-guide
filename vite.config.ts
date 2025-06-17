@@ -4,6 +4,7 @@ import path from "path";
 import { Plugin } from 'vite';
 import fs from 'fs';
 import puppeteer from 'puppeteer';
+import { componentTagger } from "lovable-tagger";
 
 // Enhanced prerender plugin with Puppeteer for SEO optimization
 const prerender = (): Plugin => {
@@ -189,6 +190,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
+    mode === 'development' && componentTagger(),
     directoryResolver(), // Add our directory resolver plugin
     mode === 'production' && prerender(),
     clearCache(), // Run in all modes to prevent caching issues
