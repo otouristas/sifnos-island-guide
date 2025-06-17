@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Hotel, Users, MessageSquare, Eye, TrendingUp, Calendar } from 'lucide-react';
+import { Hotel, Users, MessageSquare, Eye, TrendingUp, Calendar, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function DashboardOverview() {
