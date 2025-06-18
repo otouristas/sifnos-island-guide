@@ -1,8 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
-import { Message, extractUserPreferencesFromMessage, analyzeMessageTopic } from '../utils/chat-utils';
 
-// Use this interface for sending messages to the AI service
-export type AIRequestMessage = {
+// Simplified types to avoid circular references
+export type ChatMessage = {
   role: 'user' | 'assistant';
   content: string;
   id: string;
@@ -126,11 +125,7 @@ export const getWebsiteContext = async (): Promise<string> => {
       context += `- Location: ${hotel.location}\n`;
       context += `- Price: €${hotel.price}/night\n`;
       context += `- Rating: ${hotel.rating}/5\n`;
-      context += `- Description: ${hotel.description}\n`;
-      
-      // Skip amenities and rooms for now to avoid type issues
-      
-      context += '\n';
+      context += `- Description: ${hotel.description}\n\n`;
     });
 
     // Add location-specific information
@@ -312,7 +307,7 @@ export const searchHotelsWithAvailability = async (
  * Enhanced AI call with website context and intelligent date handling
  */
 export const callTouristasAI = async (
-  messages: AIRequestMessage[], 
+  messages: ChatMessage[], 
   preferences?: Record<string, string>,
   previousConversations?: ConversationContext[]
 ): Promise<ReadableStream<Uint8Array> | null> => {
@@ -420,7 +415,7 @@ export const callTouristasAI = async (
  * Direct OpenRouter API call as fallback
  */
 async function callOpenRouterDirectly(
-  messages: AIRequestMessage[],
+  messages: ChatMessage[],
   preferences: any,
   websiteContext: string,
   dateContext: string

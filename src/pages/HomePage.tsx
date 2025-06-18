@@ -30,7 +30,7 @@ export default function HomePage() {
           'sifnos beach resorts', 'traditional greek hotels', 'instant booking sifnos'
         ]}
         pageType="homepage"
-        schemaType="WebSite"
+        schemaType="WebPage"
         canonical="https://hotelssifnos.com"
         imageUrl="/uploads/homepage-hero.jpg"
       />
