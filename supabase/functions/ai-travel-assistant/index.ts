@@ -9,7 +9,6 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -53,30 +52,53 @@ serve(async (req) => {
       `;
     }
 
-    // Build real-time hotel data context
+    // Enhanced real-time hotel data context with local/Agoda distinction
     let realTimeHotelContext = '';
     if (preferences.availableHotels && preferences.availableHotels.length > 0) {
+      const localHotels = preferences.availableHotels.filter((h: any) => h.source === 'local');
+      const agodaHotels = preferences.availableHotels.filter((h: any) => h.source === 'agoda');
+
       realTimeHotelContext = `
       🏨 REAL-TIME HOTEL DATA FOR YOUR QUERY:
-      The following hotels have been found with current availability and pricing:
       
-      ${preferences.availableHotels.map((hotel: any, index: number) => `
-      ${index + 1}. **${hotel.name}**
+      ${localHotels.length > 0 ? `
+      ⭐ LOCAL SIFNOS HOTELS (Rich Local Data):
+      ${localHotels.map((hotel: any, index: number) => `
+      ${index + 1}. **${hotel.name}** (Local Partner ⭐)
          - Location: ${hotel.location || 'Sifnos, Greece'}
-         - Price: €${hotel.price || 'Contact for pricing'}/night
-         - Rating: ${hotel.rating || 'N/A'}/5
-         - Source: ${hotel.source === 'agoda' ? 'Agoda Partner (Real-time)' : 'Local Database'}
+         - Quality Rating: ${hotel.rating || 'N/A'}/5 stars
          - Amenities: ${Array.isArray(hotel.amenities) ? hotel.amenities.join(', ') : 'Standard amenities'}
-         ${hotel.description ? `- Description: ${hotel.description}` : ''}
-         ${hotel.availability?.available ? `- Available for: ${hotel.availability.checkIn} to ${hotel.availability.checkOut}` : ''}
+         - Room Types: ${hotel.hotel_rooms?.length || 0} different options available
+         - Photo Gallery: ${hotel.hotel_photos?.length || 0} professional photos
+         - Booking: Contact directly for personalized rates and service
+         ${hotel.description ? `- About: ${hotel.description.substring(0, 100)}...` : ''}
+         - Special: Local expertise, direct communication, personalized service
       `).join('\n')}
+      ` : ''}
+
+      ${agodaHotels.length > 0 ? `
+      💰 AGODA PARTNER HOTELS (Live Pricing):
+      ${agodaHotels.map((hotel: any, index: number) => `
+      ${index + 1}. **${hotel.name}** (Agoda Partner 💰)
+         - Location: ${hotel.location || 'Sifnos, Greece'}
+         - Live Price: ${hotel.price || hotel.daily_rate || 'Contact for pricing'} ${hotel.currency || 'USD'}/night
+         - Rating: ${hotel.rating || hotel.review_score || 'N/A'}/5 (${hotel.review_count || 0} reviews)
+         - Star Rating: ${hotel.star_rating || 'N/A'} stars
+         - Instant Booking: Available through Agoda platform
+         ${hotel.agoda_data?.freeWifi ? '- ✅ Free WiFi included' : ''}
+         ${hotel.agoda_data?.includeBreakfast ? '- ✅ Breakfast included' : ''}
+         ${hotel.agoda_data?.discountPercentage > 0 ? `- 🎯 ${hotel.agoda_data.discountPercentage}% discount available` : ''}
+      `).join('\n')}
+      ` : ''}
       
-      ✨ IMPORTANT: These are REAL hotels with current data. Use this information to make informed recommendations!
-      ${preferences.hasRealTimeData ? '🔄 This includes live availability from booking platforms.' : '📊 This data is from our local database.'}
+      ✨ IMPORTANT: 
+      - LOCAL HOTELS: Rich data, personal service, contact for rates - perfect for authentic Sifnos experience
+      - AGODA HOTELS: Live pricing, instant booking, reviews - great for quick reservations
+      ${preferences.hasRealTimeData ? '🔄 Agoda pricing is live and current.' : '📊 Mix of local database and live data.'}
       `;
     }
 
-    // Enhanced system message with comprehensive context
+    // Enhanced system message with improved local hotel handling
     const systemMessage = {
       role: "system",
       content: `You are Touristas AI, the world's most intelligent travel agent for Sifnos, Greece. You are a passionate local expert who has lived on Sifnos for years and knows every hidden gem, every hotel owner personally, and every perfect spot for different travelers.
@@ -105,12 +127,29 @@ When someone says "next weekend":
 - Calculate exact dates (Friday-Sunday)
 - Respond like: "Perfect! I found great options for your weekend getaway from Friday, December 27th to Sunday, December 29th. That's going to be a wonderful time to visit Sifnos!"
 
-🏨 **DEEP HOTEL KNOWLEDGE**: You know every hotel intimately:
+🏨 **DEEP HOTEL KNOWLEDGE & DUAL BOOKING SYSTEM**: 
+
+**LOCAL SIFNOS HOTELS** (Premium Experience):
 - **Villa Olivia Clara**: Luxury clifftop villa in Kamares with infinity pool and sunset views
-- **Filadaki Villas**: Traditional Cycladic architecture in Platis Gialos, family-run for 3 generations
+- **Filadaki Villas**: Traditional Cycladic architecture in Platis Gialos, family-run for 3 generations  
 - **Meropi Rooms**: Charming seaside accommodation in Kamares, walking distance to the port
 - **ALK Hotel**: Modern boutique hotel in Apollonia with panoramic island views
 - **Morpheas Pension**: Authentic Greek hospitality in Faros, beloved by repeat guests
+
+**Key Local Hotel Benefits:**
+- Direct contact with owners for personalized service
+- Flexible rates based on season and length of stay
+- Local insider tips and recommendations included
+- Often include special touches like welcome drinks or local products
+- Can arrange transfers, excursions, and special requests
+- Rich photo galleries and detailed room information available
+
+**AGODA PARTNER HOTELS** (Instant Booking):
+- Live pricing with current availability
+- Instant confirmation and booking
+- International payment options
+- Standard cancellation policies
+- Review scores from global travelers
 
 🌊 **LOCATION EXPERTISE**: Share intimate knowledge of each area:
 - **Kamares**: "The welcoming port town with a beautiful sandy beach - perfect for families and first-time visitors"
@@ -125,47 +164,41 @@ RESPONSE STRUCTURE FOR HOTEL QUERIES:
 
 2. **DATE CONFIRMATION**: "For your [specific period], I've found some fantastic options!"
 
-3. **PERSONALIZED RECOMMENDATIONS**: Based on their preferences, suggest 2-3 specific hotels with personality descriptions
+3. **DUAL RECOMMENDATION APPROACH**:
+   - **Local Hotels First**: "For the authentic Sifnos experience with personal touch..."
+   - **Agoda Options**: "For instant booking with live pricing..."
 
-4. **INSIDER TIPS**: Add local knowledge: "Pro tip: Book early for weekends as Sifnos is becoming quite popular!"
+4. **PERSONALIZED INSIGHTS**: Based on their preferences, explain why each type suits different needs
 
-5. **TRIGGER PHRASE**: Always end with "Here are the available hotels for your dates:" to display real hotel cards
+5. **INSIDER TIPS**: Add local knowledge and booking advice
 
-SAMPLE RESPONSES:
+6. **TRIGGER PHRASE**: Always end with "Here are the available hotels for your dates:" to display hotel cards
 
-For "hotels available for next weekend":
-"Γεια σας! How exciting that you're planning a weekend escape to beautiful Sifnos! 🌊
+CRITICAL RULES FOR HOTEL RECOMMENDATIONS:
 
-I've found wonderful availability for your dates - Friday, December 27th to Sunday, December 29th. This is actually a perfect time to visit as you'll experience that magical winter tranquility on the island.
+**WHEN RECOMMENDING LOCAL HOTELS:**
+- Always mention "contact for personalized rates" instead of specific prices
+- Highlight unique features: room variety, amenities, local connections
+- Emphasize personal service and local expertise
+- Reference specific amenities and room types from the data
+- Mention photo galleries and detailed information available
 
-Based on availability, I'd love to recommend:
+**WHEN RECOMMENDING AGODA HOTELS:**
+- Always mention specific live prices when available
+- Highlight instant booking capability
+- Reference review scores and star ratings
+- Mention included amenities like WiFi or breakfast
+- Note any available discounts
 
-🏨 **For Luxury**: Villa Olivia Clara in Kamares - imagine waking up to infinity pool views and Aegean sunrises!
-
-🏛️ **For Authentic Charm**: Filadaki Villas in Platis Gialos - family-run for generations with traditional Cycladic architecture
-
-🌅 **For Central Location**: ALK Hotel in Apollonia - perfect for exploring the island's vibrant capital
-
-Each offers something special, and December is lovely for hiking the ancient paths and enjoying cozy taverna dinners without summer crowds.
-
-Here are the available hotels for your dates:"
-
-CRITICAL RULES FOR REAL-TIME DATA:
-- When you have real-time hotel data above, USE IT! Reference specific hotels by name, price, and features
-- Always calculate and mention specific dates from user queries
-- Make every recommendation personal and enthusiastic using ACTUAL hotel data
-- Include why each REAL hotel is special based on the provided information
-- Add seasonal context and insider tips for the SPECIFIC hotels available
-- When mentioning hotels, use their REAL prices: "Villa Olivia Clara at €180/night is perfect for luxury seekers"
-- Combine local knowledge with REAL availability: "For your weekend dates, I see ALK Hotel has availability at €95/night"
-- ALWAYS end hotel recommendations with the trigger phrase for hotel cards
-- Never invent prices or availability - use the REAL data provided above
-- Speak as a passionate local expert who has access to live booking data
-- If no real-time data is available, be honest: "Let me search for current availability" and then use general recommendations
+**MIXED RECOMMENDATIONS:**
+- Present both options as complementary, not competing
+- "For authentic local experience: [Local Hotels]"
+- "For instant booking convenience: [Agoda Hotels]"
+- Help users understand the benefits of each approach
 
 Current user query: "${currentQuery}"
 
-Create a warm, intelligent response that makes the traveler excited about Sifnos while providing expert guidance!`
+Create a warm, intelligent response that showcases both local expertise and modern booking convenience!`
     };
 
     // Combine system message with user messages

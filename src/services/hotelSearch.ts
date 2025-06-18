@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 
 export interface UnifiedHotel {
@@ -213,12 +214,12 @@ const searchLocalHotels = async (params: SearchParams): Promise<Hotel[]> => {
         *,
         hotel_amenities(amenity),
         hotel_photos(id, photo_url, is_main_photo),
-        hotel_rooms(id, name, price, capacity)
+        hotel_rooms(id, name, price, capacity),
+        hotel_reviews(rating, comment, reviewer_name)
       `)
       .eq('is_active', true);
 
     if (params.location) {
-      // Make the location search case-insensitive and handle partial matches
       const normalizedLocation = params.location.toLowerCase();
       query = query.ilike('location', `%${normalizedLocation}%`);
       console.log('Filtering by location:', normalizedLocation);
@@ -238,25 +239,38 @@ const searchLocalHotels = async (params: SearchParams): Promise<Hotel[]> => {
         (mainPhoto.photo_url.startsWith('http') ? mainPhoto.photo_url : `/uploads/hotels/${mainPhoto.photo_url}`) :
         '/placeholder.svg';
 
-      // Extract amenities
+      // Extract amenities with enhanced processing
       const amenities = hotel.hotel_amenities?.map((a: any) => a.amenity) || [];
+
+      // Calculate average rating from reviews if available
+      const reviewRating = hotel.hotel_reviews?.length > 0 
+        ? hotel.hotel_reviews.reduce((sum: number, review: any) => sum + review.rating, 0) / hotel.hotel_reviews.length
+        : hotel.rating || 0;
 
       const localHotel: Hotel = {
         id: parseInt(hotel.id) || 0,
         name: hotel.name,
         location: hotel.location,
-        price_per_night: hotel.price || 0,
-        rating: hotel.rating || 0,
+        price_per_night: 0, // Local hotels don't have standard pricing
+        rating: reviewRating,
         image_url: imageUrl,
         amenities: amenities,
         description: hotel.description || '',
-        source: 'local'
+        source: 'local',
+        // Enhanced local hotel data
+        hotel_types: hotel.hotel_types || [],
+        hotel_photos: hotel.hotel_photos || [],
+        hotel_amenities: hotel.hotel_amenities || [],
+        hotel_rooms: hotel.hotel_rooms || [],
+        star_rating: hotel.rating || Math.round(reviewRating),
+        review_count: hotel.hotel_reviews?.length || 0,
+        review_score: reviewRating
       };
 
       return localHotel;
     });
 
-    console.log(`Found ${localHotels.length} local hotels`);
+    console.log(`Found ${localHotels.length} local hotels with enhanced data`);
     return localHotels;
 
   } catch (error) {
@@ -275,19 +289,28 @@ export const searchHotels = async (params: SearchParams = {}): Promise<Hotel[]> 
       params.checkInDate && params.checkOutDate ? searchAgodaHotels(params) : Promise.resolve([])
     ]);
 
-    // Combine and sort results
+    // Combine results with proper prioritization
+    // Local hotels first (they show local expertise), then Agoda hotels
     const allHotels = [...localHotels, ...agodaHotels];
     
-    // Sort by rating (highest first)
-    allHotels.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-
-    console.log(`Total hotels found: ${allHotels.length} (${localHotels.length} local, ${agodaHotels.length} Agoda)`);
+    // Enhanced sorting: Local hotels by rating, Agoda hotels by rating
+    const sortedLocalHotels = localHotels.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    const sortedAgodaHotels = agodaHotels.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     
-    return allHotels;
+    const finalResults = [...sortedLocalHotels, ...sortedAgodaHotels];
+
+    console.log(`Total hotels found: ${finalResults.length} (${localHotels.length} local, ${agodaHotels.length} Agoda)`);
+    console.log('Local hotels data richness:', localHotels.map(h => ({
+      name: h.name,
+      amenities: h.amenities?.length || 0,
+      photos: h.hotel_photos?.length || 0,
+      rooms: h.hotel_rooms?.length || 0
+    })));
+    
+    return finalResults;
 
   } catch (error) {
     console.error('Error in unified hotel search:', error);
-    // Return empty array on error rather than throwing
     return [];
   }
 };

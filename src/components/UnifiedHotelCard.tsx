@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
-import { Star, MapPin, Wifi, Coffee, ExternalLink, Calendar } from 'lucide-react';
+import { Star, MapPin, Wifi, Coffee, ExternalLink, Calendar, Award, Users } from 'lucide-react';
 import { generateHotelUrl } from '@/lib/url-utils';
 import { determineHotelImageUrl } from '@/utils/image-utils';
 import FavoriteButton from '@/components/auth/FavoriteButton';
@@ -16,6 +17,7 @@ interface UnifiedHotelCardProps {
 
 const UnifiedHotelCard = ({ hotel, onSelect }: UnifiedHotelCardProps) => {
   const isAgodaHotel = hotel.source === 'agoda';
+  const isLocalHotel = hotel.source === 'local';
   
   // Generate appropriate URL and image
   const hotelUrl = isAgodaHotel 
@@ -31,15 +33,15 @@ const UnifiedHotelCard = ({ hotel, onSelect }: UnifiedHotelCardProps) => {
     ? (hotel.agoda_data?.reviewScore || hotel.review_score || 0)
     : (hotel.rating || 0);
     
-  const maxRating = isAgodaHotel ? 10 : 5;
   const displayRating = isAgodaHotel 
     ? (rating / 2) // Convert 10-point to 5-point scale for stars
     : rating;
 
-  // Get price display - handle different price field names
+  // Price handling - only show for Agoda hotels
+  const showPrice = isAgodaHotel && (hotel.agoda_data?.dailyRate || hotel.daily_rate || hotel.price_per_night);
   const price = isAgodaHotel 
     ? (hotel.agoda_data?.dailyRate || hotel.daily_rate || hotel.price_per_night || 0)
-    : (hotel.price_per_night || hotel.price || 0);
+    : 0;
   const currency = isAgodaHotel ? (hotel.agoda_data?.currency || hotel.currency || 'USD') : 'EUR';
 
   // Get star rating
@@ -103,24 +105,34 @@ const UnifiedHotelCard = ({ hotel, onSelect }: UnifiedHotelCardProps) => {
         
         {/* Source badge */}
         <div className="absolute top-3 left-3">
-          {hotel.source === 'agoda' ? (
+          {isAgodaHotel ? (
             <Badge variant="secondary" className="bg-blue-600 text-white hover:bg-blue-700">
               <ExternalLink className="w-3 h-3 mr-1" />
               Agoda Partner
             </Badge>
           ) : (
             <Badge variant="secondary" className="bg-green-600 text-white hover:bg-green-700">
-              <MapPin className="w-3 h-3 mr-1" />
+              <Award className="w-3 h-3 mr-1" />
               Local Partner
             </Badge>
           )}
         </div>
 
-        {/* Discount badge */}
-        {hotel.source === 'agoda' && hotel.agoda_data?.discountPercentage > 0 && (
+        {/* Discount badge for Agoda */}
+        {isAgodaHotel && hotel.agoda_data?.discountPercentage > 0 && (
           <div className="absolute top-3 right-3">
             <Badge variant="destructive" className="bg-red-500 text-white">
               {hotel.agoda_data.discountPercentage}% OFF
+            </Badge>
+          </div>
+        )}
+
+        {/* Local hotel quality indicator */}
+        {isLocalHotel && starRating >= 4 && (
+          <div className="absolute top-3 right-3">
+            <Badge variant="secondary" className="bg-amber-500 text-white">
+              <Award className="w-3 h-3 mr-1" />
+              Premium
             </Badge>
           </div>
         )}
@@ -138,12 +150,25 @@ const UnifiedHotelCard = ({ hotel, onSelect }: UnifiedHotelCardProps) => {
             </CardDescription>
           </div>
           
-          <div className="text-right ml-3">
-            <div className="text-2xl font-bold text-green-600">
-              {formatPrice(price, currency)}
+          {/* Price section - only for Agoda hotels */}
+          {showPrice && (
+            <div className="text-right ml-3">
+              <div className="text-2xl font-bold text-green-600">
+                {formatPrice(price, currency)}
+              </div>
+              <div className="text-sm text-gray-500">per night</div>
             </div>
-            <div className="text-sm text-gray-500">per night</div>
-          </div>
+          )}
+
+          {/* Local hotel - show "Contact for rates" */}
+          {isLocalHotel && (
+            <div className="text-right ml-3">
+              <div className="text-sm font-medium text-blue-600">
+                Contact for Rates
+              </div>
+              <div className="text-xs text-gray-500">Direct booking</div>
+            </div>
+          )}
         </div>
       </CardHeader>
 
@@ -169,13 +194,15 @@ const UnifiedHotelCard = ({ hotel, onSelect }: UnifiedHotelCardProps) => {
           )}
         </div>
 
-        {/* Amenities */}
+        {/* Enhanced amenities display */}
         {hotel.amenities && hotel.amenities.length > 0 && (
           <div className="flex flex-wrap gap-2">
-            {hotel.amenities.slice(0, 3).map((amenity, index) => {
+            {hotel.amenities.slice(0, 4).map((amenity, index) => {
               const getAmenityIcon = (amenity: string) => {
-                if (amenity.toLowerCase().includes('wifi')) return <Wifi className="w-3 h-3" />;
-                if (amenity.toLowerCase().includes('breakfast')) return <Coffee className="w-3 h-3" />;
+                const amenityLower = amenity.toLowerCase();
+                if (amenityLower.includes('wifi') || amenityLower.includes('internet')) return <Wifi className="w-3 h-3" />;
+                if (amenityLower.includes('breakfast') || amenityLower.includes('coffee')) return <Coffee className="w-3 h-3" />;
+                if (amenityLower.includes('pool') || amenityLower.includes('swimming')) return <Users className="w-3 h-3" />;
                 return null;
               };
 
@@ -186,16 +213,16 @@ const UnifiedHotelCard = ({ hotel, onSelect }: UnifiedHotelCardProps) => {
                 </Badge>
               );
             })}
-            {hotel.amenities.length > 3 && (
+            {hotel.amenities.length > 4 && (
               <Badge variant="outline" className="text-xs">
-                +{hotel.amenities.length - 3} more
+                +{hotel.amenities.length - 4} more
               </Badge>
             )}
           </div>
         )}
 
         {/* Special Agoda features */}
-        {hotel.source === 'agoda' && hotel.agoda_data && (
+        {isAgodaHotel && hotel.agoda_data && (
           <div className="flex flex-wrap gap-2">
             {hotel.agoda_data.freeWifi && (
               <Badge variant="secondary" className="text-xs bg-green-100 text-green-800">
@@ -212,36 +239,51 @@ const UnifiedHotelCard = ({ hotel, onSelect }: UnifiedHotelCardProps) => {
           </div>
         )}
 
-        {/* Description */}
+        {/* Description - enhanced for local hotels */}
         {hotel.description && (
           <p className="text-sm text-gray-600 line-clamp-2">
             {hotel.description}
           </p>
         )}
 
+        {/* Local hotel special features */}
+        {isLocalHotel && hotel.hotel_rooms && hotel.hotel_rooms.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="outline" className="text-xs bg-purple-50 text-purple-700">
+              <Users className="w-3 h-3 mr-1" />
+              {hotel.hotel_rooms.length} room types
+            </Badge>
+          </div>
+        )}
+
         {/* Action button */}
         <Button 
           onClick={handleBooking}
           className="w-full mt-4"
-          variant={hotel.source === 'agoda' ? 'default' : 'outline'}
+          variant={isAgodaHotel ? 'default' : 'outline'}
         >
-          {hotel.source === 'agoda' ? (
+          {isAgodaHotel ? (
             <>
               <ExternalLink className="w-4 h-4 mr-2" />
               Book on Agoda
             </>
           ) : (
-            'View Details'
+            <>
+              <Calendar className="w-4 h-4 mr-2" />
+              View Details & Contact
+            </>
           )}
         </Button>
 
-        {/* Hotel ID for debugging */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="text-xs text-gray-400 mt-2">
-            ID: {hotel.id} | Source: {hotel.source}
-            {hotel.agoda_hotel_id && ` | Agoda ID: ${hotel.agoda_hotel_id}`}
-          </div>
-        )}
+        {/* Hotel source indicator */}
+        <div className="text-xs text-gray-400 mt-2 flex items-center justify-between">
+          <span>
+            {isAgodaHotel ? 'Live pricing from Agoda' : 'Local Sifnos hotel'}
+          </span>
+          {process.env.NODE_ENV === 'development' && (
+            <span>ID: {hotel.id}</span>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
