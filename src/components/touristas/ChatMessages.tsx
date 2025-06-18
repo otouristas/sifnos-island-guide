@@ -4,26 +4,11 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { User, Bot } from 'lucide-react';
 import HotelDisplayUnified from './HotelDisplayUnified';
-import { UnifiedHotel } from '@/services/hotelSearch';
-
-export interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  showHotels?: boolean;
-  hotels?: UnifiedHotel[];
-  location?: string;
-  preferences?: Record<string, string>;
-}
+import { Message } from './utils/chat-utils';
 
 interface ChatMessagesProps {
   messages: Message[];
   messagesEndRef: React.RefObject<HTMLDivElement>;
-}
-
-// Updated message interface to handle hotel display
-interface ExtendedMessage extends Message {
-  hotels?: any[];
 }
 
 export default function ChatMessages({ messages, messagesEndRef }: ChatMessagesProps) {
@@ -61,11 +46,11 @@ export default function ChatMessages({ messages, messagesEndRef }: ChatMessagesP
               </div>
               
               {/* Show unified hotels if available */}
-              {((message as any).hotels && (message as any).hotels.length > 0) && (
+              {message.hotels && message.hotels.length > 0 && (
                 <div className="mt-4">
                   <HotelDisplayUnified 
-                    hotels={(message as any).hotels} 
-                    location={(message as any).location}
+                    hotels={message.hotels} 
+                    location={message.location}
                   />
                 </div>
               )}

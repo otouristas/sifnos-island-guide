@@ -17,7 +17,7 @@ export interface HotelRecommendation {
   location: string;
   price: number;
   rating: number;
-  image: string;
+  image_url: string; // Changed from 'image' to 'image_url'
   amenities: string[];
   source: 'local' | 'agoda';
   description: string;
