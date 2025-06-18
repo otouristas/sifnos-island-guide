@@ -40,7 +40,7 @@ const HotelImage = ({ hotel, imageSrc, primaryType, getHotelTypeIcon }: HotelIma
         onLoad={handleImageLoad}
         onError={handleImageError}
         loading="eager"
-        fetchpriority="high"
+        fetchPriority="high"
       />
       {/* Display hotel type icon if available */}
       {primaryType && (

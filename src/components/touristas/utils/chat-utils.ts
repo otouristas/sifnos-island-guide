@@ -1,12 +1,11 @@
-
-import { UnifiedHotel } from '@/services/hotelSearch';
+import { Hotel } from '@/services/hotelSearch';
 
 export interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   showHotels?: boolean;
-  hotels?: UnifiedHotel[];
+  hotels?: Hotel[];
   location?: string;
   preferences?: Record<string, string>;
 }

@@ -1,12 +1,12 @@
 
 import React from 'react';
 import UnifiedHotelCard from '@/components/UnifiedHotelCard';
-import { UnifiedHotel } from '@/services/hotelSearch';
+import { Hotel } from '@/services/hotelSearch';
 import { Badge } from '@/components/ui/badge';
 import { Award, ExternalLink, Info } from 'lucide-react';
 
 interface HotelDisplayUnifiedProps {
-  hotels: UnifiedHotel[];
+  hotels: Hotel[];
   location?: string;
 }
 

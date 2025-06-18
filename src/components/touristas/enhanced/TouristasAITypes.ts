@@ -57,6 +57,6 @@ export interface MessageContext {
 export interface QuickPrompt {
   id: string;
   text: string;
-  category: 'location' | 'budget' | 'occasion' | 'amenity';
+  category: 'location' | 'budget' | 'occasion' | 'amenity' | 'real_time' | 'local_content' | 'local_hotels' | 'hybrid' | 'general' | 'test';
   keywords: string[];
 }
