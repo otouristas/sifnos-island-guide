@@ -19,16 +19,16 @@ const UnifiedHotelCard = ({ hotel, onSelect }: UnifiedHotelCardProps) => {
   
   // Generate appropriate URL and image
   const hotelUrl = isAgodaHotel 
-    ? hotel.landing_url || '#'
+    ? hotel.agoda_data?.landingURL || hotel.landing_url || '#'
     : `/hotels/${generateHotelUrl(hotel.name)}`;
     
   const imageUrl = isAgodaHotel 
-    ? hotel.image_url || '/placeholder.svg'
-    : determineHotelImageUrl(hotel);
+    ? hotel.agoda_data?.imageURL || hotel.image_url || '/placeholder.svg'
+    : hotel.image_url || determineHotelImageUrl(hotel);
 
   // Get rating display
   const rating = isAgodaHotel 
-    ? (hotel.review_score || 0)
+    ? (hotel.agoda_data?.reviewScore || hotel.review_score || 0)
     : (hotel.rating || 0);
     
   const maxRating = isAgodaHotel ? 10 : 5;
@@ -36,9 +36,24 @@ const UnifiedHotelCard = ({ hotel, onSelect }: UnifiedHotelCardProps) => {
     ? (rating / 2) // Convert 10-point to 5-point scale for stars
     : rating;
 
-  // Get price display
-  const price = isAgodaHotel ? hotel.daily_rate : hotel.price;
-  const currency = isAgodaHotel ? hotel.currency : 'EUR';
+  // Get price display - handle different price field names
+  const price = isAgodaHotel 
+    ? (hotel.agoda_data?.dailyRate || hotel.daily_rate || hotel.price_per_night || 0)
+    : (hotel.price_per_night || hotel.price || 0);
+  const currency = isAgodaHotel ? (hotel.agoda_data?.currency || hotel.currency || 'USD') : 'EUR';
+
+  // Get star rating
+  const starRating = isAgodaHotel 
+    ? (hotel.agoda_data?.starRating || hotel.star_rating || 0)
+    : (hotel.star_rating || Math.round(rating));
+
+  // Get review data
+  const reviewScore = isAgodaHotel 
+    ? (hotel.agoda_data?.reviewScore || hotel.review_score || 0)
+    : (hotel.review_score || rating || 0);
+  const reviewCount = isAgodaHotel 
+    ? (hotel.agoda_data?.reviewCount || hotel.review_count || 0)
+    : (hotel.review_count || 0);
 
   const formatPrice = (price: number, currency = 'USD') => {
     return new Intl.NumberFormat('en-US', {
@@ -67,8 +82,8 @@ const UnifiedHotelCard = ({ hotel, onSelect }: UnifiedHotelCardProps) => {
   };
 
   const handleBooking = () => {
-    if (hotel.source === 'agoda' && hotel.agoda_data?.landingURL) {
-      window.open(hotel.agoda_data.landingURL, '_blank', 'noopener,noreferrer');
+    if (hotel.source === 'agoda' && (hotel.agoda_data?.landingURL || hotel.landing_url)) {
+      window.open(hotel.agoda_data?.landingURL || hotel.landing_url, '_blank', 'noopener,noreferrer');
     } else if (onSelect) {
       onSelect(hotel);
     }
@@ -125,7 +140,7 @@ const UnifiedHotelCard = ({ hotel, onSelect }: UnifiedHotelCardProps) => {
           
           <div className="text-right ml-3">
             <div className="text-2xl font-bold text-green-600">
-              {formatPrice(hotel.price_per_night, hotel.source === 'agoda' ? hotel.agoda_data?.currency : 'USD')}
+              {formatPrice(price, currency)}
             </div>
             <div className="text-sm text-gray-500">per night</div>
           </div>
@@ -136,19 +151,19 @@ const UnifiedHotelCard = ({ hotel, onSelect }: UnifiedHotelCardProps) => {
         {/* Star rating and reviews */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {hotel.star_rating && renderStarRating(hotel.star_rating)}
+            {starRating > 0 && renderStarRating(displayRating)}
             <span className="text-sm text-gray-600">
-              {hotel.star_rating || 'N/A'} stars
+              {starRating || 'N/A'} stars
             </span>
           </div>
           
-          {hotel.review_score && (
+          {reviewScore > 0 && (
             <div className="flex items-center gap-1">
               <div className="bg-blue-600 text-white px-2 py-1 rounded text-sm font-medium">
-                {hotel.review_score.toFixed(1)}
+                {reviewScore.toFixed(1)}
               </div>
               <span className="text-sm text-gray-600">
-                ({hotel.review_count || 0} reviews)
+                ({reviewCount || 0} reviews)
               </span>
             </div>
           )}

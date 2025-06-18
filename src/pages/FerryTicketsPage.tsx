@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import SEO from '@/components/SEO';
@@ -18,13 +17,15 @@ const FerryTicketsPage = () => {
   return (
     <>
       <SEO 
-        title="Ferry Tickets to Sifnos - 2025 Complete Guide & Online Booking"
-        description="Book ferry tickets to and from Sifnos. View 2025 schedules, compare prices across ferry companies, and get the best rates for your Greek island hopping adventure."
+        title="Sifnos Ferry Tickets 2025 - Book Online & Save | Best Prices & Schedules"
+        description="Book ferry tickets to Sifnos online with instant confirmation. Compare 2025 schedules, prices & ferry companies. Athens/Piraeus to Sifnos routes, island hopping deals & vehicle transport options available."
         keywords={[
-          'sifnos ferry tickets', 'ferry to sifnos', 'sifnos ferry schedules',
+          'sifnos ferry tickets 2025', 'ferry to sifnos', 'sifnos ferry schedules',
           'piraeus to sifnos ferry', 'athens to sifnos boat', 'island hopping sifnos',
-          'cyclades ferry routes', 'greek islands ferries'
+          'cyclades ferry routes', 'greek islands ferries', 'online ferry booking',
+          'ferry tickets greece', 'book sifnos ferry', 'sifnos transportation'
         ]}
+        pageType="general"
         schemaType="TravelAgency"
         canonical="https://hotelssifnos.com/ferry-tickets"
         imageUrl="/uploads/ferries/ferry-hero.jpg"

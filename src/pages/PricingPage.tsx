@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
@@ -19,10 +18,17 @@ const PricingPage = () => {
   return (
     <>
       <SEO 
-        title="List Your Hotel on Sifnos - Pricing Plans | HotelsSifnos"
-        description="Choose the perfect listing plan for your hotel in Sifnos. Free basic listing, premium features, or full promotional packages with SEO boost and sponsored placement."
-        keywords={['sifnos hotel listing', 'hotel advertising sifnos', 'premium hotel listing', 'hotel marketing greece']}
+        title="List Your Sifnos Hotel 2025 - Premium Marketing & Direct Bookings | Hotels Sifnos"
+        description="List your Sifnos hotel with the island's leading accommodation platform. Reach thousands of travelers, increase direct bookings & maximize revenue. Premium marketing tools, dedicated support & competitive commission rates."
+        keywords={[
+          'list sifnos hotel 2025', 'sifnos hotel marketing', 'hotel advertising sifnos', 
+          'premium hotel listing', 'sifnos accommodation marketing', 'hotel promotion sifnos',
+          'direct booking increase', 'sifnos hotel revenue', 'cyclades hotel marketing'
+        ]}
+        pageType="pricing"
+        schemaType="WebPage"
         canonical="https://hotelssifnos.com/pricing"
+        imageUrl="/uploads/sifnos-og-image.jpg"
       />
     
       <div className="container mx-auto px-4 py-16">

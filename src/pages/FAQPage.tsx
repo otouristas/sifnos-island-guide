@@ -1,4 +1,3 @@
-
 import SEO from '../components/SEO';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import SchemaGenerator from '@/components/SchemaGenerator';
@@ -46,11 +45,17 @@ export default function FAQPage() {
   return (
     <>
       <SEO 
-        title="Sifnos Travel FAQs - Answers to Your Most Common Questions" 
-        description="Find answers to frequently asked questions about traveling to Sifnos, booking accommodations, transportation options, best times to visit, local customs, and practical tips for making the most of your stay on this beautiful Cycladic island."
-        keywords={['sifnos faq', 'sifnos travel questions', 'sifnos accommodation faq', 'how to get to sifnos', 'best time to visit sifnos', 'sifnos travel tips']}
+        title="Sifnos Hotels FAQ - Everything You Need to Know | Booking, Travel & Island Guide"
+        description="Get answers to all your Sifnos travel questions. Comprehensive guide covering hotel bookings, island transportation, best areas to stay, seasonal tips & travel requirements. Plan your perfect Sifnos vacation with expert advice."
+        keywords={[
+          'sifnos faq', 'sifnos travel questions', 'sifnos accommodation faq', 'how to get to sifnos', 
+          'best time to visit sifnos', 'sifnos travel tips', 'sifnos island guide', 'cyclades travel faq',
+          'sifnos accommodation guide', 'sifnos vacation planning', 'greece travel faq'
+        ]}
+        pageType="faq"
         schemaType="Organization"
         canonical="https://hotelssifnos.com/faq"
+        imageUrl="/uploads/sifnos-og-image.jpg"
       />
       
       {/* Add FAQ Schema */}

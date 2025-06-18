@@ -1,4 +1,3 @@
-
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getLocationBySlug, Location, sifnosLocations } from '../data/locations';
@@ -120,9 +119,18 @@ export default function LocationPage() {
         title={generateSeoTitle()}
         description={generateSeoDescription()}
         keywords={location.keywords}
+        pageType="location"
         schemaType="TouristDestination"
         canonical={`https://hotelssifnos.com/locations/${slug}`}
         imageUrl={location.imageUrl}
+        locationData={{
+          name: location.name,
+          hotelsCount: hotels.length || location.hotelsCount,
+          type: location.name === 'Kamares' ? 'port' : 
+                location.name === 'Apollonia' ? 'capital' :
+                location.name.toLowerCase().includes('beach') || location.name.toLowerCase().includes('gialos') ? 'beach' :
+                'village'
+        }}
       />
       
       <div className="container mx-auto px-4">

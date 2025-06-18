@@ -137,11 +137,18 @@ export default function BeachesPage() {
   return (
     <>
       <SEO 
-        title="Sifnos Beaches Guide - Top Beaches for Swimming, Relaxing & Activities"
-        description="Explore Sifnos' spectacular coastline from golden sand beaches like Platis Gialos to secluded coves like Vroulidia. Find detailed information on facilities, water sports, family-friendliness, and nearby accommodations for each beach on the island."
-        keywords={['sifnos beaches', 'best beaches sifnos', 'platis gialos sifnos', 'vathi beach sifnos', 'kamares beach', 'faros beach sifnos', 'chrysopigi beach', 'family beaches sifnos']}
+        title="Best Sifnos Beaches 2025 - Complete Guide to Paradise | Hotels Sifnos"
+        description="Discover Sifnos' most beautiful beaches: from golden Platis Gialos to secluded Vroulidia. Complete guide with photos, facilities, access info & nearby hotels. Find your perfect beach paradise on this stunning Cycladic island."
+        keywords={[
+          'best sifnos beaches 2025', 'sifnos beach guide', 'platis gialos beach', 
+          'vathi beach sifnos', 'kamares beach', 'faros beach sifnos', 'chrysopigi beach',
+          'family beaches sifnos', 'secluded beaches sifnos', 'cyclades beaches',
+          'greece beach guide', 'swimming sifnos', 'beach holidays greece'
+        ]}
+        pageType="general"
         schemaType="TouristDestination"
         canonical="https://hotelssifnos.com/beaches"
+        imageUrl="/uploads/beaches/plats-gialos.webp"
       />
       
       {/* Hero Section */}

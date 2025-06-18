@@ -35,7 +35,6 @@ import TouristasAIPage from "./pages/TouristasAIPage";
 import BlogPage from "./pages/BlogPage";
 import BlogPostPage from "./pages/BlogPostPage";
 import FerryTicketsPage from "./pages/FerryTicketsPage";
-import ExploreMapPage from "./pages/ExploreMapPage";
 import ProfilePage from "./pages/ProfilePage";
 import FavoritesPage from "./pages/FavoritesPage";
 import SettingsPage from "./pages/SettingsPage";
@@ -101,8 +100,6 @@ const App = () => (
               <Route path="/ferry-tickets" element={<FerryTicketsPage />} />
               {/* Touristas AI route */}
               <Route path="/touristas-ai" element={<TouristasAIPage />} />
-              {/* Explore Map route */}
-              <Route path="/explore-map" element={<ExploreMapPage />} />
               {/* User account routes */}
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/favorites" element={<FavoritesPage />} />

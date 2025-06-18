@@ -1,4 +1,3 @@
-
 import SEO from '../components/SEO';
 import { Link } from 'react-router-dom';
 import { MessageCircle, Mail, Heart, Check, Users, Building, Award, MapPin, Clock, Brain, Sparkles, Zap } from 'lucide-react';
@@ -13,11 +12,17 @@ export default function AboutUsPage() {
   return (
     <>
       <SEO 
-        title="About Hotels Sifnos | AI-Powered Accommodation Platform for Sifnos Island" 
-        description="Discover the team behind Hotels Sifnos, the first AI-powered accommodation platform dedicated to Sifnos Island. Learn how our Touristas AI technology delivers personalized recommendations for your perfect Greek island stay."
-        keywords={['AI-powered accommodation', 'Sifnos hotels', 'Touristas AI', 'Sifnos villas', 'personalized booking', 'Greek islands accommodation']}
+        title="About Hotels Sifnos - Your Trusted Sifnos Accommodation Experts Since 2020"
+        description="Hotels Sifnos - Your trusted local experts for Sifnos accommodations since 2020. We personally vet every property, offer 24/7 support & guarantee the best experience. Discover why thousands choose us for their Sifnos getaway."
+        keywords={[
+          'about hotels sifnos', 'sifnos accommodation experts', 'trusted sifnos travel', 
+          'AI-powered accommodation', 'Touristas AI', 'sifnos local experts',
+          'personalized booking sifnos', 'authentic sifnos stays', 'cyclades travel experts'
+        ]}
+        pageType="about"
         schemaType="Organization"
         canonical="https://hotelssifnos.com/about-us"
+        imageUrl="/uploads/seo-kasiotis-manager.jpg"
       />
       
       {/* Hero Section - More compact */}

@@ -4,34 +4,21 @@ import { Menu, X, ChevronDown } from 'lucide-react';
 import UserMenu from './auth/UserMenu'; // Import the UserMenu component
 
 const mainNavItems = [
-  { 
-    name: 'Hotels', 
-    path: '/hotels',
-    dropdown: [
-      { name: 'All Hotels', path: '/hotels' },
-      { name: 'Hotel Types', path: '/hotel-types' },
-      { name: 'Luxury Hotels', path: '/hotel-types/luxury-hotels' },
-      { name: 'Boutique Hotels', path: '/hotel-types/boutique-hotels' },
-      { name: 'Beach Hotels', path: '/hotel-types/beach-hotels' },
-      { name: 'Family-Friendly Hotels', path: '/hotel-types/family-friendly-hotels' },
-      { name: 'Traditional Hotels', path: '/hotel-types/traditional-hotels' },
-      { name: 'Luxury Villas', path: '/hotel-types/villas' },
-    ]
-  },
+  { name: 'Hotels', path: '/hotels' },
   { 
     name: 'Locations', 
     path: '/locations',
     dropdown: [
       { name: 'All Locations', path: '/locations' },
-      { name: 'Apollonia', path: '/locations/apollonia' },
       { name: 'Kamares', path: '/locations/kamares' },
-      { name: 'Platis Gialos', path: '/locations/platis-gialos' },
+      { name: 'Apollonia', path: '/locations/apollonia' },
+      { name: 'Artemonas', path: '/locations/artemonas' },
       { name: 'Kastro', path: '/locations/kastro' },
+      { name: 'Plathys Gialos', path: '/locations/plathys-gialos' },
       { name: 'Vathi', path: '/locations/vathi' },
       { name: 'Faros', path: '/locations/faros' },
     ]
   },
-  { name: 'Explore Map', path: '/explore-map' },
   { name: 'Ferry Tickets', path: '/ferry-tickets' },
   { name: 'Beaches', path: '/beaches' },
   { name: 'Travel Guide', path: '/travel-guide' },

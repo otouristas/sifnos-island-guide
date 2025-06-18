@@ -518,19 +518,36 @@ export default function HotelDetailPage() {
   return (
     <>
       <SEO 
-        title={`${hotel?.name} - Hotel in ${hotel?.location}, Sifnos Island`}
-        description={hotel?.short_description || `Discover ${hotel?.name} located in ${hotel?.location}, Sifnos. Enjoy luxurious accommodations with modern amenities and stunning views of the Aegean Sea.`}
-        keywords={[
-          'sifnos hotels', 
-          hotel?.name.toLowerCase(), 
-          `${hotel?.location.toLowerCase()} accommodation`, 
-          'sifnos island hotel', 
-          'aegean sea view',
-          'greek cyclades hotel'
-        ]}
-        schemaType="Hotel"
+        title={hotel?.name ? `${hotel.name} - Luxury ${hotel.type || 'Hotel'} in ${hotel.location}, Sifnos | Book Direct 2025` : "Hotel Details - Sifnos Island | Hotels Sifnos"}
+        description={hotel ? 
+          `Experience ${hotel.name} in ${hotel.location}, Sifnos. ${hotel.rating ? `Rated ${hotel.rating}/5 stars.` : ''} ${hotel.hotel_amenities?.slice(0, 3).map(a => a.amenity).join(', ') || 'Premium amenities'}. Book direct for best rates, free cancellation & exclusive perks.` :
+          "Discover luxury accommodations in Sifnos with stunning sea views, authentic Cycladic charm, and premium amenities."
+        }
+        keywords={hotel ? [
+          hotel.name.toLowerCase(),
+          `${hotel.location.toLowerCase()} hotels`,
+          'book direct sifnos',
+          `luxury ${hotel.type?.toLowerCase() || 'hotel'} sifnos`,
+          'sifnos accommodation 2025',
+          'cyclades luxury stays',
+          `${hotel.location.toLowerCase()} accommodation`,
+          'sifnos island hotels',
+          'authentic cycladic experience'
+        ] : ['sifnos hotels', 'luxury accommodation', 'cyclades hotels']}
+        pageType="hotel-detail"
+        schemaType={hotel?.type === 'Villa' ? 'Villa' : 'Hotel'}
         canonical={`https://hotelssifnos.com/hotels/${hotel ? generateHotelUrl(hotel.name) : ''}`}
         imageUrl={activeImage ? `https://hotelssifnos.com${activeImage}` : '/uploads/sifnos-og-image.jpg'}
+        hotelData={hotel ? {
+          name: hotel.name,
+          location: hotel.location,
+          type: hotel.type || 'Hotel',
+          priceRange: hotel.price_range || "€€€",
+          rating: hotel.rating,
+          amenities: hotel.hotel_amenities?.map(a => a.amenity) || [],
+          imageUrl: activeImage ? `https://hotelssifnos.com${activeImage}` : undefined,
+          telephone: hotel.phone || "+30-2284-031370"
+        } : undefined}
       />
       
       {/* Breadcrumb navigation */}

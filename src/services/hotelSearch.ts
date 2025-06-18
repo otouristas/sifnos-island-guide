@@ -205,15 +205,23 @@ const searchAgodaHotels = async (params: SearchParams): Promise<Hotel[]> => {
 
 const searchLocalHotels = async (params: SearchParams): Promise<Hotel[]> => {
   try {
-    console.log('Searching local hotels');
+    console.log('Searching local hotels with params:', params);
     
     let query = supabase
       .from('hotels')
-      .select('*')
+      .select(`
+        *,
+        hotel_amenities(amenity),
+        hotel_photos(id, photo_url, is_main_photo),
+        hotel_rooms(id, name, price, capacity)
+      `)
       .eq('is_active', true);
 
     if (params.location) {
-      query = query.ilike('location', `%${params.location}%`);
+      // Make the location search case-insensitive and handle partial matches
+      const normalizedLocation = params.location.toLowerCase();
+      query = query.ilike('location', `%${normalizedLocation}%`);
+      console.log('Filtering by location:', normalizedLocation);
     }
 
     const { data: hotels, error } = await query.order('rating', { ascending: false });
@@ -223,17 +231,30 @@ const searchLocalHotels = async (params: SearchParams): Promise<Hotel[]> => {
       return [];
     }
 
-    const localHotels: Hotel[] = (hotels || []).map(hotel => ({
-      id: hotel.id,
-      name: hotel.name,
-      location: hotel.location,
-      price_per_night: hotel.price_per_night,
-      rating: hotel.rating,
-      image_url: hotel.image_url,
-      amenities: hotel.amenities || [],
-      description: hotel.description,
-      source: 'local'
-    }));
+    const localHotels: Hotel[] = (hotels || []).map(hotel => {
+      // Get main photo or first photo
+      const mainPhoto = hotel.hotel_photos?.find((p: any) => p.is_main_photo) || hotel.hotel_photos?.[0];
+      const imageUrl = mainPhoto?.photo_url ? 
+        (mainPhoto.photo_url.startsWith('http') ? mainPhoto.photo_url : `/uploads/hotels/${mainPhoto.photo_url}`) :
+        '/placeholder.svg';
+
+      // Extract amenities
+      const amenities = hotel.hotel_amenities?.map((a: any) => a.amenity) || [];
+
+      const localHotel: Hotel = {
+        id: parseInt(hotel.id) || 0,
+        name: hotel.name,
+        location: hotel.location,
+        price_per_night: hotel.price || 0,
+        rating: hotel.rating || 0,
+        image_url: imageUrl,
+        amenities: amenities,
+        description: hotel.description || '',
+        source: 'local'
+      };
+
+      return localHotel;
+    });
 
     console.log(`Found ${localHotels.length} local hotels`);
     return localHotels;

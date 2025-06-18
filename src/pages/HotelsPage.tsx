@@ -565,11 +565,23 @@ export default function HotelsPage() {
   return (
     <>
       <SEO 
-        title="Compare & Book Hotels in Sifnos - Best Rates & Exclusive Deals" 
-        description="Browse our comprehensive collection of Sifnos hotels, from budget-friendly options to 5-star luxury resorts. Filter by amenities, location, and price to find your ideal stay with our price match guarantee and exclusive direct booking discounts."
-        keywords={['sifnos hotels', 'book hotels sifnos', 'sifnos accommodation', 'luxury hotels sifnos', 'beach hotels sifnos', 'boutique hotels sifnos', 'hotel comparison sifnos']}
-        schemaType="Hotel"
+        title="Sifnos Hotels 2025 - Compare 25+ Properties | Best Prices Guaranteed"
+        description="Browse 25+ carefully selected Sifnos hotels. Compare luxury resorts, family-friendly properties & romantic getaways. Real-time availability, best prices & instant booking. Find your ideal Sifnos accommodation today."
+        keywords={[
+          'compare sifnos hotels', 'sifnos hotel deals', 'best rates sifnos', 'instant booking sifnos',
+          'sifnos hotels 2025', 'luxury sifnos accommodation', 'beach hotels sifnos', 
+          'boutique hotels sifnos', 'family hotels sifnos', 'hotel comparison sifnos',
+          'book hotels sifnos', 'sifnos resort booking', 'cyclades hotels'
+        ]}
+        pageType="hotels"
+        schemaType="CollectionPage"
         canonical="https://hotelssifnos.com/hotels"
+        imageUrl="/uploads/hotels/sifnos-luxury-hotels.jpg"
+        locationData={{
+          name: "Sifnos",
+          hotelsCount: 25,
+          type: "capital"
+        }}
       />
       
       {/* Hero Section */}

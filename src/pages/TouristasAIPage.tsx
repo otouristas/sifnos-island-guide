@@ -15,9 +15,18 @@ export default function TouristasAIPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50">
       <SEO 
-        title="Touristas AI - Intelligent Sifnos Travel Assistant"
-        description="Get personalized hotel recommendations, travel tips, and insider knowledge for your perfect Sifnos vacation with our AI-powered assistant."
-        keywords={["Sifnos AI assistant", "travel recommendations", "hotel booking", "Greece travel", "Cyclades islands"]}
+        title="Touristas AI - Intelligent Sifnos Travel Assistant 2025 | Hotels Sifnos"
+        description="Get personalized Sifnos hotel recommendations instantly with our AI-powered travel assistant. Smart matching, real-time availability, local insights & exclusive deals. Plan your perfect Cycladic island getaway in seconds."
+        keywords={[
+          "touristas ai sifnos", "ai travel assistant", "sifnos hotel recommendations", 
+          "intelligent travel planning", "personalized sifnos guide", "ai hotel booking",
+          "smart travel assistant", "sifnos ai concierge", "cyclades travel ai",
+          "instant hotel matching", "ai powered booking", "sifnos vacation planner"
+        ]}
+        pageType="general"
+        schemaType="WebPage"
+        canonical="https://hotelssifnos.com/touristas-ai"
+        imageUrl="/uploads/touristas-ai-logo.svg"
       />
 
       {/* SaaS Hero Section */}

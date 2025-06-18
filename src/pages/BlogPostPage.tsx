@@ -104,12 +104,23 @@ const BlogPostPage = () => {
       <SEO
         title={generateSeoTitle()}
         description={generateSeoDescription()}
+        pageType="blog"
         schemaType="Article"
-        canonical={post ? `/blog/${post.slug}` : "/blog"} 
+        canonical={post ? `https://hotelssifnos.com/blog/${post.slug}` : "https://hotelssifnos.com/blog"} 
         imageUrl={post?.featuredImage}
         datePublished={post?.date}
-        author={post?.author || "Touristas AI"}
-        keywords={post?.categories.map(category => category.toLowerCase()) || ['sifnos travel', 'greek islands']}
+        dateModified={post?.date}
+        author={post?.author || "Hotels Sifnos Editorial Team"}
+        keywords={post ? [
+          ...post.categories.map(category => category.toLowerCase()),
+          'sifnos travel guide 2025',
+          'cyclades islands',
+          'greece travel blog',
+          'sifnos vacation tips',
+          'authentic greek experience',
+          'island hopping greece',
+          post.title.toLowerCase()
+        ] : ['sifnos travel', 'greek islands', 'cyclades guide']}
       />
       
       {/* Enhanced Schema.org JSON-LD */}

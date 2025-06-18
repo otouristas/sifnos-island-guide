@@ -21,6 +21,11 @@ interface ChatMessagesProps {
   messagesEndRef: React.RefObject<HTMLDivElement>;
 }
 
+// Updated message interface to handle hotel display
+interface ExtendedMessage extends Message {
+  hotels?: any[];
+}
+
 export default function ChatMessages({ messages, messagesEndRef }: ChatMessagesProps) {
   return (
     <ScrollArea className="flex-1 p-6">
@@ -56,11 +61,13 @@ export default function ChatMessages({ messages, messagesEndRef }: ChatMessagesP
               </div>
               
               {/* Show unified hotels if available */}
-              {message.showHotels && message.hotels && message.hotels.length > 0 && (
-                <HotelDisplayUnified 
-                  hotels={message.hotels} 
-                  location={message.location}
-                />
+              {((message as any).hotels && (message as any).hotels.length > 0) && (
+                <div className="mt-4">
+                  <HotelDisplayUnified 
+                    hotels={(message as any).hotels} 
+                    location={(message as any).location}
+                  />
+                </div>
               )}
             </div>
           </div>
