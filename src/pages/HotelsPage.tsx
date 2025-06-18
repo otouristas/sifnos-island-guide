@@ -1,9 +1,8 @@
-
 import { useState, useEffect, useCallback, memo } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
-import { Search, Filter, ChevronLeft, X, MessageCircle } from 'lucide-react';
+import { Search, Filter, ChevronLeft, X, MessageCircle, Calendar, Users, Minus, Plus } from 'lucide-react';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
 import HotelCard from '@/components/HotelCard';
@@ -11,6 +10,7 @@ import SponsoredHotelCard from '@/components/SponsoredHotelCard';
 import { hotelTypes } from '@/data/hotelTypes';
 import { getHotelTypeIcon } from '@/components/icons/HotelTypeIcons';
 import FilterSidebar from '@/components/hotel/FilterSidebar';
+import { searchHotels } from '@/services/hotelSearch';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,6 +21,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 import { Dispatch, FormEvent, SetStateAction } from 'react';
 
 // Define interface for SearchBar component props
@@ -30,6 +38,17 @@ interface SearchBarProps {
   searchQuery: string;
   setSearchQuery: Dispatch<SetStateAction<string>>;
   handleSearch: (e?: FormEvent) => void;
+}
+
+// Define interface for booking search state
+interface BookingSearchState {
+  checkInDate: Date | undefined;
+  checkOutDate: Date | undefined;
+  adults: number;
+  children: number;
+  isCheckInOpen: boolean;
+  isCheckOutOpen: boolean;
+  isGuestsOpen: boolean;
 }
 
 // Memoize the search bar component to improve performance
@@ -200,12 +219,25 @@ export default function HotelsPage() {
     location: '',
   });
 
+  // Booking search state
+  const [bookingSearch, setBookingSearch] = useState<BookingSearchState>({
+    checkInDate: undefined,
+    checkOutDate: undefined,
+    adults: 2,
+    children: 0,
+    isCheckInOpen: false,
+    isCheckOutOpen: false,
+    isGuestsOpen: false,
+  });
+
   const [searchQuery, setSearchQuery] = useState('');
   const [hotels, setHotels] = useState([]);
+  const [agodaHotels, setAgodaHotels] = useState([]);
   const [filteredHotels, setFilteredHotels] = useState([]);
   const [sponsoredHotels, setSponsoredHotels] = useState([]);
   const [displayedSponsoredHotel, setDisplayedSponsoredHotel] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [agodaLoading, setAgodaLoading] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const { toast } = useToast();
@@ -354,8 +386,42 @@ export default function HotelsPage() {
     }
 
     fetchHotels();
-  }, [toast]); 
-  
+  }, [toast]);
+
+  // Function to search Agoda hotels with booking parameters
+  const searchAgodaHotels = useCallback(async (checkInDate?: string, checkOutDate?: string, adults?: number, children?: number) => {
+    try {
+      setAgodaLoading(true);
+      console.log('Searching Agoda hotels with booking parameters...');
+      
+      const searchParams = {
+        checkInDate: checkInDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Default to 1 week from now
+        checkOutDate: checkOutDate || new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Default to 2 weeks from now
+        numberOfAdults: adults || 2,
+        numberOfChildren: children || 0
+      };
+      
+      const agodaResults = await searchHotels(searchParams);
+      console.log(`Found ${agodaResults.length} Agoda hotels`);
+      setAgodaHotels(agodaResults);
+      
+      toast({
+        title: "Agoda Search Complete",
+        description: `Found ${agodaResults.length} additional hotels from Agoda`,
+      });
+      
+    } catch (error) {
+      console.error('Error searching Agoda hotels:', error);
+      toast({
+        title: "Agoda Search Failed",
+        description: "Could not load additional hotels from Agoda at the moment.",
+        variant: "destructive"
+      });
+    } finally {
+      setAgodaLoading(false);
+    }
+  }, [toast]);
+
   // Select a random sponsored hotel to display when the component loads
   useEffect(() => {
     if (sponsoredHotels.length > 0) {
@@ -367,20 +433,25 @@ export default function HotelsPage() {
   
   // Apply filters whenever hotels or filters change - memoize with useCallback for better performance
   useEffect(() => {
-    if (hotels.length === 0) return;
+    if (hotels.length === 0 && agodaHotels.length === 0) return;
     
-    let results = [...hotels];
+    // Combine local and Agoda hotels
+    let results = [...hotels, ...agodaHotels];
     
     // Filter by hotel type
     if (filters.hotelType) {
       results = results.filter(hotel => 
-        hotel.hotel_types && hotel.hotel_types.includes(filters.hotelType)
+        (hotel.hotel_types && hotel.hotel_types.includes(filters.hotelType)) ||
+        (hotel.source === 'agoda' && filters.hotelType === 'luxury-hotels' && (hotel.star_rating >= 4 || hotel.rating >= 8))
       );
     }
     
     // Filter by star rating
     if (filters.starRating > 0) {
-      results = results.filter(hotel => hotel.rating === filters.starRating);
+      results = results.filter(hotel => 
+        hotel.rating === filters.starRating || 
+        (hotel.star_rating && hotel.star_rating === filters.starRating)
+      );
     }
     
     // Filter by location - now handling "all" value specifically
@@ -402,9 +473,11 @@ export default function HotelsPage() {
         return activeAmenities.every(amenity => {
           switch(amenity) {
             case 'wifi':
-              return hotelAmenities.some(a => a.includes('wifi') || a.includes('internet'));
+              return hotelAmenities.some(a => a.includes('wifi') || a.includes('internet')) ||
+                     (hotel.source === 'agoda' && hotel.agoda_data?.freeWifi);
             case 'breakfast':
-              return hotelAmenities.some(a => a.includes('breakfast'));
+              return hotelAmenities.some(a => a.includes('breakfast')) ||
+                     (hotel.source === 'agoda' && hotel.agoda_data?.includeBreakfast);
             case 'pool':
               return hotelAmenities.some(a => a.includes('pool') || a.includes('swimming'));
             case 'parking':
@@ -429,12 +502,13 @@ export default function HotelsPage() {
         hotel.name.toLowerCase().includes(query) ||
         hotel.location.toLowerCase().includes(query) ||
         (hotel.description && hotel.description.toLowerCase().includes(query)) ||
-        hotel.hotel_amenities?.some(a => a.amenity.toLowerCase().includes(query))
+        hotel.hotel_amenities?.some(a => a.amenity.toLowerCase().includes(query)) ||
+        (hotel.amenities && hotel.amenities.some(a => a.toLowerCase().includes(query)))
       );
     }
     
     setFilteredHotels(results);
-  }, [hotels, filters, searchQuery]);
+  }, [hotels, agodaHotels, filters, searchQuery]);
 
   // Memoize the handleSearch function to avoid recreating on every render
   const handleSearch = useCallback((e?: React.FormEvent) => {
@@ -445,6 +519,42 @@ export default function HotelsPage() {
     }
     // The filtering is already handled by the useEffect that watches searchQuery
   }, [searchQuery, isMobile]);
+
+  // Handle booking search
+  const handleBookingSearch = useCallback((e?: React.FormEvent) => {
+    e?.preventDefault();
+    
+    if (!bookingSearch.checkInDate || !bookingSearch.checkOutDate) {
+      toast({
+        title: "Missing dates",
+        description: "Please select both check-in and check-out dates.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (bookingSearch.checkInDate >= bookingSearch.checkOutDate) {
+      toast({
+        title: "Invalid dates",
+        description: "Check-out date must be after check-in date.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const checkInStr = format(bookingSearch.checkInDate, 'yyyy-MM-dd');
+    const checkOutStr = format(bookingSearch.checkOutDate, 'yyyy-MM-dd');
+    
+    console.log("Booking search:", {
+      checkIn: checkInStr,
+      checkOut: checkOutStr,
+      adults: bookingSearch.adults,
+      children: bookingSearch.children
+    });
+
+    // Search Agoda with the specific booking parameters
+    searchAgodaHotels(checkInStr, checkOutStr, bookingSearch.adults, bookingSearch.children);
+  }, [bookingSearch, searchAgodaHotels, toast]);
 
   const filterCount = 
     (filters.starRating ? 1 : 0) +
@@ -475,29 +585,191 @@ export default function HotelsPage() {
           </div>
         </div>
       </div>
-      
-      {/* SEO Introduction */}
-      <div className="bg-white">
-        <div className="page-container">
-          <div className="max-w-4xl mx-auto prose prose-lg">
-            <p>
-              Welcome to our comprehensive guide to accommodation in Sifnos. Whether you're seeking a 
-              luxurious beachfront resort, a charming boutique hotel in a traditional village, or a family-friendly 
-              guesthouse with authentic Cycladic character, Sifnos offers a diverse range of options to suit every 
-              preference and budget.
-            </p>
-            <p>
-              Known for its exceptional hospitality, Sifnos combines the authenticity of Greek island living with 
-              modern amenities to ensure your stay is comfortable and memorable. Many accommodations feature traditional 
-              Cycladic architecture with white-washed walls, blue accents, and stunning views of the Aegean Sea.
-            </p>
-            <p>
-              Explore our carefully selected hotels below and find your perfect base for exploring all that Sifnos has to offer.
-            </p>
-          </div>
+
+      {/* Booking Search Form */}
+      <div className="bg-white border-b border-gray-200 shadow-sm">
+        <div className="page-container py-6">
+          <form onSubmit={handleBookingSearch} className="max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+              {/* Check-in Date */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Check-in Date</label>
+                <Popover open={bookingSearch.isCheckInOpen} onOpenChange={(open) => 
+                  setBookingSearch(prev => ({ ...prev, isCheckInOpen: open }))
+                }>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal h-12",
+                        !bookingSearch.checkInDate && "text-muted-foreground"
+                      )}
+                    >
+                      <Calendar className="mr-2 h-4 w-4" />
+                      {bookingSearch.checkInDate ? format(bookingSearch.checkInDate, "MMM dd, yyyy") : "Select date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <CalendarComponent
+                      mode="single"
+                      selected={bookingSearch.checkInDate}
+                      onSelect={(date) => {
+                        setBookingSearch(prev => ({ ...prev, checkInDate: date, isCheckInOpen: false }));
+                        if (date && bookingSearch.checkOutDate && date >= bookingSearch.checkOutDate) {
+                          setBookingSearch(prev => ({ ...prev, checkOutDate: undefined }));
+                        }
+                      }}
+                      disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              {/* Check-out Date */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Check-out Date</label>
+                <Popover open={bookingSearch.isCheckOutOpen} onOpenChange={(open) => 
+                  setBookingSearch(prev => ({ ...prev, isCheckOutOpen: open }))
+                }>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal h-12",
+                        !bookingSearch.checkOutDate && "text-muted-foreground"
+                      )}
+                    >
+                      <Calendar className="mr-2 h-4 w-4" />
+                      {bookingSearch.checkOutDate ? format(bookingSearch.checkOutDate, "MMM dd, yyyy") : "Select date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <CalendarComponent
+                      mode="single"
+                      selected={bookingSearch.checkOutDate}
+                      onSelect={(date) => 
+                        setBookingSearch(prev => ({ ...prev, checkOutDate: date, isCheckOutOpen: false }))
+                      }
+                      disabled={(date) => {
+                        const today = new Date(new Date().setHours(0, 0, 0, 0));
+                        const checkIn = bookingSearch.checkInDate;
+                        return date < today || (checkIn && date <= checkIn);
+                      }}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              {/* Guests */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Guests</label>
+                <Popover open={bookingSearch.isGuestsOpen} onOpenChange={(open) => 
+                  setBookingSearch(prev => ({ ...prev, isGuestsOpen: open }))
+                }>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="w-full justify-start h-12">
+                      <Users className="mr-2 h-4 w-4" />
+                      {bookingSearch.adults + bookingSearch.children} guests
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-80" align="start">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-medium">Adults</div>
+                          <div className="text-sm text-gray-500">Ages 13+</div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => setBookingSearch(prev => ({ 
+                              ...prev, 
+                              adults: Math.max(1, prev.adults - 1) 
+                            }))}
+                            disabled={bookingSearch.adults <= 1}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <span className="w-8 text-center">{bookingSearch.adults}</span>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => setBookingSearch(prev => ({ 
+                              ...prev, 
+                              adults: Math.min(8, prev.adults + 1) 
+                            }))}
+                            disabled={bookingSearch.adults >= 8}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-medium">Children</div>
+                          <div className="text-sm text-gray-500">Ages 0-12</div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => setBookingSearch(prev => ({ 
+                              ...prev, 
+                              children: Math.max(0, prev.children - 1) 
+                            }))}
+                            disabled={bookingSearch.children <= 0}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <span className="w-8 text-center">{bookingSearch.children}</span>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => setBookingSearch(prev => ({ 
+                              ...prev, 
+                              children: Math.min(6, prev.children + 1) 
+                            }))}
+                            disabled={bookingSearch.children >= 6}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              {/* Search Button */}
+              <Button 
+                type="submit" 
+                className="h-12 bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white font-semibold"
+                disabled={agodaLoading || !bookingSearch.checkInDate || !bookingSearch.checkOutDate}
+              >
+                {agodaLoading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Searching...
+                  </>
+                ) : (
+                  <>
+                    <Search className="mr-2 h-4 w-4" />
+                    Search Hotels
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
         </div>
       </div>
-      
+
       {/* Compact Search Bar for Mobile - Optimized with memo component */}
       {isMobile && (
         <div className="sticky top-16 z-50 bg-white shadow-md border-b border-gray-200">
@@ -525,56 +797,6 @@ export default function HotelsPage() {
         </div>
       )}
       
-      {/* Desktop Search Bar - Performance optimized */}
-      {!isMobile && (
-        <div className="bg-white border-b border-gray-200 sticky top-16 z-40 shadow-md will-change-transform">
-          <div className="page-container py-3">
-            <form 
-              className="flex flex-col md:flex-row gap-4 items-center"
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSearch();
-              }}
-            >
-              <div className="w-full md:flex-1 relative">
-                <Input
-                  type="text"
-                  placeholder="Search for hotels, locations, or amenities"
-                  className="pl-10 py-4 h-auto"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              </div>
-              <div className="flex gap-2 w-full md:w-auto">
-                <Button 
-                  type="submit" 
-                  className="flex-1 md:w-auto bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white py-2 h-auto px-4"
-                  size="sm"
-                >
-                  <Search size={18} className="mr-1" />
-                  Search
-                </Button>
-                <Button 
-                  asChild
-                  className="flex-1 md:w-auto bg-sifnos-deep-blue hover:bg-sifnos-turquoise text-white py-2 h-auto"
-                  size="sm"
-                >
-                  <Link to="/touristas-ai" className="flex items-center">
-                    <img 
-                      src="/uploads/touristas-ai-logo.svg" 
-                      alt="Touristas AI" 
-                      className="w-4 h-4 mr-1"
-                    />
-                    Touristas AI
-                  </Link>
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-      
       {/* Content Section */}
       <div className="bg-gray-50">
         <div className="page-container py-8">
@@ -596,14 +818,54 @@ export default function HotelsPage() {
               <div className="flex justify-between items-center mb-6">
                 <h2 className="font-montserrat font-semibold text-xl">
                   {loading ? "Loading hotels..." : `${filteredHotels.length} hotels found`}
+                  {agodaHotels.length > 0 && (
+                    <span className="text-sm text-gray-600 font-normal">
+                      ({hotels.length} local + {agodaHotels.length} Agoda)
+                    </span>
+                  )}
                 </h2>
-                <div className="flex items-center">
-                  <span className="mr-2 text-sm">Sort by:</span>
-                  <select className="border rounded-md p-2 text-sm">
-                    <option>Recommended</option>
-                    <option>Rating (high to low)</option>
-                    <option>A-Z</option>
-                  </select>
+                <div className="flex items-center gap-4">
+                  {!agodaLoading && agodaHotels.length === 0 && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-600">
+                        Use booking search above for Agoda results
+                      </span>
+                      <Button
+                        onClick={() => {
+                          if (!bookingSearch.checkInDate || !bookingSearch.checkOutDate) {
+                            toast({
+                              title: "Select dates",
+                              description: "Please select check-in and check-out dates to search Agoda.",
+                              variant: "destructive"
+                            });
+                            return;
+                          }
+                          const checkInStr = format(bookingSearch.checkInDate, 'yyyy-MM-dd');
+                          const checkOutStr = format(bookingSearch.checkOutDate, 'yyyy-MM-dd');
+                          searchAgodaHotels(checkInStr, checkOutStr, bookingSearch.adults, bookingSearch.children);
+                        }}
+                        variant="outline"
+                        size="sm"
+                        className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
+                      >
+                        Search Agoda
+                      </Button>
+                    </div>
+                  )}
+                  {agodaLoading && (
+                    <div className="flex items-center text-sm text-gray-600">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500 mr-2"></div>
+                      Searching Agoda...
+                    </div>
+                  )}
+                  <div className="flex items-center">
+                    <span className="mr-2 text-sm">Sort by:</span>
+                    <select className="border rounded-md p-2 text-sm">
+                      <option>Recommended</option>
+                      <option>Rating (high to low)</option>
+                      <option>A-Z</option>
+                    </select>
+                  </div>
                 </div>
               </div>
               
@@ -623,9 +885,132 @@ export default function HotelsPage() {
               {!loading && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredHotels.length > 0 ? (
-                    filteredHotels.map(hotel => (
-                      <HotelCard key={hotel.id} hotel={hotel} showLogo={true} />
-                    ))
+                    filteredHotels.map(hotel => {
+                      // Use a unique key that handles both local and Agoda hotels
+                      const hotelKey = hotel.source === 'agoda' ? `agoda-${hotel.id}` : `local-${hotel.id}`;
+                      
+                      // For Agoda hotels, we might want to use a different component or modify display
+                      if (hotel.source === 'agoda') {
+                        return (
+                          <div key={hotelKey} className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-gray-100">
+                            <div className="relative">
+                              <img
+                                src={hotel.image_url || '/placeholder.svg'}
+                                alt={hotel.name}
+                                className="w-full h-48 object-cover"
+                                onError={(e) => {
+                                  e.currentTarget.src = '/placeholder.svg';
+                                }}
+                              />
+                              
+                              {/* Agoda Badge */}
+                              <div className="absolute top-2 left-2">
+                                <div className="bg-blue-600 text-white px-2 py-1 rounded-md text-xs font-semibold shadow-lg">
+                                  🏨 Agoda
+                                </div>
+                              </div>
+                              
+                              {/* Discount Badge */}
+                              {hotel.agoda_data?.discountPercentage > 0 && (
+                                <div className="absolute top-2 right-2">
+                                  <div className="bg-red-500 text-white px-2 py-1 rounded-md text-xs font-bold shadow-lg">
+                                    -{hotel.agoda_data.discountPercentage}%
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {/* Star Rating */}
+                              <div className="absolute bottom-2 left-2">
+                                <div className="bg-black bg-opacity-70 text-white px-2 py-1 rounded text-xs flex items-center">
+                                  <span className="text-yellow-400 mr-1">★</span>
+                                  <span>{hotel.star_rating}</span>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="p-4">
+                              {/* Hotel Name */}
+                              <h3 className="font-semibold text-gray-900 text-lg mb-1 line-clamp-1">
+                                {hotel.name}
+                              </h3>
+                              
+                              {/* Location */}
+                              <p className="text-sm text-gray-600 mb-2 flex items-center">
+                                <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                                </svg>
+                                Sifnos, Greece
+                              </p>
+                              
+                              {/* Review Score & Stars */}
+                              <div className="flex items-center mb-3">
+                                <div className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium mr-2">
+                                  {hotel.review_score?.toFixed(1)}/10
+                                </div>
+                                <div className="flex items-center text-xs text-gray-500">
+                                  <div className="flex mr-1">
+                                    {[...Array(5)].map((_, i) => (
+                                      <span key={i} className={`${i < Math.floor((hotel.review_score || 0) / 2) ? 'text-yellow-400' : 'text-gray-300'}`}>
+                                        ★
+                                      </span>
+                                    ))}
+                                  </div>
+                                  ({hotel.review_count})
+                                </div>
+                              </div>
+                              
+                              {/* Amenities */}
+                              <div className="flex flex-wrap gap-1 mb-3">
+                                {hotel.agoda_data?.freeWifi && (
+                                  <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
+                                    📶 WiFi
+                                  </span>
+                                )}
+                                {hotel.agoda_data?.includeBreakfast && (
+                                  <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs">
+                                    🍳 Breakfast
+                                  </span>
+                                )}
+                              </div>
+                              
+                              {/* Price & Book Button */}
+                              <div className="flex items-center justify-between pt-2 border-t">
+                                <div className="flex flex-col">
+                                  {hotel.agoda_data?.crossedOutRate > hotel.price_per_night && (
+                                    <span className="text-xs text-gray-400 line-through">
+                                      €{hotel.agoda_data.crossedOutRate}
+                                    </span>
+                                  )}
+                                  <div className="flex items-baseline">
+                                    <span className="text-xl font-bold text-green-600">
+                                      €{hotel.price_per_night}
+                                    </span>
+                                    <span className="text-xs text-gray-500 ml-1">/night</span>
+                                  </div>
+                                </div>
+                                
+                                <button 
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    if (hotel.agoda_data?.landingURL) {
+                                      window.open(hotel.agoda_data.landingURL, '_blank');
+                                    }
+                                  }}
+                                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                                >
+                                  Book Now
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+                      
+                      // For local hotels, use the existing HotelCard component
+                      return (
+                        <HotelCard key={hotelKey} hotel={hotel} showLogo={true} />
+                      );
+                    })
                   ) : !displayedSponsoredHotel && (
                     <div className="text-center py-12 col-span-3">
                       <h3 className="font-medium text-xl text-gray-700">No hotels found matching your criteria</h3>
@@ -658,6 +1043,28 @@ export default function HotelsPage() {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* SEO Introduction - moved to bottom above location guide */}
+      <div className="bg-white">
+        <div className="page-container">
+          <div className="max-w-4xl mx-auto prose prose-lg py-8">
+            <p>
+              Welcome to our comprehensive guide to accommodation in Sifnos. Whether you're seeking a 
+              luxurious beachfront resort, a charming boutique hotel in a traditional village, or a family-friendly 
+              guesthouse with authentic Cycladic character, Sifnos offers a diverse range of options to suit every 
+              preference and budget.
+            </p>
+            <p>
+              Known for its exceptional hospitality, Sifnos combines the authenticity of Greek island living with 
+              modern amenities to ensure your stay is comfortable and memorable. Many accommodations feature traditional 
+              Cycladic architecture with white-washed walls, blue accents, and stunning views of the Aegean Sea.
+            </p>
+            <p>
+              Explore our carefully selected hotels below and find your perfect base for exploring all that Sifnos has to offer.
+            </p>
           </div>
         </div>
       </div>
@@ -721,4 +1128,3 @@ export default function HotelsPage() {
     </>
   );
 }
-

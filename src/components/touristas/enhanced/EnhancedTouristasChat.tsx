@@ -9,15 +9,15 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { AIMessage, HotelRecommendation, HotelBundle, QuickPrompt, MessageContext } from './TouristasAITypes';
-import { searchUnifiedHotels } from '@/services/hotelSearch';
-import { callTouristasAI, processStreamingResponse } from '../services/ChatService';
+import { searchHotels } from '@/services/hotelSearch';
+import { callTouristasAI, processStreamingResponse, searchHotelsWithAvailability, parseNaturalDates } from '../services/ChatService';
 
 const QUICK_PROMPTS: QuickPrompt[] = [
-  { id: '1', text: 'Find romantic hotels in Platis Gialos', category: 'location', keywords: ['romantic', 'platis gialos'] },
-  { id: '2', text: 'Budget-friendly options in Apollonia', category: 'budget', keywords: ['budget', 'apollonia'] },
-  { id: '3', text: 'Family hotels with pool near beaches', category: 'amenity', keywords: ['family', 'pool', 'beach'] },
-  { id: '4', text: 'Luxury villas for honeymoon', category: 'occasion', keywords: ['luxury', 'villa', 'honeymoon'] },
-  { id: '5', text: 'Hotels available for next weekend', category: 'location', keywords: ['available', 'weekend'] },
+  { id: '1', text: 'Hotels available for next weekend', category: 'location', keywords: ['available', 'weekend'] },
+  { id: '2', text: 'Romantic hotels in Platis Gialos', category: 'location', keywords: ['romantic', 'platis gialos'] },
+  { id: '3', text: 'Budget-friendly options in Apollonia', category: 'budget', keywords: ['budget', 'apollonia'] },
+  { id: '4', text: 'Family hotels with pool near beaches', category: 'amenity', keywords: ['family', 'pool', 'beach'] },
+  { id: '5', text: 'Luxury accommodations for next week', category: 'occasion', keywords: ['luxury', 'next week'] },
 ];
 
 export default function EnhancedTouristasChat() {
@@ -28,12 +28,12 @@ export default function EnhancedTouristasChat() {
     {
       id: 'welcome',
       type: 'bot',
-      content: 'Γεια σου! ✨ I\'m your enhanced Sifnos travel assistant. I can help you find the perfect accommodation, create personalized hotel packages, and provide insider tips for your stay in beautiful Sifnos!',
+      content: 'Γεια σου! ✨ I\'m Touristas AI, your intelligent Sifnos travel companion powered by 200+ automated trained agents. I understand natural language dates like "next weekend" and can find real-time hotel availability for your exact travel dates. Ask me anything about Sifnos accommodations!',
       timestamp: new Date(),
       suggestions: [
-        'Show me luxury hotels',
+        'Hotels available for next weekend',
+        'Luxury accommodations for next week',
         'Budget options near beaches',
-        'Hotels with pools',
         'Romantic getaway packages'
       ]
     }
@@ -47,10 +47,7 @@ export default function EnhancedTouristasChat() {
   const inputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
+  // Only scroll to bottom when user sends a message, not on initial load
   const scrollToBottom = () => {
     setTimeout(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -219,16 +216,35 @@ export default function EnhancedTouristasChat() {
       // Remove typing indicator
       setMessages(prev => prev.filter(msg => msg.id !== 'typing'));
 
-      // Search for hotels if it's accommodation related
+      // Enhanced hotel search with intelligent date parsing and real availability
       let relevantHotels: any[] = [];
-      if (newContext.topic === 'accommodation' || messageContent.toLowerCase().includes('hotel')) {
-        const searchParams = {
+      const needsHotelSearch = newContext.topic === 'accommodation' || 
+                              messageContent.toLowerCase().includes('hotel') ||
+                              messageContent.toLowerCase().includes('stay') ||
+                              messageContent.toLowerCase().includes('book') ||
+                              messageContent.toLowerCase().includes('available') ||
+                              messageContent.toLowerCase().includes('weekend') ||
+                              messageContent.toLowerCase().includes('week');
+      
+      if (needsHotelSearch) {
+        console.log('Using enhanced hotel search for:', messageContent);
+        
+        // Parse natural language dates from the message
+        const parsedDates = parseNaturalDates(messageContent);
+        
+        const searchPreferences = {
           location: newContext.location,
           amenities: newContext.interests?.join(','),
-          hotelName: messageContent.toLowerCase().includes('villa') ? 'villa' : undefined
+          hotelName: messageContent.toLowerCase().includes('villa') ? 'villa' : undefined,
+          budget: newContext.budget,
+          travelers: newContext.travelers,
+          adults: 2,
+          children: 0,
+          ...parsedDates // This will include checkInDate and checkOutDate if parsed
         };
         
-        relevantHotels = await searchUnifiedHotels(messageContent, searchParams);
+        console.log('Enhanced search preferences:', searchPreferences);
+        relevantHotels = await searchHotelsWithAvailability(messageContent, searchPreferences);
       }
 
       // Prepare AI messages
@@ -312,7 +328,10 @@ export default function EnhancedTouristasChat() {
         );
       }
 
-      scrollToBottom();
+      // Only scroll to bottom when response is complete
+      if (!isLoading) {
+        scrollToBottom();
+      }
 
     } catch (error) {
       console.error('Error in enhanced chat:', error);
@@ -345,9 +364,9 @@ export default function EnhancedTouristasChat() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-200px)] min-h-[600px] rounded-xl overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 border border-gray-200 shadow-2xl">
+    <div className="flex flex-col h-[calc(100vh-200px)] min-h-[600px] rounded-xl overflow-hidden border-2 shadow-2xl" style={{ backgroundColor: 'rgba(227, 215, 195, 0.02)', borderColor: 'rgba(30, 46, 72, 0.15)' }}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-sifnos-deep-blue to-sifnos-turquoise p-4 text-white">
+      <div className="p-4 text-white" style={{ background: 'linear-gradient(135deg, #1E2E48 0%, #2a3c5a 100%)' }}>
         <div className="flex items-center gap-3">
           <div className="relative">
             <Avatar className="w-10 h-10 border-2 border-white/20">
@@ -359,11 +378,11 @@ export default function EnhancedTouristasChat() {
             <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full"></div>
           </div>
           <div>
-            <h3 className="font-semibold">TouristasAI Enhanced</h3>
+            <h3 className="font-semibold">Touristas AI</h3>
             <p className="text-xs text-white/80">Your intelligent Sifnos travel companion</p>
           </div>
-          <div className="ml-auto">
-            <Sparkles className="h-5 w-5 text-yellow-300" />
+                      <div className="ml-auto">
+            <Sparkles className="h-5 w-5" style={{ color: '#FFD700' }} />
           </div>
         </div>
       </div>
@@ -382,7 +401,12 @@ export default function EnhancedTouristasChat() {
                     variant="outline"
                     size="sm"
                     onClick={() => handleQuickPrompt(prompt)}
-                    className="text-left justify-start h-auto p-3 text-sm border-dashed hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50"
+                    className="text-left justify-start h-auto p-3 text-sm border-dashed hover:opacity-80"
+                    style={{ 
+                      borderColor: '#1E2E48',
+                      color: '#1E2E48',
+                      backgroundColor: 'rgba(227, 215, 195, 0.1)'
+                    }}
                   >
                     {prompt.text}
                   </Button>
@@ -395,13 +419,13 @@ export default function EnhancedTouristasChat() {
             <div key={message.id} className="flex gap-3">
               <Avatar className="w-8 h-8 mt-1 flex-shrink-0">
                 {message.type === 'user' ? (
-                  <AvatarFallback className="bg-sifnos-deep-blue text-white">
+                  <AvatarFallback className="text-white" style={{ backgroundColor: '#1E2E48' }}>
                     <User className="h-4 w-4" />
                   </AvatarFallback>
                 ) : (
                   <>
                     <AvatarImage src="/uploads/touristas-ai-logo.svg" alt="TouristasAI" />
-                    <AvatarFallback className="bg-sifnos-turquoise text-white">
+                    <AvatarFallback className="text-white" style={{ backgroundColor: '#1E2E48' }}>
                       <Bot className="h-4 w-4" />
                     </AvatarFallback>
                   </>
@@ -412,9 +436,12 @@ export default function EnhancedTouristasChat() {
                 {/* Message Content */}
                 <div className={`p-4 rounded-2xl max-w-[85%] ${
                   message.type === 'user' 
-                    ? 'bg-gradient-to-r from-sifnos-deep-blue to-purple-600 text-white ml-auto' 
-                    : 'bg-white shadow-md text-gray-900 border border-gray-100'
-                }`}>
+                    ? 'text-white ml-auto' 
+                    : 'bg-white shadow-md border border-gray-100'
+                }`} style={message.type === 'user' ? { 
+                  background: 'linear-gradient(135deg, #1E2E48 0%, #2a3c5a 100%)',
+                  color: '#E3D7C3'
+                } : { color: '#1E2E48' }}>
                   {message.isTyping ? (
                     <div className="flex items-center gap-2">
                       <div className="flex gap-1">
@@ -489,7 +516,7 @@ export default function EnhancedTouristasChat() {
                                 >⭐</div>
                               ))}
                             </div>
-                            <div className="text-sm font-bold text-sifnos-deep-blue">
+                            <div className="text-sm font-bold" style={{ color: '#1E2E48' }}>
                               €{hotel.price}/night
                             </div>
                           </div>
@@ -502,7 +529,8 @@ export default function EnhancedTouristasChat() {
                           </div>
                           <Button 
                             size="sm" 
-                            className="w-full bg-sifnos-deep-blue hover:bg-sifnos-deep-blue/90"
+                            className="w-full text-white hover:opacity-90"
+                            style={{ backgroundColor: '#1E2E48' }}
                             onClick={() => hotel.bookingUrl && window.open(hotel.bookingUrl, '_blank')}
                           >
                             View Details
@@ -524,7 +552,12 @@ export default function EnhancedTouristasChat() {
                           variant="outline"
                           size="sm"
                           onClick={() => handleSuggestionClick(suggestion)}
-                          className="text-xs bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 border-purple-200"
+                          className="text-xs border hover:opacity-80"
+                          style={{ 
+                            backgroundColor: 'rgba(227, 215, 195, 0.1)',
+                            borderColor: '#1E2E48',
+                            color: '#1E2E48'
+                          }}
                         >
                           {suggestion}
                         </Button>
@@ -547,13 +580,17 @@ export default function EnhancedTouristasChat() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about hotels, get recommendations, or plan your Sifnos adventure..."
-            className="flex-1 border-gray-300 focus-visible:ring-sifnos-deep-blue rounded-full pl-4"
+            className="flex-1 border-gray-300 rounded-full pl-4"
+            style={{ 
+              '--tw-ring-color': '#1E2E48'
+            } as React.CSSProperties}
             disabled={isLoading}
           />
           <Button 
             type="submit" 
             disabled={isLoading || !input.trim()} 
-            className="bg-gradient-to-r from-sifnos-deep-blue to-purple-600 hover:from-sifnos-deep-blue/90 hover:to-purple-700 rounded-full w-12 h-12 p-0 flex items-center justify-center"
+            className="text-white hover:opacity-90 rounded-full w-12 h-12 p-0 flex items-center justify-center"
+            style={{ background: 'linear-gradient(135deg, #1E2E48 0%, #2a3c5a 100%)' }}
           >
             {isLoading ? 
               <Loader2 className="h-5 w-5 animate-spin" /> : 

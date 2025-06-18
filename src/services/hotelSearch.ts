@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 
 export interface UnifiedHotel {
@@ -52,59 +51,128 @@ export interface SearchParams {
   hotelName?: string;
 }
 
-export async function searchUnifiedHotels(params: SearchParams): Promise<UnifiedHotel[]> {
-  const results: UnifiedHotel[] = [];
+export interface Hotel {
+  id: number;
+  name: string;
+  location: string;
+  price_per_night: number;
+  rating: number;
+  image_url: string;
+  amenities: string[];
+  description?: string;
+  star_rating?: number;
+  review_score?: number;
+  review_count?: number;
+  agoda_hotel_id?: number;
+  source: 'local' | 'agoda';
+  agoda_data?: any;
+}
 
-  // Search local hotels
-  try {
-    let query = supabase
-      .from('hotels')
-      .select(`
-        *,
-        hotel_amenities(amenity),
-        hotel_photos(id, photo_url, is_main_photo),
-        hotel_rooms(id, name, price, capacity)
-      `);
+export interface AgodaHotel {
+  hotelId: number;
+  hotelName: string;
+  starRating: number;
+  reviewScore: number;
+  reviewCount: number;
+  currency: string;
+  dailyRate: number;
+  crossedOutRate: number;
+  discountPercentage: number;
+  imageURL: string;
+  landingURL: string;
+  includeBreakfast: boolean;
+  freeWifi: boolean;
+  latitude?: number;
+  longitude?: number;
+}
 
-    // Apply location filter if provided
-    if (params.location) {
-      query = query.ilike('location', `%${params.location}%`);
-    }
+const validateDates = (checkInDate: string, checkOutDate: string): boolean => {
+  const today = new Date().toISOString().split('T')[0];
+  const checkIn = new Date(checkInDate);
+  const checkOut = new Date(checkOutDate);
 
-    // Apply hotel name filter if provided
-    if (params.hotelName) {
-      query = query.ilike('name', `%${params.hotelName}%`);
-    }
-
-    const { data: localHotels, error: localError } = await query;
-    
-    if (localError) {
-      console.error('Error fetching local hotels:', localError);
-    } else if (localHotels) {
-      const mappedLocalHotels: UnifiedHotel[] = localHotels.map(hotel => ({
-        id: hotel.id,
-        name: hotel.name,
-        location: hotel.location,
-        description: hotel.description,
-        rating: hotel.rating,
-        price: hotel.price,
-        source: 'local' as const,
-        hotel_types: hotel.hotel_types,
-        hotel_photos: hotel.hotel_photos,
-        hotel_amenities: hotel.hotel_amenities,
-        hotel_rooms: hotel.hotel_rooms
-      }));
-      
-      results.push(...mappedLocalHotels);
-    }
-  } catch (error) {
-    console.error('Error in local hotel search:', error);
+  if (checkInDate < today) {
+    throw new Error('Check-in date cannot be in the past');
   }
 
-  // Search Agoda hotels if dates are provided
-  if (params.checkInDate && params.checkOutDate) {
+  if (checkOutDate <= checkInDate) {
+    throw new Error('Check-out date must be after check-in date');
+  }
+
+  // Check if stay is too long (more than 30 days)
+  const diffTime = checkOut.getTime() - checkIn.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  if (diffDays > 30) {
+    throw new Error('Maximum stay is 30 days');
+  }
+
+  return true;
+};
+
+const convertAgodaToHotel = (agodaHotel: AgodaHotel): Hotel => {
+  const amenities = [];
+  if (agodaHotel.freeWifi) amenities.push('Free WiFi');
+  if (agodaHotel.includeBreakfast) amenities.push('Breakfast Included');
+  if (agodaHotel.discountPercentage > 0) amenities.push(`${agodaHotel.discountPercentage}% Discount`);
+
+  return {
+    id: agodaHotel.hotelId,
+    name: agodaHotel.hotelName,
+    location: 'Sifnos, Greece',
+    price_per_night: agodaHotel.dailyRate,
+    rating: agodaHotel.reviewScore,
+    image_url: agodaHotel.imageURL,
+    amenities,
+    star_rating: agodaHotel.starRating,
+    review_score: agodaHotel.reviewScore,
+    review_count: agodaHotel.reviewCount,
+    agoda_hotel_id: agodaHotel.hotelId,
+    source: 'agoda',
+    agoda_data: agodaHotel
+  };
+};
+
+const searchAgodaHotels = async (params: SearchParams): Promise<Hotel[]> => {
+  try {
+    console.log('Searching Agoda hotels with params:', params);
+
+    // Validate dates
+    if (params.checkInDate && params.checkOutDate) {
+      validateDates(params.checkInDate, params.checkOutDate);
+    }
+
+    // Check if proxy server is available, fallback to Supabase function
+    let response;
+    let useProxy = false;
+
     try {
-      const { data: agodaResponse, error: agodaError } = await supabase.functions.invoke('agoda-search', {
+      // Try proxy server first
+      const proxyResponse = await fetch('http://localhost:3001/api/agoda-search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          checkInDate: params.checkInDate,
+          checkOutDate: params.checkOutDate,
+          numberOfAdults: params.numberOfAdults || 2,
+          numberOfChildren: params.numberOfChildren || 0
+        })
+      });
+
+      if (proxyResponse.ok) {
+        response = await proxyResponse.json();
+        useProxy = true;
+        console.log('Using proxy server for Agoda search');
+      }
+    } catch (proxyError) {
+      console.log('Proxy server not available, trying Supabase function...');
+    }
+
+    // Fallback to Supabase function if proxy not available
+    if (!useProxy) {
+      const { data, error } = await supabase.functions.invoke('agoda-search', {
         body: {
           checkInDate: params.checkInDate,
           checkOutDate: params.checkOutDate,
@@ -113,35 +181,92 @@ export async function searchUnifiedHotels(params: SearchParams): Promise<Unified
         }
       });
 
-      if (agodaError) {
-        console.error('Error calling Agoda function:', agodaError);
-      } else if (agodaResponse?.results) {
-        const mappedAgodaHotels: UnifiedHotel[] = agodaResponse.results.map((hotel: any) => ({
-          id: `agoda-${hotel.agoda_hotel_id || hotel.hotelId}`,
-          name: hotel.name || hotel.hotelName,
-          rating: hotel.review_score || hotel.reviewScore || 0,
-          price: hotel.daily_rate || hotel.dailyRate || 0,
-          source: 'agoda' as const,
-          agoda_hotel_id: hotel.agoda_hotel_id || hotel.hotelId,
-          star_rating: hotel.star_rating || hotel.starRating,
-          review_score: hotel.review_score || hotel.reviewScore,
-          review_count: hotel.review_count || hotel.reviewCount,
-          daily_rate: hotel.daily_rate || hotel.dailyRate,
-          crossed_out_rate: hotel.crossed_out_rate || hotel.crossedOutRate,
-          discount_percentage: hotel.discount_percentage || hotel.discountPercentage,
-          currency: hotel.currency,
-          image_url: hotel.image_url || hotel.imageURL,
-          landing_url: hotel.landing_url || hotel.landingURL,
-          include_breakfast: hotel.include_breakfast || hotel.includeBreakfast,
-          free_wifi: hotel.free_wifi || hotel.freeWifi
-        }));
-        
-        results.push(...mappedAgodaHotels);
+      if (error) {
+        console.error('Supabase function error:', error);
+        return [];
       }
-    } catch (error) {
-      console.error('Error in Agoda hotel search:', error);
-    }
-  }
 
-  return results;
-}
+      response = data;
+    }
+
+    if (!response || !response.results) {
+      console.log('No Agoda results found');
+      return [];
+    }
+
+    console.log(`Found ${response.results.length} Agoda hotels`);
+    return response.results.map(convertAgodaToHotel);
+
+  } catch (error) {
+    console.error('Error searching Agoda hotels:', error);
+    return [];
+  }
+};
+
+const searchLocalHotels = async (params: SearchParams): Promise<Hotel[]> => {
+  try {
+    console.log('Searching local hotels');
+    
+    let query = supabase
+      .from('hotels')
+      .select('*')
+      .eq('is_active', true);
+
+    if (params.location) {
+      query = query.ilike('location', `%${params.location}%`);
+    }
+
+    const { data: hotels, error } = await query.order('rating', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching local hotels:', error);
+      return [];
+    }
+
+    const localHotels: Hotel[] = (hotels || []).map(hotel => ({
+      id: hotel.id,
+      name: hotel.name,
+      location: hotel.location,
+      price_per_night: hotel.price_per_night,
+      rating: hotel.rating,
+      image_url: hotel.image_url,
+      amenities: hotel.amenities || [],
+      description: hotel.description,
+      source: 'local'
+    }));
+
+    console.log(`Found ${localHotels.length} local hotels`);
+    return localHotels;
+
+  } catch (error) {
+    console.error('Error searching local hotels:', error);
+    return [];
+  }
+};
+
+export const searchHotels = async (params: SearchParams = {}): Promise<Hotel[]> => {
+  try {
+    console.log('Unified hotel search with params:', params);
+
+    // Search both local and Agoda hotels in parallel
+    const [localHotels, agodaHotels] = await Promise.all([
+      searchLocalHotels(params),
+      params.checkInDate && params.checkOutDate ? searchAgodaHotels(params) : Promise.resolve([])
+    ]);
+
+    // Combine and sort results
+    const allHotels = [...localHotels, ...agodaHotels];
+    
+    // Sort by rating (highest first)
+    allHotels.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+
+    console.log(`Total hotels found: ${allHotels.length} (${localHotels.length} local, ${agodaHotels.length} Agoda)`);
+    
+    return allHotels;
+
+  } catch (error) {
+    console.error('Error in unified hotel search:', error);
+    // Return empty array on error rather than throwing
+    return [];
+  }
+};

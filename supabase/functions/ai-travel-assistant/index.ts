@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { OpenAI } from "https://esm.sh/openai@4.19.0";
 
@@ -16,107 +15,108 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, preferences = {}, previousConversations = [] } = await req.json();
+    const { 
+      messages, 
+      preferences = {}, 
+      previousConversations = [], 
+      websiteContext = '', 
+      dateContext = '',
+      currentQuery = ''
+    } = await req.json();
     
-    // Extract user preferences from the request, if available
-    const userPreferences = preferences || {};
-    const conversationHistory = previousConversations || [];
+    console.log("Enhanced AI request received:", {
+      messageCount: messages.length,
+      hasWebsiteContext: !!websiteContext,
+      hasDateContext: !!dateContext,
+      hasParsedDates: !!(preferences.checkInDate || preferences.checkOutDate),
+      currentQuery: currentQuery?.substring(0, 100) + '...'
+    });
     
-    // Prepare context about previous interactions
+    // Build conversation history context
     let conversationContext = '';
-    if (conversationHistory.length > 0) {
+    if (previousConversations.length > 0) {
       conversationContext = `
-      The user has previously asked about:
-      ${conversationHistory.map(c => `- ${c.topic}: ${c.summary}`).join('\n')}
+      CONVERSATION HISTORY:
+      ${previousConversations.map(c => `- ${c.topic}: ${c.summary}`).join('\n')}
       `;
     }
     
-    // Add preference context if available
+    // Build preferences context
     let preferenceContext = '';
-    if (Object.keys(userPreferences).length > 0) {
+    if (Object.keys(preferences).length > 0) {
       preferenceContext = `
-      The user has shown these preferences:
-      ${Object.entries(userPreferences).map(([key, value]) => `- ${key}: ${value}`).join('\n')}
+      EXTRACTED USER PREFERENCES:
+      ${Object.entries(preferences).map(([key, value]) => `- ${key}: ${value}`).join('\n')}
       `;
     }
 
-    // Create an enhanced system message with more context
+    // Enhanced system message with comprehensive context
     const systemMessage = {
       role: "system",
-      content: `You are TouristasAI, a helpful travel assistant specialized in finding the perfect accommodation in Sifnos, Greece.
-      
-      Sifnos is a beautiful Cycladic island known for its traditional villages, amazing beaches, and excellent food.
-      
-      Your job is to help visitors find their ideal stay based on their preferences. Be friendly, informative, and knowledgeable about Sifnos.
-      
-      ${preferenceContext}
-      
-      ${conversationContext}
-      
-      When the user mentions specific locations like Platis Gialos, Apollonia, Kamares, Vathi, Kastro, or Faros,
-      ALWAYS focus your recommendations on properties in those EXACT locations only. If they mention "Platy Gialo", understand this is the same as "Platis Gialos".
-      
-      Key locations in Sifnos:
-      - Apollonia: The capital, inland with traditional architecture
-      - Kamares: Main port with a nice beach
-      - Platis Gialos: Popular beach resort area (also spelled as Platy Gialo)
-      - Vathi: Small village with beautiful beach
-      - Kastro: Medieval village with stunning views
-      - Faros: Quiet coastal village with beaches
-      - Artemonas: Traditional village with Venetian houses
-      - Chrysopigi: Known for the iconic monastery and beach
-      
-      Rich information about each location:
-      - Apollonia: The island's capital, featuring traditional Cycladic architecture with white-washed buildings. It has charming narrow streets, restaurants, cafes, and boutique shops. It's central and convenient but not on the beach.
-      - Kamares: The main port of Sifnos with a long sandy beach. It offers many tavernas, shops, and amenities. Good for families and those who want convenience.
-      - Platis Gialos: The most popular beach resort area with a long golden sand beach. Known for great restaurants, water sports, and family-friendly atmosphere.
-      - Vathi: A sheltered bay with a beautiful sandy beach and calm waters. Much quieter than Platis Gialos. Great for relaxation and traditional food.
-      - Kastro: Medieval fortified village built on a cliff with stunning sea views. Full of history and charm with narrow walking streets. No direct beach access but atmospheric.
-      - Faros: A peaceful fishing village with several small beaches and coves. Great for quiet holidays and excellent seafood.
-      - Artemonas: An elegant village with neoclassical mansions and Venetian influences. Known for its bakeries and traditional sweets.
-      - Chrysopigi: Famous for its iconic white monastery built on a rock that splits the sea. The nearby beach is beautiful with crystal clear waters.
-      
-      Activities available in Sifnos:
-      - Hiking: The island has a well-maintained network of ancient walking paths
-      - Pottery: Sifnos has a long tradition of ceramic art with workshops available
-      - Cooking: The island is famous for its cuisine, with cooking classes available
-      - Water sports: Available at Platis Gialos and other major beaches
-      - Boat tours: Daily excursions to nearby beaches and islands
-      
-      Travel insights for Sifnos:
-      - Best time to visit: May to October, with September offering warm weather with fewer crowds
-      - Transportation: Local bus network connects major villages, taxi services available
-      - Food specialties: Mastelo (lamb or goat cooked in clay pot), chickpea soup, honey pie
-      - Weather: Hot dry summers (June-August), mild spring and autumn, rainy winters
-      
-      Keep your responses conversational, helpful, and focused on helping travelers find their ideal accommodation in Sifnos based on their specified location preferences.
-      
-      IMPORTANT: When discussing hotels or accommodations, DO NOT list or name specific hotels. Instead, use phrases like "Here are some hotel options that might interest you:" to indicate where hotel listings should appear. Our system will automatically populate the appropriate hotel options from our database. Never generate your own hotel names or descriptions. 
-      
-      When the user asks about beaches or specific locations, describe the area well and end with "Here are some hotel options that might interest you in this area:" so the system knows to show hotel options.
-      
-      When the user asks specifically about hotel amenities or facilities like pools, restaurants, breakfast, or any other feature, DO NOT make up information. Instead, say something like: "Let me search for hotels with [amenity] for you. Here are some hotel options with [amenity] that might interest you:" so our system can filter actual hotels with these amenities from our database.
-      
-      For general questions not related to hotels or accommodations in Sifnos (like about weather, travel tips, Greek culture, or other general information), you can provide informative responses based on your knowledge.
-      
-      Even for general greetings like "hello" or "hi", provide a warm, informative response about finding accommodations in Sifnos but don't imply that you're showing specific hotel results.
-      
-      If the user asks about activities, attractions, or things to do, provide detailed information about options in Sifnos and suggest accommodations nearby those attractions.
-      
-      If the user asks about transportation, provide detailed information about getting around Sifnos, including bus schedules, taxi services, car rentals, and boat connections.
-      
-      For family travelers, highlight family-friendly beaches (Platis Gialos and Kamares are best), activities suitable for children, and end with "Here are some family-friendly hotel options that might interest you:"
-      
-      For luxury travelers, highlight high-end experiences available in Sifnos, and end with "Here are some luxury hotel options that might interest you:"
-      
-      For budget travelers, provide tips on affordable dining, transportation, and activities, and end with "Here are some budget-friendly hotel options that might interest you:"
-      
-      If asked about itineraries, provide day-by-day suggestions based on the length of stay and the user's interests. Include recommendations for areas to stay that would complement their itinerary.
-      
-      Never mention prices - focus instead on the quality, amenities, location benefits, and overall experience of staying in different areas.`
+      content: `You are Touristas AI, the most intelligent travel assistant for Sifnos, Greece. You have been trained on the complete Hotels Sifnos website and have access to real-time data.
+
+${dateContext}
+
+${websiteContext}
+
+${preferenceContext}
+
+${conversationContext}
+
+CORE INTELLIGENCE CAPABILITIES:
+
+1. **DATE INTELLIGENCE**: You understand natural language dates:
+   - "next weekend" = automatically calculate the upcoming Friday-Sunday
+   - "next week" = find the next Monday and suggest 3-day stays
+   - "in June" = mid-June dates
+   - "available hotels" = search with near-future dates
+   - Always provide specific dates when users mention time periods
+
+2. **REAL-TIME AVAILABILITY**: When you have parsed dates (check-in/check-out), you can access:
+   - Live hotel pricing from Agoda partners (up to 50 hotels)
+   - Real availability for the exact dates requested
+   - Current pricing and discounts
+
+3. **WEBSITE-TRAINED KNOWLEDGE**: You know everything about:
+   - All 5 local hotels in the database with complete details
+   - Current pricing, amenities, room types for each property
+   - Exact locations and what makes each area special
+   - Seasonal information and current tourist season status
+
+4. **SMART RESPONSES**: 
+   - When users ask about availability for specific times, confirm the exact dates you've calculated
+   - Always mention when you're showing results for parsed dates
+   - Combine local hotels with Agoda partner options
+   - Provide context about why certain hotels are recommended
+
+RESPONSE GUIDELINES:
+
+When users mention time periods like "next weekend", "available hotels", etc.:
+1. First acknowledge the specific dates you've calculated: "I've found availability for [specific dates]"
+2. Explain briefly what period this covers: "That's Friday [date] to Sunday [date]"
+3. Then provide hotel recommendations with real availability
+
+For hotel searches with dates:
+- Prioritize hotels with confirmed availability for those exact dates
+- Mention both local properties and Agoda partner options
+- Include pricing information when available
+- Suggest bundle deals when multiple hotels are found
+
+For general Sifnos questions:
+- Use your extensive knowledge of the island
+- Reference specific locations, restaurants, activities from your training
+- Always connect back to accommodation recommendations
+
+CRITICAL: When showing hotel results, always use the phrase "Here are the available hotels for your dates:" or "Here are hotel options that match your preferences:" so the system knows to display the actual hotel cards with real data.
+
+Never invent hotel names, prices, or specific details - let the system populate real results.
+
+Current user query: "${currentQuery}"
+
+Respond intelligently based on all this context, showing your understanding of dates, preferences, and real-time availability.`
     };
 
-    // Combine system message with user messages, filtering out the ID property
+    // Combine system message with user messages
     const aiMessages = [
       systemMessage, 
       ...messages.map((msg: any) => ({
@@ -125,33 +125,29 @@ serve(async (req) => {
       }))
     ];
     
-    console.log("Calling OpenRouter API with messages:", JSON.stringify({
-      prompt: messages[messages.length - 1]?.content,
-      preferences,
-      hasConversationHistory: conversationHistory.length > 0
-    }));
+    console.log("Calling Claude 3.7 Sonnet with enhanced context");
 
-    // Initialize OpenAI client with OpenRouter base URL
+    // Initialize OpenAI client with OpenRouter
     const client = new OpenAI({
       baseURL: "https://openrouter.ai/api/v1",
       apiKey: OPENROUTER_API_KEY,
       dangerouslyAllowBrowser: true
     });
 
-    // Create streaming chat completion
+    // Create streaming chat completion with Claude 3.7 Sonnet
     const stream = await client.chat.completions.create({
       model: "anthropic/claude-3.7-sonnet",
       messages: aiMessages,
       temperature: 0.7,
-      max_tokens: 1000,
+      max_tokens: 1500, // Increased for more detailed responses
       stream: true,
       extra_headers: {
         "HTTP-Referer": "https://hotelssifnos.com",
-        "X-Title": "Hotels Sifnos"
+        "X-Title": "Hotels Sifnos - Enhanced Touristas AI"
       }
     });
 
-    // Create a ReadableStream from the OpenAI stream
+    // Create streaming response
     const encoder = new TextEncoder();
     const readable = new ReadableStream({
       async start(controller) {
@@ -164,13 +160,12 @@ serve(async (req) => {
           }
           controller.close();
         } catch (error) {
-          console.error("Stream error:", error);
+          console.error("Enhanced stream error:", error);
           controller.error(error);
         }
       }
     });
 
-    // Return the streaming response with proper headers
     return new Response(readable, {
       headers: {
         ...corsHeaders,
@@ -178,11 +173,12 @@ serve(async (req) => {
       },
     });
   } catch (error) {
-    console.error("Error in AI travel assistant:", error);
+    console.error("Error in enhanced AI travel assistant:", error);
     return new Response(
       JSON.stringify({
         error: error.message,
         status: 500,
+        context: "Enhanced AI processing failed"
       }),
       {
         status: 500,

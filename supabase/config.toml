@@ -72,8 +72,8 @@ port = 54327
 vector_port = 54328
 backend = "postgres"
 
-[experimental.graphql]
-enabled = false
-
 [functions.ai-travel-assistant]
+verify_jwt = false
+
+[functions.agoda-search]
 verify_jwt = false

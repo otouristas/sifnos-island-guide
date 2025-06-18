@@ -1,5 +1,5 @@
-
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
 import TouristasAIBanner from '@/components/TouristasAIBanner';
 import SponsoredHotelCard from '@/components/SponsoredHotelCard';
@@ -73,6 +73,21 @@ export default function HomePage() {
       
       {/* Island Guide Section */}
       <IslandGuideSection />
+      
+      {/* Explore Map Section */}
+      <div className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl font-bold mb-6">Explore Sifnos Island</h2>
+            <p className="text-lg mb-8">
+              Discover the beautiful island of Sifnos with our interactive map. Find the perfect location for your stay, explore beaches, attractions, and more.
+            </p>
+            <Link to="/explore-map" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-8 transition-colors duration-200">
+              View Interactive Map
+            </Link>
+          </div>
+        </div>
+      </div>
       
       {/* List Your Hotel Section */}
       <ListYourHotelSection />

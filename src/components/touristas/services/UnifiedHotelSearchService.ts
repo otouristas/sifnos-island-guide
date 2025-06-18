@@ -1,5 +1,4 @@
-
-import { searchUnifiedHotels, SearchParams, UnifiedHotel } from '@/services/hotelSearch';
+import { searchHotels, Hotel } from '@/services/hotelSearch';
 
 // Extract dates from chat context if available
 export function extractDatesFromMessage(message: string): { checkInDate?: string; checkOutDate?: string } {
@@ -32,41 +31,93 @@ export function extractDatesFromMessage(message: string): { checkInDate?: string
   return {};
 }
 
-export async function searchHotelsUnified(query: string, preferences: Record<string, string> = {}): Promise<UnifiedHotel[]> {
-  console.log('Searching unified hotels with query:', query, 'preferences:', preferences);
-  
-  // Extract search parameters
-  const searchParams: SearchParams = {
-    location: preferences.location,
-    amenities: preferences.amenities,
-    hotelName: preferences.hotelName,
-    numberOfAdults: preferences.numberOfAdults ? parseInt(preferences.numberOfAdults) : 2,
-    numberOfChildren: preferences.numberOfChildren ? parseInt(preferences.numberOfChildren) : 0,
-  };
-  
-  // Try to extract dates from the query or preferences
-  const datesFromQuery = extractDatesFromMessage(query);
-  if (datesFromQuery.checkInDate) {
-    searchParams.checkInDate = datesFromQuery.checkInDate;
+interface SearchParams {
+  checkInDate?: string;
+  checkOutDate?: string;
+  numberOfAdults?: number;
+  numberOfChildren?: number;
+  location?: string;
+}
+
+export const searchHotelsUnified = async (query: string): Promise<Hotel[]> => {
+  return UnifiedHotelSearchService.searchHotels(query);
+};
+
+export class UnifiedHotelSearchService {
+  static async searchHotels(query: string): Promise<Hotel[]> {
+    try {
+      console.log('UnifiedHotelSearchService: Searching for:', query);
+      
+      // Extract search parameters from the query
+      const searchParams = this.extractSearchParams(query);
+      
+      // Use the unified search service
+      const results = await searchHotels(searchParams);
+      
+      console.log(`UnifiedHotelSearchService: Found ${results.length} hotels`);
+      return results;
+      
+    } catch (error) {
+      console.error('UnifiedHotelSearchService: Search error:', error);
+      return [];
+    }
   }
-  if (datesFromQuery.checkOutDate) {
-    searchParams.checkOutDate = datesFromQuery.checkOutDate;
+
+  private static extractSearchParams(query: string): SearchParams {
+    const params: SearchParams = {};
+    
+    // Simple keyword extraction - you can enhance this with NLP
+    const lowerQuery = query.toLowerCase();
+    
+    // Extract location hints
+    const locationKeywords = ['kamares', 'apollonia', 'artemonas', 'kastro', 'plathys gialos', 'faros', 'vathi'];
+    for (const location of locationKeywords) {
+      if (lowerQuery.includes(location)) {
+        params.location = location;
+        break;
+      }
+    }
+    
+    // Extract guest count
+    const adultMatch = lowerQuery.match(/(\d+)\s*(?:adult|person|guest|people)/);
+    if (adultMatch) {
+      params.numberOfAdults = parseInt(adultMatch[1]);
+    }
+    
+    const childMatch = lowerQuery.match(/(\d+)\s*(?:child|kid)/);
+    if (childMatch) {
+      params.numberOfChildren = parseInt(childMatch[1]);
+    }
+    
+    // Extract dates (basic pattern matching)
+    const datePatterns = [
+      /(\d{4}-\d{2}-\d{2})/g,
+      /(\d{1,2}\/\d{1,2}\/\d{4})/g,
+      /(\d{1,2}-\d{1,2}-\d{4})/g
+    ];
+    
+    for (const pattern of datePatterns) {
+      const matches = lowerQuery.match(pattern);
+      if (matches && matches.length >= 2) {
+        params.checkInDate = this.normalizeDate(matches[0]);
+        params.checkOutDate = this.normalizeDate(matches[1]);
+        break;
+      }
+    }
+    
+    return params;
   }
   
-  // Use preference dates if available
-  if (preferences.checkInDate) {
-    searchParams.checkInDate = preferences.checkInDate;
-  }
-  if (preferences.checkOutDate) {
-    searchParams.checkOutDate = preferences.checkOutDate;
-  }
-  
-  try {
-    const results = await searchUnifiedHotels(searchParams);
-    console.log(`Found ${results.length} unified hotels (${results.filter(h => h.source === 'local').length} local, ${results.filter(h => h.source === 'agoda').length} from Agoda)`);
-    return results;
-  } catch (error) {
-    console.error('Error searching unified hotels:', error);
-    return [];
+  private static normalizeDate(dateStr: string): string {
+    try {
+      // Convert various date formats to YYYY-MM-DD
+      const date = new Date(dateStr);
+      if (!isNaN(date.getTime())) {
+        return date.toISOString().split('T')[0];
+      }
+    } catch (error) {
+      console.warn('Failed to parse date:', dateStr);
+    }
+    return '';
   }
 }

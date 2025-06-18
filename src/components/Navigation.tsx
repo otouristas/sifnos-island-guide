@@ -31,6 +31,7 @@ const mainNavItems = [
       { name: 'Faros', path: '/locations/faros' },
     ]
   },
+  { name: 'Explore Map', path: '/explore-map' },
   { name: 'Ferry Tickets', path: '/ferry-tickets' },
   { name: 'Beaches', path: '/beaches' },
   { name: 'Travel Guide', path: '/travel-guide' },

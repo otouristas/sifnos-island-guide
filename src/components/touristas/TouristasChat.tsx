@@ -21,7 +21,33 @@ import {
   trackConversationContext,
   ConversationContext
 } from './services/ChatService';
-import { searchHotelsUnified, extractDatesFromMessage } from './services/UnifiedHotelSearchService';
+import { UnifiedHotelSearchService } from './services/UnifiedHotelSearchService';
+
+// Simple date extraction function
+const extractDatesFromMessage = (message: string) => {
+  const result = {
+    checkInDate: '',
+    checkOutDate: ''
+  };
+  
+  // Simple date pattern matching
+  const datePatterns = [
+    /(\d{4}-\d{2}-\d{2})/g,
+    /(\d{1,2}\/\d{1,2}\/\d{4})/g,
+    /(\d{1,2}-\d{1,2}-\d{4})/g
+  ];
+  
+  for (const pattern of datePatterns) {
+    const matches = message.match(pattern);
+    if (matches && matches.length >= 2) {
+      result.checkInDate = matches[0];
+      result.checkOutDate = matches[1];
+      break;
+    }
+  }
+  
+  return result;
+};
 
 export default function TouristasChat() {
   const [input, setInput] = useState('');
@@ -222,7 +248,7 @@ export default function TouristasChat() {
         
         console.log('Searching with preferences:', searchPreferences);
         
-        relevantHotels = await searchHotelsUnified(searchQuery, searchPreferences);
+        relevantHotels = await UnifiedHotelSearchService.searchHotels(searchQuery);
         
         console.log("Found relevant hotels:", relevantHotels.length);
         

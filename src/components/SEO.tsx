@@ -193,7 +193,7 @@ export default function SEO({
       <html lang="en" />
       <title>{fullTitle}</title>
       <meta name="description" content={uniqueDescription} />
-      {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
+      {keywords && Array.isArray(keywords) && keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
       <meta name="author" content={author} />
       
       {/* Version control and cache busting */}
