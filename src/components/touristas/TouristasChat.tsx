@@ -21,7 +21,6 @@ import {
   trackConversationContext,
   ConversationContext
 } from './services/ChatService';
-import { UnifiedHotelSearchService } from './services/UnifiedHotelSearchService';
 
 // Simple date extraction function
 const extractDatesFromMessage = (message: string) => {
@@ -248,7 +247,9 @@ export default function TouristasChat() {
         
         console.log('Searching with preferences:', searchPreferences);
         
-        relevantHotels = await UnifiedHotelSearchService.searchHotels(searchQuery);
+        // Use the fixed searchHotelsWithAvailability function
+        const { searchHotelsWithAvailability } = await import('./services/ChatService');
+        relevantHotels = await searchHotelsWithAvailability(input, searchPreferences);
         
         console.log("Found relevant hotels:", relevantHotels.length);
         

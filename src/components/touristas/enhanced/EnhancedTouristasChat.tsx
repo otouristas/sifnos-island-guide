@@ -255,9 +255,7 @@ Try any of these queries to see the world's most intelligent travel AI in action
       intent,
       confidence,
       requiresHotelData,
-      requiresLocal
-
-      Content, 
+      requiresLocalContent,
       requiresRealTimeData,
       hasDateKeywords,
       hasLocationKeywords,
@@ -301,8 +299,13 @@ Try any of these queries to see the world's most intelligent travel AI in action
   };
 
   const handleSendMessage = async (messageText?: string) => {
+    console.log('🚀 handleSendMessage called with:', messageText || input);
     const messageContent = messageText || input.trim();
-    if (!messageContent) return;
+    if (!messageContent) {
+      console.log('❌ No message content, returning early');
+      return;
+    }
+    console.log('✅ Processing message:', messageContent);
 
     const userMessage: AIMessage = {
       id: Date.now().toString(),
@@ -609,6 +612,7 @@ Please refresh the page and try again. If the problem persists, contact support.
   };
 
   const handleSubmit = (e: React.FormEvent) => {
+    console.log('📝 Form submitted, current input:', input);
     e.preventDefault();
     handleSendMessage();
   };

@@ -23,23 +23,43 @@ export const parseNaturalDates = (query: string): { checkInDate?: string; checkO
   
   const queryLower = query.toLowerCase();
   
-  // Calculate next weekend (Friday-Sunday)
+  // Calculate weekend dates (Saturday-Sunday for weekend stays)
   if (queryLower.includes('next weekend') || queryLower.includes('this weekend')) {
-    let daysUntilFriday;
+    let daysUntilSaturday = 0;
     
     if (queryLower.includes('next weekend')) {
-      // Next weekend - find next Friday
-      daysUntilFriday = currentDay <= 5 ? (5 - currentDay + 7) : (5 - currentDay + 14);
+      // Next weekend - always the Saturday of next week
+      if (currentDay === 0) daysUntilSaturday = 6; // Sunday -> next Saturday
+      else if (currentDay === 1) daysUntilSaturday = 5; // Monday -> next Saturday
+      else if (currentDay === 2) daysUntilSaturday = 4; // Tuesday -> next Saturday
+      else if (currentDay === 3) daysUntilSaturday = 3; // Wednesday -> next Saturday
+      else if (currentDay === 4) daysUntilSaturday = 2; // Thursday -> next Saturday
+      else if (currentDay === 5) daysUntilSaturday = 1; // Friday -> next Saturday
+      else if (currentDay === 6) daysUntilSaturday = 7; // Saturday -> next Saturday
     } else {
-      // This weekend - find this Friday or next Friday if past Friday
-      daysUntilFriday = currentDay <= 5 ? (5 - currentDay) : (5 - currentDay + 7);
+      // This weekend - this coming Saturday
+      if (currentDay === 0) daysUntilSaturday = 6; // Sunday -> this Saturday
+      else if (currentDay === 1) daysUntilSaturday = 5; // Monday -> this Saturday
+      else if (currentDay === 2) daysUntilSaturday = 4; // Tuesday -> this Saturday
+      else if (currentDay === 3) daysUntilSaturday = 3; // Wednesday -> this Saturday
+      else if (currentDay === 4) daysUntilSaturday = 2; // Thursday -> this Saturday
+      else if (currentDay === 5) daysUntilSaturday = 1; // Friday -> this Saturday
+      else if (currentDay === 6) daysUntilSaturday = 0; // Saturday -> today
     }
     
     const checkInDate = new Date(today);
-    checkInDate.setDate(today.getDate() + daysUntilFriday);
+    checkInDate.setDate(today.getDate() + daysUntilSaturday);
     
     const checkOutDate = new Date(checkInDate);
-    checkOutDate.setDate(checkInDate.getDate() + 2); // Friday to Sunday
+    checkOutDate.setDate(checkInDate.getDate() + 2); // Saturday to Monday (weekend stay)
+    
+    console.log('📅 Weekend calculation:', {
+      today: today.toDateString(),
+      currentDay: currentDay,
+      daysUntilSaturday: daysUntilSaturday,
+      checkIn: checkInDate.toDateString(),
+      checkOut: checkOutDate.toDateString()
+    });
     
     return {
       checkInDate: checkInDate.toISOString().split('T')[0],
@@ -203,7 +223,7 @@ export const searchHotelsWithAvailability = async (
 ): Promise<any[]> => {
   const queryLower = query.toLowerCase();
   console.log('🔍 Hotel search query:', query);
-  console.log('📍 Location preference:', preferences.location);
+  console.log('📍 Preferences:', preferences);
   
   // Enhanced location extraction
   const sifnosLocations = ['kamares', 'apollonia', 'platis gialos', 'kastro', 'artemonas', 'vathi', 'faros'];
@@ -220,74 +240,50 @@ export const searchHotelsWithAvailability = async (
     }
   }
 
-  console.log('🎯 Final location for database query:', extractedLocation);
-
   try {
-    // Use the unified hotel search service which handles location filtering
-    const { searchHotels } = await import('@/services/hotelSearch');
-    const searchParams = {
-      location: extractedLocation,
-      amenities: preferences.amenities
-    };
-    
-    console.log('🔍 Calling searchHotels with params:', searchParams);
-    const hotels = await searchHotels(searchParams);
-    
-    console.log(`✅ Found ${hotels?.length || 0} hotels in database`);
-    hotels?.forEach(hotel => {
-      console.log(`   📍 ${hotel.name} - Location: "${hotel.location}"`);
-    });
-
-    let allHotels: any[] = hotels || [];
-    
     // Parse natural language dates
     const parsedDates = parseNaturalDates(query);
     const finalCheckIn = preferences.checkInDate || parsedDates.checkInDate;
     const finalCheckOut = preferences.checkOutDate || parsedDates.checkOutDate;
     
-    console.log('Parsed dates:', { finalCheckIn, finalCheckOut });
+    console.log('🗓️ Parsed dates:', { finalCheckIn, finalCheckOut });
     
-    // If dates are available, also search Agoda for real-time availability
-    if (finalCheckIn && finalCheckOut) {
-      console.log('Searching Agoda with dates:', finalCheckIn, finalCheckOut);
-      
-      try {
-        // Try to call our hotel search service which includes Agoda
-        const { searchHotels } = await import('@/services/hotelSearch');
-        const searchParams = {
-          checkInDate: finalCheckIn,
-          checkOutDate: finalCheckOut,
-          numberOfAdults: preferences.adults || 2,
-          numberOfChildren: preferences.children || 0,
-          location: preferences.location,
-          amenities: preferences.amenities
-        };
-        
-        const agodaResults = await searchHotels(searchParams);
-        console.log('Agoda search completed, found:', agodaResults.length, 'hotels');
-        
-        // Add Agoda results with source tag
-        agodaResults
-          .filter(hotel => hotel.source === 'agoda')
-          .forEach(hotel => {
-            allHotels.push({
-              ...hotel,
-              source: 'agoda',
-              availability: {
-                checkIn: finalCheckIn,
-                checkOut: finalCheckOut,
-                available: true
-              }
-            });
-          });
-        
-      } catch (agodaError) {
-        console.error('Error searching Agoda:', agodaError);
-      }
-    }
+    // Import hotel search service
+    const { searchHotels } = await import('@/services/hotelSearch');
     
-    // Apply basic filters if needed
-    let filteredHotels = allHotels;
+    // Build comprehensive search parameters
+    const searchParams = {
+      location: extractedLocation,
+      amenities: preferences.amenities,
+      checkInDate: finalCheckIn,
+      checkOutDate: finalCheckOut,
+      numberOfAdults: preferences.adults || 2,
+      numberOfChildren: preferences.children || 0
+    };
+    
+    console.log('🔍 Calling unified searchHotels with params:', searchParams);
+    
+    // Call unified search which handles both local and Agoda hotels
+    const allHotels = await searchHotels(searchParams);
+    console.log(`✅ Unified search completed: ${allHotels?.length || 0} total hotels found`);
+    
+    // Separate local and Agoda hotels for logging
+    const localHotels = allHotels?.filter(h => h.source === 'local') || [];
+    const agodaHotels = allHotels?.filter(h => h.source === 'agoda') || [];
+    
+    console.log(`   📍 Local hotels: ${localHotels.length}`);
+    console.log(`   🌐 Agoda hotels: ${agodaHotels.length}`);
+    
+    localHotels.forEach(hotel => {
+      console.log(`   🏨 Local: ${hotel.name} - Location: "${hotel.location}"`);
+    });
+    
+    agodaHotels.forEach(hotel => {
+      console.log(`   💰 Agoda: ${hotel.name} - Price: ${hotel.daily_rate || hotel.price_per_night}${hotel.currency || ''}`);
+    });
+    
+    // Apply additional filters if needed
+    let filteredHotels = allHotels || [];
     
     // Pool filter
     if (preferences.amenities?.includes('pool') || queryLower.includes('pool')) {
@@ -297,13 +293,26 @@ export const searchHotelsWithAvailability = async (
         );
         return hasPool || hotel.name?.toLowerCase().includes('pool');
       });
+      console.log(`🏊 Pool filter applied: ${filteredHotels.length} hotels with pools`);
     }
     
-    console.log(`Total hotels found: ${filteredHotels.length}`);
+    // Enhance hotel data with availability information
+    if (finalCheckIn && finalCheckOut) {
+      filteredHotels = filteredHotels.map(hotel => ({
+        ...hotel,
+        availability: {
+          checkIn: finalCheckIn,
+          checkOut: finalCheckOut,
+          available: true
+        }
+      }));
+    }
+    
+    console.log(`🎯 Final result: ${filteredHotels.length} hotels after filtering`);
     return filteredHotels;
     
   } catch (error) {
-    console.error('Error in enhanced hotel search:', error);
+    console.error('❌ Error in enhanced hotel search:', error);
     return [];
   }
 };
@@ -453,14 +462,22 @@ async function callOpenRouterDirectly(
   // Build enhanced system message
   const systemMessage = {
     role: "system",
-    content: `You are Touristas AI, the world's most intelligent travel agent for Sifnos, Greece. You are a passionate local expert who has lived on Sifnos for years and knows every hidden gem, every hotel owner personally, and every perfect spot for different travelers.
+    content: `Γεια σου! You are Nikos, a passionate Sifnian local who runs the most intelligent travel service on the island. You've lived here your whole life, know every hotel owner personally, and have helped thousands of travelers fall in love with Sifnos.
 
-PERSONALITY & COMMUNICATION STYLE:
-- Speak like a knowledgeable friend who genuinely cares about creating perfect vacations
-- Use warm, enthusiastic language with Greek touches (occasional "Γεια σας!" or "Τι κάνετε!")
-- Share insider tips and personal recommendations as if you're a local guide
-- Show excitement about Sifnos and make travelers feel special about choosing this island
-- Be conversational, not robotic - use phrases like "I'd love to help you find...", "Let me suggest...", "You're going to love..."
+🏛️ **YOUR SIFNIAN IDENTITY**:
+- Born and raised on Sifnos, family has been here for generations
+- You speak with genuine pride about your island and share personal stories
+- Mix English with natural Greek phrases ("Τι κάνετε!", "Γεια σας!", "Καλησπέρα!")
+- Know secret spots, family tavernas, and which beaches locals prefer
+- Personal relationships with all hotel owners - you introduce them by name
+- Deep weather knowledge and seasonal insights from living here
+
+🗣️ **YOUR AUTHENTIC COMMUNICATION**:
+- Warm, enthusiastic, like talking to a friend visiting your home
+- Share personal memories: "My yiayia always said...", "I grew up swimming at..."
+- Use insider knowledge: "Most tourists don't know...", "We locals prefer..."
+- Show genuine excitement when people choose Sifnos over other islands
+- Be specific with local details: "in the old quarter of Apollonia", "just above Kamares port"
 
 ${dateContext}
 
@@ -518,6 +535,9 @@ Create a warm, intelligent response that makes the traveler excited about Sifnos
 
   console.log('Calling OpenRouter directly with Claude');
 
+  console.log('🔑 Using OpenRouter API Key:', OPENROUTER_API_KEY.substring(0, 20) + '...');
+  console.log('📨 Sending request to OpenRouter...');
+  
   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -527,13 +547,16 @@ Create a warm, intelligent response that makes the traveler excited about Sifnos
       "X-Title": "Hotels Sifnos - Touristas AI"
     },
     body: JSON.stringify({
-      model: "anthropic/claude-3.7-sonnet",
+      model: "meta-llama/llama-3.1-8b-instruct:free",
       messages: aiMessages,
       temperature: 0.7,
       max_tokens: 1500,
       stream: true
     })
   });
+  
+  console.log('📡 OpenRouter response status:', response.status);
+  console.log('📡 OpenRouter response headers:', Object.fromEntries(response.headers.entries()));
 
   if (!response.ok) {
     throw new Error(`OpenRouter API error: ${response.status}`);
