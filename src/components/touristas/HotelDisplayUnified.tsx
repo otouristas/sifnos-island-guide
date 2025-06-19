@@ -1,12 +1,12 @@
 
 import React from 'react';
 import UnifiedHotelCard from '@/components/UnifiedHotelCard';
-import { UnifiedHotel } from '@/services/hotelSearch';
+import { Hotel } from '@/services/hotelSearch';
 import { Badge } from '@/components/ui/badge';
 import { Award, ExternalLink, Info } from 'lucide-react';
 
 interface HotelDisplayUnifiedProps {
-  hotels: UnifiedHotel[];
+  hotels: Hotel[];
   location?: string;
 }
 
@@ -34,7 +34,6 @@ const HotelDisplayUnified = ({ hotels, location }: HotelDisplayUnifiedProps) => 
         </div>
       </div>
 
-      {/* Local Hotels Section */}
       {localHotels.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center gap-2">
@@ -61,7 +60,6 @@ const HotelDisplayUnified = ({ hotels, location }: HotelDisplayUnifiedProps) => 
         </div>
       )}
 
-      {/* Agoda Hotels Section */}
       {agodaHotels.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center gap-2">
