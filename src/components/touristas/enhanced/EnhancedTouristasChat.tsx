@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { Send, Loader2, Bot, User, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,18 +10,16 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { AIMessage, HotelRecommendation, HotelBundle, QuickPrompt, MessageContext } from './TouristasAITypes';
 import { searchHotels } from '@/services/hotelSearch';
-import { callTouristasAI, processStreamingResponse, searchHotelsWithAvailability, parseNaturalDates, trackConversationContext } from '../services/ChatService';
-// import { queryRouter } from '../services/IntelligentQueryRouter';
-// import { dataOrchestrator } from '../services/DataSourceOrchestrator';
-import { IntelligentRoutingDemo } from '../services/IntelligentRouterDemo';
+import { callTouristasAI, processStreamingResponse, searchHotelsWithAvailability, parseNaturalDates, trackConversationContext, AIRequestMessage } from '../services/ChatService';
+import { extractUserPreferencesFromMessage } from '../utils/chat-utils';
 
 const QUICK_PROMPTS: QuickPrompt[] = [
-  { id: 1, text: "Hotels available for next weekend", category: "real_time" },
-  { id: 2, text: "Best beaches in Sifnos", category: "local_content" },
-  { id: 3, text: "Hotels in Kamares", category: "local_hotels" },
-  { id: 4, text: "Plan my 3-day Sifnos vacation", category: "hybrid" },
-  { id: 5, text: "What's the weather like in July?", category: "general" },
-  { id: 6, text: "🧠 Test Intelligent Routing System", category: "test" }
+  { id: '1', text: "Hotels available for next weekend", category: "real_time" },
+  { id: '2', text: "Best beaches in Sifnos", category: "local_content" },
+  { id: '3', text: "Hotels in Kamares", category: "local_hotels" },
+  { id: '4', text: "Plan my 3-day Sifnos vacation", category: "hybrid" },
+  { id: '5', text: "What's the weather like in July?", category: "general" },
+  { id: '6', text: "🧠 Test Intelligent Routing System", category: "test" }
 ];
 
 export default function EnhancedTouristasChat() {
@@ -50,7 +49,6 @@ export default function EnhancedTouristasChat() {
   const inputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  // Only scroll to bottom when user sends a message, not on initial load
   const scrollToBottom = () => {
     setTimeout(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -61,19 +59,16 @@ export default function EnhancedTouristasChat() {
     const lowerMessage = message.toLowerCase();
     const context: MessageContext = { topic: 'general' };
 
-    // Extract location
     const locations = ['platis gialos', 'apollonia', 'kamares', 'kastro', 'artemonas', 'vathi', 'faros', 'chrysopigi'];
     const foundLocation = locations.find(loc => lowerMessage.includes(loc));
     if (foundLocation) context.location = foundLocation;
 
-    // Extract budget hints
     if (lowerMessage.includes('budget') || lowerMessage.includes('cheap') || lowerMessage.includes('affordable')) {
       context.budget = 'budget';
     } else if (lowerMessage.includes('luxury') || lowerMessage.includes('premium') || lowerMessage.includes('expensive')) {
       context.budget = 'luxury';
     }
 
-    // Extract traveler type
     if (lowerMessage.includes('family') || lowerMessage.includes('kids') || lowerMessage.includes('children')) {
       context.travelers = 'family';
     } else if (lowerMessage.includes('couple') || lowerMessage.includes('romantic') || lowerMessage.includes('honeymoon')) {
@@ -82,11 +77,9 @@ export default function EnhancedTouristasChat() {
       context.travelers = 'solo';
     }
 
-    // Extract interests/amenities
     const amenities = ['pool', 'spa', 'beach', 'wifi', 'breakfast', 'parking', 'restaurant', 'bar'];
     context.interests = amenities.filter(amenity => lowerMessage.includes(amenity));
 
-    // Determine topic
     if (lowerMessage.includes('hotel') || lowerMessage.includes('stay') || lowerMessage.includes('accommodation')) {
       context.topic = 'accommodation';
     } else if (foundLocation) {
@@ -131,7 +124,7 @@ export default function EnhancedTouristasChat() {
 
     const totalPrice = hotels.reduce((sum, hotel) => sum + hotel.price, 0);
     const averagePrice = totalPrice / hotels.length;
-    const savings = Math.round(averagePrice * 0.15 * hotels.length); // 15% bundle discount
+    const savings = Math.round(averagePrice * 0.15 * hotels.length);
 
     return {
       id: `bundle-${Date.now()}`,
@@ -172,9 +165,7 @@ export default function EnhancedTouristasChat() {
   const handleQuickPrompt = (prompt: QuickPrompt) => {
     setInput(prompt.text);
     
-    // Special handling for test prompt
     if (prompt.category === 'test') {
-      // Show intelligent routing demonstration
       const testMessage = `🧠 INTELLIGENT ROUTING SYSTEM TEST
 
 This demonstrates how Touristas AI routes different queries:
@@ -213,25 +204,19 @@ Try any of these queries to see the world's most intelligent travel AI in action
     handleSendMessage(suggestion);
   };
 
-  // 🧠 INTELLIGENT QUERY ANALYSIS METHODS
   const analyzeQueryIntent = (message: string, context: MessageContext) => {
     const messageLower = message.toLowerCase();
     
-    // Real-time availability patterns
     const hasDateKeywords = ['next weekend', 'next week', 'available', 'book', 'reserve', 'dates'].some(keyword => messageLower.includes(keyword));
     const hasTemporalKeywords = ['tomorrow', 'today', 'this weekend', 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'].some(keyword => messageLower.includes(keyword));
     
-    // Location-specific patterns
     const sifnosLocations = ['kamares', 'apollonia', 'platis gialos', 'kastro', 'faros', 'vathi', 'artemonas'];
     const hasLocationKeywords = sifnosLocations.some(location => messageLower.includes(location));
     
-    // Hotel-related patterns
     const hasHotelKeywords = ['hotel', 'accommodation', 'stay', 'villa', 'room'].some(keyword => messageLower.includes(keyword));
     
-    // Local content patterns
     const hasLocalContentKeywords = ['beach', 'restaurant', 'taverna', 'things to do', 'activity', 'pottery', 'museum'].some(keyword => messageLower.includes(keyword));
     
-    // Determine intent
     let intent = 'general_travel_info';
     let confidence = 0.5;
     let requiresHotelData = false;
@@ -257,7 +242,6 @@ Try any of these queries to see the world's most intelligent travel AI in action
       requiresHotelData = true;
     }
     
-    // Complex planning queries
     const planningKeywords = ['plan', 'itinerary', 'trip', 'vacation'].some(keyword => messageLower.includes(keyword));
     if (planningKeywords || (hasHotelKeywords && hasLocalContentKeywords)) {
       intent = 'hybrid_recommendation';
@@ -271,7 +255,9 @@ Try any of these queries to see the world's most intelligent travel AI in action
       intent,
       confidence,
       requiresHotelData,
-      requiresLocalContent, 
+      requiresLocal
+
+      Content, 
       requiresRealTimeData,
       hasDateKeywords,
       hasLocationKeywords,
@@ -318,7 +304,6 @@ Try any of these queries to see the world's most intelligent travel AI in action
     const messageContent = messageText || input.trim();
     if (!messageContent) return;
 
-    // Add user message
     const userMessage: AIMessage = {
       id: Date.now().toString(),
       type: 'user',
@@ -330,11 +315,9 @@ Try any of these queries to see the world's most intelligent travel AI in action
     setInput('');
     setShowQuickPrompts(false);
 
-    // Extract context from user message
     const newContext = extractContextFromMessage(messageContent);
     setUserContext(prev => ({ ...prev, ...newContext }));
 
-    // Show typing indicator
     setIsTyping(true);
     const typingMessage: AIMessage = {
       id: 'typing',
@@ -345,38 +328,33 @@ Try any of these queries to see the world's most intelligent travel AI in action
     };
     setMessages(prev => [...prev, typingMessage]);
 
-    // Natural delay for AI response
     await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
 
     try {
       setIsLoading(true);
       setIsTyping(false);
 
-      // Remove typing indicator
       setMessages(prev => prev.filter(msg => msg.id !== 'typing'));
 
-      // Test date parsing first
       const parsedDates = parseNaturalDates(messageContent);
       console.log('Date parsing test for:', messageContent, 'Result:', parsedDates);
       
-      // Build message context
       const previousMessages = messages.slice(-5).map(msg => ({
-        role: msg.type === 'user' ? 'user' : 'assistant',
+        role: msg.type === 'user' ? 'user' as const : 'assistant' as const,
         content: msg.content,
         id: msg.id
       }));
       
-      const conversationContext = trackConversationContext(messages);
+      const conversationContext = trackConversationContext(messages.map(msg => ({
+        id: msg.id,
+        role: msg.type === 'user' ? 'user' : 'assistant',
+        content: msg.content
+      })));
       
-      console.log('Conversation context:', conversationContext);
-      console.log('User preferences extracted:', newContext);
-      
-      // 🧠 INTELLIGENT QUERY ANALYSIS - World's Most Advanced Travel AI
       console.log('🧠 Analyzing query with intelligent routing system...');
       
       const queryLower = messageContent.toLowerCase();
       
-      // Determine query intent and routing strategy
       const queryIntent = analyzeQueryIntent(messageContent, newContext);
       const routingStrategy = determineRoutingStrategy(queryIntent, queryLower);
       
@@ -387,21 +365,18 @@ Try any of these queries to see the world's most intelligent travel AI in action
         strategy: routingStrategy.strategy
       });
       
-      // 🎯 LOCATION-BASED HOTEL SEARCH DEBUGGING
       console.log('=== HOTEL SEARCH DEBUG ===');
       console.log('Query:', messageContent);
       console.log('Detected location:', newContext.location);
       console.log('Needs hotel search:', queryIntent.requiresHotelData);
       console.log('========================');
 
-      // Enhanced hotel search with intelligent routing
       let relevantHotels: any[] = [];
       const needsHotelSearch = queryIntent.requiresHotelData;
       
       if (needsHotelSearch || queryIntent.intent === 'local_sponsored_hotels' || queryIntent.intent === 'real_time_availability') {
         console.log('🔍 Enhanced hotel search triggered for:', messageContent);
         
-        // Parse natural language dates from the message
         const parsedDates = parseNaturalDates(messageContent);
         console.log('📅 Parsed dates:', parsedDates);
         
@@ -413,14 +388,13 @@ Try any of these queries to see the world's most intelligent travel AI in action
           travelers: newContext.travelers,
           adults: 2,
           children: 0,
-          ...parsedDates // This will include checkInDate and checkOutDate if parsed
+          ...parsedDates
         };
         
         console.log('🎯 Enhanced search preferences:', searchPreferences);
         relevantHotels = await searchHotelsWithAvailability(messageContent, searchPreferences);
         console.log('🏨 Found hotels for AI context:', relevantHotels.length);
         
-        // 🚀 FALLBACK: Ensure we always have hotels for testing
         if (relevantHotels.length === 0) {
           console.log('🎯 No hotels found from search, using sample data for testing...');
           relevantHotels = [
@@ -455,28 +429,11 @@ Try any of these queries to see the world's most intelligent travel AI in action
                 checkOut: parsedDates.checkOutDate,
                 available: true
               }
-            },
-            {
-              id: 'sample-3',
-              name: 'Filadaki Villas',
-              location: 'Platis Gialos, Sifnos', 
-              price_per_night: 120,
-              rating: 4.7,
-              source: 'agoda',
-              image_url: '/uploads/hotels/filadaki-studios/filadaki-logo.png',
-              amenities: ['Traditional Architecture', 'Beach Access', 'WiFi', 'Kitchenette'],
-              description: 'Traditional Cycladic villas just steps from the beautiful Platis Gialos beach',
-              availability: {
-                checkIn: parsedDates.checkInDate,
-                checkOut: parsedDates.checkOutDate,
-                available: true
-              }
             }
           ];
           console.log('🏨 Using fallback sample hotels:', relevantHotels.length);
         }
         
-        // Format hotels for better AI integration
         const hotelSummary = relevantHotels.map(hotel => ({
           name: hotel.name,
           location: hotel.location,
@@ -491,8 +448,7 @@ Try any of these queries to see the world's most intelligent travel AI in action
         console.log('📊 Hotel summary for AI:', hotelSummary);
       }
 
-      // Create an AI message
-      const aiMessage: Message = {
+      const aiMessage: AIMessage = {
         id: `ai-${Date.now()}`,
         type: 'bot',
         content: '',
@@ -502,17 +458,14 @@ Try any of these queries to see the world's most intelligent travel AI in action
 
       setMessages(prev => [...prev, aiMessage]);
 
-      // 🌟 PREPARE INTELLIGENT CONTEXT based on routing strategy
       const enhancedPreferences = {
         ...extractUserPreferencesFromMessage(messageContent),
         
-        // Intelligent routing metadata
         queryIntent: queryIntent.intent,
         routingStrategy: routingStrategy.strategy,
         routingSources: routingStrategy.sources,
         confidence: queryIntent.confidence,
         
-        // Hotel data (for real-time and local hotel queries)
         availableHotels: relevantHotels?.length > 0 ? relevantHotels.slice(0, 10).map(hotel => ({
           name: hotel.name,
           location: hotel.location,
@@ -524,22 +477,18 @@ Try any of these queries to see the world's most intelligent travel AI in action
           availability: hotel.availability
         })) : undefined,
         
-        // Enhanced intelligence flags
         hasRealTimeData: queryIntent.requiresRealTimeData && !!relevantHotels?.length,
         hasLocalHotels: routingStrategy.sources.includes('local_hotels'),
         usesAgodaAPI: routingStrategy.sources.includes('agoda'),
         hasLocalContent: queryIntent.requiresLocalContent,
         
-        // Query processing metadata
         searchQuery: messageContent,
         parsedDates: parseNaturalDates(messageContent),
         entities: queryIntent.entities,
         
-        // Intelligence context for AI
         intelligenceMode: `INTELLIGENT_ROUTING_${queryIntent.intent.toUpperCase()}`
       };
 
-      // Call the world's most intelligent AI service
       console.log('🌟 EXECUTING WORLD\'S MOST INTELLIGENT TRAVEL AI:', {
         intent: queryIntent.intent,
         strategy: routingStrategy.strategy,
@@ -584,48 +533,33 @@ Please try again in a few moments or contact support if the issue persists.`
         return;
       }
 
-      // Process the streaming response with hotel detection
       const reader = responseStream.getReader();
       let fullResponse = await processStreamingResponse(reader, aiMessage.id, setMessages);
       
-      // Check if AI response mentions hotel display triggers and ensure hotels are shown
       const shouldShowHotels = fullResponse.includes('Here are the available hotels for your dates:') || 
                               fullResponse.includes('Here are hotel options that match your preferences:') ||
                               fullResponse.includes('available hotels') ||
                               (relevantHotels.length > 0 && needsHotelSearch);
       
-      // 🚀 FORCE HOTEL DISPLAY: Always show hotels when we have them
       if (relevantHotels.length > 0) {
         console.log('🎯 Displaying hotel cards - found', relevantHotels.length, 'hotels');
         
-        // Format hotels for display with proper data mapping
         const formattedHotels = relevantHotels.slice(0, 6).map(hotel => ({
           id: hotel.id?.toString() || Math.random().toString(),
           name: hotel.name,
           location: hotel.location || 'Sifnos, Greece',
-          price_per_night: hotel.price_per_night || hotel.daily_rate || hotel.price || 0,
           price: hotel.price_per_night || hotel.daily_rate || hotel.price || 0,
           rating: hotel.rating || hotel.review_score || 4.0,
-          image_url: hotel.image_url || '/placeholder.svg',
+          image: hotel.image_url || '/placeholder.svg',
           amenities: hotel.amenities || hotel.hotel_amenities?.map((a: any) => a.amenity) || ['WiFi', 'Sea View'],
           source: hotel.source || 'local',
           description: hotel.description || 'Beautiful accommodation in Sifnos',
-          // Include Agoda-specific fields
-          agoda_data: hotel.agoda_data,
-          agoda_hotel_id: hotel.agoda_hotel_id,
-          star_rating: hotel.star_rating || Math.round(hotel.rating || 0),
-          review_score: hotel.review_score || hotel.rating || 0,
-          review_count: hotel.review_count || 0,
-          daily_rate: hotel.daily_rate,
-          currency: hotel.currency,
-          landing_url: hotel.landing_url,
           bestFor: ['travelers'],
           bookingUrl: hotel.landing_url || hotel.booking_url || '#'
         }));
         
         console.log('🏨 Formatted hotels for display:', formattedHotels.map(h => h.name));
         
-        // Update the message with hotels
         setMessages(prev => 
           prev.map(msg => 
             msg.id === aiMessage.id 
@@ -646,7 +580,6 @@ Please try again in a few moments or contact support if the issue persists.`
         console.log('⚠️ No hotels to display');
       }
 
-      // Only scroll to bottom when response is complete
       if (!isLoading) {
         scrollToBottom();
       }
@@ -682,7 +615,6 @@ Please refresh the page and try again. If the problem persists, contact support.
 
   return (
     <div className="flex flex-col h-[calc(100vh-200px)] min-h-[600px] rounded-xl overflow-hidden border-2 shadow-2xl" style={{ backgroundColor: 'rgba(227, 215, 195, 0.02)', borderColor: 'rgba(30, 46, 72, 0.15)' }}>
-      {/* Header */}
       <div className="p-4 text-white" style={{ background: 'linear-gradient(135deg, #1E2E48 0%, #2a3c5a 100%)' }}>
         <div className="flex items-center gap-3">
           <div className="relative">
@@ -698,16 +630,14 @@ Please refresh the page and try again. If the problem persists, contact support.
             <h3 className="font-semibold">Touristas AI</h3>
             <p className="text-xs text-white/80">Your intelligent Sifnos travel companion</p>
           </div>
-                      <div className="ml-auto">
+          <div className="ml-auto">
             <Sparkles className="h-5 w-5" style={{ color: '#FFD700' }} />
           </div>
         </div>
       </div>
 
-      {/* Messages */}
       <ScrollArea className="flex-1 p-6">
         <div className="space-y-6">
-          {/* Quick Prompts - only show if no messages yet */}
           {showQuickPrompts && messages.length === 1 && (
             <div className="mb-6">
               <p className="text-sm text-gray-600 mb-3">Try these popular requests:</p>
@@ -750,7 +680,6 @@ Please refresh the page and try again. If the problem persists, contact support.
               </Avatar>
               
               <div className="flex-1 min-w-0">
-                {/* Message Content */}
                 <div className={`p-4 rounded-2xl max-w-[85%] ${
                   message.type === 'user' 
                     ? 'text-white ml-auto' 
@@ -775,7 +704,6 @@ Please refresh the page and try again. If the problem persists, contact support.
                   )}
                 </div>
 
-                {/* Hotel Bundle */}
                 {message.hotelBundle && (
                   <Card className="mt-4 bg-gradient-to-br from-purple-100 to-pink-100 border-purple-200">
                     <CardContent className="p-4">
@@ -804,7 +732,6 @@ Please refresh the page and try again. If the problem persists, contact support.
                   </Card>
                 )}
 
-                {/* Individual Hotels */}
                 {message.hotels && message.hotels.length > 0 && (
                   <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {message.hotels.map((hotel) => (
@@ -858,7 +785,6 @@ Please refresh the page and try again. If the problem persists, contact support.
                   </div>
                 )}
 
-                {/* Smart Suggestions */}
                 {message.suggestions && message.suggestions.length > 0 && (
                   <div className="mt-4">
                     <p className="text-sm text-gray-600 mb-2">You might also want to know:</p>
@@ -889,7 +815,6 @@ Please refresh the page and try again. If the problem persists, contact support.
         </div>
       </ScrollArea>
 
-      {/* Input Form */}
       <div className="border-t border-gray-200 p-4 bg-white/90 backdrop-blur-sm">
         <form onSubmit={handleSubmit} className="flex gap-2">
           <Input

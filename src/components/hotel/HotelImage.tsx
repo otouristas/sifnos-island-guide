@@ -21,7 +21,6 @@ const HotelImage = ({ hotel, imageSrc, primaryType, getHotelTypeIcon }: HotelIma
     console.error(`Failed to load image for ${hotel.name}: ${e.currentTarget.src}`);
     setImageError(true);
     
-    // Try to reload the image with a different cache-buster
     const timestamp = Date.now();
     const randomValue = Math.floor(Math.random() * 1000);
     e.currentTarget.src = `/placeholder.svg?v=${timestamp}-${randomValue}`;
@@ -40,9 +39,8 @@ const HotelImage = ({ hotel, imageSrc, primaryType, getHotelTypeIcon }: HotelIma
         onLoad={handleImageLoad}
         onError={handleImageError}
         loading="eager"
-        fetchpriority="high"
+        fetchPriority="high"
       />
-      {/* Display hotel type icon if available */}
       {primaryType && (
         <div className="absolute top-2 left-2 bg-white/80 backdrop-blur-sm p-1 rounded-full">
           <div className="w-6 h-6 text-sifnos-turquoise">
