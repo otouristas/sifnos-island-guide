@@ -59,35 +59,39 @@ export interface Hotel {
   id: number;
   name: string;
   location: string;
-  price: number; // Keep as 'price' to match database
+  price_per_night: number;
   rating: number;
   image_url: string;
   amenities: string[];
-  description: string;
-  source: 'local' | 'agoda';
-  
-  // Optional Agoda-specific fields
-  agoda_hotel_id?: number;
-  agoda_data?: any;
+  description?: string;
   star_rating?: number;
   review_score?: number;
   review_count?: number;
+  agoda_hotel_id?: number;
+  source: 'local' | 'agoda';
+  agoda_data?: any;
+  
+  // Additional fields for local hotels
+  hotel_types?: string[];
+  hotel_photos?: {
+    id: string;
+    photo_url: string;
+    is_main_photo?: boolean;
+  }[];
+  hotel_amenities?: {
+    amenity: string;
+  }[];
+  hotel_rooms?: {
+    id: string;
+    name: string;
+    price: number;
+    capacity: number;
+  }[];
+  
+  // Additional Agoda fields
   daily_rate?: number;
   currency?: string;
   landing_url?: string;
-  
-  // Optional local hotel fields
-  hotel_types?: string[];
-  hotel_photos?: any[];
-  hotel_amenities?: any[];
-  hotel_rooms?: any[];
-  
-  // Optional match information for enhanced display
-  matchInfo?: {
-    matchedWith?: string;
-    confidence?: number;
-    similarity?: number;
-  };
 }
 
 export interface AgodaHotel {
@@ -275,7 +279,7 @@ const searchLocalHotels = async (params: SearchParams): Promise<Hotel[]> => {
         id: parseInt(hotel.id) || 0,
         name: hotel.name,
         location: hotel.location,
-        price: 0, // Local hotels don't show prices
+        price_per_night: 0, // Local hotels don't show prices
         rating: reviewRating,
         image_url: imageUrl,
         amenities: amenities,

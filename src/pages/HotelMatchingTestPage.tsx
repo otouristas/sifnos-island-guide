@@ -13,7 +13,7 @@ interface LocalHotel {
   id: number;
   name: string;
   location: string;
-  price?: number; // Use 'price' to match database column
+  price_per_night?: number;
   rating: number;
   image_url: string;
   description?: string;
@@ -143,7 +143,7 @@ export default function HotelMatchingTestPage() {
       console.log('🔍 Fetching local hotels from Supabase...');
       const { data, error } = await supabase
         .from('hotels')
-        .select('id, name, location, price, rating, image_url, description')
+        .select('id, name, location, price_per_night, rating, image_url, description')
         .eq('is_active', true)
         .order('rating', { ascending: false });
 
@@ -276,8 +276,8 @@ export default function HotelMatchingTestPage() {
                   <Star size={14} fill="currentColor" />
                   <span className="ml-1 text-sm">{pair.local.rating}</span>
                 </div>
-                {pair.local.price && (
-                  <span className="text-sm font-medium">€{pair.local.price}/night</span>
+                {pair.local.price_per_night && (
+                  <span className="text-sm font-medium">€{pair.local.price_per_night}/night</span>
                 )}
               </div>
             </div>
@@ -340,8 +340,8 @@ export default function HotelMatchingTestPage() {
             </span>
           </div>
           <span>
-            {type === 'local' && 'price' in hotel && hotel.price 
-              ? `€${hotel.price}/night`
+            {type === 'local' && 'price_per_night' in hotel && hotel.price_per_night 
+              ? `€${hotel.price_per_night}/night`
               : type === 'agoda' && 'dailyRate' in hotel
               ? `${hotel.currency}${hotel.dailyRate}/night`
               : 'Price not available'
@@ -513,4 +513,4 @@ export default function HotelMatchingTestPage() {
       </div>
     </div>
   );
-}
+} 
