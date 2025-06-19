@@ -55,6 +55,13 @@
     </script>
     <!-- End MailerLite Universal -->
 
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#E3D7C3">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Touristas AI">
+    
     <!-- Favicon -->
     <link rel="icon" href="/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png" type="image/png">
     <link rel="shortcut icon" href="/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png" type="image/png">
@@ -63,6 +70,40 @@
 
   <body>
     <div id="root"></div>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('🚀 Touristas AI Service Worker registered successfully:', registration.scope);
+              
+              // Show install prompt if available
+              let deferredPrompt;
+              window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                console.log('📱 Touristas AI can be installed as an app!');
+              });
+              
+              // Optional: Show install button after 30 seconds
+              setTimeout(() => {
+                if (deferredPrompt) {
+                  const showInstallBanner = sessionStorage.getItem('touristas-install-dismissed') !== 'true';
+                  if (showInstallBanner) {
+                    console.log('💡 Tip: Install Touristas AI for the best experience!');
+                  }
+                }
+              }, 30000);
+            })
+            .catch((error) => {
+              console.log('❌ Service Worker registration failed:', error);
+            });
+        });
+      }
+    </script>
+    
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>

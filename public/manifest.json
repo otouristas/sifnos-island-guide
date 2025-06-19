@@ -1,0 +1,90 @@
+{
+  "name": "Touristas AI - Sifnos Travel Assistant",
+  "short_name": "Touristas AI",
+  "description": "Your intelligent Sifnos travel companion powered by AI. Find perfect hotels, get local insights, and plan your Greek island adventure.",
+  "start_url": "/touristas-ai",
+  "display": "standalone",
+  "background_color": "#1E2E48",
+  "theme_color": "#E3D7C3",
+  "orientation": "portrait-primary",
+  "categories": ["travel", "tourism", "lifestyle"],
+  "lang": "en",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/uploads/touristas-ai-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/uploads/touristas-ai-logo.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/uploads/touristas-ai-logo.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Find Hotels",
+      "short_name": "Hotels",
+      "description": "Search for available hotels in Sifnos",
+      "url": "/touristas-ai?q=hotels",
+      "icons": [
+        {
+          "src": "/hotel1.jpg",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Voice Search",
+      "short_name": "Voice",
+      "description": "Use voice to find accommodations",
+      "url": "/touristas-ai?voice=true",
+      "icons": [
+        {
+          "src": "/uploads/touristas-ai-logo.svg",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Weather Info",
+      "short_name": "Weather",
+      "description": "Get weather-aware recommendations",
+      "url": "/touristas-ai?q=weather",
+      "icons": [
+        {
+          "src": "/beach1.jpg",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/uploads/sifnos-og-image.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Sifnos Hotels and Travel Assistant"
+    }
+  ],
+  "features": [
+    "Voice Recognition",
+    "Real-time Hotel Search",
+    "Weather Integration",
+    "Local Insights",
+    "AI-Powered Recommendations"
+  ]
+} 

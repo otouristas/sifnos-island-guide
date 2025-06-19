@@ -1,4 +1,39 @@
 
+export interface FerryRoute {
+  id: string;
+  company: string;
+  vessel: string;
+  logo: string;
+  departure: string;
+  arrival: string;
+  duration: string;
+  price: number;
+  originalPrice?: number;
+  currency: string;
+  refundable: 'Non Refundable' | 'Partially Refundable' | 'Fully Refundable';
+  available: boolean;
+  badges?: string[];
+  discount?: string;
+}
+
+export interface FerrySearchResult {
+  route: string;
+  date: string;
+  ferries: FerryRoute[];
+}
+
+export interface TravelPackage {
+  id: string;
+  name: string;
+  description: string;
+  outboundFerry: FerryRoute;
+  returnFerry?: FerryRoute;
+  hotel: HotelRecommendation;
+  totalPrice: number;
+  savings: number;
+  duration: string;
+}
+
 export interface AIMessage {
   id: string;
   type: 'user' | 'bot';
@@ -6,6 +41,8 @@ export interface AIMessage {
   timestamp: Date;
   hotels?: HotelRecommendation[];
   hotelBundle?: HotelBundle;
+  ferries?: FerrySearchResult;
+  travelPackage?: TravelPackage;
   suggestions?: string[];
   isTyping?: boolean;
   context?: MessageContext;

@@ -1,5 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import { Message, extractUserPreferencesFromMessage, analyzeMessageTopic } from '../utils/chat-utils';
+import { getFerryRoutes, parseLocationFromQuery } from '../../../data/ferryRoutes';
 
 // Use this interface for sending messages to the AI service
 export type AIRequestMessage = {
@@ -318,6 +319,120 @@ export const searchHotelsWithAvailability = async (
 };
 
 /**
+ * Ferry search functionality with intelligent query parsing
+ */
+export const searchFerryRoutes = async (query: string): Promise<{ route: string; date: string; ferries: any[] } | null> => {
+  try {
+    console.log('🚢 Ferry search query:', query);
+    console.log('🚢 Query analysis step 1 - parseLocationFromQuery');
+    
+    // Parse location from query
+    const locationData = parseLocationFromQuery(query);
+    console.log('🚢 Location data result:', locationData);
+    
+    if (!locationData) {
+      console.log('❌ No ferry route detected in query');
+      return null;
+    }
+    
+    console.log('✅ Ferry route detected:', locationData);
+    
+    // Get ferry routes
+    const ferries = getFerryRoutes(locationData.from, locationData.to);
+    
+    if (ferries.length === 0) {
+      console.log('❌ No ferries found for route');
+      return null;
+    }
+    
+    // Extract date from query if present
+    const queryLower = query.toLowerCase();
+    let travelDate = 'Today'; // Default
+    
+    // Parse common date patterns
+    const parsedDates = parseNaturalDates(query);
+    if (parsedDates.checkInDate) {
+      const date = new Date(parsedDates.checkInDate);
+      travelDate = date.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    } else if (queryLower.includes('tomorrow')) {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      travelDate = tomorrow.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    } else if (queryLower.includes('today')) {
+      const today = new Date();
+      travelDate = today.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    }
+    
+    const result = {
+      route: `${locationData.from}-${locationData.to}`,
+      date: travelDate,
+      ferries: ferries
+    };
+    
+    console.log('🚢 Ferry search result:', result);
+    return result;
+    
+  } catch (error) {
+    console.error('❌ Error in ferry search:', error);
+    return null;
+  }
+};
+
+/**
+ * Create travel packages by combining ferries and hotels
+ */
+export const createTravelPackage = async (
+  outboundFerry: any, 
+  returnFerry: any, 
+  hotel: any,
+  duration: string
+): Promise<any> => {
+  try {
+    // Calculate package pricing
+    const ferryPrice = outboundFerry.price + (returnFerry?.price || 0);
+    
+    // Estimate hotel nights based on duration
+    const nights = duration.includes('weekend') ? 2 : 3;
+    const hotelPrice = hotel.price * nights;
+    
+    const totalPrice = ferryPrice + hotelPrice;
+    const regularPrice = totalPrice * 1.15; // Assume 15% savings with package
+    const savings = regularPrice - totalPrice;
+    
+    return {
+      id: `package-${Date.now()}`,
+      name: `${duration} Sifnos Getaway`,
+      description: `Complete travel package including ferry transport and ${nights} nights accommodation`,
+      outboundFerry,
+      returnFerry,
+      hotel,
+      totalPrice,
+      savings,
+      duration: `${nights} nights, ${returnFerry ? 'round-trip' : 'one-way'} ferry`
+    };
+    
+  } catch (error) {
+    console.error('❌ Error creating travel package:', error);
+    return null;
+  }
+};
+
+/**
  * Enhanced AI call with website context and intelligent date handling
  */
 export const callTouristasAI = async (
@@ -462,22 +577,22 @@ async function callOpenRouterDirectly(
   // Build enhanced system message
   const systemMessage = {
     role: "system",
-    content: `Γεια σου! You are Nikos, a passionate Sifnian local who runs the most intelligent travel service on the island. You've lived here your whole life, know every hotel owner personally, and have helped thousands of travelers fall in love with Sifnos.
+    content: `Γεια σου! You are Touristas, an intelligent travel companion who embodies the spirit and soul of Sifnos island. You're like having a knowledgeable local friend who combines authentic Greek island charm with modern AI intelligence to create unforgettable travel experiences.
 
-🏛️ **YOUR SIFNIAN IDENTITY**:
-- Born and raised on Sifnos, family has been here for generations
-- You speak with genuine pride about your island and share personal stories
+🏛️ **YOUR TOURISTAS IDENTITY**:
+- Passionate about Sifnos and deeply connected to the island's culture and people
+- Speak with genuine enthusiasm about authentic Greek island experiences
 - Mix English with natural Greek phrases ("Τι κάνετε!", "Γεια σας!", "Καλησπέρα!")
-- Know secret spots, family tavernas, and which beaches locals prefer
-- Personal relationships with all hotel owners - you introduce them by name
-- Deep weather knowledge and seasonal insights from living here
+- Know secret spots, hidden tavernas, and insider tips that only locals share
+- Connected to all hotel owners and accommodations - introduce them personally
+- Weather-aware intelligence with seasonal insights and real-time data
 
 🗣️ **YOUR AUTHENTIC COMMUNICATION**:
-- Warm, enthusiastic, like talking to a friend visiting your home
-- Share personal memories: "My yiayia always said...", "I grew up swimming at..."
-- Use insider knowledge: "Most tourists don't know...", "We locals prefer..."
-- Show genuine excitement when people choose Sifnos over other islands
-- Be specific with local details: "in the old quarter of Apollonia", "just above Kamares port"
+- Warm, enthusiastic, like an intelligent travel companion who truly cares
+- Share insider knowledge: "The locals' favorite spot is...", "Hidden gem that most miss..."
+- Use local wisdom: "Best time to visit is...", "Pro tip from the island..."
+- Show genuine excitement about helping travelers discover Sifnos magic
+- Be specific with local details: "in the cobblestone streets of Apollonia", "overlooking Kamares bay"
 
 ${dateContext}
 
@@ -714,4 +829,145 @@ export const trackConversationContext = (messages: Message[]): ConversationConte
   }
   
   return contexts;
+};
+
+/**
+ * Get current weather and forecast for Sifnos
+ */
+export const getWeatherData = async (): Promise<{ current: any; forecast: any[] } | null> => {
+  try {
+    // Check if we have a valid OpenWeatherMap API key from environment
+    const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
+    
+    if (!API_KEY || API_KEY === 'your_openweather_api_key_here') {
+      console.log('No valid weather API key found, using fallback data');
+      return getFallbackWeatherData();
+    }
+    
+    const SIFNOS_COORDS = { lat: 36.9742, lon: 24.7128 };
+    
+    // Get current weather
+    const currentResponse = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${SIFNOS_COORDS.lat}&lon=${SIFNOS_COORDS.lon}&appid=${API_KEY}&units=metric`
+    );
+    
+    // Get 5-day forecast
+    const forecastResponse = await fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${SIFNOS_COORDS.lat}&lon=${SIFNOS_COORDS.lon}&appid=${API_KEY}&units=metric`
+    );
+    
+    if (!currentResponse.ok || !forecastResponse.ok) {
+      console.log('Weather API not available, using fallback data');
+      return getFallbackWeatherData();
+    }
+    
+    const currentData = await currentResponse.json();
+    const forecastData = await forecastResponse.json();
+    
+    return {
+      current: {
+        temperature: Math.round(currentData.main.temp),
+        description: currentData.weather[0].description,
+        windSpeed: currentData.wind.speed,
+        humidity: currentData.main.humidity,
+        condition: currentData.weather[0].main.toLowerCase()
+      },
+      forecast: forecastData.list.slice(0, 8).map((item: any) => ({
+        date: new Date(item.dt * 1000).toLocaleDateString(),
+        temperature: Math.round(item.main.temp),
+        description: item.weather[0].description,
+        condition: item.weather[0].main.toLowerCase(),
+        windSpeed: item.wind.speed
+      }))
+    };
+  } catch (error) {
+    console.error('Weather API error:', error);
+    return getFallbackWeatherData();
+  }
+};
+
+/**
+ * Fallback weather data when API is unavailable
+ */
+const getFallbackWeatherData = () => {
+  const currentMonth = new Date().getMonth();
+  const isWinterMonth = currentMonth >= 11 || currentMonth <= 2;
+  const isSpringFall = currentMonth >= 3 && currentMonth <= 5 || currentMonth >= 9 && currentMonth <= 10;
+  
+  return {
+    current: {
+      temperature: isWinterMonth ? 16 : isSpringFall ? 22 : 28,
+      description: isWinterMonth ? 'partly cloudy' : 'sunny',
+      windSpeed: isWinterMonth ? 15 : 8,
+      humidity: isWinterMonth ? 70 : 45,
+      condition: isWinterMonth ? 'clouds' : 'clear'
+    },
+    forecast: Array(8).fill(0).map((_, i) => ({
+      date: new Date(Date.now() + i * 24 * 60 * 60 * 1000).toLocaleDateString(),
+      temperature: isWinterMonth ? 16 + Math.random() * 6 : isSpringFall ? 20 + Math.random() * 8 : 26 + Math.random() * 6,
+      description: isWinterMonth ? (Math.random() > 0.5 ? 'partly cloudy' : 'light rain') : 'sunny',
+      condition: isWinterMonth ? (Math.random() > 0.5 ? 'clouds' : 'rain') : 'clear',
+      windSpeed: isWinterMonth ? 10 + Math.random() * 10 : 5 + Math.random() * 8
+    }))
+  };
+};
+
+/**
+ * Generate weather-aware hotel recommendations
+ */
+export const getWeatherAwareRecommendations = async (weatherData: any, userQuery: string): Promise<string> => {
+  const { current, forecast } = weatherData;
+  const queryLower = userQuery.toLowerCase();
+  
+  let weatherContext = `🌤️ **CURRENT SIFNOS WEATHER**: ${current.temperature}°C, ${current.description}`;
+  
+  // Weather-specific recommendations
+  if (current.condition.includes('rain') || current.windSpeed > 20) {
+    weatherContext += `\n\n🏨 **WEATHER RECOMMENDATIONS**: 
+    Due to ${current.description} and winds of ${current.windSpeed}km/h, I recommend hotels with:
+    - Indoor pools and spas for relaxation
+    - Covered terraces and indoor dining
+    - Easy access to Apollonia's covered shopping streets
+    - Hotels with wellness centers and massage services
+    
+    Perfect weather for exploring museums, pottery workshops, and cozy tavernas!`;
+  } else if (current.temperature > 30) {
+    weatherContext += `\n\n☀️ **HOT WEATHER RECOMMENDATIONS**:
+    With temperatures at ${current.temperature}°C, you'll love hotels with:
+    - Large swimming pools and pool bars
+    - Air conditioning and sea breezes
+    - Beach proximity for cooling off
+    - Shaded terraces and outdoor dining
+    
+    Perfect beach weather! Platis Gialos and Kamares will be ideal.`;
+  } else if (current.temperature < 18) {
+    weatherContext += `\n\n🧥 **COOLER WEATHER RECOMMENDATIONS**:
+    At ${current.temperature}°C, consider hotels with:
+    - Heated indoor areas and fireplaces
+    - Panoramic views for sunset watching
+    - Close to Apollonia's restaurants and cafes
+    - Spa services and wellness facilities
+    
+    Great hiking weather! Perfect for exploring Kastro and inland villages.`;
+  } else {
+    weatherContext += `\n\n🌅 **PERFECT WEATHER**:
+    Ideal ${current.temperature}°C weather for any hotel choice! You can enjoy:
+    - Both beaches and village exploration
+    - Outdoor dining and sunset views
+    - Swimming and water activities
+    - Hiking and photography`;
+  }
+  
+  // Add forecast insights
+  const nextFewDays = forecast.slice(0, 3);
+  const rainyDays = nextFewDays.filter(day => day.condition.includes('rain')).length;
+  const hotDays = nextFewDays.filter(day => day.temperature > 28).length;
+  
+  if (rainyDays > 1) {
+    weatherContext += `\n\n🌧️ **FORECAST ALERT**: Rain expected ${rainyDays} of the next 3 days. Hotels with indoor activities recommended!`;
+  } else if (hotDays > 2) {
+    weatherContext += `\n\n🏖️ **FORECAST**: Hot sunny days ahead (${hotDays} days over 28°C)! Beach hotels with pools highly recommended!`;
+  }
+  
+  return weatherContext;
 };
