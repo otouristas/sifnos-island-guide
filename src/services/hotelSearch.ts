@@ -142,60 +142,30 @@ const searchAgodaHotels = async (params: SearchParams): Promise<Hotel[]> => {
       validateDates(params.checkInDate, params.checkOutDate);
     }
 
-    // Check if proxy server is available, fallback to Supabase function
-    let response;
-    let useProxy = false;
-
-    try {
-      // Try proxy server first
-      const proxyResponse = await fetch('http://localhost:3001/api/agoda-search', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          checkInDate: params.checkInDate,
-          checkOutDate: params.checkOutDate,
-          numberOfAdults: params.numberOfAdults || 2,
-          numberOfChildren: params.numberOfChildren || 0
-        })
-      });
-
-      if (proxyResponse.ok) {
-        response = await proxyResponse.json();
-        useProxy = true;
-        console.log('Using proxy server for Agoda search');
+    // Use Supabase Edge Function for production
+    const { data, error } = await supabase.functions.invoke('agoda-search', {
+      body: {
+        checkInDate: params.checkInDate,
+        checkOutDate: params.checkOutDate,
+        numberOfAdults: params.numberOfAdults || 2,
+        numberOfChildren: params.numberOfChildren || 0
       }
-    } catch (proxyError) {
-      console.log('Proxy server not available, trying Supabase function...');
+    });
+
+    if (error) {
+      console.error('Supabase function error:', error);
+      return [];
     }
 
-    // Fallback to Supabase function if proxy not available
-    if (!useProxy) {
-      const { data, error } = await supabase.functions.invoke('agoda-search', {
-        body: {
-          checkInDate: params.checkInDate,
-          checkOutDate: params.checkOutDate,
-          numberOfAdults: params.numberOfAdults || 2,
-          numberOfChildren: params.numberOfChildren || 0
-        }
-      });
+    const response = data;
 
-      if (error) {
-        console.error('Supabase function error:', error);
-        return [];
-      }
-
-      response = data;
-    }
-
-    if (!response || !response.results) {
+    if (!response || !response.agoda_data?.results) {
       console.log('No Agoda results found');
       return [];
     }
 
-    console.log(`Found ${response.results.length} Agoda hotels`);
-    return response.results.map(convertAgodaToHotel);
+    console.log(`Found ${response.agoda_data.results.length} Agoda hotels`);
+    return response.agoda_data.results.map(convertAgodaToHotel);
 
   } catch (error) {
     console.error('Error searching Agoda hotels:', error);

@@ -38,8 +38,8 @@ enabled = true
 
 [auth]
 enabled = true
-site_url = "http://localhost:3000"
-additional_redirect_urls = ["https://localhost:3000"]
+site_url = "https://hotelssifnos.com"
+additional_redirect_urls = ["https://hotelssifnos.com", "http://localhost:3000", "http://localhost:8080"]
 jwt_expiry = 3600
 enable_refresh_token_rotation = true
 refresh_token_reuse_interval = 10
