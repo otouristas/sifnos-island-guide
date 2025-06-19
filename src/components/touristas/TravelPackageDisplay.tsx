@@ -17,15 +17,22 @@ export function TravelPackageDisplay({ travelPackage }: TravelPackageDisplayProp
       <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-purple-400/20 to-blue-400/20 rounded-full blur-2xl"></div>
       <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-2xl"></div>
       
-      {/* Header */}
-      <div className="relative z-10 flex items-center gap-4 mb-6">
-        <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl shadow-lg">
-          <Sparkles className="w-8 h-8 text-white" />
-        </div>
-        <div className="flex-1">
-          <h3 className="text-2xl font-bold text-gray-800 mb-1">{travelPackage.name}</h3>
-          <p className="text-gray-600">{travelPackage.description}</p>
-          <div className="flex items-center gap-4 mt-2">
+      {/* Header - Mobile Optimized */}
+      <div className="relative z-10 mb-6">
+        {/* Mobile: Stacked Layout */}
+        <div className="flex flex-col space-y-4 md:hidden">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl shadow-lg flex-shrink-0">
+              <Sparkles className="w-6 h-6 text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg font-bold text-gray-800 mb-1">{travelPackage.name}</h3>
+              <div className="text-2xl font-bold text-purple-600">{formatCurrency(travelPackage.totalPrice)}</div>
+              <div className="text-xs text-gray-500">Complete Package</div>
+            </div>
+          </div>
+          <p className="text-sm text-gray-600">{travelPackage.description}</p>
+          <div className="flex items-center gap-3">
             <div className="flex items-center gap-1 text-sm text-gray-600">
               <Calendar className="w-4 h-4" />
               <span>{travelPackage.duration}</span>
@@ -35,14 +42,34 @@ export function TravelPackageDisplay({ travelPackage }: TravelPackageDisplayProp
             </div>
           </div>
         </div>
-        <div className="text-right">
-          <div className="text-3xl font-bold text-purple-600">{formatCurrency(travelPackage.totalPrice)}</div>
-          <div className="text-sm text-gray-500">Complete Package</div>
+
+        {/* Desktop: Original Layout */}
+        <div className="hidden md:flex items-center gap-4">
+          <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl shadow-lg">
+            <Sparkles className="w-8 h-8 text-white" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-2xl font-bold text-gray-800 mb-1">{travelPackage.name}</h3>
+            <p className="text-gray-600">{travelPackage.description}</p>
+            <div className="flex items-center gap-4 mt-2">
+              <div className="flex items-center gap-1 text-sm text-gray-600">
+                <Calendar className="w-4 h-4" />
+                <span>{travelPackage.duration}</span>
+              </div>
+              <div className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                Save {formatCurrency(travelPackage.savings)}!
+              </div>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-3xl font-bold text-purple-600">{formatCurrency(travelPackage.totalPrice)}</div>
+            <div className="text-sm text-gray-500">Complete Package</div>
+          </div>
         </div>
       </div>
 
       {/* Package Components */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6">
         {/* Outbound Ferry */}
         <div className="bg-white/80 backdrop-blur-sm rounded-lg border border-blue-200/50 p-5">
           <div className="flex items-center gap-3 mb-4">
@@ -119,20 +146,20 @@ export function TravelPackageDisplay({ travelPackage }: TravelPackageDisplayProp
       </div>
 
       {/* Hotel */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-lg border border-purple-200/50 p-5 mb-6">
-        <div className="flex items-start gap-4">
+      <div className="bg-white/80 backdrop-blur-sm rounded-lg border border-purple-200/50 p-4 md:p-5 mb-6">
+        <div className="flex flex-col md:flex-row md:items-start gap-4">
           <img 
             src={travelPackage.hotel.image} 
             alt={travelPackage.hotel.name}
-            className="w-24 h-24 object-cover rounded-lg border-2 border-white shadow-md"
+            className="w-full h-48 md:w-24 md:h-24 object-cover rounded-lg border-2 border-white shadow-md"
           />
           <div className="flex-1">
-            <div className="flex items-start justify-between mb-2">
-              <div>
+            <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-2">
+              <div className="flex-1">
                 <h4 className="font-bold text-lg text-gray-800">{travelPackage.hotel.name}</h4>
                 <div className="flex items-center gap-2 text-gray-600 mb-2">
                   <MapPin className="w-4 h-4" />
-                  <span>{travelPackage.hotel.location}</span>
+                  <span className="text-sm">{travelPackage.hotel.location}</span>
                 </div>
                 <div className="flex items-center gap-1 mb-2">
                   {[...Array(5)].map((_, i) => (
@@ -148,7 +175,7 @@ export function TravelPackageDisplay({ travelPackage }: TravelPackageDisplayProp
                   <span className="text-sm text-gray-600 ml-1">({travelPackage.hotel.rating})</span>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="mt-2 md:mt-0 md:text-right">
                 <div className="text-xl font-bold text-purple-600">
                   {formatCurrency(travelPackage.hotel.price)}
                 </div>

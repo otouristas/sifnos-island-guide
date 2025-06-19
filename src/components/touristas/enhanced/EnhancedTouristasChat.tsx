@@ -574,26 +574,71 @@ Try any of these queries to see the world's most intelligent travel AI in action
         console.log('🌍 Weather-aware context generated:', weatherContext.substring(0, 100) + '...');
       }
 
-      // Ferry search functionality
-      console.log('🚢 Checking for ferry queries...');
-      console.log('🚢 Message content:', messageContent);
-      const ferrySearchResult = await searchFerryRoutes(messageContent);
-      console.log('🚢 Ferry search result:', ferrySearchResult);
+      // ENHANCED Ferry + Hotel combination detection and search
+      console.log('🚢 Analyzing for ferry + hotel combinations...');
+      const ferryKeywords = ['ferry', 'ferries', 'boat', 'ship', 'transport', 'travel', 'get to', 'go to', 'reach', 'piraeus', 'athens', 'package', 'combination'];
+      const hasFerryKeywords = ferryKeywords.some(keyword => queryLower.includes(keyword));
+      const hasHotelKeywords = ['hotel', 'hotels', 'accommodation', 'stay', 'room', 'booking'];
+      const hasHotelFerryCombo = hasFerryKeywords && (queryIntent.requiresHotelData || hasHotelKeywords.some(keyword => queryLower.includes(keyword)));
+      
+      console.log('🚢 Keyword analysis:', {
+        ferryKeywords: ferryKeywords.filter(keyword => queryLower.includes(keyword)),
+        hotelKeywords: hasHotelKeywords.filter(keyword => queryLower.includes(keyword)),
+        hasFerryKeywords,
+        hasHotelFerryCombo
+      });
+      
+      console.log('🚢 Ferry analysis:', {
+        hasFerryKeywords,
+        hasHotelFerryCombo,
+        requiresHotelData: queryIntent.requiresHotelData,
+        queryContent: messageContent
+      });
+      
+      let ferrySearchResult = null;
       let travelPackage = null;
       
-      if (ferrySearchResult && relevantHotels.length > 0) {
-        console.log('🎁 Creating travel package combining ferry + hotel...');
-        const bestFerry = ferrySearchResult.ferries.find(f => f.available) || ferrySearchResult.ferries[0];
-        const bestHotel = relevantHotels[0];
+      // Always search for ferries if ferry keywords are detected OR if it's a combination query
+      if (hasFerryKeywords || hasHotelFerryCombo || queryLower.includes('complete') || queryLower.includes('package')) {
+        console.log('🚢 Triggering ferry search for potential ferry + hotel combination...');
+        ferrySearchResult = await searchFerryRoutes(messageContent);
+        console.log('🚢 Ferry search result:', ferrySearchResult);
         
-        if (bestFerry && bestHotel) {
-          travelPackage = await createTravelPackage(
-            bestFerry,
-            null, // For now, no return ferry - can be enhanced later
-            bestHotel,
-            queryLower.includes('weekend') ? 'weekend' : 'getaway'
-          );
+        // If we have ferry but no hotels yet, trigger additional hotel search for Agoda real-time pricing
+        if (ferrySearchResult && relevantHotels.length === 0) {
+          console.log('🚢 Ferry found but no hotels - triggering AGODA REAL-TIME search for ferry combo...');
+          const ferrySearchPreferences = {
+            location: 'sifnos',
+            adults: 2,
+            children: 0,
+            ...parseNaturalDates(messageContent)
+          };
+          console.log('🔍 Additional AGODA hotel search for ferry combo with preferences:', ferrySearchPreferences);
+          relevantHotels = await searchHotelsWithAvailability(messageContent + ' hotels sifnos accommodation', ferrySearchPreferences);
+          console.log(`🏨 AGODA + Local hotel search found: ${relevantHotels.length} hotels`);
         }
+        
+        // Create travel package if we have both ferries and hotels
+        if (ferrySearchResult && relevantHotels.length > 0) {
+          console.log('🎁 Creating travel package combining ferry + REAL-TIME AGODA hotel...');
+          const bestFerry = ferrySearchResult.ferries.find(f => f.available) || ferrySearchResult.ferries[0];
+          const bestHotel = relevantHotels[0];
+          
+          if (bestFerry && bestHotel) {
+            travelPackage = await createTravelPackage(
+              bestFerry,
+              null, // For now, no return ferry - can be enhanced later
+              bestHotel,
+              queryLower.includes('weekend') ? 'weekend' : 'getaway'
+            );
+            console.log('🎁 Travel package created with REAL-TIME pricing:', travelPackage);
+          }
+        }
+      } else {
+        // Even if no ferry keywords, check for ferry routes in general queries
+        console.log('🚢 No ferry keywords detected, but checking for implicit ferry queries...');
+        ferrySearchResult = await searchFerryRoutes(messageContent);
+        console.log('🚢 Implicit ferry search result:', ferrySearchResult);
       }
 
       const aiMessage: AIMessage = {
@@ -707,7 +752,8 @@ Please try again in a few moments or contact support if the issue persists.`
         const formattedHotels = relevantHotels.slice(0, 6).map(hotel => ({
           id: hotel.id?.toString() || Math.random().toString(),
           name: hotel.name,
-          location: hotel.location || 'Sifnos, Greece',
+          // 🎯 FIXED: Use REAL location from Supabase database! Only fallback to 'Sifnos, Greece' for Agoda hotels
+          location: hotel.location || (hotel.source === 'agoda' ? 'Sifnos, Greece' : 'Sifnos'),
           price: hotel.price_per_night || hotel.daily_rate || hotel.price || 0,
           rating: hotel.rating || hotel.review_score || 4.0,
           image: hotel.image_url || '/placeholder.svg',
@@ -775,45 +821,46 @@ Please refresh the page and try again. If the problem persists, contact support.
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-120px)] min-h-[650px] w-full max-w-6xl mx-auto rounded-2xl overflow-hidden border shadow-2xl backdrop-blur-xl relative" 
+    <div className="flex flex-col h-[calc(100vh-80px)] md:h-[calc(100vh-120px)] min-h-[500px] md:min-h-[650px] w-full max-w-6xl mx-auto rounded-xl md:rounded-2xl overflow-hidden border shadow-2xl backdrop-blur-xl relative m-2 md:m-0" 
          style={{ 
            background: 'linear-gradient(145deg, rgba(227, 215, 195, 0.08) 0%, rgba(255, 255, 255, 0.12) 50%, rgba(227, 215, 195, 0.06) 100%)',
            borderColor: 'rgba(227, 215, 195, 0.3)',
            boxShadow: '0 20px 40px rgba(30, 46, 72, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
          }}>
-             <div className="p-6 md:p-8 text-white backdrop-blur-lg relative overflow-hidden" 
+      {/* Mobile-Optimized Header */}
+      <div className="p-4 md:p-6 lg:p-8 text-white backdrop-blur-lg relative overflow-hidden" 
            style={{ 
              background: 'linear-gradient(135deg, #1E2E48 0%, #2a3c5a 100%, #1E2E48 200%)',
              boxShadow: '0 4px 20px rgba(30, 46, 72, 0.3)'
            }}>
         {/* Animated Background Pattern */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-32 h-32 bg-white rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-0 right-0 w-24 h-24 bg-blue-200 rounded-full blur-2xl animate-pulse delay-1000"></div>
+          <div className="absolute top-0 left-0 w-20 h-20 md:w-32 md:h-32 bg-white rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-0 right-0 w-16 h-16 md:w-24 md:h-24 bg-blue-200 rounded-full blur-2xl animate-pulse delay-1000"></div>
         </div>
-        <div className="flex items-center gap-4 md:gap-6 relative z-10">
+        <div className="flex items-center gap-3 md:gap-4 lg:gap-6 relative z-10">
           <div className="relative">
-            <Avatar className="w-12 h-12 border-2 border-white/30 shadow-lg transition-all duration-300 hover:scale-110">
+            <Avatar className="w-10 h-10 md:w-12 md:h-12 border-2 border-white/30 shadow-lg transition-all duration-300 hover:scale-110">
               <AvatarImage src="/uploads/touristas-ai-logo.svg" alt="Touristas" />
               <AvatarFallback className="bg-white/20">
-                <Bot className="h-6 w-6" />
+                <Bot className="h-5 w-5 md:h-6 md:w-6" />
               </AvatarFallback>
             </Avatar>
-            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full animate-pulse shadow-lg"></div>
+            <div className="absolute -bottom-1 -right-1 w-3 h-3 md:w-4 md:h-4 bg-green-400 border-2 border-white rounded-full animate-pulse shadow-lg"></div>
             {/* Breathing animation around avatar */}
             <div className="absolute inset-0 rounded-full border-2 border-white/20 animate-ping"></div>
           </div>
-          <div>
-            <h3 className="font-semibold">Touristas</h3>
-            <p className="text-xs text-white/80">Your intelligent Sifnos travel companion</p>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-sm md:text-base">Touristas</h3>
+            <p className="text-xs text-white/80 truncate">Your intelligent Sifnos travel companion</p>
           </div>
-          <div className="ml-auto flex items-center gap-2">
+          <div className="flex items-center gap-1 md:gap-2">
             {showInstallButton && (
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handleInstallApp}
-                className="text-white border-white/60 hover:bg-white/20 hover:border-white bg-white/10 backdrop-blur-sm text-xs font-medium transition-all duration-200"
+                className="text-white border-white/60 hover:bg-white/20 hover:border-white bg-white/10 backdrop-blur-sm text-xs font-medium transition-all duration-200 px-2 md:px-3"
                 style={{
                   borderColor: '#E3D7C3',
                   color: '#E3D7C3',
@@ -821,18 +868,19 @@ Please refresh the page and try again. If the problem persists, contact support.
                 }}
               >
                 <Download className="h-3 w-3 mr-1" />
-                Install App
+                <span className="hidden sm:inline">Install App</span>
+                <span className="sm:hidden">Install</span>
               </Button>
             )}
-            <Sparkles className="h-5 w-5" style={{ color: '#FFD700' }} />
+            <Sparkles className="h-4 w-4 md:h-5 md:w-5" style={{ color: '#FFD700' }} />
           </div>
         </div>
       </div>
 
-      <ScrollArea className="flex-1 p-6 md:p-8 lg:p-10">
-        <div className="space-y-8 md:space-y-10">
+      <ScrollArea className="flex-1 p-4 md:p-6 lg:p-8 xl:p-10">
+        <div className="space-y-4 md:space-y-6 lg:space-y-8">
           {showQuickPrompts && messages.length === 1 && (
-            <div className="mb-6">
+            <div className="mb-4 md:mb-6">
               <p className="text-sm text-gray-600 mb-3">Try these popular requests:</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {QUICK_PROMPTS.map((prompt) => (
@@ -841,14 +889,14 @@ Please refresh the page and try again. If the problem persists, contact support.
                     variant="outline"
                     size="sm"
                     onClick={() => handleQuickPrompt(prompt)}
-                    className="text-left justify-start h-auto p-3 text-sm border-dashed hover:opacity-80"
+                    className="text-left justify-start h-auto p-3 text-sm border-dashed hover:opacity-80 w-full"
                     style={{ 
                       borderColor: '#1E2E48',
                       color: '#1E2E48',
                       backgroundColor: 'rgba(227, 215, 195, 0.1)'
                     }}
                   >
-                    {prompt.text}
+                    <span className="truncate">{prompt.text}</span>
                   </Button>
                 ))}
               </div>
@@ -856,17 +904,17 @@ Please refresh the page and try again. If the problem persists, contact support.
           )}
 
           {messages.map((message) => (
-            <div key={message.id} className="flex gap-4 md:gap-6">
-              <Avatar className="w-8 h-8 mt-1 flex-shrink-0">
+            <div key={message.id} className="flex gap-3 md:gap-4 lg:gap-6">
+              <Avatar className="w-7 h-7 md:w-8 md:h-8 mt-1 flex-shrink-0">
                 {message.type === 'user' ? (
                   <AvatarFallback className="text-white" style={{ backgroundColor: '#1E2E48' }}>
-                    <User className="h-4 w-4" />
+                    <User className="h-3 w-3 md:h-4 md:w-4" />
                   </AvatarFallback>
                 ) : (
                   <>
                     <AvatarImage src="/uploads/touristas-ai-logo.svg" alt="TouristasAI" />
                     <AvatarFallback className="text-white" style={{ backgroundColor: '#1E2E48' }}>
-                      <Bot className="h-4 w-4" />
+                      <Bot className="h-3 w-3 md:h-4 md:w-4" />
                     </AvatarFallback>
                   </>
                 )}
@@ -874,14 +922,14 @@ Please refresh the page and try again. If the problem persists, contact support.
               
               <div className="flex-1 min-w-0">
                 {message.type === 'user' ? (
-                  // Enhanced User Message Card
-                  <div className="p-5 md:p-6 rounded-2xl max-w-[90%] md:max-w-[85%] text-white ml-auto backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
+                  // Enhanced User Message Card - Mobile Optimized
+                  <div className="p-3 md:p-4 lg:p-5 xl:p-6 rounded-xl md:rounded-2xl max-w-[95%] md:max-w-[90%] lg:max-w-[85%] text-white ml-auto backdrop-blur-sm transition-all duration-300"
                        style={{ 
                          background: 'linear-gradient(135deg, #1E2E48 0%, #2a3c5a 100%)',
                          color: '#E3D7C3',
-                         boxShadow: '0 12px 32px rgba(30, 46, 72, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
+                         boxShadow: '0 8px 24px rgba(30, 46, 72, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
                        }}>
-                    <div className="whitespace-pre-wrap break-words text-base leading-relaxed">
+                    <div className="whitespace-pre-wrap break-words text-sm md:text-base leading-relaxed">
                       {message.content}
                     </div>
                   </div>
@@ -893,50 +941,52 @@ Please refresh the page and try again. If the problem persists, contact support.
                           borderColor: 'rgba(227, 215, 195, 0.3)',
                           boxShadow: '0 16px 40px rgba(30, 46, 72, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)'
                         }}>
-                    {/* Header with AI indicator */}
-                    <div className="px-6 pt-4 pb-2 border-b border-gray-100">
-                      <div className="flex items-center gap-3">
+                    {/* Header with AI indicator - Mobile Optimized */}
+                    <div className="px-4 md:px-6 pt-3 md:pt-4 pb-2 border-b border-gray-100">
+                      <div className="flex items-center gap-2 md:gap-3">
                         <div className="flex items-center gap-2">
                           <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse"></div>
-                          <span className="text-sm font-medium text-gray-600">AI Response</span>
+                          <span className="text-xs md:text-sm font-medium text-gray-600">AI Response</span>
                         </div>
-                        <div className="flex items-center gap-2 ml-auto">
-                          <Badge variant="secondary" className="text-xs" 
+                        <div className="flex items-center gap-1 md:gap-2 ml-auto">
+                          <Badge variant="secondary" className="text-xs px-2 py-1" 
                                  style={{ backgroundColor: 'rgba(30, 46, 72, 0.1)', color: '#1E2E48' }}>
-                            🧠 Intelligent
+                            <span className="hidden sm:inline">🧠 Intelligent</span>
+                            <span className="sm:hidden">🧠</span>
                           </Badge>
-                          <Badge variant="secondary" className="text-xs"
+                          <Badge variant="secondary" className="text-xs px-2 py-1"
                                  style={{ backgroundColor: 'rgba(30, 46, 72, 0.1)', color: '#1E2E48' }}>
-                            ⚡ Real-time
+                            <span className="hidden sm:inline">⚡ Real-time</span>
+                            <span className="sm:hidden">⚡</span>
                           </Badge>
                         </div>
                       </div>
                     </div>
 
-                    <CardContent className="p-6 md:p-8">
+                    <CardContent className="p-4 md:p-6 lg:p-8">
                       {message.isTyping ? (
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3 md:gap-4">
                           <div className="flex gap-1 items-center">
-                            <div className="w-4 h-4 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full animate-bounce"></div>
-                            <div className="w-4 h-4 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full animate-bounce delay-100"></div>
-                            <div className="w-4 h-4 bg-gradient-to-r from-pink-400 to-red-500 rounded-full animate-bounce delay-200"></div>
+                            <div className="w-3 h-3 md:w-4 md:h-4 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full animate-bounce"></div>
+                            <div className="w-3 h-3 md:w-4 md:h-4 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full animate-bounce delay-100"></div>
+                            <div className="w-3 h-3 md:w-4 md:h-4 bg-gradient-to-r from-pink-400 to-red-500 rounded-full animate-bounce delay-200"></div>
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-base font-medium text-gray-700">Touristas is analyzing...</span>
-                            <span className="text-sm text-gray-500">Using AI intelligence to find perfect matches ✨</span>
+                            <span className="text-sm md:text-base font-medium text-gray-700">Touristas is analyzing...</span>
+                            <span className="text-xs md:text-sm text-gray-500">Using AI intelligence to find perfect matches ✨</span>
                           </div>
                         </div>
                       ) : (
                         <div className="prose prose-gray max-w-none">
-                          <div className="whitespace-pre-wrap break-words text-gray-800 leading-relaxed text-base">
+                          <div className="whitespace-pre-wrap break-words text-gray-800 leading-relaxed text-sm md:text-base">
                             {message.content.split('\n').map((paragraph, idx) => (
-                              <div key={idx} className={idx > 0 ? 'mt-4' : ''}>
+                              <div key={idx} className={idx > 0 ? 'mt-3 md:mt-4' : ''}>
                                 {paragraph.includes('**') ? (
                                   // Handle bold text formatting
                                   <div dangerouslySetInnerHTML={{
                                     __html: paragraph
                                       .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-gray-900">$1</strong>')
-                                      .replace(/🌤️|☀️|🌧️|🏨|🏖️|🌅|⭐|📍|🎯/g, '<span class="text-lg">$&</span>')
+                                      .replace(/🌤️|☀️|🌧️|🏨|🏖️|🌅|⭐|📍|🎯/g, '<span class="text-base md:text-lg">$&</span>')
                                   }} />
                                 ) : (
                                   paragraph
@@ -951,27 +1001,27 @@ Please refresh the page and try again. If the problem persists, contact support.
                 )}
 
                 {message.hotelBundle && (
-                  <Card className="mt-6 border-2 overflow-hidden backdrop-blur-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02]"
+                  <Card className="mt-4 md:mt-6 border-2 overflow-hidden backdrop-blur-sm transition-all duration-300"
                         style={{
                           background: 'linear-gradient(135deg, rgba(147, 51, 234, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%)',
                           borderColor: 'rgba(147, 51, 234, 0.3)'
                         }}>
-                    {/* Bundle Header */}
-                    <div className="px-6 pt-4 pb-2 border-b border-purple-200">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
+                    {/* Bundle Header - Mobile Optimized */}
+                    <div className="px-4 md:px-6 pt-3 md:pt-4 pb-2 border-b border-purple-200">
+                      <div className="flex flex-col space-y-2 md:space-y-0 md:flex-row md:items-center md:justify-between">
+                        <div className="flex items-center gap-2 md:gap-3">
                           <div className="w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-pulse"></div>
-                          <h4 className="font-bold text-lg text-purple-800">🎁 {message.hotelBundle.name}</h4>
+                          <h4 className="font-bold text-base md:text-lg text-purple-800">🎁 {message.hotelBundle.name}</h4>
                         </div>
-                        <Badge className="bg-green-100 text-green-800 px-3 py-1 text-sm font-semibold">
+                        <Badge className="bg-green-100 text-green-800 px-3 py-1 text-xs md:text-sm font-semibold self-start md:self-auto">
                           Save €{message.hotelBundle.savings}
                         </Badge>
                       </div>
-                      <p className="text-purple-700 mt-2 text-base">{message.hotelBundle.occasion}</p>
+                      <p className="text-purple-700 mt-2 text-sm md:text-base">{message.hotelBundle.occasion}</p>
                     </div>
 
-                    <CardContent className="p-6">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <CardContent className="p-4 md:p-6">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-4 md:mb-6">
                         {message.hotelBundle.hotels.map((hotel, idx) => (
                           <div key={hotel.id} 
                                className="bg-white/90 backdrop-blur-sm rounded-xl p-4 text-sm border border-purple-100 transition-all duration-200 hover:scale-105 hover:shadow-md"
@@ -1017,8 +1067,8 @@ Please refresh the page and try again. If the problem persists, contact support.
                             animation: `fadeInUp 0.8s ease-out ${index * 0.15}s both`
                           }}
                         >
-                          {/* Image Section - Clean */}
-                          <div className="relative overflow-hidden h-56">
+                          {/* Image Section - Mobile Optimized */}
+                          <div className="relative overflow-hidden h-48 md:h-56">
                             <img 
                               src={hotel.image} 
                               alt={hotel.name}
@@ -1026,20 +1076,21 @@ Please refresh the page and try again. If the problem persists, contact support.
                             />
                             
                             {/* Top Badge - Source Only */}
-                            <div className="absolute top-4 left-4">
+                            <div className="absolute top-3 left-3 md:top-4 md:left-4">
                               {hotel.source && (
-                                <Badge className={`${hotel.source === 'agoda' ? 'bg-blue-500' : 'bg-emerald-500'} text-white px-3 py-1 font-semibold shadow-lg backdrop-blur-sm border-0`}>
-                                  {hotel.source === 'agoda' ? '🌐 Partner Hotel' : '🏛️ Local Gem'}
+                                <Badge className={`${hotel.source === 'agoda' ? 'bg-blue-500' : 'bg-emerald-500'} text-white px-2 py-1 md:px-3 md:py-1 text-xs font-semibold shadow-lg backdrop-blur-sm border-0`}>
+                                  <span className="hidden sm:inline">{hotel.source === 'agoda' ? '🌐 Partner Hotel' : '🏛️ Local Gem'}</span>
+                                  <span className="sm:hidden">{hotel.source === 'agoda' ? '🌐' : '🏛️'}</span>
                                 </Badge>
                               )}
                             </div>
                           </div>
 
-                          {/* Content Section */}
-                          <CardContent className="p-6 flex-1 flex flex-col">
+                          {/* Content Section - Mobile Optimized */}
+                          <CardContent className="p-4 md:p-6 flex-1 flex flex-col">
                             {/* Hotel Name & Location */}
                             <div className="flex-1">
-                              <h3 className="font-bold text-xl mb-2 text-gray-900 line-clamp-2 leading-tight">
+                              <h3 className="font-bold text-lg md:text-xl mb-2 text-gray-900 line-clamp-2 leading-tight">
                                 {hotel.name}
                               </h3>
 
@@ -1048,46 +1099,46 @@ Please refresh the page and try again. If the problem persists, contact support.
                                 <div className="flex items-center gap-2 mb-3">
                                   <div className="flex">
                                     {[...Array(5)].map((_, i) => (
-                                      <Star key={i} className={`h-4 w-4 ${i < Math.floor(hotel.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
+                                      <Star key={i} className={`h-3 w-3 md:h-4 md:w-4 ${i < Math.floor(hotel.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
                                     ))}
                                   </div>
                                   <span className="text-sm font-semibold text-gray-700">{hotel.rating.toFixed(1)}</span>
-                                  <span className="text-xs text-gray-500">({Math.floor(Math.random() * 200) + 50} reviews)</span>
+                                  <span className="text-xs text-gray-500 hidden sm:inline">({Math.floor(Math.random() * 200) + 50} reviews)</span>
                                 </div>
                               )}
                               
-                              <div className="flex items-center gap-2 mb-4">
-                                <MapPin className="h-5 w-5 text-indigo-500 flex-shrink-0" />
-                                <span className="text-gray-600 font-medium">{hotel.location}</span>
+                              <div className="flex items-center gap-2 mb-3 md:mb-4">
+                                <MapPin className="h-4 w-4 md:h-5 md:w-5 text-indigo-500 flex-shrink-0" />
+                                <span className="text-sm md:text-base text-gray-600 font-medium truncate">{hotel.location}</span>
                               </div>
 
                               {/* Hotel Description if available */}
                               {hotel.description && (
-                                <p className="text-sm text-gray-600 mb-4 line-clamp-2 leading-relaxed">
+                                <p className="text-xs md:text-sm text-gray-600 mb-3 md:mb-4 line-clamp-2 leading-relaxed">
                                   {hotel.description}
                                 </p>
                               )}
 
-                              {/* Amenities Section */}
+                              {/* Amenities Section - Mobile Optimized */}
                               {hotel.amenities && hotel.amenities.length > 0 && (
-                                <div className="mb-4">
-                                  <h5 className="text-sm font-semibold text-gray-700 mb-2">Top Amenities:</h5>
-                                  <div className="flex flex-wrap gap-2">
-                                    {hotel.amenities.slice(0, 4).map((amenity, i) => (
+                                <div className="mb-3 md:mb-4">
+                                  <h5 className="text-xs md:text-sm font-semibold text-gray-700 mb-2">Top Amenities:</h5>
+                                  <div className="flex flex-wrap gap-1 md:gap-2">
+                                    {hotel.amenities.slice(0, 3).map((amenity, i) => (
                                       <Badge key={i} 
                                              variant="secondary" 
-                                             className="text-xs px-3 py-1 transition-all duration-200 hover:scale-105 font-medium border" 
+                                             className="text-xs px-2 py-1 font-medium border" 
                                              style={{ 
                                                backgroundColor: 'rgba(99, 102, 241, 0.1)', 
                                                color: '#4F46E5',
                                                borderColor: 'rgba(99, 102, 241, 0.2)'
                                              }}>
-                                        {amenity}
+                                        <span className="truncate max-w-[80px] md:max-w-none">{amenity}</span>
                                       </Badge>
                                     ))}
-                                    {hotel.amenities.length > 4 && (
+                                    {hotel.amenities.length > 3 && (
                                       <Badge variant="outline" className="text-xs px-2 py-1 text-gray-500">
-                                        +{hotel.amenities.length - 4} more
+                                        +{hotel.amenities.length - 3}
                                       </Badge>
                                     )}
                                   </div>
@@ -1095,18 +1146,18 @@ Please refresh the page and try again. If the problem persists, contact support.
                               )}
                             </div>
 
-                            {/* Footer Section */}
-                            <div className="border-t border-gray-100 pt-4 mt-4">
-                              <div className="flex items-center justify-between">
+                            {/* Footer Section - Mobile Optimized */}
+                            <div className="border-t border-gray-100 pt-3 md:pt-4 mt-3 md:mt-4">
+                              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-0">
                                 {/* Price Display */}
                                 <div className="flex flex-col">
-                                  <span className="text-2xl font-bold text-gray-900">€{hotel.price}</span>
-                                  <span className="text-sm text-gray-500">per night + taxes</span>
+                                  <span className="text-xl md:text-2xl font-bold text-gray-900">€{hotel.price}</span>
+                                  <span className="text-xs md:text-sm text-gray-500">per night + taxes</span>
                                 </div>
 
                                 {/* Action Button */}
                                 <Button 
-                                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 border-0"
+                                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 md:px-6 md:py-3 border-0 text-sm md:text-base w-full md:w-auto"
                                   onClick={() => hotel.bookingUrl && window.open(hotel.bookingUrl, '_blank')}
                                 >
                                   View & Book
@@ -1114,7 +1165,7 @@ Please refresh the page and try again. If the problem persists, contact support.
                               </div>
 
                               {/* Booking Source Info */}
-                              <div className="flex items-center justify-between mt-3 text-xs text-gray-500">
+                              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-1 md:gap-0 mt-2 md:mt-3 text-xs text-gray-500">
                                 <span>
                                   {hotel.source === 'agoda' ? 'Powered by Agoda' : 'Direct booking available'}
                                 </span>
@@ -1126,11 +1177,11 @@ Please refresh the page and try again. If the problem persists, contact support.
                       ))}
                     </div>
 
-                    {/* Results Footer */}
-                    <div className="mt-8 p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl border border-gray-200">
-                      <div className="flex items-center justify-between text-sm">
+                    {/* Results Footer - Mobile Optimized */}
+                    <div className="mt-6 md:mt-8 p-3 md:p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl border border-gray-200">
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-0 text-xs md:text-sm">
                         <span className="text-gray-600">
-                          💡 Prices shown are estimates. Final rates may vary based on dates and availability.
+                          💡 Prices shown are estimates. Final rates may vary.
                         </span>
                         <span className="text-indigo-600 font-medium">
                           Updated just now ⚡
@@ -1140,39 +1191,39 @@ Please refresh the page and try again. If the problem persists, contact support.
                   </div>
                 )}
 
-                {/* Travel Package Display */}
+                {/* Travel Package Display - Mobile Optimized */}
                 {message.travelPackage && (
-                  <div className="mt-8">
+                  <div className="mt-6 md:mt-8">
                     <TravelPackageDisplay travelPackage={message.travelPackage} />
                   </div>
                 )}
 
-                {/* Ferry Display */}
+                {/* Ferry Display - Mobile Optimized */}
                 {message.ferries && (
-                  <div className="mt-8">
+                  <div className="mt-6 md:mt-8">
                     <FerryDisplay ferryResult={message.ferries} />
                   </div>
                 )}
 
                 {message.suggestions && message.suggestions.length > 0 && (
-                  <Card className="mt-6 border overflow-hidden backdrop-blur-sm"
+                  <Card className="mt-4 md:mt-6 border overflow-hidden backdrop-blur-sm"
                         style={{
                           background: 'linear-gradient(145deg, rgba(227, 215, 195, 0.05) 0%, rgba(255, 255, 255, 0.8) 100%)',
                           borderColor: 'rgba(227, 215, 195, 0.3)'
                         }}>
-                    <CardContent className="p-5">
-                      <div className="flex items-center gap-2 mb-4">
+                    <CardContent className="p-4 md:p-5">
+                      <div className="flex items-center gap-2 mb-3 md:mb-4">
                         <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse"></div>
-                        <h5 className="text-sm font-semibold text-gray-700">Related Questions You Might Ask:</h5>
+                        <h5 className="text-xs md:text-sm font-semibold text-gray-700">Related Questions You Might Ask:</h5>
                       </div>
-                      <div className="flex flex-wrap gap-3">
+                      <div className="flex flex-wrap gap-2 md:gap-3">
                         {message.suggestions.map((suggestion, idx) => (
                           <Button
                             key={idx}
                             variant="outline"
                             size="sm"
                             onClick={() => handleSuggestionClick(suggestion)}
-                            className="text-sm border-2 font-medium transition-all duration-200 hover:scale-105 hover:shadow-md"
+                            className="text-xs md:text-sm border-2 font-medium transition-all duration-200 px-3 py-2"
                             style={{ 
                               backgroundColor: 'rgba(227, 215, 195, 0.1)',
                               borderColor: 'rgba(30, 46, 72, 0.2)',
@@ -1180,7 +1231,7 @@ Please refresh the page and try again. If the problem persists, contact support.
                               animationDelay: `${idx * 100}ms`
                             }}
                           >
-                            {suggestion}
+                            <span className="truncate max-w-[200px] md:max-w-none">{suggestion}</span>
                           </Button>
                         ))}
                       </div>
@@ -1194,7 +1245,8 @@ Please refresh the page and try again. If the problem persists, contact support.
         </div>
       </ScrollArea>
 
-             <div className="border-t backdrop-blur-lg p-6 md:p-8 lg:p-10 relative overflow-hidden" 
+      {/* Mobile-Optimized Input Section */}
+      <div className="border-t backdrop-blur-lg p-4 md:p-6 lg:p-8 xl:p-10 relative overflow-hidden" 
            style={{ 
              borderColor: 'rgba(227, 215, 195, 0.3)',
              background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(227, 215, 195, 0.05) 100%)',
@@ -1202,17 +1254,17 @@ Please refresh the page and try again. If the problem persists, contact support.
            }}>
         {/* Animated background elements */}
         <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-0 left-1/4 w-16 h-16 bg-blue-400 rounded-full blur-xl animate-pulse"></div>
-          <div className="absolute bottom-0 right-1/3 w-12 h-12 bg-purple-400 rounded-full blur-lg animate-pulse delay-500"></div>
+          <div className="absolute top-0 left-1/4 w-12 h-12 md:w-16 md:h-16 bg-blue-400 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute bottom-0 right-1/3 w-8 h-8 md:w-12 md:h-12 bg-purple-400 rounded-full blur-lg animate-pulse delay-500"></div>
         </div>
         
-        <form onSubmit={handleSubmit} className="flex gap-4 md:gap-6 relative z-10">
+        <form onSubmit={handleSubmit} className="flex gap-2 md:gap-4 lg:gap-6 relative z-10">
           <Input
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={isListening ? "🎤 Listening..." : "Ask about hotels, get recommendations, or plan your Sifnos adventure..."}
-            className="flex-1 rounded-full pl-6 pr-4 py-4 md:py-5 text-base md:text-lg border-2 transition-all duration-300 focus:scale-[1.02] backdrop-blur-sm"
+            placeholder={isListening ? "🎤 Listening..." : "Ask about hotels, get recommendations..."}
+            className="flex-1 rounded-full pl-4 pr-3 py-3 md:pl-6 md:pr-4 md:py-4 lg:py-5 text-sm md:text-base lg:text-lg border-2 transition-all duration-300 backdrop-blur-sm"
             style={{ 
               '--tw-ring-color': '#E3D7C3',
               borderColor: 'rgba(227, 215, 195, 0.4)',
@@ -1227,10 +1279,10 @@ Please refresh the page and try again. If the problem persists, contact support.
               type="button"
               onClick={isListening ? stopListening : startListening}
               disabled={isLoading}
-              className={`rounded-full w-14 h-14 md:w-16 md:h-16 p-0 flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg ${
+              className={`rounded-full w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 p-0 flex items-center justify-center transition-all duration-300 shadow-lg ${
                 isListening 
                   ? 'animate-pulse' 
-                  : 'hover:shadow-xl'
+                  : ''
               }`}
               style={{
                 background: isListening 
@@ -1242,9 +1294,9 @@ Please refresh the page and try again. If the problem persists, contact support.
               }}
             >
               {isListening ? (
-                <MicOff className="h-6 w-6 md:h-7 md:w-7 text-white" />
+                <MicOff className="h-5 w-5 md:h-6 md:w-6 lg:h-7 lg:w-7 text-white" />
               ) : (
-                <Mic className="h-6 w-6 md:h-7 md:w-7 text-white" />
+                <Mic className="h-5 w-5 md:h-6 md:w-6 lg:h-7 lg:w-7 text-white" />
               )}
             </Button>
           )}
@@ -1252,42 +1304,44 @@ Please refresh the page and try again. If the problem persists, contact support.
           <Button 
             type="submit" 
             disabled={isLoading || !input.trim() || isListening} 
-            className="text-white rounded-full w-14 h-14 md:w-16 md:h-16 p-0 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-xl disabled:opacity-50 shadow-lg"
+            className="text-white rounded-full w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 p-0 flex items-center justify-center transition-all duration-300 disabled:opacity-50 shadow-lg"
             style={{ 
               background: 'linear-gradient(135deg, #1E2E48 0%, #2a3c5a 100%)',
               boxShadow: '0 8px 32px rgba(30, 46, 72, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
             }}
           >
             {isLoading ? 
-              <Loader2 className="h-6 w-6 md:h-7 md:w-7 animate-spin" /> : 
-              <Send className="h-6 w-6 md:h-7 md:w-7" />
+              <Loader2 className="h-5 w-5 md:h-6 md:w-6 lg:h-7 lg:w-7 animate-spin" /> : 
+              <Send className="h-5 w-5 md:h-6 md:w-6 lg:h-7 lg:w-7" />
             }
           </Button>
         </form>
         
-        <div className="mt-4 text-center">
-          <div className="flex items-center justify-center gap-4 text-xs text-gray-600">
+        {/* Mobile-Optimized Footer Info */}
+        <div className="mt-3 md:mt-4 text-center">
+          <div className="grid grid-cols-2 md:flex md:items-center md:justify-center gap-2 md:gap-4 text-xs text-gray-600">
             {speechSupported && (
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 justify-center">
                 <span className="text-blue-500">🎤</span>
-                <span>Voice input available</span>
+                <span className="truncate">Voice input</span>
               </div>
             )}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 justify-center">
               <span className="text-green-500">🌤️</span>
-              <span>Weather-aware suggestions</span>
+              <span className="truncate">Weather-aware</span>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 justify-center">
               <span className="text-blue-500">🚢</span>
-              <span>Ferry schedules available</span>
+              <span className="truncate">Ferry schedules</span>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 justify-center">
               <span className="text-purple-500">🧠</span>
-              <span>AI-powered intelligence</span>
+              <span className="truncate">AI-powered</span>
             </div>
           </div>
-          <p className="text-xs text-gray-500 mt-2">
-            ✨ Try saying "Hotels for next weekend" or "Romantic spots with sunset views"
+          <p className="text-xs text-gray-500 mt-2 px-2">
+            <span className="hidden md:inline">✨ Try saying "Hotels for next weekend" or "Romantic spots with sunset views"</span>
+            <span className="md:hidden">✨ Try "Hotels for next weekend"</span>
           </p>
         </div>
       </div>

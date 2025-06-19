@@ -78,89 +78,90 @@ export function FerryDisplay({ ferryResult }: FerryDisplayProps): JSX.Element {
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-              {/* Company Logo & Info */}
-              <div className="md:col-span-3 flex items-center gap-3">
-                <div className="w-14 h-14 bg-white rounded-lg border shadow-sm flex items-center justify-center overflow-hidden">
-                  <img 
-                    src={ferry.logo} 
-                    alt={ferry.company}
-                    className="w-12 h-12 object-contain"
-                    onError={(e) => {
-                      e.currentTarget.src = '/uploads/ferries/seajets.png';
-                    }}
-                  />
-                </div>
-                <div>
-                  <div className="font-bold text-gray-800 text-sm">{ferry.company}</div>
-                  <div className="text-gray-600 text-xs">{ferry.vessel}</div>
-                </div>
-              </div>
+                         {/* Mobile-First Responsive Layout */}
+             <div className="space-y-4 md:space-y-0 md:grid md:grid-cols-12 md:gap-4 md:items-center">
+               {/* Company Logo & Info - Full width on mobile */}
+               <div className="md:col-span-3 flex items-center gap-3">
+                 <div className="w-12 h-12 md:w-14 md:h-14 bg-white rounded-lg border shadow-sm flex items-center justify-center overflow-hidden flex-shrink-0">
+                   <img 
+                     src={ferry.logo} 
+                     alt={ferry.company}
+                     className="w-10 h-10 md:w-12 md:h-12 object-contain"
+                     onError={(e) => {
+                       e.currentTarget.src = '/uploads/ferries/seajets.png';
+                     }}
+                   />
+                 </div>
+                 <div className="flex-1 min-w-0">
+                   <div className="font-bold text-gray-800 text-sm md:text-base truncate">{ferry.company}</div>
+                   <div className="text-gray-600 text-xs md:text-sm truncate">{ferry.vessel}</div>
+                 </div>
+               </div>
 
-              {/* Schedule */}
-              <div className="md:col-span-3 text-center">
-                <div className="flex items-center justify-center gap-2 mb-1">
-                  <Clock className="w-4 h-4 text-blue-600" />
-                  <span className="font-bold text-lg text-gray-800">{ferry.departure}</span>
-                  <span className="text-gray-400">→</span>
-                  <span className="font-bold text-lg text-gray-800">{ferry.arrival}</span>
-                </div>
-                <div className="text-sm text-gray-600">{ferry.duration}</div>
-              </div>
+               {/* Schedule - Horizontal layout on mobile */}
+               <div className="md:col-span-3">
+                 <div className="flex items-center justify-center gap-2 mb-1">
+                   <Clock className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                   <span className="font-bold text-base md:text-lg text-gray-800">{ferry.departure}</span>
+                   <span className="text-gray-400 mx-1">→</span>
+                   <span className="font-bold text-base md:text-lg text-gray-800">{ferry.arrival}</span>
+                 </div>
+                 <div className="text-sm text-gray-600 text-center">{ferry.duration}</div>
+               </div>
 
-              {/* Price */}
-              <div className="md:col-span-2 text-center">
-                <div className="flex items-center justify-center gap-1">
-                  <Euro className="w-4 h-4 text-green-600" />
-                  <div>
-                    {ferry.originalPrice && (
-                      <div className="text-sm text-gray-400 line-through">
-                        {ferry.currency}{ferry.originalPrice.toFixed(2)}
-                      </div>
-                    )}
-                    <div className="font-bold text-xl text-gray-800">
-                      {ferry.currency}{ferry.price.toFixed(2)}
-                    </div>
-                    {ferry.discount && (
-                      <div className="text-xs font-bold text-green-600">{ferry.discount}</div>
-                    )}
-                  </div>
-                </div>
-              </div>
+               {/* Price - Mobile optimized */}
+               <div className="md:col-span-2">
+                 <div className="flex items-center justify-center gap-1">
+                   <Euro className="w-4 h-4 text-green-600 flex-shrink-0" />
+                   <div>
+                     {ferry.originalPrice && (
+                       <div className="text-sm text-gray-400 line-through text-center">
+                         {ferry.currency}{ferry.originalPrice.toFixed(2)}
+                       </div>
+                     )}
+                     <div className="font-bold text-lg md:text-xl text-gray-800">
+                       {ferry.currency}{ferry.price.toFixed(2)}
+                     </div>
+                     {ferry.discount && (
+                       <div className="text-xs font-bold text-green-600 text-center">{ferry.discount}</div>
+                     )}
+                   </div>
+                 </div>
+               </div>
 
-              {/* Availability & Refund */}
-              <div className="md:col-span-2 text-center">
-                <div className={`flex items-center justify-center gap-1 mb-2 ${getAvailabilityColor(ferry.available)}`}>
-                  {ferry.available ? (
-                    <CheckCircle className="w-4 h-4" />
-                  ) : (
-                    <AlertCircle className="w-4 h-4" />
-                  )}
-                  <span className="text-sm font-medium">
-                    {ferry.available ? 'Available' : 'Not Available'}
-                  </span>
-                </div>
-                <div className={`text-xs px-2 py-1 rounded-full border ${getRefundableBadgeColor(ferry.refundable)}`}>
-                  {ferry.refundable}
-                </div>
-              </div>
+               {/* Mobile: Availability & Refund in single row */}
+               <div className="md:col-span-2 flex flex-col items-center space-y-2">
+                 <div className={`flex items-center gap-1 ${getAvailabilityColor(ferry.available)}`}>
+                   {ferry.available ? (
+                     <CheckCircle className="w-4 h-4 flex-shrink-0" />
+                   ) : (
+                     <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                   )}
+                   <span className="text-sm font-medium whitespace-nowrap">
+                     {ferry.available ? 'Available' : 'Not Available'}
+                   </span>
+                 </div>
+                 <div className={`text-xs px-2 py-1 rounded-full border text-center ${getRefundableBadgeColor(ferry.refundable)}`}>
+                   {ferry.refundable}
+                 </div>
+               </div>
 
-              {/* Book Button */}
-              <div className="md:col-span-2">
-                <button
-                  disabled={!ferry.available}
-                  className={`
-                    w-full px-4 py-2 rounded-lg font-medium transition-all duration-200
-                    ${ferry.available 
-                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 hover:scale-105 shadow-lg hover:shadow-xl' 
-                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    }
-                  `}
-                >
-                  {ferry.available ? 'Select Ferry' : 'Unavailable'}
-                </button>
-              </div>
-            </div>
+               {/* Book Button - Full width on mobile */}
+               <div className="md:col-span-2">
+                 <button
+                   disabled={!ferry.available}
+                   className={`
+                     w-full px-4 py-3 md:py-2 rounded-lg font-medium transition-all duration-200 text-sm md:text-base
+                     ${ferry.available 
+                       ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg' 
+                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                     }
+                   `}
+                 >
+                   {ferry.available ? 'Select Ferry' : 'Unavailable'}
+                 </button>
+               </div>
+             </div>
           </div>
         ))}
       </div>

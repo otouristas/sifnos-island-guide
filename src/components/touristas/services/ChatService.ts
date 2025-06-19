@@ -276,7 +276,7 @@ export const searchHotelsWithAvailability = async (
     console.log(`   🌐 Agoda hotels: ${agodaHotels.length}`);
     
     localHotels.forEach(hotel => {
-      console.log(`   🏨 Local: ${hotel.name} - Location: "${hotel.location}"`);
+      console.log(`   🏨 Local: ${hotel.name} - Location: "${hotel.location}" (from Supabase)`);
     });
     
     agodaHotels.forEach(hotel => {
