@@ -17,7 +17,7 @@ export interface HotelRecommendation {
   location: string;
   price: number;
   rating: number;
-  image_url: string; // Changed from 'image' to 'image_url'
+  image: string;
   amenities: string[];
   source: 'local' | 'agoda';
   description: string;
@@ -57,6 +57,6 @@ export interface MessageContext {
 export interface QuickPrompt {
   id: string;
   text: string;
-  category: 'location' | 'budget' | 'occasion' | 'amenity' | 'real_time' | 'local_content' | 'local_hotels' | 'hybrid' | 'general' | 'test';
+  category: 'location' | 'budget' | 'occasion' | 'amenity';
   keywords: string[];
 }

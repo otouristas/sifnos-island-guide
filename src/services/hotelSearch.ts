@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 
 export interface UnifiedHotel {
@@ -8,11 +9,6 @@ export interface UnifiedHotel {
   rating: number;
   price: number;
   source: 'local' | 'agoda';
-  
-  // Common required fields for both types
-  price_per_night: number;
-  amenities: string[];
-  image_url: string;
   
   // Local hotel fields
   hotel_types?: string[];
@@ -40,6 +36,7 @@ export interface UnifiedHotel {
   crossed_out_rate?: number;
   discount_percentage?: number;
   currency?: string;
+  image_url?: string;
   landing_url?: string;
   include_breakfast?: boolean;
   free_wifi?: boolean;
@@ -70,28 +67,6 @@ export interface Hotel {
   agoda_hotel_id?: number;
   source: 'local' | 'agoda';
   agoda_data?: any;
-  
-  // Additional fields for local hotels
-  hotel_types?: string[];
-  hotel_photos?: {
-    id: string;
-    photo_url: string;
-    is_main_photo?: boolean;
-  }[];
-  hotel_amenities?: {
-    amenity: string;
-  }[];
-  hotel_rooms?: {
-    id: string;
-    name: string;
-    price: number;
-    capacity: number;
-  }[];
-  
-  // Additional Agoda fields
-  daily_rate?: number;
-  currency?: string;
-  landing_url?: string;
 }
 
 export interface AgodaHotel {
@@ -155,10 +130,7 @@ const convertAgodaToHotel = (agodaHotel: AgodaHotel): Hotel => {
     review_count: agodaHotel.reviewCount,
     agoda_hotel_id: agodaHotel.hotelId,
     source: 'agoda',
-    agoda_data: agodaHotel,
-    daily_rate: agodaHotel.dailyRate,
-    currency: agodaHotel.currency,
-    landing_url: agodaHotel.landingURL
+    agoda_data: agodaHotel
   };
 };
 
@@ -245,7 +217,7 @@ const searchLocalHotels = async (params: SearchParams): Promise<Hotel[]> => {
         hotel_rooms(id, name, price, capacity),
         hotel_reviews(rating, comment, reviewer_name)
       `)
-      .eq('source', 'local');
+      .eq('is_active', true);
 
     if (params.location) {
       const normalizedLocation = params.location.toLowerCase();
@@ -279,7 +251,7 @@ const searchLocalHotels = async (params: SearchParams): Promise<Hotel[]> => {
         id: parseInt(hotel.id) || 0,
         name: hotel.name,
         location: hotel.location,
-        price_per_night: 0, // Local hotels don't show prices
+        price_per_night: 0, // Local hotels don't have standard pricing
         rating: reviewRating,
         image_url: imageUrl,
         amenities: amenities,

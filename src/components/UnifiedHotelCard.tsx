@@ -91,7 +91,7 @@ const UnifiedHotelCard = ({ hotel, onSelect }: UnifiedHotelCardProps) => {
     }
   };
 
-  const CardContentComponent = () => (
+  const CardContent = () => (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 group">
       <div className="relative">
         <img
@@ -297,14 +297,14 @@ const UnifiedHotelCard = ({ hotel, onSelect }: UnifiedHotelCardProps) => {
         rel="noopener noreferrer"
         className="block hover:no-underline"
       >
-        <CardContentComponent />
+        <CardContent />
       </a>
     );
   }
 
   return (
     <Link to={hotelUrl} className="block hover:no-underline">
-      <CardContentComponent />
+      <CardContent />
     </Link>
   );
 };
