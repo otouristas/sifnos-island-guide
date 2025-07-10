@@ -51,6 +51,9 @@ import AgodaTestPage from './pages/AgodaTestPage';
 import AgodaDirectTestPage from './pages/AgodaDirectTestPage';
 import HotelMatchingTestPage from './pages/HotelMatchingTestPage';
 import EnhancedHotelsPage from './pages/EnhancedHotelsPage';
+import WhereToStaySifnosPage from './pages/WhereToStaySifnosPage';
+import BestBeachesSifnosPage from './pages/BestBeachesSifnosPage';
+import LuxuryHotelsSifnosPage from './pages/LuxuryHotelsSifnosPage';
 
 // Components
 import Navigation from "./components/Navigation";
@@ -70,7 +73,7 @@ const App = () => (
             'luxury hotels sifnos', 'beach hotels sifnos', 'boutique hotels cyclades',
             'where to stay in sifnos', 'best hotels sifnos greece'
           ]}
-          schemaType="Organization"
+          schemaType="WebPage"
           canonical="https://hotelssifnos.com"
           imageUrl="/uploads/sifnos-og-image.jpg"
         />
@@ -98,6 +101,10 @@ const App = () => (
               <Route path="/blog/:slug" element={<BlogPostPage />} />
               {/* Ferry tickets route */}
               <Route path="/ferry-tickets" element={<FerryTicketsPage />} />
+              {/* SEO-optimized content pages */}
+              <Route path="/where-to-stay-sifnos" element={<WhereToStaySifnosPage />} />
+              <Route path="/best-beaches-sifnos-guide" element={<BestBeachesSifnosPage />} />
+              <Route path="/luxury-hotels-sifnos" element={<LuxuryHotelsSifnosPage />} />
               {/* Touristas AI route */}
               <Route path="/touristas-ai" element={<TouristasAIPage />} />
               {/* User account routes */}

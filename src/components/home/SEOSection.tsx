@@ -28,6 +28,18 @@ export default function SEOSection() {
               Browse All Hotels
             </Link>
             <Link 
+              to="/where-to-stay-sifnos" 
+              className="px-6 py-3 border border-sifnos-turquoise text-sifnos-turquoise hover:bg-sifnos-turquoise hover:text-white rounded-md transition-colors"
+            >
+              Where to Stay Guide
+            </Link>
+            <Link 
+              to="/best-beaches-sifnos-guide" 
+              className="px-6 py-3 border border-orange-400 text-orange-600 hover:bg-orange-400 hover:text-white rounded-md transition-colors"
+            >
+              Best Beaches Guide
+            </Link>
+            <Link 
               to="/touristas-ai" 
               className="px-6 py-3 border border-sifnos-turquoise text-sifnos-turquoise hover:bg-sifnos-turquoise hover:text-white rounded-md transition-colors flex items-center gap-2"
             >
