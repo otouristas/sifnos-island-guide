@@ -172,7 +172,7 @@ const UnifiedHotelCard = ({ hotel, onSelect }: UnifiedHotelCardProps) => {
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-3">
+      <div className="space-y-3 p-6 pt-0">
         {/* Star rating and reviews */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -284,7 +284,7 @@ const UnifiedHotelCard = ({ hotel, onSelect }: UnifiedHotelCardProps) => {
             <span>ID: {hotel.id}</span>
           )}
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 

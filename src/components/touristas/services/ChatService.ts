@@ -132,8 +132,7 @@ export const getWebsiteContext = async (): Promise<string> => {
     // Get all hotels from database for AI context
     const { data: hotels, error } = await supabase
       .from('hotels')
-      .select('*')
-      .eq('is_active', true);
+      .select('id, name, location, description, rating, price');
 
     if (error) {
       console.error('Error fetching hotels for context:', error);
@@ -145,7 +144,9 @@ export const getWebsiteContext = async (): Promise<string> => {
     hotels?.forEach(hotel => {
       context += `**${hotel.name}**\n`;
       context += `- Location: ${hotel.location}\n`;
-      context += `- Price: €${hotel.price}/night\n`;
+      if (hotel.price) {
+        context += `- Price: €${hotel.price}/night\n`;
+      }
       context += `- Rating: ${hotel.rating}/5\n`;
       context += `- Description: ${hotel.description}\n`;
       
@@ -437,7 +438,7 @@ export const createTravelPackage = async (
  */
 export const callTouristasAI = async (
   messages: AIRequestMessage[], 
-  preferences?: Record<string, string>,
+  preferences?: Record<string, any>,
   previousConversations?: ConversationContext[]
 ): Promise<ReadableStream<Uint8Array> | null> => {
   try {
