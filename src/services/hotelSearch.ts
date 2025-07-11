@@ -77,6 +77,12 @@ export interface Hotel {
   currency?: string;
   landing_url?: string;
   hotel_rooms?: any[];
+  matchInfo?: {
+    confidence: number;
+    reasons: string[];
+    matchedWith?: string;
+    similarity?: number;
+  };
 }
 
 export interface AgodaHotel {
@@ -197,8 +203,7 @@ const searchLocalHotels = async (params: SearchParams): Promise<Hotel[]> => {
         hotel_photos(id, photo_url, is_main_photo),
         hotel_rooms(id, name, price, capacity),
         hotel_reviews(rating, comment, reviewer_name)
-      `)
-      .eq('is_active', true);
+      `);
 
     if (params.location) {
       const normalizedLocation = params.location.toLowerCase();

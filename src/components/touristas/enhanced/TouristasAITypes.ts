@@ -37,6 +37,7 @@ export interface TravelPackage {
 export interface AIMessage {
   id: string;
   type: 'user' | 'bot';
+  role?: 'user' | 'assistant';
   content: string;
   timestamp: Date;
   hotels?: HotelRecommendation[];
@@ -94,6 +95,13 @@ export interface MessageContext {
 export interface QuickPrompt {
   id: string;
   text: string;
-  category: 'location' | 'budget' | 'occasion' | 'amenity' | 'real_time' | 'local_content' | 'local_hotels' | 'hybrid' | 'general' | 'test';
+  category: 'location' | 'budget' | 'occasion' | 'amenity' | 'real_time' | 'local_content' | 'local_hotels' | 'hybrid' | 'general' | 'test' | 'weather_aware';
   keywords?: string[];
+}
+
+export interface Message {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
 }

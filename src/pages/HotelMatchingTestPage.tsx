@@ -10,12 +10,12 @@ import { Search, Check, X, TrendingUp, Star, MapPin, ExternalLink } from 'lucide
 import SEO from '@/components/SEO';
 
 interface LocalHotel {
-  id: number;
+  id: string;
   name: string;
   location: string;
-  price_per_night?: number;
+  price?: number;
   rating: number;
-  image_url: string;
+  image_url?: string;
   description?: string;
 }
 
@@ -143,8 +143,7 @@ export default function HotelMatchingTestPage() {
       console.log('🔍 Fetching local hotels from Supabase...');
       const { data, error } = await supabase
         .from('hotels')
-        .select('id, name, location, price_per_night, rating, image_url, description')
-        .eq('is_active', true)
+        .select('id, name, location, price, rating, description')
         .order('rating', { ascending: false });
 
       if (error) throw error;
@@ -276,8 +275,8 @@ export default function HotelMatchingTestPage() {
                   <Star size={14} fill="currentColor" />
                   <span className="ml-1 text-sm">{pair.local.rating}</span>
                 </div>
-                {pair.local.price_per_night && (
-                  <span className="text-sm font-medium">€{pair.local.price_per_night}/night</span>
+                {pair.local.price && (
+                  <span className="text-sm font-medium">€{pair.local.price}/night</span>
                 )}
               </div>
             </div>
@@ -340,8 +339,8 @@ export default function HotelMatchingTestPage() {
             </span>
           </div>
           <span>
-            {type === 'local' && 'price_per_night' in hotel && hotel.price_per_night 
-              ? `€${hotel.price_per_night}/night`
+            {type === 'local' && 'price' in hotel && hotel.price 
+              ? `€${hotel.price}/night`
               : type === 'agoda' && 'dailyRate' in hotel
               ? `${hotel.currency}${hotel.dailyRate}/night`
               : 'Price not available'

@@ -37,9 +37,10 @@ export default function EnhancedTouristasChat() {
     {
       id: 'welcome',
       type: 'bot',
+      role: 'assistant',
       content: 'Γεια σου! ✨ I\'m Touristas, your intelligent Sifnos travel companion! I combine authentic Greek island charm with modern AI to help you discover perfect accommodations AND ferry schedules. I understand natural dates like "next weekend", check real-time availability, consider current weather, and can create complete travel packages combining ferries + hotels. Ready to explore Sifnos together? 🚢',
       timestamp: new Date(),
-              suggestions: [
+      suggestions: [
         'Hotels available for next weekend',
         'Ferry schedules from Piraeus to Sifnos',
         'Complete travel packages for a weekend',
@@ -739,7 +740,7 @@ Please try again in a few moments or contact support if the issue persists.`
       }
 
       const reader = responseStream.getReader();
-      let fullResponse = await processStreamingResponse(reader, aiMessage.id, setMessages);
+      let fullResponse = await processStreamingResponse(reader, aiMessage.id, setMessages as any);
       
       const shouldShowHotels = fullResponse.includes('Here are the available hotels for your dates:') || 
                               fullResponse.includes('Here are hotel options that match your preferences:') ||
@@ -802,7 +803,7 @@ Please try again in a few moments or contact support if the issue persists.`
 **Debugging Information:**
 - Date parsing: ${JSON.stringify(parseNaturalDates(messageContent))}
 - Context extraction: Working
-- Hotel search: ${relevantHotels?.length || 0} results
+- Hotel search: 0 results
 
 Please refresh the page and try again. If the problem persists, contact support.`
               } 
