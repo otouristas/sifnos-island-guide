@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      ab_test_variants: {
+        Row: {
+          configuration: Json
+          created_at: string
+          id: string
+          is_active: boolean
+          test_name: string
+          traffic_percentage: number
+          updated_at: string
+          variant_name: string
+        }
+        Insert: {
+          configuration: Json
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          test_name: string
+          traffic_percentage?: number
+          updated_at?: string
+          variant_name: string
+        }
+        Update: {
+          configuration?: Json
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          test_name?: string
+          traffic_percentage?: number
+          updated_at?: string
+          variant_name?: string
+        }
+        Relationships: []
+      }
       agoda_hotels: {
         Row: {
           agoda_hotel_id: number
@@ -85,6 +118,166 @@ export type Database = {
           star_rating?: number | null
         }
         Relationships: []
+      }
+      booking_sessions: {
+        Row: {
+          check_in_date: string
+          check_out_date: string
+          created_at: string
+          expires_at: string
+          guests: number
+          hotel_id: string
+          id: string
+          room_id: string | null
+          session_id: string
+          status: string
+          updated_at: string
+          user_email: string | null
+          user_phone: string | null
+        }
+        Insert: {
+          check_in_date: string
+          check_out_date: string
+          created_at?: string
+          expires_at?: string
+          guests?: number
+          hotel_id: string
+          id?: string
+          room_id?: string | null
+          session_id: string
+          status?: string
+          updated_at?: string
+          user_email?: string | null
+          user_phone?: string | null
+        }
+        Update: {
+          check_in_date?: string
+          check_out_date?: string
+          created_at?: string
+          expires_at?: string
+          guests?: number
+          hotel_id?: string
+          id?: string
+          room_id?: string | null
+          session_id?: string
+          status?: string
+          updated_at?: string
+          user_email?: string | null
+          user_phone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_sessions_hotel_id_fkey"
+            columns: ["hotel_id"]
+            isOneToOne: false
+            referencedRelation: "hotels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_sessions_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_campaigns: {
+        Row: {
+          body_template: string
+          created_at: string
+          delay_hours: number | null
+          id: string
+          is_active: boolean
+          name: string
+          subject_template: string
+          trigger_event: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          body_template: string
+          created_at?: string
+          delay_hours?: number | null
+          id?: string
+          is_active?: boolean
+          name: string
+          subject_template: string
+          trigger_event: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          body_template?: string
+          created_at?: string
+          delay_hours?: number | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          subject_template?: string
+          trigger_event?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      email_sends: {
+        Row: {
+          booking_session_id: string | null
+          campaign_id: string
+          clicked_at: string | null
+          id: string
+          opened_at: string | null
+          recipient_email: string
+          sent_at: string
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          booking_session_id?: string | null
+          campaign_id: string
+          clicked_at?: string | null
+          id?: string
+          opened_at?: string | null
+          recipient_email: string
+          sent_at?: string
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          booking_session_id?: string | null
+          campaign_id?: string
+          clicked_at?: string | null
+          id?: string
+          opened_at?: string | null
+          recipient_email?: string
+          sent_at?: string
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_sends_booking_session_id_fkey"
+            columns: ["booking_session_id"]
+            isOneToOne: false
+            referencedRelation: "booking_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_sends_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "email_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_sends_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       ferry_schedules: {
         Row: {
@@ -556,6 +749,44 @@ export type Database = {
           },
         ]
       }
+      social_proof_events: {
+        Row: {
+          anonymous_user_id: string | null
+          created_at: string
+          event_type: string
+          hotel_id: string
+          id: string
+          user_country: string | null
+          user_location: string | null
+        }
+        Insert: {
+          anonymous_user_id?: string | null
+          created_at?: string
+          event_type: string
+          hotel_id: string
+          id?: string
+          user_country?: string | null
+          user_location?: string | null
+        }
+        Update: {
+          anonymous_user_id?: string | null
+          created_at?: string
+          event_type?: string
+          hotel_id?: string
+          id?: string
+          user_country?: string | null
+          user_location?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "social_proof_events_hotel_id_fkey"
+            columns: ["hotel_id"]
+            isOneToOne: false
+            referencedRelation: "hotels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_favorites: {
         Row: {
           created_at: string
@@ -592,6 +823,59 @@ export type Database = {
           },
         ]
       }
+      user_preferences: {
+        Row: {
+          created_at: string
+          currency: string | null
+          hotel_types: string[] | null
+          id: string
+          language: string | null
+          location_preferences: string[] | null
+          preferred_amenities: string[] | null
+          price_range_max: number | null
+          price_range_min: number | null
+          session_id: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          currency?: string | null
+          hotel_types?: string[] | null
+          id?: string
+          language?: string | null
+          location_preferences?: string[] | null
+          preferred_amenities?: string[] | null
+          price_range_max?: number | null
+          price_range_min?: number | null
+          session_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          currency?: string | null
+          hotel_types?: string[] | null
+          id?: string
+          language?: string | null
+          location_preferences?: string[] | null
+          preferred_amenities?: string[] | null
+          price_range_max?: number | null
+          price_range_min?: number | null
+          session_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_profiles: {
         Row: {
           avatar_url: string | null
@@ -616,6 +900,81 @@ export type Database = {
           id?: string
           last_name?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      user_test_assignments: {
+        Row: {
+          assigned_at: string
+          id: string
+          session_id: string | null
+          test_name: string
+          user_id: string | null
+          variant_name: string
+        }
+        Insert: {
+          assigned_at?: string
+          id?: string
+          session_id?: string | null
+          test_name: string
+          user_id?: string | null
+          variant_name: string
+        }
+        Update: {
+          assigned_at?: string
+          id?: string
+          session_id?: string | null
+          test_name?: string
+          user_id?: string | null
+          variant_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_test_assignments_test_name_variant_name_fkey"
+            columns: ["test_name", "variant_name"]
+            isOneToOne: false
+            referencedRelation: "ab_test_variants"
+            referencedColumns: ["test_name", "variant_name"]
+          },
+          {
+            foreignKeyName: "user_test_assignments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      weather_recommendations: {
+        Row: {
+          created_at: string
+          hotel_types: string[] | null
+          id: string
+          location: string
+          priority_score: number | null
+          recommendation_type: string
+          temperature_range: string | null
+          weather_condition: string
+        }
+        Insert: {
+          created_at?: string
+          hotel_types?: string[] | null
+          id?: string
+          location: string
+          priority_score?: number | null
+          recommendation_type: string
+          temperature_range?: string | null
+          weather_condition: string
+        }
+        Update: {
+          created_at?: string
+          hotel_types?: string[] | null
+          id?: string
+          location?: string
+          priority_score?: number | null
+          recommendation_type?: string
+          temperature_range?: string | null
+          weather_condition?: string
         }
         Relationships: []
       }

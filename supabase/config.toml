@@ -77,3 +77,21 @@ verify_jwt = false
 
 [functions.agoda-search]
 verify_jwt = false
+
+[functions.real-time-availability]
+verify_jwt = false
+
+[functions.booking-engine]
+verify_jwt = false
+
+[functions.weather-recommendations]
+verify_jwt = false
+
+[functions.email-automation]
+verify_jwt = false
+
+[functions.ab-testing]
+verify_jwt = false
+
+[functions.multilingual-ai]
+verify_jwt = false
