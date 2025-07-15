@@ -84,9 +84,18 @@ export default function SEO({
   // Enhanced canonical URL generation
   const getCanonicalUrl = () => {
     if (canonical) {
-      return canonical.startsWith('http') 
+      let url = canonical.startsWith('http') 
         ? canonical 
         : `https://hotelssifnos.com${canonical.startsWith('/') ? canonical : `/${canonical}`}`;
+      
+      // Remove any trailing /index.html or /index
+      url = url.replace(/\/index\.html?$/, '');
+      // Ensure trailing slash consistency (remove for all except root)
+      if (url !== 'https://hotelssifnos.com') {
+        url = url.replace(/\/$/, '');
+      }
+      
+      return url;
     }
     return "https://hotelssifnos.com";
   };

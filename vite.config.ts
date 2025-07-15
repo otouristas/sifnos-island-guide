@@ -53,7 +53,7 @@ const prerender = (): Plugin => {
           await page.setViewport({ width: 1200, height: 800 });
           
           // We're building a static file, so we'll use file:// protocol
-          const htmlPath = path.join(outputDir, route === '/' ? 'index.html' : `${route.substring(1)}/index.html`);
+          const htmlPath = path.join(outputDir, route === '/' ? 'index.html' : `${route.substring(1)}.html`);
           
           // Check if HTML file exists
           if (!fs.existsSync(htmlPath)) {
