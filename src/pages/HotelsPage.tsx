@@ -827,56 +827,63 @@ export default function HotelsPage() {
             
             {/* Hotels Listing */}
             <div className="w-full lg:w-3/4 px-4">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="font-montserrat font-semibold text-xl">
-                  {loading ? "Loading hotels..." : `${filteredHotels.length} hotels found`}
-                  {agodaHotels.length > 0 && (
-                    <span className="text-sm text-gray-600 font-normal">
-                      ({hotels.length} local + {agodaHotels.length} Agoda)
-                    </span>
-                  )}
-                </h2>
-                <div className="flex items-center gap-4">
-                  {!agodaLoading && agodaHotels.length === 0 && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">
-                        Use booking search above for Agoda results
+              {/* Mobile-responsive header section */}
+              <div className="mb-6">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                  <h2 className="font-montserrat font-semibold text-xl">
+                    {loading ? "Loading hotels..." : `${filteredHotels.length} hotels found`}
+                    {agodaHotels.length > 0 && (
+                      <span className="text-sm text-gray-600 font-normal block sm:inline">
+                        ({hotels.length} local + {agodaHotels.length} Agoda)
                       </span>
-                      <Button
-                        onClick={() => {
-                          if (!bookingSearch.checkInDate || !bookingSearch.checkOutDate) {
-                            toast({
-                              title: "Select dates",
-                              description: "Please select check-in and check-out dates to search Agoda.",
-                              variant: "destructive"
-                            });
-                            return;
-                          }
-                          const checkInStr = format(bookingSearch.checkInDate, 'yyyy-MM-dd');
-                          const checkOutStr = format(bookingSearch.checkOutDate, 'yyyy-MM-dd');
-                          searchAgodaHotels(checkInStr, checkOutStr, bookingSearch.adults, bookingSearch.children);
-                        }}
-                        variant="outline"
-                        size="sm"
-                        className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
-                      >
-                        Search Agoda
-                      </Button>
+                    )}
+                  </h2>
+                  
+                  {/* Controls section - responsive layout */}
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+                    {!agodaLoading && agodaHotels.length === 0 && (
+                      <div className="flex flex-col xs:flex-row items-start xs:items-center gap-2 w-full sm:w-auto">
+                        <span className="text-sm text-gray-600 whitespace-nowrap">
+                          Search Agoda for more options
+                        </span>
+                        <Button
+                          onClick={() => {
+                            if (!bookingSearch.checkInDate || !bookingSearch.checkOutDate) {
+                              toast({
+                                title: "Select dates",
+                                description: "Please select check-in and check-out dates to search Agoda.",
+                                variant: "destructive"
+                              });
+                              return;
+                            }
+                            const checkInStr = format(bookingSearch.checkInDate, 'yyyy-MM-dd');
+                            const checkOutStr = format(bookingSearch.checkOutDate, 'yyyy-MM-dd');
+                            searchAgodaHotels(checkInStr, checkOutStr, bookingSearch.adults, bookingSearch.children);
+                          }}
+                          variant="outline"
+                          size="sm"
+                          className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100 shrink-0"
+                        >
+                          Search Agoda
+                        </Button>
+                      </div>
+                    )}
+                    
+                    {agodaLoading && (
+                      <div className="flex items-center text-sm text-gray-600">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500 mr-2"></div>
+                        Searching Agoda...
+                      </div>
+                    )}
+                    
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm whitespace-nowrap">Sort by:</span>
+                      <select className="border rounded-md p-2 text-sm bg-white min-w-0 flex-1 sm:flex-initial">
+                        <option>Recommended</option>
+                        <option>Rating (high to low)</option>
+                        <option>A-Z</option>
+                      </select>
                     </div>
-                  )}
-                  {agodaLoading && (
-                    <div className="flex items-center text-sm text-gray-600">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500 mr-2"></div>
-                      Searching Agoda...
-                    </div>
-                  )}
-                  <div className="flex items-center">
-                    <span className="mr-2 text-sm">Sort by:</span>
-                    <select className="border rounded-md p-2 text-sm">
-                      <option>Recommended</option>
-                      <option>Rating (high to low)</option>
-                      <option>A-Z</option>
-                    </select>
                   </div>
                 </div>
               </div>
