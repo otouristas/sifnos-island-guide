@@ -1,3 +1,4 @@
+
 import { Helmet } from 'react-helmet';
 
 interface SEOProps {
@@ -11,7 +12,7 @@ interface SEOProps {
   dateModified?: string;
   author?: string;
   noIndex?: boolean;
-  pageType?: 'homepage' | 'hotels' | 'location' | 'hotel-detail' | 'about' | 'contact' | 'blog' | 'faq' | 'pricing' | 'general';
+  pageType?: 'homepage' | 'hotels' | 'location' | 'hotel-detail' | 'about' | 'contact' | 'blog' | 'faq' | 'pricing' | 'ferry-tickets' | 'travel-guide' | 'beaches' | 'general';
   locationData?: {
     name: string;
     hotelsCount?: number;
@@ -81,117 +82,150 @@ export default function SEO({
   const ogImage = getOptimizedImage();
   const currentYear = new Date().getFullYear();
   
-  // Enhanced canonical URL generation
+  // FIXED: Enhanced canonical URL generation - removes ALL index references
   const getCanonicalUrl = () => {
     if (canonical) {
       let url = canonical.startsWith('http') 
         ? canonical 
         : `https://hotelssifnos.com${canonical.startsWith('/') ? canonical : `/${canonical}`}`;
       
-      // Remove any trailing /index.html or /index
-      url = url.replace(/\/index\.html?$/, '');
+      // CRITICAL FIX: Remove ALL index references
+      url = url.replace(/\/index\.html?$/i, '');
+      url = url.replace(/\/index$/i, '');
+      url = url.replace(/index\.html?$/i, '');
+      url = url.replace(/index$/i, '');
+      
       // Ensure trailing slash consistency (remove for all except root)
-      if (url !== 'https://hotelssifnos.com') {
+      if (url !== 'https://hotelssifnos.com' && url !== 'https://hotelssifnos.com/') {
         url = url.replace(/\/$/, '');
+      }
+      
+      // Ensure root has trailing slash
+      if (url === 'https://hotelssifnos.com') {
+        url = 'https://hotelssifnos.com/';
       }
       
       return url;
     }
-    return "https://hotelssifnos.com";
+    return "https://hotelssifnos.com/";
   };
   
   const formattedCanonical = getCanonicalUrl();
   
-  // Super-optimized title generation for SEO & CRO
+  // ENHANCED: Super-optimized title generation for 2025 SEO
   const generateSuperOptimizedTitle = (): string => {
     switch (pageType) {
       case 'homepage':
-        return `Best Sifnos Hotels ${currentYear} - Luxury Beach Resorts & Boutique Stays | Book Direct & Save`;
+        return `Best Sifnos Hotels 2025 - Luxury Resorts & Villas | Instant Booking & Best Prices`;
         
       case 'hotels':
-        return `Sifnos Hotels ${currentYear} - Compare ${locationData?.hotelsCount || '25+'} Properties | Best Prices Guaranteed`;
+        return `Sifnos Hotels 2025 - Compare 25+ Premium Properties | Best Price Guarantee`;
         
       case 'location':
         if (locationData) {
           const locationTypeMap = {
-            'port': 'Port Hotels & Waterfront Stays',
-            'beach': 'Beachfront Hotels & Resorts', 
-            'village': 'Traditional Village Hotels',
-            'capital': 'Capital City Hotels & Boutique Stays'
+            'port': 'Waterfront Hotels & Port Access',
+            'beach': 'Beachfront Resorts & Sea View Hotels', 
+            'village': 'Traditional Village Hotels & Authentic Stays',
+            'capital': 'Central Hotels & Boutique Accommodations'
           };
-          return `${locationData.name} Hotels ${currentYear} - ${locationTypeMap[locationData.type]} | ${locationData.hotelsCount || '10+'} Properties`;
+          return `${locationData.name} Hotels 2025 - ${locationTypeMap[locationData.type]} | ${locationData.hotelsCount || '10+'} Verified Properties`;
         }
         return title;
         
       case 'hotel-detail':
         if (hotelData) {
-          const propertyType = hotelData.type === 'Villa' ? 'Luxury Villa' : 'Boutique Hotel';
-          return `${hotelData.name} - ${propertyType} in ${hotelData.location}, Sifnos | Book Direct ${currentYear}`;
+          const propertyType = hotelData.type === 'Villa' ? 'Luxury Villa' : 'Premium Hotel';
+          return `${hotelData.name} - ${propertyType} ${hotelData.location}, Sifnos | Book Direct 2025`;
         }
         return title;
         
+      case 'ferry-tickets':
+        return `Sifnos Ferry Tickets 2025 - Book Online | Hotels & Transport Package Deals`;
+        
+      case 'travel-guide':
+        return `Ultimate Sifnos Travel Guide 2025 - Best Hotels, Beaches & Local Secrets`;
+        
+      case 'beaches':
+        return `Best Sifnos Beaches 2025 - Complete Guide with Beachfront Hotels`;
+        
       case 'about':
-        return `About Hotels Sifnos - Your Trusted Sifnos Accommodation Experts Since 2020`;
+        return `About Hotels Sifnos - Your Trusted Island Accommodation Experts Since 2020`;
         
       case 'contact':
-        return `Contact Hotels Sifnos - 24/7 Support | Book Your Perfect Sifnos Stay Today`;
+        return `Contact Hotels Sifnos - 24/7 Expert Support | Premium Booking Service`;
         
       case 'faq':
-        return `Sifnos Hotels FAQ - Everything You Need to Know | Booking, Travel & Island Guide`;
+        return `Sifnos Hotels FAQ 2025 - Everything You Need to Know | Expert Answers`;
         
       case 'pricing':
-        return `List Your Sifnos Hotel ${currentYear} - Premium Marketing & Direct Bookings | Hotels Sifnos`;
+        return `List Your Sifnos Property 2025 - Premium Marketing & Direct Bookings Platform`;
+        
+      case 'blog':
+        return `Sifnos Travel Blog 2025 - Expert Guides, Hotel Reviews & Island Secrets`;
         
       default:
         return title.includes("Sifnos") ? 
-          `${title} | Hotels Sifnos` : 
-          `${title} - Sifnos ${currentYear} | Hotels Sifnos`;
+          `${title} | Hotels Sifnos 2025` : 
+          `${title} - Sifnos Island 2025 | Hotels Sifnos`;
     }
   };
 
-  // Super-optimized descriptions for conversion
+  // ENHANCED: Super-optimized descriptions for conversion & SEO
   const generateSuperOptimizedDescription = (): string => {
     switch (pageType) {
       case 'homepage':
-        return `Discover Sifnos' finest hotels & accommodations. Book luxury beachfront resorts, traditional villas & boutique stays with best price guarantee. Exclusive deals, verified reviews & instant confirmation. Your perfect Cycladic island escape starts here.`;
+        return `Discover Sifnos' finest hotels, luxury villas & boutique resorts. Instant booking, best price guarantee, verified reviews & 24/7 support. Your perfect Cycladic escape starts here - book now & save!`;
         
       case 'hotels':
-        return `Browse ${locationData?.hotelsCount || '25+'} carefully selected Sifnos hotels. Compare luxury resorts, family-friendly properties & romantic getaways. Real-time availability, best prices & instant booking. Find your ideal Sifnos accommodation today.`;
+        return `Browse 25+ handpicked Sifnos hotels & villas. Compare luxury resorts, family properties & romantic getaways with real-time availability, best prices & instant confirmation. Find your ideal accommodation today.`;
         
       case 'location':
         if (locationData) {
           const locationDescMap = {
-            'port': `Port area hotels with easy ferry access, waterfront dining & convenient transportation.`,
-            'beach': `Beachfront properties with private beach access, water sports & stunning sea views.`,
-            'village': `Authentic village accommodations with traditional architecture & local culture.`,
-            'capital': `Central location hotels with shopping, dining & historic attractions nearby.`
+            'port': `Waterfront hotels with ferry access, harbor views & convenient transportation links.`,
+            'beach': `Beachfront resorts with private beach access, water sports & stunning Aegean sea views.`,
+            'village': `Traditional village hotels with authentic Cycladic architecture & local cultural experiences.`,
+            'capital': `Central accommodations with shopping, dining & historic attractions within walking distance.`
           };
-          return `Book hotels in ${locationData.name}, Sifnos. ${locationDescMap[locationData.type]} Choose from ${locationData.hotelsCount || '10+'} verified properties with instant confirmation & best price guarantee.`;
+          return `Book premium hotels in ${locationData.name}, Sifnos. ${locationDescMap[locationData.type]} Choose from ${locationData.hotelsCount || '10+'} verified properties with instant booking & price guarantee.`;
         }
         return description;
         
       case 'hotel-detail':
         if (hotelData) {
           const amenitiesText = hotelData.amenities?.slice(0, 3).join(', ') || 'premium amenities';
-          return `Experience ${hotelData.name} in ${hotelData.location}, Sifnos. ${hotelData.rating ? `Rated ${hotelData.rating}/5 stars.` : ''} Featuring ${amenitiesText}. Book direct for best rates, free cancellation & exclusive perks.`;
+          return `Experience ${hotelData.name} in ${hotelData.location}, Sifnos. ${hotelData.rating ? `Rated ${hotelData.rating}/5 stars.` : ''} Featuring ${amenitiesText}. Book direct for exclusive rates & complimentary perks.`;
         }
         return description;
         
+      case 'ferry-tickets':
+        return `Book Sifnos ferry tickets online with best prices guaranteed. Complete travel packages with hotels, car rentals & exclusive island deals. Your seamless Sifnos journey starts here.`;
+        
+      case 'travel-guide':
+        return `Complete Sifnos travel guide with expert recommendations for hotels, beaches, restaurants & hidden gems. Insider tips for the perfect Greek island vacation with accommodation booking.`;
+        
+      case 'beaches':
+        return `Discover Sifnos' best beaches with our comprehensive guide. From family-friendly Platis Gialos to secluded Vathi, find beachfront hotels & perfect coastal accommodations.`;
+        
       case 'about':
-        return `Hotels Sifnos - Your trusted local experts for Sifnos accommodations since 2020. We personally vet every property, offer 24/7 support & guarantee the best experience. Discover why thousands choose us for their Sifnos getaway.`;
+        return `Hotels Sifnos - Your trusted local experts for premium accommodations since 2020. Personally vetted properties, 24/7 support & best price guarantee. Discover why thousands choose us.`;
         
       case 'contact':
-        return `Contact Hotels Sifnos for personalized assistance with your Sifnos accommodation. Our local experts provide 24/7 support, custom recommendations & exclusive booking benefits. Get in touch for your perfect island escape.`;
+        return `Contact Hotels Sifnos for personalized accommodation assistance. Local experts providing 24/7 support, custom recommendations & exclusive booking benefits. Your perfect stay awaits.`;
         
       case 'faq':
-        return `Get answers to all your Sifnos travel questions. Comprehensive guide covering hotel bookings, island transportation, best areas to stay, seasonal tips & travel requirements. Plan your perfect Sifnos vacation with expert advice.`;
+        return `Get expert answers to all Sifnos travel questions. Comprehensive guide covering hotel bookings, island transport, best areas, seasonal tips & travel requirements for your perfect vacation.`;
         
       case 'pricing':
-        return `List your Sifnos hotel with the island's leading accommodation platform. Reach thousands of travelers, increase direct bookings & maximize revenue. Premium marketing tools, dedicated support & competitive commission rates.`;
+        return `List your Sifnos property with the island's leading accommodation platform. Reach targeted travelers, increase direct bookings & maximize revenue with premium marketing tools.`;
+        
+      case 'blog':
+        return `Expert Sifnos travel insights, hotel reviews & island guides. Local recommendations for accommodations, dining, beaches & attractions from your trusted island experts.`;
         
       default:
         return description.length > 150 ? description : 
-          `${description} Discover the best of Sifnos with Hotels Sifnos - your trusted accommodation experts.`;
+          `${description} Expert recommendations for Sifnos accommodations with best prices & instant booking guarantee.`;
     }
   };
   
@@ -204,19 +238,22 @@ export default function SEO({
   const cacheBuster = `${timestamp}-${randomValue}`;
   
   // Override noIndex for important pages
-  const isImportantPage = ['homepage', 'hotels', 'location', 'hotel-detail'].includes(pageType);
+  const isImportantPage = ['homepage', 'hotels', 'location', 'hotel-detail', 'ferry-tickets', 'travel-guide', 'beaches'].includes(pageType);
   if (isImportantPage) {
     noIndex = false;
   }
 
-  // Enhanced keywords based on page type
+  // ENHANCED: Keywords based on page type with 2025 targeting
   const generateOptimizedKeywords = (): string[] => {
-    const baseKeywords = keywords.length > 0 ? keywords : ['sifnos hotels', 'greece accommodation', 'cyclades islands'];
+    const baseKeywords = keywords.length > 0 ? keywords : ['sifnos hotels 2025', 'greece accommodation', 'cyclades islands'];
     
     const pageSpecificKeywords = {
-      'homepage': ['best sifnos hotels', 'luxury sifnos resorts', 'book sifnos hotels', `sifnos accommodation ${currentYear}`],
-      'hotels': ['compare sifnos hotels', 'sifnos hotel deals', 'best rates sifnos', 'instant booking sifnos'],
-      'location': locationData ? [`${locationData.name.toLowerCase()} hotels`, `hotels in ${locationData.name.toLowerCase()}`, `${locationData.name.toLowerCase()} accommodation`] : [],
+      'homepage': ['best sifnos hotels 2025', 'luxury sifnos resorts', 'sifnos villas', 'book sifnos hotels', 'cyclades accommodation'],
+      'hotels': ['compare sifnos hotels', 'sifnos hotel deals 2025', 'best rates sifnos', 'instant booking sifnos', 'verified hotels sifnos'],
+      'ferry-tickets': ['sifnos ferry tickets', 'book ferry sifnos', 'sifnos transport', 'greece ferry booking', 'cyclades ferry'],
+      'travel-guide': ['sifnos travel guide 2025', 'sifnos vacation planning', 'best time visit sifnos', 'sifnos attractions'],
+      'beaches': ['best sifnos beaches', 'sifnos beach guide', 'beachfront hotels sifnos', 'sifnos swimming beaches'],
+      'location': locationData ? [`${locationData.name.toLowerCase()} hotels`, `hotels in ${locationData.name.toLowerCase()}`, `${locationData.name.toLowerCase()} accommodation 2025`] : [],
       'hotel-detail': hotelData ? [`${hotelData.name.toLowerCase()}`, `${hotelData.location.toLowerCase()} hotels`, 'book direct sifnos'] : []
     };
     
@@ -235,7 +272,7 @@ export default function SEO({
     "isPartOf": {
       "@type": "WebSite",
       "name": "Hotels Sifnos",
-      "url": "https://hotelssifnos.com",
+      "url": "https://hotelssifnos.com/",
       "potentialAction": {
         "@type": "SearchAction",
         "target": "https://hotelssifnos.com/hotels?search={search_term_string}",
@@ -332,7 +369,7 @@ export default function SEO({
       )}
       <meta name="googlebot" content={noIndex ? "noindex, nofollow" : "index, follow, max-snippet:-1, max-image-preview:large"} />
       
-      {/* Canonical URL */}
+      {/* FIXED: Canonical URL */}
       <link rel="canonical" href={formattedCanonical} />
       
       {/* Alternate Language Links */}
@@ -402,7 +439,7 @@ export default function SEO({
             "@type": "TravelAgency",
             "name": "Hotels Sifnos",
             "description": "Premier accommodation booking platform for Sifnos island, Greece",
-            "url": "https://hotelssifnos.com",
+            "url": "https://hotelssifnos.com/",
             "logo": "https://hotelssifnos.com/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png",
             "contactPoint": {
               "@type": "ContactPoint",

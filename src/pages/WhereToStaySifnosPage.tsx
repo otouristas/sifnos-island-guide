@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Star, Users, ArrowRight } from 'lucide-react';
+import { MapPin, Star, Users, ArrowRight, Award, Shield, Clock } from 'lucide-react';
 import SEO from '@/components/SEO';
 import { supabase } from '@/integrations/supabase/client';
 import { sifnosLocations } from '@/data/locations';
@@ -41,11 +42,13 @@ export default function WhereToStaySifnosPage() {
   return (
     <>
       <SEO 
-        title="Where to Stay in Sifnos 2025 - Best Areas & Hotel Guide | Hotels Sifnos"
-        description="Complete guide to the best areas to stay in Sifnos. From beachfront Platis Gialos to historic Kastro, find your perfect location with our expert recommendations and exclusive hotel deals."
+        title="Where to Stay in Sifnos 2025 - Complete Area Guide | Best Hotels & Locations"
+        description="Complete guide to the best areas to stay in Sifnos. From beachfront Platis Gialos to historic Kastro, find your perfect location with our expert recommendations, verified hotels & exclusive deals."
         keywords={[
-          'where to stay in sifnos', 'best areas sifnos', 'sifnos accommodation guide',
-          'best location sifnos hotels', 'sifnos travel guide', 'where to stay sifnos greece'
+          'where to stay in sifnos', 'best areas sifnos', 'sifnos accommodation guide 2025',
+          'best location sifnos hotels', 'sifnos travel guide', 'sifnos neighborhoods',
+          'apollonia vs kamares sifnos', 'platis gialos hotels', 'kastro sifnos accommodation',
+          'sifnos village guide', 'best sifnos locations', 'where to stay cyclades'
         ]}
         pageType="location"
         canonical="https://hotelssifnos.com/where-to-stay-sifnos"
@@ -53,65 +56,129 @@ export default function WhereToStaySifnosPage() {
       />
 
       <div className="container mx-auto px-4 py-8">
-        {/* Hero Section */}
+        {/* Enhanced Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-sifnos-deep-blue mb-6">
             Where to Stay in Sifnos: Complete Guide 2025
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Discover the best areas to stay in Sifnos with our comprehensive guide. 
-            From bustling port towns to secluded beach villages, find your perfect base for exploring this enchanting Cycladic island.
+          <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8">
+            Discover the perfect area for your Sifnos getaway with our comprehensive location guide. 
+            From bustling port towns to secluded beach villages, find your ideal base with verified hotels, 
+            expert insights, and exclusive booking deals.
           </p>
+          
+          {/* Trust Indicators */}
+          <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600 mb-8">
+            <div className="flex items-center">
+              <Shield className="text-green-500 mr-2" size={16} />
+              <span>25+ Verified Hotels</span>
+            </div>
+            <div className="flex items-center">
+              <Award className="text-yellow-500 mr-2" size={16} />
+              <span>Local Expert Curated</span>
+            </div>
+            <div className="flex items-center">
+              <Clock className="text-blue-500 mr-2" size={16} />
+              <span>24/7 Support</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Navigation */}
+        <div className="bg-sifnos-deep-blue rounded-2xl p-6 mb-12">
+          <h2 className="text-xl font-bold text-white mb-4 text-center">🗺️ Jump to Your Preferred Area</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            {topLocations.map((location) => (
+              <a 
+                key={location.slug}
+                href={`#${location.slug}`}
+                className="text-center p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors text-white text-sm"
+              >
+                <div className="font-medium">{location.name}</div>
+                <div className="text-xs opacity-75">{location.hotelsCount || '5+'} hotels</div>
+              </a>
+            ))}
+          </div>
         </div>
 
         {/* Best Areas Section */}
         <section className="mb-16">
           <h2 className="text-3xl font-bold text-sifnos-deep-blue mb-8 text-center">
-            🏖️ Best Areas to Stay in Sifnos
+            🏖️ Best Areas to Stay in Sifnos Island
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="space-y-12">
             {topLocations.map((location, index) => (
-              <Card key={location.slug} className="overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="relative h-48">
-                  <img 
-                    src={location.imageUrl} 
-                    alt={location.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-4 left-4 bg-white/90 px-3 py-1 rounded-full text-sm font-medium">
-                    #{index + 1} Choice
-                  </div>
-                </div>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-bold text-sifnos-deep-blue mb-2">{location.name}</h3>
-                  <p className="text-gray-600 mb-4 line-clamp-3">{location.shortDescription}</p>
-                  
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center text-sm text-gray-500">
-                      <MapPin size={16} className="mr-1" />
-                      <span>{location.hotelsCount || '5+'} hotels</span>
+              <div key={location.slug} id={location.slug} className="scroll-mt-8">
+                <Card className="overflow-hidden hover:shadow-xl transition-shadow">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+                    <div className="relative h-64 lg:h-auto">
+                      <img 
+                        src={location.imageUrl} 
+                        alt={`${location.name}, Sifnos`}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute top-4 left-4 bg-sifnos-turquoise text-white px-3 py-1 rounded-full text-sm font-medium">
+                        #{index + 1} Recommended
+                      </div>
+                      <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
+                        {location.hotelsCount || '5+'} Hotels Available
+                      </div>
                     </div>
-                    <div className="flex items-center text-sm text-gray-500">
-                      <Users size={16} className="mr-1" />
-                      <span>Family friendly</span>
-                    </div>
+                    <CardContent className="p-8">
+                      <h3 className="text-2xl font-bold text-sifnos-deep-blue mb-4">{location.name}</h3>
+                      <p className="text-gray-600 mb-6 leading-relaxed">{location.description || location.shortDescription}</p>
+                      
+                      <div className="space-y-3 mb-6">
+                        <div className="flex items-center text-sm">
+                          <MapPin size={16} className="mr-2 text-sifnos-turquoise" />
+                          <span className="font-medium mr-2">Best for:</span>
+                          <span className="text-gray-600">
+                            {location.name === 'Apollonia' && 'Nightlife, dining, central location'}
+                            {location.name === 'Kamares' && 'Ferry convenience, waterfront dining'}
+                            {location.name === 'Platis Gialos' && 'Families, beach lovers, water sports'}
+                            {location.name === 'Kastro' && 'Romance, history, stunning views'}
+                            {location.name === 'Vathi' && 'Peace, nature, secluded beaches'}
+                            {location.name === 'Faros' && 'Traditional fishing village charm'}
+                            {!['Apollonia', 'Kamares', 'Platis Gialos', 'Kastro', 'Vathi', 'Faros'].includes(location.name) && 'Authentic island experience'}
+                          </span>
+                        </div>
+                        <div className="flex items-center text-sm">
+                          <Users size={16} className="mr-2 text-sifnos-turquoise" />
+                          <span className="font-medium mr-2">Ideal travelers:</span>
+                          <span className="text-gray-600">
+                            {location.name === 'Apollonia' && 'First-time visitors, couples, solo travelers'}
+                            {location.name === 'Kamares' && 'Convenience seekers, short stays'}
+                            {location.name === 'Platis Gialos' && 'Families with children, beach enthusiasts'}
+                            {location.name === 'Kastro' && 'Romantic couples, history buffs'}
+                            {location.name === 'Vathi' && 'Nature lovers, peaceful retreats'}
+                            {location.name === 'Faros' && 'Authentic experience seekers'}
+                            {!['Apollonia', 'Kamares', 'Platis Gialos', 'Kastro', 'Vathi', 'Faros'].includes(location.name) && 'Adventure travelers, culture enthusiasts'}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <Link 
+                          to={`/locations/${location.slug}`}
+                          className="flex-1 inline-flex items-center justify-center px-4 py-2 bg-sifnos-turquoise text-white rounded-lg hover:bg-sifnos-deep-blue transition-colors font-medium"
+                        >
+                          View Hotels in {location.name} <ArrowRight size={16} className="ml-2" />
+                        </Link>
+                        <button className="px-4 py-2 border-2 border-sifnos-turquoise text-sifnos-turquoise rounded-lg hover:bg-sifnos-turquoise hover:text-white transition-colors font-medium">
+                          Compare Prices
+                        </button>
+                      </div>
+                    </CardContent>
                   </div>
-                  
-                  <Link 
-                    to={`/locations/${location.slug}`}
-                    className="inline-flex items-center text-sifnos-turquoise hover:text-sifnos-deep-blue font-medium"
-                  >
-                    View Hotels <ArrowRight size={16} className="ml-1" />
-                  </Link>
-                </CardContent>
-              </Card>
+                </Card>
+              </div>
             ))}
           </div>
         </section>
 
         {/* Quick Hotel Finder */}
-        <section className="mb-16 bg-gray-50 p-8 rounded-xl">
+        <section className="mb-16 bg-gray-50 p-8 rounded-2xl">
           <h2 className="text-3xl font-bold text-sifnos-deep-blue mb-8 text-center">
             💎 Top Rated Hotels by Area
           </h2>
@@ -133,8 +200,76 @@ export default function WhereToStaySifnosPage() {
               to="/hotels"
               className="inline-block px-8 py-3 bg-sifnos-turquoise text-white rounded-lg hover:bg-sifnos-deep-blue transition-colors font-medium"
             >
-              View All Hotels
+              View All Hotels & Compare Prices
             </Link>
+          </div>
+        </section>
+
+        {/* Detailed Comparison Table */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-sifnos-deep-blue mb-8 text-center">
+            📊 Sifnos Areas Comparison Guide
+          </h2>
+          
+          <div className="overflow-x-auto">
+            <table className="w-full bg-white rounded-xl shadow-sm overflow-hidden">
+              <thead className="bg-sifnos-deep-blue text-white">
+                <tr>
+                  <th className="px-6 py-4 text-left">Location</th>
+                  <th className="px-6 py-4 text-center">Beach Access</th>
+                  <th className="px-6 py-4 text-center">Nightlife</th>
+                  <th className="px-6 py-4 text-center">Family Friendly</th>
+                  <th className="px-6 py-4 text-center">Transport Links</th>
+                  <th className="px-6 py-4 text-center">Price Range</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                <tr className="hover:bg-gray-50">
+                  <td className="px-6 py-4">
+                    <div className="font-semibold text-sifnos-deep-blue">Apollonia</div>
+                    <div className="text-sm text-gray-600">Island Capital</div>
+                  </td>
+                  <td className="px-6 py-4 text-center">⭐⭐⭐</td>
+                  <td className="px-6 py-4 text-center">⭐⭐⭐⭐⭐</td>
+                  <td className="px-6 py-4 text-center">⭐⭐⭐⭐</td>
+                  <td className="px-6 py-4 text-center">⭐⭐⭐⭐⭐</td>
+                  <td className="px-6 py-4 text-center text-sm">€80-180</td>
+                </tr>
+                <tr className="hover:bg-gray-50">
+                  <td className="px-6 py-4">
+                    <div className="font-semibold text-sifnos-deep-blue">Kamares</div>
+                    <div className="text-sm text-gray-600">Main Port</div>
+                  </td>
+                  <td className="px-6 py-4 text-center">⭐⭐⭐⭐</td>
+                  <td className="px-6 py-4 text-center">⭐⭐⭐</td>
+                  <td className="px-6 py-4 text-center">⭐⭐⭐⭐</td>
+                  <td className="px-6 py-4 text-center">⭐⭐⭐⭐⭐</td>
+                  <td className="px-6 py-4 text-center text-sm">€70-150</td>
+                </tr>
+                <tr className="hover:bg-gray-50">
+                  <td className="px-6 py-4">
+                    <div className="font-semibold text-sifnos-deep-blue">Platis Gialos</div>
+                    <div className="text-sm text-gray-600">Best Beach</div>
+                  </td>
+                  <td className="px-6 py-4 text-center">⭐⭐⭐⭐⭐</td>
+                  <td className="px-6 py-4 text-center">⭐⭐</td>
+                  <td className="px-6 py-4 text-center">⭐⭐⭐⭐⭐</td>
+                  <td className="px-6 py-4 text-center">⭐⭐⭐</td>
+                  <td className="px-6 py-4 text-center text-sm">€90-200</td>
+                </tr>
+                <tr className="hover:bg-gray-50">
+                  <td className="px-6 py-4">
+                    <div className="font-semibold text-sifnos-deep-blue">Kastro</div>
+                    <div className="text-sm text-gray-600">Historic Village</div>
+                  </td>
+                  <td className="px-6 py-4 text-center">⭐⭐</td>
+                  <td className="px-6 py-4 text-center">⭐</td>
+                  <td className="px-6 py-4 text-center">⭐⭐</td>
+                  <td className="px-6 py-4 text-center">⭐⭐</td>
+                  <td className="px-6 py-4 text-center text-sm">€100-250</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </section>
 
@@ -147,77 +282,149 @@ export default function WhereToStaySifnosPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-6">
               <div className="border-l-4 border-sifnos-turquoise pl-6">
-                <h3 className="text-xl font-semibold mb-2">For First-Time Visitors</h3>
-                <p className="text-gray-600">
-                  Stay in <strong>Apollonia</strong> for easy access to restaurants and nightlife, 
-                  or <strong>Kamares</strong> for convenience and beachfront location.
+                <h3 className="text-xl font-semibold mb-2">🏖️ For Beach Lovers</h3>
+                <p className="text-gray-600 mb-3">
+                  <Link to="/locations/platis-gialos" className="text-sifnos-turquoise font-medium hover:underline">Platis Gialos</Link> offers the island's most popular beach with golden sand, 
+                  shallow waters perfect for families, and excellent beachfront hotels. The area has tavernas, 
+                  water sports, and a relaxed atmosphere.
                 </p>
+                <Link to="/hotel-types/beach-hotels" className="text-sm text-sifnos-turquoise hover:underline">
+                  View Beachfront Hotels →
+                </Link>
               </div>
               
               <div className="border-l-4 border-sifnos-turquoise pl-6">
-                <h3 className="text-xl font-semibold mb-2">For Beach Lovers</h3>
-                <p className="text-gray-600">
-                  <strong>Platis Gialos</strong> offers the best beach with shallow waters, 
-                  perfect for families and water sports enthusiasts.
+                <h3 className="text-xl font-semibold mb-2">🌃 For Nightlife & Dining</h3>
+                <p className="text-gray-600 mb-3">
+                  <Link to="/locations/apollonia" className="text-sifnos-turquoise font-medium hover:underline">Apollonia</Link>, the island's capital, is the epicenter of Sifnos nightlife. 
+                  The charming pedestrian streets come alive after sunset with bars, cafes, and restaurants 
+                  serving both traditional and modern cuisine.
                 </p>
+                <Link to="/hotel-types/boutique-hotels" className="text-sm text-sifnos-turquoise hover:underline">
+                  View Boutique Hotels →
+                </Link>
               </div>
               
               <div className="border-l-4 border-sifnos-turquoise pl-6">
-                <h3 className="text-xl font-semibold mb-2">For Romance & Luxury</h3>
-                <p className="text-gray-600">
-                  <strong>Vathi</strong> and <strong>Kastro</strong> provide intimate settings 
-                  with stunning views and peaceful surroundings.
+                <h3 className="text-xl font-semibold mb-2">💕 For Romance & Luxury</h3>
+                <p className="text-gray-600 mb-3">
+                  <Link to="/locations/kastro" className="text-sifnos-turquoise font-medium hover:underline">Kastro</Link> and <Link to="/locations/vathi" className="text-sifnos-turquoise font-medium hover:underline">Vathi</Link> provide intimate settings 
+                  with spectacular sunset views, medieval architecture, and peaceful surroundings. 
+                  Perfect for couples seeking romance and tranquility.
                 </p>
+                <Link to="/hotel-types/luxury-hotels" className="text-sm text-sifnos-turquoise hover:underline">
+                  View Luxury Hotels →
+                </Link>
               </div>
             </div>
             
             <div className="space-y-6">
               <div className="border-l-4 border-orange-400 pl-6">
-                <h3 className="text-xl font-semibold mb-2">Best Time to Book</h3>
-                <p className="text-gray-600">
-                  Book 2-3 months ahead for summer (June-August). 
-                  Spring and fall offer better rates and fewer crowds.
+                <h3 className="text-xl font-semibold mb-2">⏰ Booking Strategy</h3>
+                <p className="text-gray-600 mb-3">
+                  Book 2-3 months ahead for summer (June-August) to secure the best hotels and rates. 
+                  Spring (April-May) and fall (September-October) offer excellent weather with significantly 
+                  lower prices and fewer crowds.
                 </p>
+                <Link to="/hotels" className="text-sm text-orange-600 hover:underline">
+                  Check Current Availability →
+                </Link>
               </div>
               
               <div className="border-l-4 border-orange-400 pl-6">
-                <h3 className="text-xl font-semibold mb-2">Transportation Tips</h3>
-                <p className="text-gray-600">
-                  Rent a car or scooter for maximum flexibility. 
-                  Bus service connects major areas but can be limited.
+                <h3 className="text-xl font-semibold mb-2">🚗 Transportation Guide</h3>
+                <p className="text-gray-600 mb-3">
+                  Rent a car or scooter for maximum flexibility exploring the island. Regular bus service 
+                  connects major areas, but having your own transport opens up hidden beaches and 
+                  traditional villages off the beaten path.
                 </p>
+                <a href="https://cycladesrentacar.com" target="_blank" rel="noopener noreferrer" className="text-sm text-orange-600 hover:underline">
+                  Rent a Car in Sifnos →
+                </a>
               </div>
               
               <div className="border-l-4 border-orange-400 pl-6">
-                <h3 className="text-xl font-semibold mb-2">Budget Considerations</h3>
-                <p className="text-gray-600">
-                  Expect premium prices in Platis Gialos. 
-                  Better value found in Apollonia and smaller villages.
+                <h3 className="text-xl font-semibold mb-2">💰 Budget Considerations</h3>
+                <p className="text-gray-600 mb-3">
+                  Expect premium prices in popular beach areas like Platis Gialos. Better value can be 
+                  found in <Link to="/locations/apollonia" className="text-sifnos-turquoise font-medium hover:underline">Apollonia</Link> and smaller villages, 
+                  with easy access to beaches via bus or rental vehicle.
                 </p>
+                <Link to="/pricing" className="text-sm text-orange-600 hover:underline">
+                  Compare Hotel Prices →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Seasonal Guide */}
+        <section className="mb-16 bg-white rounded-2xl shadow-sm p-8">
+          <h2 className="text-3xl font-bold text-sifnos-deep-blue mb-8 text-center">
+            📅 Best Time to Stay in Each Area
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="text-center p-6 bg-blue-50 rounded-xl">
+              <div className="text-3xl mb-3">🌸</div>
+              <h3 className="font-semibold text-sifnos-deep-blue mb-2">Spring (Apr-May)</h3>
+              <p className="text-sm text-gray-600 mb-3">Perfect weather, wildflowers, fewer crowds</p>
+              <div className="text-xs text-gray-500">
+                Best areas: All locations, especially hiking areas
+              </div>
+            </div>
+            
+            <div className="text-center p-6 bg-yellow-50 rounded-xl">
+              <div className="text-3xl mb-3">☀️</div>
+              <h3 className="font-semibold text-sifnos-deep-blue mb-2">Summer (Jun-Aug)</h3>
+              <p className="text-sm text-gray-600 mb-3">Peak season, hot weather, full services</p>
+              <div className="text-xs text-gray-500">
+                Best areas: Beach locations, Apollonia nightlife
+              </div>
+            </div>
+            
+            <div className="text-center p-6 bg-orange-50 rounded-xl">
+              <div className="text-3xl mb-3">🍂</div>
+              <h3 className="font-semibold text-sifnos-deep-blue mb-2">Fall (Sep-Oct)</h3>
+              <p className="text-sm text-gray-600 mb-3">Warm sea, great weather, lower prices</p>
+              <div className="text-xs text-gray-500">
+                Best areas: Beach areas, romantic locations
+              </div>
+            </div>
+            
+            <div className="text-center p-6 bg-gray-50 rounded-xl">
+              <div className="text-3xl mb-3">❄️</div>
+              <h3 className="font-semibold text-sifnos-deep-blue mb-2">Winter (Nov-Mar)</h3>
+              <p className="text-sm text-gray-600 mb-3">Quiet period, authentic local life</p>
+              <div className="text-xs text-gray-500">
+                Best areas: Apollonia, traditional villages
               </div>
             </div>
           </div>
         </section>
 
         {/* CTA Section */}
-        <section className="text-center bg-sifnos-deep-blue text-white p-8 rounded-xl">
+        <section className="text-center bg-sifnos-deep-blue text-white p-8 rounded-2xl">
           <h2 className="text-3xl font-bold mb-4">Ready to Book Your Perfect Sifnos Stay?</h2>
           <p className="text-xl mb-6">
-            Get exclusive deals and instant confirmation on the best hotels in every area
+            Get exclusive deals, instant confirmation, and expert local support for your dream island getaway
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
               to="/hotels"
               className="px-8 py-3 bg-white text-sifnos-deep-blue rounded-lg hover:bg-gray-100 transition-colors font-medium"
             >
-              Browse All Hotels
+              Browse All Hotels & Prices
             </Link>
             <Link 
               to="/touristas-ai"
               className="px-8 py-3 border-2 border-white text-white rounded-lg hover:bg-white hover:text-sifnos-deep-blue transition-colors font-medium"
             >
-              Get AI Recommendations
+              Get Personalized Recommendations
             </Link>
+          </div>
+          <div className="mt-6 text-sm opacity-75">
+            ✅ Best Price Guarantee • ✅ 24/7 Expert Support • ✅ Instant Booking Confirmation
           </div>
         </section>
       </div>
