@@ -32,50 +32,26 @@ const handler = async (req: Request): Promise<Response> => {
     if (req.method === 'POST') {
       const bookingData: BookingRequest = await req.json();
       
-      // Validate required fields
-      if (!bookingData.hotelId || !bookingData.checkIn || !bookingData.checkOut) {
-        return new Response(JSON.stringify({ error: 'Missing required fields' }), {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
-      }
-
-      // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(bookingData.userEmail)) {
-        return new Response(JSON.stringify({ error: 'Invalid email format' }), {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
-      }
-
-      // Validate dates
-      const checkIn = new Date(bookingData.checkIn);
-      const checkOut = new Date(bookingData.checkOut);
-      if (checkOut <= checkIn) {
-        return new Response(JSON.stringify({ error: 'Check-out must be after check-in' }), {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+      // Get authenticated user ID if available
+      const authHeader = req.headers.get('Authorization');
+      let userId: string | null = null;
+      
+      if (authHeader) {
+        try {
+          const jwt = authHeader.replace('Bearer ', '');
+          const { data: { user }, error } = await supabase.auth.getUser(jwt);
+          if (user && !error) {
+            userId = user.id;
+          }
+        } catch (err) {
+          console.log('Auth token validation failed:', err);
+        }
       }
       
       // Generate session ID
       const sessionId = crypto.randomUUID();
-
-      // Get current user ID if authenticated
-      const authHeader = req.headers.get('Authorization');
-      let userId = null;
-      if (authHeader) {
-        try {
-          const token = authHeader.replace('Bearer ', '');
-          const { data: { user } } = await supabase.auth.getUser(token);
-          userId = user?.id;
-        } catch (error) {
-          console.error('Error getting user from token:', error);
-        }
-      }
       
-      // Create booking session with user_id
+      // Create booking session with user_id if authenticated
       const { data: session, error: sessionError } = await supabase
         .from('booking_sessions')
         .insert({
@@ -87,7 +63,7 @@ const handler = async (req: Request): Promise<Response> => {
           guests: bookingData.guests,
           user_email: bookingData.userEmail,
           user_phone: bookingData.userPhone,
-          user_id: userId,
+          user_id: userId, // Set user_id for authenticated users
           status: 'pending'
         })
         .select()

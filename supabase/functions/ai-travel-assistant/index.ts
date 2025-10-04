@@ -3,10 +3,6 @@ import { OpenAI } from "https://esm.sh/openai@4.19.0";
 
 const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY");
 
-if (!OPENROUTER_API_KEY) {
-  console.error("OPENROUTER_API_KEY is not set");
-}
-
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -18,6 +14,10 @@ serve(async (req) => {
   }
 
   try {
+    if (!OPENROUTER_API_KEY) {
+      throw new Error('OPENROUTER_API_KEY is not configured');
+    }
+
     const { 
       messages, 
       preferences = {}, 
