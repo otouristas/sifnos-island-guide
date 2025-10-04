@@ -10,7 +10,7 @@ import { MapPin, Star, Filter, Grid, List } from 'lucide-react';
 export default function HotelsPage() {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode<'grid' | 'list'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchParams] = useSearchParams();
   const [filteredHotels, setFilteredHotels] = useState([]);
 
