@@ -271,7 +271,7 @@ export default function FerryTicketsPage() {
             </Link>
           </div>
           
-          <div class="text-center">
+          <div className="text-center">
             <Link to="/where-to-stay-sifnos" className="inline-flex items-center px-6 py-3 bg-sifnos-turquoise text-white rounded-lg hover:bg-sifnos-deep-blue transition-colors font-medium mr-4">
               Complete Where to Stay Guide <ArrowRight size={16} className="ml-2" />
             </Link>

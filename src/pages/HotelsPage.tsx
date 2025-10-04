@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
 import HotelCard from '@/components/HotelCard';
-import HotelFilters from '@/components/HotelFilters';
 import { supabase } from '@/integrations/supabase/client';
 import { useSearchParams } from 'react-router-dom';
 import { MapPin, Star, Filter, Grid, List } from 'lucide-react';
@@ -146,13 +145,12 @@ export default function HotelsPage() {
           </div>
         </div>
 
-        {/* Filters and View Controls */}
+        {/* View Controls */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div className="flex items-center gap-4">
-            <HotelFilters 
-              hotels={hotels} 
-              onFilterChange={setFilteredHotels}
-            />
+            <span className="text-gray-600">
+              Showing {filteredHotels.length} {filteredHotels.length === 1 ? 'hotel' : 'hotels'}
+            </span>
           </div>
           
           <div className="flex items-center gap-2">
