@@ -1,7 +1,11 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { OpenAI } from "https://esm.sh/openai@4.19.0";
 
-const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY") || "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";
+const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY");
+
+if (!OPENROUTER_API_KEY) {
+  console.error("OPENROUTER_API_KEY is not set");
+}
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',

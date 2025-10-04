@@ -31,6 +31,15 @@ const handler = async (req: Request): Promise<Response> => {
 
     const { trigger, userEmail, bookingId, sessionId, userName, hotelName }: EmailTrigger = await req.json();
 
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(userEmail)) {
+      return new Response(JSON.stringify({ error: 'Invalid email format' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     // Get campaign for this trigger
     const { data: campaign, error: campaignError } = await supabase
       .from('email_campaigns')

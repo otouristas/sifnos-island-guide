@@ -23,12 +23,16 @@ serve(async (req) => {
   try {
     console.log('Contact email function called')
     
-    // Use the provided SMTP settings
-    const SMTP_HOSTNAME = 'hotelssifnos.com'
-    const SMTP_PORT = 465
-    const SMTP_USERNAME = 'hello@hotelssifnos.com'
-    const SMTP_PASSWORD = 'Gamiesai@@20'
-    const ADMIN_EMAIL = 'hello@hotelssifnos.com'
+    // Get SMTP credentials from environment
+    const SMTP_HOSTNAME = Deno.env.get('SMTP_HOSTNAME') || 'hotelssifnos.com';
+    const SMTP_PORT = parseInt(Deno.env.get('SMTP_PORT') || '465');
+    const SMTP_USERNAME = Deno.env.get('SMTP_USERNAME') || 'hello@hotelssifnos.com';
+    const SMTP_PASSWORD = Deno.env.get('SMTP_PASSWORD');
+    const ADMIN_EMAIL = Deno.env.get('ADMIN_EMAIL') || 'hello@hotelssifnos.com';
+
+    if (!SMTP_PASSWORD) {
+      throw new Error('SMTP_PASSWORD is not configured');
+    }
 
     const { name, email, subject, message } = await req.json() as ContactPayload
     
