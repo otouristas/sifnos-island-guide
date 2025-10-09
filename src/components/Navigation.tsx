@@ -1,251 +1,310 @@
 import { useState, useEffect, memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown } from 'lucide-react';
-import UserMenu from './auth/UserMenu'; // Import the UserMenu component
+import { Menu, X, ChevronDown, HelpCircle } from 'lucide-react';
+import AuthButton from '@/components/auth/AuthButton';
+import UserMenu from '@/components/auth/UserMenu';
+import { LanguageSelector } from '@/components/auth/LanguageSelector';
+import { useAuth } from '@/lib/auth';
+import { Button } from '@/components/ui/button';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 
 const mainNavItems = [
-  { name: 'Hotels', path: '/hotels' },
-  { 
-    name: 'Locations', 
+  { name: 'Home', path: '/' },
+  {
+    name: 'Hotels',
+    path: '/hotels',
+    children: [
+      { name: 'All Hotels', path: '/hotels' },
+      { name: 'Luxury Hotels', path: '/hotels/luxury' },
+      { name: 'Beach Hotels', path: '/hotels/beach' },
+      { name: 'Budget Hotels', path: '/hotels/budget' },
+    ],
+  },
+  {
+    name: 'Explore',
     path: '/locations',
-    dropdown: [
-      { name: 'All Locations', path: '/locations' },
-      { name: 'Kamares', path: '/locations/kamares' },
-      { name: 'Apollonia', path: '/locations/apollonia' },
-      { name: 'Artemonas', path: '/locations/artemonas' },
-      { name: 'Kastro', path: '/locations/kastro' },
-      { name: 'Plathys Gialos', path: '/locations/plathys-gialos' },
-      { name: 'Vathi', path: '/locations/vathi' },
-      { name: 'Faros', path: '/locations/faros' },
-    ]
+    children: [
+      { name: 'Locations', path: '/locations' },
+      { name: 'Beaches', path: '/beaches' },
+      { name: 'Travel Guide', path: '/travel-guide' },
+    ],
   },
   { name: 'Ferry Tickets', path: '/ferry-tickets' },
-  { name: 'Beaches', path: '/beaches' },
-  { name: 'Travel Guide', path: '/travel-guide' },
+  { name: 'Blog', path: '/blog' },
+  { name: 'Contact', path: '/contact' },
 ];
 
-// Define prop types for the DesktopNavItems component
 interface NavItemProps {
   location: ReturnType<typeof useLocation>;
   openDropdown: string | null;
   toggleDropdown: (name: string | null) => void;
 }
 
-// Memoize the desktop nav items to prevent unnecessary re-renders
 const DesktopNavItems = memo(({ location, openDropdown, toggleDropdown }: NavItemProps) => (
-  <div className="hidden md:block">
-    <div className="ml-10 flex items-center space-x-2">
-      {mainNavItems.map((item) => (
-        <div key={item.name} className="relative group">
-          {item.dropdown ? (
-            <div className="relative">
-              <button
-                onClick={() => toggleDropdown(item.name)}
-                className={`font-montserrat px-3 py-2 text-sm font-medium flex items-center transition-colors duration-200 hover:text-[#1E2E48] ${
-                  location.pathname.startsWith(item.path) 
-                  ? 'text-[#1E2E48] border-b-2 border-[#1E2E48]' 
-                  : 'text-gray-700'
+  <NavigationMenu className="hidden lg:flex">
+    <NavigationMenuList className="gap-1">
+      {mainNavItems.map((item) => {
+        const isActive = location.pathname === item.path || 
+          (item.children?.some(child => location.pathname === child.path));
+        
+        if (item.children) {
+          return (
+            <NavigationMenuItem key={item.name}>
+              <NavigationMenuTrigger 
+                className={`bg-transparent hover:bg-accent/50 transition-all duration-200 ${
+                  isActive ? 'text-accent font-semibold' : 'text-foreground'
                 }`}
               >
                 {item.name}
-                <ChevronDown size={14} className="ml-1" />
-              </button>
-              <div 
-                className={`absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 transition-all duration-200 ${
-                  openDropdown === item.name ? 'opacity-100 visible' : 'opacity-0 invisible'
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid w-[200px] gap-2 p-3 bg-popover/95 backdrop-blur-md border-border">
+                  {item.children.map((child) => (
+                    <li key={child.name}>
+                      <NavigationMenuLink asChild>
+                        <Link
+                          to={child.path}
+                          className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                        >
+                          <div className="text-sm font-medium leading-none">{child.name}</div>
+                        </Link>
+                      </NavigationMenuLink>
+                    </li>
+                  ))}
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          );
+        }
+
+        return (
+          <NavigationMenuItem key={item.name}>
+            <Link to={item.path}>
+              <Button
+                variant="ghost"
+                className={`transition-all duration-200 ${
+                  isActive ? 'text-accent font-semibold bg-accent/10' : 'text-foreground hover:bg-accent/50'
                 }`}
               >
-                {item.dropdown.map((dropdownItem) => (
-                  <Link
-                    key={dropdownItem.name}
-                    to={dropdownItem.path}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#1E2E48]"
-                    onClick={() => toggleDropdown(null)}
-                  >
-                    {dropdownItem.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <Link
-              to={item.path}
-              className={`font-montserrat px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[#1E2E48] ${
-                location.pathname === item.path 
-                ? 'text-[#1E2E48] border-b-2 border-[#1E2E48]' 
-                : 'text-gray-700'
-              }`}
-            >
-              {item.name}
+                {item.name}
+              </Button>
             </Link>
-          )}
-        </div>
-      ))}
+          </NavigationMenuItem>
+        );
+      })}
+    </NavigationMenuList>
+  </NavigationMenu>
+));
+
+DesktopNavItems.displayName = 'DesktopNavItems';
+
+interface MobileMenuProps extends NavItemProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+const MobileMenu = memo(({ isOpen, location, openDropdown, toggleDropdown, setIsOpen }: MobileMenuProps) => (
+  <div
+    className={`fixed inset-0 z-50 bg-background/95 backdrop-blur-lg transition-all duration-300 lg:hidden ${
+      isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+    }`}
+  >
+    <div className="container flex flex-col h-full py-6">
+      <div className="flex justify-between items-center mb-8">
+        <Link to="/" className="text-2xl font-bold text-primary" onClick={() => setIsOpen(false)}>
+          Hotels Sifnos
+        </Link>
+        <button
+          onClick={() => setIsOpen(false)}
+          className="p-2 hover:bg-accent/50 rounded-lg transition-colors"
+          aria-label="Close menu"
+        >
+          <X className="h-6 w-6" />
+        </button>
+      </div>
+
+      <nav className="flex-1 overflow-y-auto">
+        {mainNavItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          const hasChildren = item.children && item.children.length > 0;
+
+          return (
+            <div key={item.name} className="mb-2">
+              {hasChildren ? (
+                <>
+                  <button
+                    onClick={() => toggleDropdown(openDropdown === item.name ? null : item.name)}
+                    className={`w-full flex justify-between items-center p-4 rounded-lg transition-colors ${
+                      isActive ? 'bg-accent/20 text-accent font-semibold' : 'hover:bg-accent/10'
+                    }`}
+                  >
+                    <span className="text-lg">{item.name}</span>
+                    <ChevronDown
+                      className={`h-5 w-5 transition-transform ${
+                        openDropdown === item.name ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+                  {openDropdown === item.name && (
+                    <div className="mt-2 ml-4 space-y-1">
+                      {item.children.map((child) => (
+                        <Link
+                          key={child.name}
+                          to={child.path}
+                          onClick={() => setIsOpen(false)}
+                          className={`block p-3 rounded-lg transition-colors ${
+                            location.pathname === child.path
+                              ? 'bg-accent/20 text-accent font-medium'
+                              : 'hover:bg-accent/10'
+                          }`}
+                        >
+                          {child.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <Link
+                  to={item.path}
+                  onClick={() => setIsOpen(false)}
+                  className={`block p-4 rounded-lg text-lg transition-colors ${
+                    isActive ? 'bg-accent/20 text-accent font-semibold' : 'hover:bg-accent/10'
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              )}
+            </div>
+          );
+        })}
+      </nav>
+
+      <div className="pt-6 border-t border-border space-y-3">
+        <LanguageSelector />
+        <AuthButton />
+      </div>
     </div>
   </div>
 ));
 
-// Define prop types for the MobileMenu component
-interface MobileMenuProps extends NavItemProps {
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
+MobileMenu.displayName = 'MobileMenu';
 
-// Memoize the mobile menu to prevent unnecessary re-renders
-const MobileMenu = memo(({ isOpen, location, openDropdown, toggleDropdown, setIsOpen }: MobileMenuProps) => {
-  if (!isOpen) return null;
-  
-  return (
-    <div className="md:hidden bg-white shadow-lg animate-fade-in">
-      <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-        {mainNavItems.map((item) => (
-          <div key={item.name}>
-            {item.dropdown ? (
-              <>
-                <button
-                  onClick={() => toggleDropdown(item.name)}
-                  className={`w-full flex justify-between items-center px-3 py-2 rounded-md text-base font-medium ${
-                    location.pathname.startsWith(item.path)
-                    ? 'text-[#1E2E48] bg-[#E3D7C3]/10'
-                    : 'text-gray-700 hover:bg-[#E3D7C3]/10 hover:text-[#1E2E48]'
-                  }`}
-                >
-                  {item.name}
-                  <ChevronDown 
-                    size={16} 
-                    className={`transform transition-transform ${openDropdown === item.name ? 'rotate-180' : ''}`} 
-                  />
-                </button>
-                {openDropdown === item.name && (
-                  <div className="pl-4 space-y-1 mt-1">
-                    {item.dropdown.map((dropdownItem) => (
-                      <Link
-                        key={dropdownItem.name}
-                        to={dropdownItem.path}
-                        className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-[#E3D7C3]/10 hover:text-[#1E2E48]"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        {dropdownItem.name}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </>
-            ) : (
-              <Link
-                to={item.path}
-                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
-                  location.pathname === item.path
-                  ? 'text-[#1E2E48] bg-[#E3D7C3]/10'
-                  : 'text-gray-700 hover:bg-[#E3D7C3]/10 hover:text-[#1E2E48]'
-                }`}
-                onClick={() => setIsOpen(false)}
-              >
-                {item.name}
-              </Link>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-});
-
-export default function Navigation() {
+const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
-  const [isMounted, setIsMounted] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  // Prevent animating on initial render
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  // Prevent scroll when menu is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
-    
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, [isOpen]);
-  
-  // Use a passive scroll listener to improve performance
-  useEffect(() => {
-    const handleScroll = () => {
-      // Use requestAnimationFrame to optimize scroll performance
-      requestAnimationFrame(() => {
-        setIsScrolled(window.scrollY > 10);
-      });
-    };
-
-    // Add passive scrolling for better performance
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+  const { user } = useAuth();
 
   const toggleDropdown = (name: string | null) => {
     setOpenDropdown(openDropdown === name ? null : name);
   };
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <nav className={`bg-white shadow-md sticky top-0 z-50 transition-shadow ${
-      isScrolled ? 'shadow-lg' : 'shadow-md'
-    }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-3">
-            <Link to="/" className="flex items-center space-x-2">
-              <img 
-                src="/lovable-uploads/18f3243f-e98a-4341-8b0a-e7ea71ce61bf.png" 
-                alt="HotelsSifnos Logo" 
-                className="h-8 w-8"
-                loading="eager"
-              />
-              <span className="font-montserrat font-bold text-[#1E2E48] text-xl">
-                Hotels<span className="text-[#E3D7C3]">Sifnos</span>
-              </span>
+    <>
+      <header
+        className={`sticky top-0 z-40 w-full transition-all duration-300 ${
+          scrolled
+            ? 'bg-background/80 backdrop-blur-xl shadow-[var(--shadow-elegant)] border-b border-border/50'
+            : 'bg-background/95 backdrop-blur-md'
+        }`}
+      >
+        <div className="container mx-auto px-4">
+          <div className="flex h-20 items-center justify-between">
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-3 group">
+              <div className="relative">
+                <div className="absolute inset-0 bg-accent/20 blur-xl group-hover:bg-accent/30 transition-all duration-300 rounded-full"></div>
+                <span className="relative text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                  Hotels Sifnos
+                </span>
+              </div>
             </Link>
-          </div>
-          
-          {/* Desktop navigation */}
-          <DesktopNavItems 
-            location={location} 
-            openDropdown={openDropdown}
-            toggleDropdown={toggleDropdown}
-          />
-          
-          {/* User Menu - Add this */}
-          <div className="hidden md:flex items-center">
-            <UserMenu />
-          </div>
-          
-          {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
-            <UserMenu />
-            <button
-              type="button"
-              className="p-2 rounded-md text-[#1E2E48]"
-              onClick={() => setIsOpen(!isOpen)}
-              aria-label={isOpen ? "Close main menu" : "Open main menu"}
-            >
-              <span className="sr-only">{isOpen ? "Close main menu" : "Open main menu"}</span>
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+
+            {/* Desktop Navigation */}
+            <DesktopNavItems
+              location={location}
+              openDropdown={openDropdown}
+              toggleDropdown={toggleDropdown}
+            />
+
+            {/* Right Side Actions */}
+            <div className="flex items-center gap-3">
+              {/* Help Icon */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hidden lg:flex hover:bg-accent/50 transition-colors"
+                aria-label="Help"
+                asChild
+              >
+                <Link to="/contact">
+                  <HelpCircle className="h-5 w-5" />
+                </Link>
+              </Button>
+
+              {/* Language Selector - Desktop */}
+              <div className="hidden lg:block">
+                <LanguageSelector />
+              </div>
+
+              {/* Auth Buttons - Desktop */}
+              <div className="hidden lg:flex items-center gap-2">
+                {user ? (
+                  <UserMenu />
+                ) : (
+                  <AuthButton />
+                )}
+              </div>
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="lg:hidden p-2 hover:bg-accent/50 rounded-lg transition-colors"
+                aria-label="Toggle menu"
+              >
+                {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Mobile menu with conditional rendering and optimization */}
+      {/* Mobile Menu */}
       <MobileMenu
         isOpen={isOpen}
         location={location}
@@ -253,6 +312,8 @@ export default function Navigation() {
         toggleDropdown={toggleDropdown}
         setIsOpen={setIsOpen}
       />
-    </nav>
+    </>
   );
-}
+};
+
+export default Navigation;
