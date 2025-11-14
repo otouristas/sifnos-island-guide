@@ -50,7 +50,6 @@ import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import AgodaTestPage from './pages/AgodaTestPage';
 import AgodaDirectTestPage from './pages/AgodaDirectTestPage';
 import HotelMatchingTestPage from './pages/HotelMatchingTestPage';
-import EnhancedHotelsPage from './pages/EnhancedHotelsPage';
 import WhereToStaySifnosPage from './pages/WhereToStaySifnosPage';
 import BestBeachesSifnosPage from './pages/BestBeachesSifnosPage';
 import LuxuryHotelsSifnosPage from './pages/LuxuryHotelsSifnosPage';
@@ -115,7 +114,6 @@ const App = () => (
               <Route path="/agoda-test" element={<AgodaTestPage />} />
               <Route path="/agoda-direct-test" element={<AgodaDirectTestPage />} />
               <Route path="/hotel-matching-test" element={<HotelMatchingTestPage />} />
-              <Route path="/enhanced-hotels" element={<EnhancedHotelsPage />} />
               {/* Other routes */}
               <Route path="/beaches" element={<BeachesPage />} />
               <Route path="/travel-guide" element={<TravelGuidePage />} />
