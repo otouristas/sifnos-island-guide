@@ -1,8 +1,7 @@
-
-import { Navigate } from 'react-router-dom';
+import HomePage from './HomePage';
 
 const Index = () => {
-  return <Navigate to="/hotels" replace />;
+  return <HomePage />;
 };
 
 export default Index;
