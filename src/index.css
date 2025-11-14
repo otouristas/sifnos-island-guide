@@ -35,6 +35,12 @@
 
     --radius: 0.75rem;
 
+    /* Accent Light */
+    --accent-light: 48 85% 85%;
+    
+    /* Primary Accent */
+    --primary-accent: 200 30% 25%;
+
     /* Premium Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(210 50% 12%) 0%, hsl(200 30% 25%) 100%);
     --gradient-accent: linear-gradient(135deg, hsl(42 90% 55%) 0%, hsl(38 85% 48%) 100%);
@@ -42,8 +48,10 @@
 
     /* Shadows */
     --shadow-elegant: 0 10px 40px -10px hsl(210 50% 12% / 0.15);
+    --shadow-elegant-lg: 0 20px 60px -15px hsl(210 50% 12% / 0.25);
     --shadow-premium: 0 20px 60px -15px hsl(210 50% 12% / 0.25);
     --shadow-glow: 0 0 40px hsl(42 90% 55% / 0.2);
+    --shadow-glow-lg: 0 0 60px hsl(42 90% 55% / 0.3);
 
     /* Toast Colors */
     --toast-success-background: 142 76% 36%;

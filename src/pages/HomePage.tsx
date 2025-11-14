@@ -2,12 +2,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
-import TouristasAIBanner from '@/components/TouristasAIBanner';
 import SponsoredHotelCard from '@/components/SponsoredHotelCard';
 import SchemaGenerator from '@/components/SchemaGenerator';
 
 // Import our component sections
 import HeroSection from '@/components/home/HeroSection';
+import FeaturedTouristasAI from '@/components/home/FeaturedTouristasAI';
 import FeaturedHotelsSection from '@/components/home/FeaturedHotelsSection';
 import LocationsSection from '@/components/home/LocationsSection';
 import LocationsIntroSection from '@/components/home/LocationsIntroSection';
@@ -52,6 +52,9 @@ export default function HomePage() {
       
       {/* Hero Section with Enhanced Search */}
       <HeroSection />
+      
+      {/* Featured Touristas AI Section */}
+      <FeaturedTouristasAI />
 
       {/* Quick Links Bar - NEW for better internal linking */}
       <div className="bg-sifnos-deep-blue py-4">
@@ -118,13 +121,6 @@ export default function HomePage() {
       
       {/* Hotel Types Section */}
       <HotelTypesSection />
-      
-      {/* Touristas AI Banner CTA Section */}
-      <div className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <TouristasAIBanner />
-        </div>
-      </div>
       
       {/* Locations Introduction Text */}
       <LocationsIntroSection />

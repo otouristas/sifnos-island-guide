@@ -1,113 +1,87 @@
-
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search } from 'lucide-react';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { sifnosLocations } from '../../data/locations';
+import { Bot, Star, Shield, CheckCircle } from 'lucide-react';
 
 export default function HeroSection() {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState<string>('');
-  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
-
-  const toggleAmenity = (amenity: string) => {
-    setSelectedAmenities(prevAmenities =>
-      prevAmenities.includes(amenity) 
-        ? prevAmenities.filter(a => a !== amenity)
-        : [...prevAmenities, amenity]
-    );
-  };
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    const params = new URLSearchParams();
-    
-    if (searchQuery) params.append('search', searchQuery);
-    if (selectedLocation) params.append('location', selectedLocation);
-    if (selectedAmenities.length > 0) params.append('amenities', selectedAmenities.join(','));
-    
-    navigate(`/hotels?${params.toString()}`);
-  };
 
   return (
-    <div className="relative h-[70vh] flex items-center justify-center bg-sifnos-deep-blue overflow-hidden">
-      <img 
-        src="/uploads/homepage-hero.jpg" 
-        alt="Chrysopigi Monastery in Sifnos" 
-        className="absolute inset-0 w-full h-full object-cover opacity-60"
+    <div className="relative h-[80vh] flex items-center justify-center overflow-hidden">
+      {/* Background Image with Parallax Effect */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat transform scale-105"
+        style={{
+          backgroundImage: 'url(/uploads/homepage-hero.jpg)',
+        }}
       />
-      <div className="absolute inset-0 bg-black bg-opacity-40"></div>
       
-      <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-        <h1 className="font-montserrat text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-          Find Your Perfect Stay in Sifnos Island
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/60 via-primary/40 to-primary-accent/50" />
+      
+      {/* Content */}
+      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
+        <div className="mb-4 inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white text-sm animate-fade-in">
+          <span className="inline-block w-2 h-2 bg-accent rounded-full animate-pulse" />
+          🏝️ 25+ Handpicked Hotels in Sifnos
+        </div>
+        
+        <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 animate-fade-in-up leading-tight">
+          Find Your Perfect Stay in Paradise
         </h1>
-        <p className="text-xl md:text-2xl text-white mb-8">
-          Discover the best hotels, villas, and accommodations in the beautiful Cycladic island of Sifnos
+        
+        <p className="font-body text-xl md:text-2xl text-white/90 mb-10 max-w-3xl mx-auto animate-fade-in-up animation-delay-200">
+          Discover handpicked hotels, villas & resorts powered by AI-driven recommendations
         </p>
         
-        {/* Minimal Search Form */}
-        <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-md p-5 rounded-lg shadow-lg">
-          <form onSubmit={handleSearch} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Select 
-                value={selectedLocation} 
-                onValueChange={setSelectedLocation}
-              >
-                <SelectTrigger className="w-full bg-white/90 border-0">
-                  <SelectValue placeholder="Where in Sifnos?" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all-locations">Any location</SelectItem>
-                  {sifnosLocations.map((location) => (
-                    <SelectItem key={location.id} value={location.slug}>
-                      {location.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              
-              <div className="relative col-span-1 md:col-span-2">
-                <Input
-                  type="text"
-                  placeholder="Search hotels, amenities, or keywords..."
-                  className="pl-10 bg-white/90 border-0 w-full"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              </div>
-            </div>
-            
-            <div className="flex gap-2 flex-wrap justify-center md:justify-between items-center">
-              <div className="flex gap-2 flex-wrap">
-                {selectedAmenities.length > 0 && selectedAmenities.map(amenity => (
-                  <span key={amenity} className="bg-white/20 text-white text-xs px-3 py-1 rounded-full flex items-center">
-                    {amenity}
-                    <button 
-                      type="button" 
-                      onClick={() => toggleAmenity(amenity)} 
-                      className="ml-1 text-white hover:text-white/70"
-                    >
-                      ×
-                    </button>
-                  </span>
-                ))}
-              </div>
-              
-              <Button 
-                type="submit" 
-                className="bg-white hover:bg-white/90 text-sifnos-deep-blue"
-              >
-                <Search className="mr-2 h-4 w-4" />
-                Search Hotels
-              </Button>
-            </div>
-          </form>
+        {/* CTAs */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12 animate-fade-in-up animation-delay-400">
+          <Button
+            onClick={() => navigate('/touristas-ai')}
+            size="lg"
+            variant="premium"
+            className="text-lg px-8 py-6 h-auto shadow-glow hover:shadow-glow-lg transition-all duration-300 hover:scale-105"
+          >
+            <Bot className="mr-2 h-5 w-5" />
+            Try Touristas AI
+          </Button>
+          
+          <Button
+            onClick={() => navigate('/hotels')}
+            size="lg"
+            variant="outline"
+            className="text-lg px-8 py-6 h-auto border-2 border-white/80 text-white hover:bg-white hover:text-primary transition-all duration-300"
+          >
+            Browse Hotels
+          </Button>
+        </div>
+        
+        {/* Trust Badges */}
+        <div className="flex flex-wrap gap-6 justify-center items-center text-white/90 animate-fade-in-up animation-delay-600">
+          <div className="flex items-center gap-2">
+            <Star className="h-5 w-5 text-accent fill-accent" />
+            <span className="font-body text-sm">500+ Reviews</span>
+          </div>
+          
+          <div className="hidden sm:block w-px h-6 bg-white/30" />
+          
+          <div className="flex items-center gap-2">
+            <CheckCircle className="h-5 w-5 text-accent" />
+            <span className="font-body text-sm">Best Price Guarantee</span>
+          </div>
+          
+          <div className="hidden sm:block w-px h-6 bg-white/30" />
+          
+          <div className="flex items-center gap-2">
+            <Shield className="h-5 w-5 text-accent" />
+            <span className="font-body text-sm">Secure Booking</span>
+          </div>
+        </div>
+      </div>
+      
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+        <div className="w-6 h-10 border-2 border-white/50 rounded-full flex items-start justify-center p-2">
+          <div className="w-1 h-3 bg-white/50 rounded-full" />
         </div>
       </div>
     </div>
