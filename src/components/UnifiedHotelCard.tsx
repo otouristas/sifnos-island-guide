@@ -13,9 +13,10 @@ import { Button } from "@/components/ui/button";
 interface UnifiedHotelCardProps {
   hotel: Hotel;
   onSelect?: (hotel: Hotel) => void;
+  className?: string;
 }
 
-const UnifiedHotelCard = ({ hotel, onSelect }: UnifiedHotelCardProps) => {
+const UnifiedHotelCard = ({ hotel, onSelect, className }: UnifiedHotelCardProps) => {
   const isAgodaHotel = hotel.source === 'agoda';
   const isLocalHotel = hotel.source === 'local';
   
@@ -92,7 +93,7 @@ const UnifiedHotelCard = ({ hotel, onSelect }: UnifiedHotelCardProps) => {
   };
 
   const CardContent = () => (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 group">
+    <Card className={`overflow-hidden hover:shadow-lg transition-shadow duration-300 group ${className || ''}`}>
       <div className="relative">
         <img
           src={imageUrl}
