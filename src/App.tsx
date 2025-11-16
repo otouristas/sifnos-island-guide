@@ -6,9 +6,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SEO from "./components/SEO";
 import SitemapGenerator from "./components/SitemapGenerator";
 import CookieConsent from "./components/CookieConsent";
-import { TouristasAIMiniBubble } from "./components/touristas";
 import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "./lib/auth";
+import { TouristasProvider } from "./contexts/TouristasContext";
+import { TouristasChat } from "./components/TouristasChat";
+import { TouristasToggle } from "./components/TouristasToggle";
 
 // Pages
 import HomePage from "./pages/HomePage";
@@ -64,6 +66,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
+        <TouristasProvider>
         <SEO 
           title="Find Your Perfect Stay in Sifnos - Best Hotels & Accommodation"
           description="Discover Sifnos' premier hotel booking platform with exclusive deals, verified reviews, and local expertise. Compare accommodations across all island locations and find your perfect Greek island getaway with our best price guarantee."
@@ -138,8 +141,10 @@ const App = () => (
           </main>
           <Footer />
           <CookieConsent />
-          <TouristasAIMiniBubble />
+          <TouristasToggle />
+          <TouristasChat />
         </BrowserRouter>
+        </TouristasProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
