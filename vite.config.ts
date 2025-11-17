@@ -223,10 +223,13 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // Split vendor code into separate chunks
+          // DO NOT split React - keep it in the entry chunk
+          // This ensures React is always loaded before any components that use it
           if (id.includes('node_modules')) {
-            // Keep React, React-DOM, and React-Router in the main vendor chunk
-            // to ensure they're always available when contexts load
+            // Skip React completely - let it stay in the main entry
+            if (id.includes('react') || id.includes('react-dom')) {
+              return undefined; // Stay in entry chunk
+            }
             if (id.includes('@supabase')) {
               return 'supabase';
             }
@@ -237,15 +240,6 @@ export default defineConfig(({ mode }) => ({
               return 'icons';
             }
             return 'vendor';
-          }
-          // Keep contexts in the main bundle to ensure React is loaded first
-          if (id.includes('src/contexts/')) {
-            return 'contexts';
-          }
-          // Split pages into separate chunks
-          if (id.includes('src/pages/')) {
-            const page = id.split('src/pages/')[1].split('/')[0].replace('.tsx', '');
-            return `page-${page}`;
           }
         },
         entryFileNames: mode === 'production' ? 'assets/[name]-[hash].js' : 'assets/[name].js',
