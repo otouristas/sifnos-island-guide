@@ -83,60 +83,48 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Popular Locations */}
+          {/* Quick Links */}
           <div>
-            <h4 className="font-heading font-semibold mb-6 text-sifnos-beige text-lg">{t('footer.popularLocations')}</h4>
+            <h4 className="font-heading font-semibold mb-6 text-sifnos-beige text-lg">{t('footer.quickLinks')}</h4>
             <ul className="space-y-3 text-white/70 text-sm">
-              <li><Link to="/locations/apollonia" className="hover:text-white transition-colors">Apollonia</Link></li>
-              <li><Link to="/locations/kamares" className="hover:text-white transition-colors">Kamares</Link></li>
-              <li><Link to="/locations/platis-gialos" className="hover:text-white transition-colors">Platis Gialos</Link></li>
-              <li><Link to="/locations/kastro" className="hover:text-white transition-colors">Kastro</Link></li>
-              <li><Link to="/locations/vathi" className="hover:text-white transition-colors">Vathi</Link></li>
-              <li><Link to="/locations/faros" className="hover:text-white transition-colors">Faros</Link></li>
-            </ul>
-          </div>
-
-          {/* Hotel Types */}
-          <div>
-            <h4 className="font-heading font-semibold mb-6 text-sifnos-beige text-lg">{t('footer.hotelTypes')}</h4>
-            <ul className="space-y-3 text-white/70 text-sm">
-              <li><Link to="/hotels" className="hover:text-white transition-colors">{t('common.allHotels')}</Link></li>
-              <li><Link to="/hotel-types/luxury-hotels" className="hover:text-white transition-colors">{t('common.luxuryHotels')}</Link></li>
-              <li><Link to="/hotel-types/beach-hotels" className="hover:text-white transition-colors">{t('common.beachHotels')}</Link></li>
-              <li><Link to="/hotel-types/villas" className="hover:text-white transition-colors">{t('common.villas')}</Link></li>
-              <li><Link to="/hotel-types/boutique-hotels" className="hover:text-white transition-colors">Boutique Hotels</Link></li>
-              <li><Link to="/hotel-types/budget-hotels" className="hover:text-white transition-colors">{t('common.budgetHotels')}</Link></li>
-            </ul>
-          </div>
-
-          {/* Resources */}
-          <div>
-            <h4 className="font-heading font-semibold mb-6 text-sifnos-beige text-lg">{t('footer.resources')}</h4>
-            <ul className="space-y-3 text-white/70 text-sm">
-              <li><Link to="/travel-guide" className="hover:text-white transition-colors">{t('common.travelGuide')}</Link></li>
-              <li><Link to="/best-beaches-sifnos-guide" className="hover:text-white transition-colors">{t('common.beaches')} Guide</Link></li>
+              <li><Link to="/hotels" className="hover:text-white transition-colors">{t('common.hotels')}</Link></li>
+              <li><Link to="/locations" className="hover:text-white transition-colors">{t('common.locations')}</Link></li>
+              <li><Link to="/hotel-types" className="hover:text-white transition-colors">{t('common.hotelTypes')}</Link></li>
               <li><Link to="/ferry-tickets" className="hover:text-white transition-colors">{t('common.ferryTickets')}</Link></li>
               <li><Link to="/blog" className="hover:text-white transition-colors">{t('common.blog')}</Link></li>
+            </ul>
+          </div>
+
+          {/* For Hotel Owners */}
+          <div>
+            <h4 className="font-heading font-semibold mb-6 text-sifnos-beige text-lg">{t('footer.forHotelOwners')}</h4>
+            <ul className="space-y-3 text-white/70 text-sm">
+              <li><Link to="/hotel-owner-portal" className="hover:text-white transition-colors">Owner Portal</Link></li>
+              <li><Link to="/pricing" className="hover:text-white transition-colors">Pricing & Plans</Link></li>
+              <li><Link to="/list-your-hotel" className="hover:text-white transition-colors">List Your Hotel</Link></li>
+              <li><Link to="/owner-resources" className="hover:text-white transition-colors">Resources</Link></li>
+              <li><Link to="/owner-support" className="hover:text-white transition-colors">Support</Link></li>
+            </ul>
+          </div>
+
+          {/* For Guests */}
+          <div>
+            <h4 className="font-heading font-semibold mb-6 text-sifnos-beige text-lg">{t('footer.forGuests')}</h4>
+            <ul className="space-y-3 text-white/70 text-sm">
+              <li><Link to="/guest-guide" className="hover:text-white transition-colors">Guest Guide</Link></li>
+              <li><Link to="/how-it-works" className="hover:text-white transition-colors">How It Works</Link></li>
+              <li><Link to="/guest-support" className="hover:text-white transition-colors">Guest Support</Link></li>
+              <li><Link to="/booking-policies" className="hover:text-white transition-colors">Booking Policies</Link></li>
+              <li><Link to="/guest-experience" className="hover:text-white transition-colors">Guest Experience</Link></li>
+            </ul>
+            <h5 className="font-heading font-semibold mt-6 mb-3 text-sifnos-beige text-lg">{t('footer.resources')}</h5>
+            <ul className="space-y-2 text-white/70 text-sm">
+              <li><Link to="/travel-guide" className="hover:text-white transition-colors">{t('common.travelGuide')}</Link></li>
+              <li><Link to="/best-beaches-sifnos-guide" className="hover:text-white transition-colors">{t('common.beaches')} Guide</Link></li>
               <li><Link to="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
               <li><Link to="/contact" className="hover:text-white transition-colors">{t('common.contact')}</Link></li>
-            </ul>
-            <h5 className="font-heading font-semibold mt-6 mb-3 text-sifnos-beige">{t('footer.company')}</h5>
-            <ul className="space-y-2 text-white/70 text-sm">
-              <li><Link to="/about-us" className="hover:text-white transition-colors">{t('footer.aboutUs')}</Link></li>
-              <li><Link to="/pricing" className="hover:text-white transition-colors">{t('footer.listYourHotel')}</Link></li>
               <li><Link to="/privacy-policy" className="hover:text-white transition-colors">{t('footer.privacyPolicy')}</Link></li>
               <li><Link to="/terms-of-service" className="hover:text-white transition-colors">{t('footer.termsOfService')}</Link></li>
-            </ul>
-            <h5 className="font-heading font-semibold mt-6 mb-3 text-sifnos-beige">{t('footer.forHotelOwners')}</h5>
-            <ul className="space-y-2 text-white/70 text-sm">
-              <li><Link to="/pricing" className="hover:text-white transition-colors">{t('footer.listYourHotel')}</Link></li>
-              <li><Link to="/hotel-owner/signup" className="hover:text-white transition-colors">{t('footer.ownerPortal')}</Link></li>
-            </ul>
-            <h5 className="font-heading font-semibold mt-6 mb-3 text-sifnos-beige">{t('footer.forGuests')}</h5>
-            <ul className="space-y-2 text-white/70 text-sm">
-              <li><Link to="/guest-experience" className="hover:text-white transition-colors">Guest Experience</Link></li>
-              <li><Link to="/travel-guide" className="hover:text-white transition-colors">{t('footer.guestGuide')}</Link></li>
-              <li><Link to="/faq" className="hover:text-white transition-colors">{t('footer.howItWorks')}</Link></li>
             </ul>
           </div>
         </div>

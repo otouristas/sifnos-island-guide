@@ -71,6 +71,13 @@ const LuxuryHotelsSifnosPage = lazy(() => import('./pages/LuxuryHotelsSifnosPage
 const TravelPackagesPage = lazy(() => import('./pages/TravelPackagesPage'));
 const HotelSignUpPage = lazy(() => import('./pages/auth/HotelSignUpPage'));
 const GuestExperiencePage = lazy(() => import('./pages/GuestExperiencePage'));
+const HotelOwnerPortalPage = lazy(() => import('./pages/HotelOwnerPortalPage'));
+const OwnerResourcesPage = lazy(() => import('./pages/OwnerResourcesPage'));
+const OwnerSupportPage = lazy(() => import('./pages/OwnerSupportPage'));
+const HowItWorksPage = lazy(() => import('./pages/HowItWorksPage'));
+const GuestGuidePage = lazy(() => import('./pages/GuestGuidePage'));
+const GuestSupportPage = lazy(() => import('./pages/GuestSupportPage'));
+const BookingPoliciesPage = lazy(() => import('./pages/BookingPoliciesPage'));
 
 // Guest portal components
 const GuestShell = lazy(() => import("./components/guest/layout/GuestShell").then(m => ({ default: m.GuestShell })));
@@ -167,6 +174,19 @@ const App = () => {
                   <Route path="/luxury-hotels-sifnos" element={<LuxuryHotelsSifnosPage />} />
                   {/* Touristas AI route */}
                   <Route path="/touristas-ai" element={<TouristasAIPage />} />
+                  
+                  {/* Hotel Owner Pages */}
+                  <Route path="/hotel-owner-portal" element={<HotelOwnerPortalPage />} />
+                  <Route path="/list-your-hotel" element={<PricingPage />} />
+                  <Route path="/owner-resources" element={<OwnerResourcesPage />} />
+                  <Route path="/owner-support" element={<OwnerSupportPage />} />
+                  
+                  {/* Guest Pages */}
+                  <Route path="/guest-guide" element={<GuestGuidePage />} />
+                  <Route path="/how-it-works" element={<HowItWorksPage />} />
+                  <Route path="/guest-support" element={<GuestSupportPage />} />
+                  <Route path="/booking-policies" element={<BookingPoliciesPage />} />
+                  
                   {/* User account routes */}
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/favorites" element={<FavoritesPage />} />
