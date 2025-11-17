@@ -1,15 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
 
-// Import all translations statically
-import enTranslations from '../locales/en.json';
-import elTranslations from '../locales/el.json';
-import frTranslations from '../locales/fr.json';
-import itTranslations from '../locales/it.json';
-import deTranslations from '../locales/de.json';
-import svTranslations from '../locales/sv.json';
-import ruTranslations from '../locales/ru.json';
-import trTranslations from '../locales/tr.json';
-
 export type Language = 'en' | 'el' | 'fr' | 'it' | 'de' | 'sv' | 'ru' | 'tr';
 
 interface I18nContextType {
@@ -32,15 +22,17 @@ interface I18nProviderProps {
   children: ReactNode;
 }
 
-const translationsMap: Record<Language, Record<string, any>> = {
-  en: enTranslations,
-  el: elTranslations,
-  fr: frTranslations,
-  it: itTranslations,
-  de: deTranslations,
-  sv: svTranslations,
-  ru: ruTranslations,
-  tr: trTranslations,
+// Dynamic translation loader
+const loadTranslations = async (lang: Language): Promise<Record<string, any>> => {
+  try {
+    const translations = await import(`../locales/${lang}.json`);
+    return translations.default;
+  } catch (error) {
+    console.error(`Failed to load translations for ${lang}`, error);
+    // Fallback to English
+    const enTranslations = await import('../locales/en.json');
+    return enTranslations.default;
+  }
 };
 
 export const I18nProvider = ({ children }: I18nProviderProps) => {
@@ -52,6 +44,8 @@ export const I18nProvider = ({ children }: I18nProviderProps) => {
       : 'en';
   });
 
+  const [translations, setTranslations] = useState<Record<string, any>>({});
+
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem('language', lang);
@@ -60,14 +54,18 @@ export const I18nProvider = ({ children }: I18nProviderProps) => {
 
   useEffect(() => {
     document.documentElement.lang = language;
+    
+    // Load translations for the selected language
+    loadTranslations(language).then(setTranslations);
   }, [language]);
-
-  // Get translations directly from map
-  const translations = useMemo(() => translationsMap[language] || translationsMap.en, [language]);
 
   // Translation function with nested key support (e.g., "common.home")
   const t = useMemo(() => {
     return (key: string, params?: Record<string, string>): string => {
+      if (!translations || Object.keys(translations).length === 0) {
+        return key; // Return key if translations not loaded yet
+      }
+
       const keys = key.split('.');
       let value: any = translations;
       
@@ -75,16 +73,7 @@ export const I18nProvider = ({ children }: I18nProviderProps) => {
         if (value && typeof value === 'object' && k in value) {
           value = value[k];
         } else {
-          // Fallback to English if translation not found
-          value = translationsMap.en;
-          for (const fallbackKey of keys) {
-            if (value && typeof value === 'object' && fallbackKey in value) {
-              value = value[fallbackKey];
-            } else {
-              return key; // Return key if even English translation not found
-            }
-          }
-          break;
+          return key; // Return key if translation not found
         }
       }
       

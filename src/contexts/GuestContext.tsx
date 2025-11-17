@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -44,7 +44,7 @@ const GuestContext = createContext<GuestContextValue>({
 
 export const useGuestContext = () => useContext(GuestContext);
 
-export const GuestProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const GuestProvider = ({ children }: { children: ReactNode }) => {
   const { hotelSlug, guestToken } = useParams();
   const [value, setValue] = useState<GuestContextValue>({
     hotel: null,
