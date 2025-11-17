@@ -33,7 +33,9 @@ window.addEventListener('unhandledrejection', (event) => {
 });
 
 // Log when the error handlers are registered
-console.log('✅ Global error handlers registered');
+if (process.env.NODE_ENV === 'development') {
+  console.log('✅ Global error handlers registered');
+}
 
 // Generate a unique version identifier for this build
 const buildVersion = `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
