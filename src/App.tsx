@@ -1,6 +1,4 @@
-console.log('[APP.TSX] 🚀 Starting App.tsx module evaluation');
 import { Suspense, lazy, ReactNode } from "react";
-console.log('[APP.TSX] ✅ React hooks imported');
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,9 +10,7 @@ import CookieConsent from "./components/CookieConsent";
 import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "./lib/auth";
 import { TouristasProvider } from "./contexts/TouristasContext";
-console.log('[APP.TSX] 📦 About to import I18nProvider...');
 import { I18nProvider } from "./contexts/I18nContext";
-console.log('[APP.TSX] ✅ I18nProvider imported successfully');
 import TouristasChat from "./components/TouristasChat";
 import { TouristasToggle } from "./components/TouristasToggle";
 import { ErrorBoundary } from "./components/ErrorBoundary";
