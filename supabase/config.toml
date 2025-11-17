@@ -95,3 +95,12 @@ verify_jwt = false
 
 [functions.multilingual-ai]
 verify_jwt = false
+
+[functions.fetch-ferry-schedule]
+verify_jwt = false
+
+[functions.send-recovery-email]
+verify_jwt = false
+
+[functions.check-abandoned-bookings]
+verify_jwt = false

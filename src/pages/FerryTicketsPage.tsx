@@ -21,6 +21,8 @@ import {
   Compass
 } from 'lucide-react';
 
+import FerryScheduleWidget from '@/components/shared/FerryScheduleWidget';
+
 export default function FerryTicketsPage() {
   const [fromPort, setFromPort] = useState('');
   const [toPort, setToPort] = useState('sifnos');
@@ -155,6 +157,21 @@ export default function FerryTicketsPage() {
               target="_blank"
               rel="noopener noreferrer sponsored"
               className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-semibold text-lg shadow-lg"
+              onClick={() => {
+                // Track abandoned booking if user has filled form data
+                if (fromPort && toPort && departureDate) {
+                  import('@/utils/abandonedBookingTracker').then(({ abandonedBookingTracker }) => {
+                    abandonedBookingTracker.startTracking({
+                      bookingType: 'ferry',
+                      ferryRoute: `${fromPort} - ${toPort}`,
+                      checkInDate: departureDate,
+                      checkOutDate: returnDate || departureDate,
+                      guests: passengers,
+                      bookingData: { from: fromPort, to: toPort, date: departureDate, passengers }
+                    });
+                  });
+                }
+              }}
             >
               <Ticket className="h-5 w-5" />
               Search & Book Ferry Tickets
@@ -166,6 +183,11 @@ export default function FerryTicketsPage() {
               Powered by Ferryhopper - Greece's #1 ferry booking platform
             </p>
           </div>
+        </div>
+
+        {/* Real-Time Ferry Schedule Widget */}
+        <div className="mb-12">
+          <FerryScheduleWidget />
         </div>
 
         {/* Ferry Routes & Schedule */}

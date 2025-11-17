@@ -58,6 +58,7 @@ import HotelMatchingTestPage from './pages/HotelMatchingTestPage';
 import WhereToStaySifnosPage from './pages/WhereToStaySifnosPage';
 import BestBeachesSifnosPage from './pages/BestBeachesSifnosPage';
 import LuxuryHotelsSifnosPage from './pages/LuxuryHotelsSifnosPage';
+import TravelPackagesPage from './pages/TravelPackagesPage';
 
 // Components
 import Navigation from "./components/Navigation";
@@ -109,6 +110,8 @@ const App = () => (
               <Route path="/blog/:slug" element={<BlogPostPage />} />
               {/* Ferry tickets route */}
               <Route path="/ferry-tickets" element={<FerryTicketsPage />} />
+              {/* Travel packages route */}
+              <Route path="/packages" element={<TravelPackagesPage />} />
               {/* SEO-optimized content pages */}
               <Route path="/where-to-stay-sifnos" element={<WhereToStaySifnosPage />} />
               <Route path="/best-beaches-sifnos-guide" element={<BestBeachesSifnosPage />} />
