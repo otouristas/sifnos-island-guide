@@ -47,6 +47,87 @@ export type Database = {
         }
         Relationships: []
       }
+      abandoned_bookings: {
+        Row: {
+          booking_data: Json | null
+          booking_type: string
+          check_in_date: string | null
+          check_out_date: string | null
+          converted: boolean | null
+          converted_at: string | null
+          created_at: string | null
+          estimated_price: number | null
+          ferry_route: string | null
+          guests: number | null
+          hotel_id: string | null
+          id: string
+          package_id: string | null
+          recovery_email_sent: boolean | null
+          recovery_email_sent_at: string | null
+          session_id: string
+          updated_at: string | null
+          user_email: string | null
+          user_name: string | null
+        }
+        Insert: {
+          booking_data?: Json | null
+          booking_type: string
+          check_in_date?: string | null
+          check_out_date?: string | null
+          converted?: boolean | null
+          converted_at?: string | null
+          created_at?: string | null
+          estimated_price?: number | null
+          ferry_route?: string | null
+          guests?: number | null
+          hotel_id?: string | null
+          id?: string
+          package_id?: string | null
+          recovery_email_sent?: boolean | null
+          recovery_email_sent_at?: string | null
+          session_id: string
+          updated_at?: string | null
+          user_email?: string | null
+          user_name?: string | null
+        }
+        Update: {
+          booking_data?: Json | null
+          booking_type?: string
+          check_in_date?: string | null
+          check_out_date?: string | null
+          converted?: boolean | null
+          converted_at?: string | null
+          created_at?: string | null
+          estimated_price?: number | null
+          ferry_route?: string | null
+          guests?: number | null
+          hotel_id?: string | null
+          id?: string
+          package_id?: string | null
+          recovery_email_sent?: boolean | null
+          recovery_email_sent_at?: string | null
+          session_id?: string
+          updated_at?: string | null
+          user_email?: string | null
+          user_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "abandoned_bookings_hotel_id_fkey"
+            columns: ["hotel_id"]
+            isOneToOne: false
+            referencedRelation: "hotels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "abandoned_bookings_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "travel_packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agoda_hotels: {
         Row: {
           agoda_hotel_id: number
@@ -694,6 +775,68 @@ export type Database = {
         }
         Relationships: []
       }
+      package_bookings: {
+        Row: {
+          booking_status: string | null
+          check_in_date: string
+          check_out_date: string
+          created_at: string | null
+          ferry_departure_date: string
+          guest_email: string
+          guest_name: string
+          guest_phone: string | null
+          id: string
+          number_of_guests: number
+          package_id: string | null
+          special_requests: string | null
+          total_price: number
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          booking_status?: string | null
+          check_in_date: string
+          check_out_date: string
+          created_at?: string | null
+          ferry_departure_date: string
+          guest_email: string
+          guest_name: string
+          guest_phone?: string | null
+          id?: string
+          number_of_guests: number
+          package_id?: string | null
+          special_requests?: string | null
+          total_price: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          booking_status?: string | null
+          check_in_date?: string
+          check_out_date?: string
+          created_at?: string | null
+          ferry_departure_date?: string
+          guest_email?: string
+          guest_name?: string
+          guest_phone?: string | null
+          id?: string
+          number_of_guests?: number
+          package_id?: string | null
+          special_requests?: string | null
+          total_price?: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "package_bookings_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "travel_packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       room_availability: {
         Row: {
           created_at: string
@@ -819,6 +962,68 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "social_proof_events_hotel_id_fkey"
+            columns: ["hotel_id"]
+            isOneToOne: false
+            referencedRelation: "hotels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      travel_packages: {
+        Row: {
+          base_price: number
+          created_at: string | null
+          description: string | null
+          discount_percentage: number | null
+          ferry_route: string
+          final_price: number
+          hotel_id: string | null
+          id: string
+          included_amenities: string[] | null
+          is_active: boolean | null
+          max_guests: number | null
+          name: string
+          updated_at: string | null
+          valid_from: string
+          valid_until: string
+        }
+        Insert: {
+          base_price: number
+          created_at?: string | null
+          description?: string | null
+          discount_percentage?: number | null
+          ferry_route: string
+          final_price: number
+          hotel_id?: string | null
+          id?: string
+          included_amenities?: string[] | null
+          is_active?: boolean | null
+          max_guests?: number | null
+          name: string
+          updated_at?: string | null
+          valid_from: string
+          valid_until: string
+        }
+        Update: {
+          base_price?: number
+          created_at?: string | null
+          description?: string | null
+          discount_percentage?: number | null
+          ferry_route?: string
+          final_price?: number
+          hotel_id?: string | null
+          id?: string
+          included_amenities?: string[] | null
+          is_active?: boolean | null
+          max_guests?: number | null
+          name?: string
+          updated_at?: string | null
+          valid_from?: string
+          valid_until?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "travel_packages_hotel_id_fkey"
             columns: ["hotel_id"]
             isOneToOne: false
             referencedRelation: "hotels"
