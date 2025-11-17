@@ -209,33 +209,53 @@ export default defineConfig(({ mode }) => ({
   },
   // Optimization for better SEO and performance
   build: {
-    target: 'modules',
-    modulePreload: true,
-    minify: mode === 'production' ? 'terser' : false, // Only use terser in production
+    target: 'esnext',
+    modulePreload: {
+      polyfill: true
+    },
+    minify: mode === 'production' ? 'terser' : false,
     terserOptions: {
       compress: {
-        drop_console: mode === 'production', // Remove console logs in production
-        drop_debugger: true
+        drop_console: mode === 'production',
+        drop_debugger: true,
+        pure_funcs: mode === 'production' ? ['console.log', 'console.info'] : []
       }
     },
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-lib': ['@/components/ui/index'],
-          'supabase': ['@supabase/supabase-js'],
-          'touristas': ['@/components/touristas/index']
+        manualChunks(id) {
+          // Split vendor code into separate chunks
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+              return 'react-vendor';
+            }
+            if (id.includes('@supabase')) {
+              return 'supabase';
+            }
+            if (id.includes('@radix-ui')) {
+              return 'ui-components';
+            }
+            if (id.includes('lucide-react')) {
+              return 'icons';
+            }
+            return 'vendor';
+          }
+          // Split pages into separate chunks
+          if (id.includes('src/pages/')) {
+            const page = id.split('src/pages/')[1].split('/')[0].replace('.tsx', '');
+            return `page-${page}`;
+          }
         },
-        // Fixed file naming pattern by removing the [time] placeholder
         entryFileNames: mode === 'production' ? 'assets/[name]-[hash].js' : 'assets/[name].js',
         chunkFileNames: mode === 'production' ? 'assets/[name]-[hash].js' : 'assets/[name].js',
         assetFileNames: mode === 'production' ? 'assets/[name]-[hash].[ext]' : 'assets/[name].[ext]'
       }
     },
-    // Ensure assets are properly hashed for cache busting
     assetsDir: 'assets',
-    sourcemap: mode !== 'production', // Disable sourcemaps in production for performance
-    ssrManifest: true, // Generate SSR manifest
-    emptyOutDir: true, // Clean output directory before build
+    sourcemap: mode !== 'production',
+    ssrManifest: true,
+    emptyOutDir: true,
+    chunkSizeWarningLimit: 1000,
+    cssCodeSplit: true
   }
 }));

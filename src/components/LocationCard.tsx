@@ -1,7 +1,7 @@
-
 import { Link } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import OptimizedImage from './shared/OptimizedImage';
 
 interface LocationCardProps {
   name: string;
@@ -28,11 +28,11 @@ export default function LocationCard({
         className
       )}
     >
-      <div className="relative">
-        <img 
+      <div className="relative h-48">
+        <OptimizedImage
           src={imageUrl} 
           alt={`${name}, Sifnos`} 
-          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
         />
         <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-30 transition-all"></div>
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
