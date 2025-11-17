@@ -69,6 +69,8 @@ const WhereToStaySifnosPage = lazy(() => import('./pages/WhereToStaySifnosPage')
 const BestBeachesSifnosPage = lazy(() => import('./pages/BestBeachesSifnosPage'));
 const LuxuryHotelsSifnosPage = lazy(() => import('./pages/LuxuryHotelsSifnosPage'));
 const TravelPackagesPage = lazy(() => import('./pages/TravelPackagesPage'));
+const HotelSignUpPage = lazy(() => import('./pages/auth/HotelSignUpPage'));
+const GuestExperiencePage = lazy(() => import('./pages/GuestExperiencePage'));
 
 // Guest portal components
 const GuestShell = lazy(() => import("./components/guest/layout/GuestShell").then(m => ({ default: m.GuestShell })));
@@ -173,6 +175,8 @@ const App = () => {
                   <Route path="/signin" element={<SignInPage />} />
                   <Route path="/signup" element={<SignUpPage />} />
                   <Route path="/reset-password" element={<ResetPasswordPage />} />
+                  <Route path="/hotel-owner/signup" element={<HotelSignUpPage />} />
+                  <Route path="/guest-experience" element={<GuestExperiencePage />} />
                   <Route path="/agoda-test" element={<AgodaTestPage />} />
                   <Route path="/agoda-direct-test" element={<AgodaDirectTestPage />} />
                   <Route path="/hotel-matching-test" element={<HotelMatchingTestPage />} />
