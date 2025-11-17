@@ -65,6 +65,7 @@ const TravelPackagesPage = lazy(() => import('./pages/TravelPackagesPage'));
 // Guest portal components
 const GuestShell = lazy(() => import("./components/guest/layout/GuestShell").then(m => ({ default: m.GuestShell })));
 const GuestHome = lazy(() => import("./components/guest/GuestHome").then(m => ({ default: m.GuestHome })));
+const GuestGuide = lazy(() => import("./components/guest/GuestGuide").then(m => ({ default: m.GuestGuide })));
 
 const queryClient = new QueryClient();
 
@@ -121,7 +122,7 @@ const App = () => (
                   {/* Guest Portal Routes */}
                   <Route path="/h/:hotelSlug/g/:guestToken" element={<GuestShell />}>
                     <Route index element={<GuestHome />} />
-                    <Route path="guide" element={<div className="p-4 text-center text-muted-foreground">Guest Guide - Coming Soon</div>} />
+                    <Route path="guide" element={<GuestGuide />} />
                     <Route path="area" element={<div className="p-4 text-center text-muted-foreground">Area Guide - Coming Soon</div>} />
                     <Route path="requests" element={<div className="p-4 text-center text-muted-foreground">Requests - Coming Soon</div>} />
                     <Route path="settings" element={<div className="p-4 text-center text-muted-foreground">Settings - Coming Soon</div>} />
