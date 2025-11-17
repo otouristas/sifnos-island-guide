@@ -65,9 +65,9 @@ export default function HotelGallerySection({ hotel, onImageClick }: HotelGaller
     <>
       <section className="mb-16">
         <div className="page-container">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-            {/* Main Slider - Left Side */}
-            <div className="col-span-2 sm:col-span-3 md:col-span-3 lg:col-span-3 relative group">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-2">
+            {/* Main Slider - Left Side (60% on large screens) */}
+            <div className="lg:col-span-3 relative group">
               <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden rounded-lg bg-gray-100">
                 <img
                   src={currentImageUrl}

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { MapPin, Waves, Utensils, Camera, Mountain } from 'lucide-react';
+import { MapPin, Waves, Utensils, Camera, Hiking } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 

@@ -247,91 +247,77 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-4 md:space-y-6">
+        <div className="space-y-6">
           {reviews.map((review) => (
             <Card key={review.id} className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <CardContent className="p-4 md:p-6">
-                <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
-                  {/* Avatar - smaller on mobile */}
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-sifnos-turquoise to-sifnos-deep-blue overflow-hidden flex-shrink-0 flex items-center justify-center text-white font-semibold text-base sm:text-lg">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-4">
+                  {/* Avatar */}
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-sifnos-turquoise to-sifnos-deep-blue overflow-hidden flex-shrink-0 flex items-center justify-center text-white font-semibold text-lg">
                     {review.reviewer_name.charAt(0).toUpperCase()}
                   </div>
                   
-                  <div className="flex-1 w-full min-w-0">
-                    {/* Header - stack on mobile */}
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 sm:gap-2 mb-2 sm:mb-3">
-                      <div className="min-w-0">
-                        <h4 className="font-semibold text-base sm:text-lg text-sifnos-deep-blue truncate">
-                          {review.reviewer_name}
-                        </h4>
+                  <div className="flex-1">
+                    {/* Header */}
+                    <div className="flex flex-wrap justify-between items-start mb-3">
+                      <div>
+                        <h4 className="font-semibold text-lg text-sifnos-deep-blue">{review.reviewer_name}</h4>
                         {review.country && (
-                          <div className="flex items-center text-xs sm:text-sm text-gray-600 mt-1">
-                            <Flag size={12} className="mr-1 flex-shrink-0" />
-                            <span className="truncate">{review.country}</span>
+                          <div className="flex items-center text-sm text-gray-600 mt-1">
+                            <Flag size={14} className="mr-1" />
+                            {review.country}
                           </div>
                         )}
                       </div>
-                      <span className="text-xs sm:text-sm text-gray-500 whitespace-nowrap">
+                      <span className="text-sm text-gray-500">
                         {formatDate(review.date)}
                       </span>
                     </div>
                     
-                    {/* Rating - smaller on mobile */}
-                    <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                      <div className="flex gap-0.5">
+                    {/* Rating */}
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="flex">
                         {renderStarRating(review.rating)}
                       </div>
-                      <span className="text-xs sm:text-sm font-semibold text-gray-700">
-                        {Number(review.rating).toFixed(1)}
-                      </span>
+                      <span className="text-sm font-semibold text-gray-700">{Number(review.rating).toFixed(1)}</span>
                     </div>
                     
-                    {/* Comment - better line-height on mobile */}
-                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-3 sm:mb-4 break-words">
-                      {review.comment}
-                    </p>
+                    {/* Comment */}
+                    <p className="text-gray-700 leading-relaxed mb-4">{review.comment}</p>
                     
-                    {/* Actions - wrap on mobile */}
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-4 pt-2 sm:pt-3 border-t border-gray-100">
+                    {/* Actions */}
+                    <div className="flex items-center gap-4 pt-3 border-t border-gray-100">
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-xs sm:text-sm text-gray-600 hover:text-sifnos-turquoise h-8"
+                        className="text-gray-600 hover:text-sifnos-turquoise"
                       >
-                        <ThumbsUp className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                        <ThumbsUp className="h-4 w-4 mr-1" />
                         Helpful
                       </Button>
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-xs sm:text-sm text-gray-600 hover:text-sifnos-turquoise h-8"
+                        className="text-gray-600 hover:text-sifnos-turquoise"
                       >
-                        <ThumbsDown className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                        <ThumbsDown className="h-4 w-4 mr-1" />
                         Not Helpful
                       </Button>
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-xs sm:text-sm text-gray-600 hover:text-sifnos-turquoise h-8"
+                        className="text-gray-600 hover:text-sifnos-turquoise"
                       >
-                        <Reply className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                        <Reply className="h-4 w-4 mr-1" />
                         Reply
                       </Button>
-                      <div className="ml-auto text-xs text-gray-500 flex items-center flex-shrink-0">
+                      <div className="ml-auto text-xs text-gray-500 flex items-center">
                         <img 
                           src="/uploads/Booking.com.svg" 
                           alt="Booking.com" 
                           className="h-3 mr-1" 
                         />
-                        <span className="hidden sm:inline">via Booking.com</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                        via Booking.com
                       </div>
                     </div>
                   </div>
