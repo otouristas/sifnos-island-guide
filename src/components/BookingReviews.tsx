@@ -332,15 +332,8 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
             </Card>
           ))}
         </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
       )}
+      
       
       <div className="mt-6 text-center">
         <a 

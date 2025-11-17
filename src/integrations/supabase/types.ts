@@ -364,21 +364,27 @@ export type Database = {
           created_at: string
           hotel_id: string
           id: string
+          is_verified: boolean
           role: string
+          updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
           hotel_id: string
           id?: string
+          is_verified?: boolean
           role?: string
+          updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
           hotel_id?: string
           id?: string
+          is_verified?: boolean
           role?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: [
@@ -589,6 +595,7 @@ export type Database = {
           booking_platform: string | null
           booking_url: string | null
           created_at: string
+          created_by: string | null
           description: string
           email: string | null
           featured_end_date: string | null
@@ -603,6 +610,7 @@ export type Database = {
           location: string
           logo_path: string | null
           name: string
+          owner_user_id: string | null
           phone: string | null
           price: number
           rating: number
@@ -611,7 +619,9 @@ export type Database = {
           social_instagram: string | null
           social_twitter: string | null
           source: string | null
+          status: Database["public"]["Enums"]["hotel_status"]
           updated_at: string
+          updated_by: string | null
           website: string | null
         }
         Insert: {
@@ -619,6 +629,7 @@ export type Database = {
           booking_platform?: string | null
           booking_url?: string | null
           created_at?: string
+          created_by?: string | null
           description: string
           email?: string | null
           featured_end_date?: string | null
@@ -633,6 +644,7 @@ export type Database = {
           location: string
           logo_path?: string | null
           name: string
+          owner_user_id?: string | null
           phone?: string | null
           price: number
           rating: number
@@ -641,7 +653,9 @@ export type Database = {
           social_instagram?: string | null
           social_twitter?: string | null
           source?: string | null
+          status?: Database["public"]["Enums"]["hotel_status"]
           updated_at?: string
+          updated_by?: string | null
           website?: string | null
         }
         Update: {
@@ -649,6 +663,7 @@ export type Database = {
           booking_platform?: string | null
           booking_url?: string | null
           created_at?: string
+          created_by?: string | null
           description?: string
           email?: string | null
           featured_end_date?: string | null
@@ -663,6 +678,7 @@ export type Database = {
           location?: string
           logo_path?: string | null
           name?: string
+          owner_user_id?: string | null
           phone?: string | null
           price?: number
           rating?: number
@@ -671,7 +687,9 @@ export type Database = {
           social_instagram?: string | null
           social_twitter?: string | null
           source?: string | null
+          status?: Database["public"]["Enums"]["hotel_status"]
           updated_at?: string
+          updated_by?: string | null
           website?: string | null
         }
         Relationships: []
@@ -899,27 +917,42 @@ export type Database = {
       }
       user_profiles: {
         Row: {
+          account_type: Database["public"]["Enums"]["account_type"]
           avatar_url: string | null
+          business_address: string | null
+          business_name: string | null
+          business_phone: string | null
           created_at: string
           first_name: string | null
           id: string
           last_name: string | null
+          onboarding_completed: boolean
           updated_at: string
         }
         Insert: {
+          account_type?: Database["public"]["Enums"]["account_type"]
           avatar_url?: string | null
+          business_address?: string | null
+          business_name?: string | null
+          business_phone?: string | null
           created_at?: string
           first_name?: string | null
           id: string
           last_name?: string | null
+          onboarding_completed?: boolean
           updated_at?: string
         }
         Update: {
+          account_type?: Database["public"]["Enums"]["account_type"]
           avatar_url?: string | null
+          business_address?: string | null
+          business_name?: string | null
+          business_phone?: string | null
           created_at?: string
           first_name?: string | null
           id?: string
           last_name?: string | null
+          onboarding_completed?: boolean
           updated_at?: string
         }
         Relationships: []
@@ -1034,7 +1067,9 @@ export type Database = {
       }
     }
     Enums: {
+      account_type: "user" | "hotel_business"
       app_role: "admin" | "hotel_owner" | "user"
+      hotel_status: "draft" | "pending_review" | "active" | "inactive"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1162,7 +1197,9 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      account_type: ["user", "hotel_business"],
       app_role: ["admin", "hotel_owner", "user"],
+      hotel_status: ["draft", "pending_review", "active", "inactive"],
     },
   },
 } as const
