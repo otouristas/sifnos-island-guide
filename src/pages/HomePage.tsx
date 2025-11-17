@@ -26,7 +26,6 @@ import LocalInsightsSection from '@/components/home/LocalInsightsSection';
 import TrendingNowSection from '@/components/home/TrendingNowSection';
 import SeasonalRecommendationsSection from '@/components/home/SeasonalRecommendationsSection';
 import TrustBadges from '@/components/shared/TrustBadges';
-import ExitIntentPopup from '@/components/shared/ExitIntentPopup';
 import TouristasAIBanner from '@/components/shared/TouristasAIBanner';
 
 const quickLinks = [
@@ -269,9 +268,6 @@ export default function HomePage() {
           ]
         }}
       />
-      
-      {/* Exit Intent Popup */}
-      <ExitIntentPopup />
     </>
   );
 }

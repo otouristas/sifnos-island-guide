@@ -134,6 +134,7 @@ export default function Footer() {
             </ul>
             <h5 className="font-heading font-semibold mt-6 mb-3 text-sifnos-beige">{t('footer.forGuests')}</h5>
             <ul className="space-y-2 text-white/70 text-sm">
+              <li><Link to="/guest-experience" className="hover:text-white transition-colors">Guest Experience</Link></li>
               <li><Link to="/travel-guide" className="hover:text-white transition-colors">{t('footer.guestGuide')}</Link></li>
               <li><Link to="/faq" className="hover:text-white transition-colors">{t('footer.howItWorks')}</Link></li>
             </ul>
