@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+// Pre-import English translations as fallback
+import enTranslationsFallback from '../locales/en.json';
 
 export type Language = 'en' | 'el' | 'fr' | 'it' | 'de' | 'sv' | 'ru' | 'tr';
 
@@ -25,38 +27,69 @@ interface I18nProviderProps {
 // Dynamic translation loader
 const loadTranslations = async (lang: Language): Promise<Record<string, any>> => {
   try {
+    // If English, use the pre-imported version
+    if (lang === 'en') {
+      return enTranslationsFallback;
+    }
+    
+    // For other languages, try dynamic import
     const translations = await import(`../locales/${lang}.json`);
-    return translations.default;
+    return translations.default || enTranslationsFallback;
   } catch (error) {
     console.error(`Failed to load translations for ${lang}`, error);
     // Fallback to English
-    const enTranslations = await import('../locales/en.json');
-    return enTranslations.default;
+    return enTranslationsFallback;
   }
 };
 
 export const I18nProvider = ({ children }: I18nProviderProps) => {
   const [language, setLanguageState] = useState<Language>(() => {
     // Get from localStorage or default to English
-    const saved = localStorage.getItem('language') as Language;
-    return saved && ['en', 'el', 'fr', 'it', 'de', 'sv', 'ru', 'tr'].includes(saved) 
-      ? saved 
-      : 'en';
+    // Use try-catch to handle cases where localStorage might not be available
+    try {
+      const saved = localStorage.getItem('language') as Language;
+      return saved && ['en', 'el', 'fr', 'it', 'de', 'sv', 'ru', 'tr'].includes(saved) 
+        ? saved 
+        : 'en';
+    } catch {
+      return 'en';
+    }
   });
 
-  const [translations, setTranslations] = useState<Record<string, any>>({});
+  // Initialize with English translations as fallback to prevent blank page
+  const [translations, setTranslations] = useState<Record<string, any>>(enTranslationsFallback);
+  const [isLoading, setIsLoading] = useState(false);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
-    localStorage.setItem('language', lang);
-    document.documentElement.lang = lang;
+    try {
+      localStorage.setItem('language', lang);
+    } catch (e) {
+      console.warn('Failed to save language to localStorage', e);
+    }
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = lang;
+    }
   };
 
   useEffect(() => {
-    document.documentElement.lang = language;
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = language;
+    }
     
     // Load translations for the selected language
-    loadTranslations(language).then(setTranslations);
+    setIsLoading(true);
+    loadTranslations(language)
+      .then((loadedTranslations) => {
+        setTranslations(loadedTranslations);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error('Failed to load translations:', error);
+        // Set empty translations as fallback
+        setTranslations({});
+        setIsLoading(false);
+      });
   }, [language]);
 
   // Translation function with nested key support (e.g., "common.home")

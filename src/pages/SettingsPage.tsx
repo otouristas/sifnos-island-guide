@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '@/lib/auth';
+import { useI18n } from '@/contexts/I18nContext';
 import SEO from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -30,6 +31,7 @@ type PasswordFormValues = z.infer<typeof passwordFormSchema>;
 
 export default function SettingsPage() {
   const { user, signOut } = useAuth();
+  const { t } = useI18n();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -127,13 +129,13 @@ export default function SettingsPage() {
       
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold text-sifnos-deep-blue mb-8">Account Settings</h1>
+          <h1 className="text-3xl font-bold text-sifnos-deep-blue mb-8">{t('common.accountSettings')}</h1>
           
           <Tabs defaultValue="security" className="w-full">
             <TabsList className="mb-8">
-              <TabsTrigger value="security">Security</TabsTrigger>
-              <TabsTrigger value="preferences">Preferences</TabsTrigger>
-              <TabsTrigger value="notifications">Notifications</TabsTrigger>
+              <TabsTrigger value="security">{t('common.security')}</TabsTrigger>
+              <TabsTrigger value="preferences">{t('common.preferences')}</TabsTrigger>
+              <TabsTrigger value="notifications">{t('common.notifications')}</TabsTrigger>
             </TabsList>
             
             <TabsContent value="security">

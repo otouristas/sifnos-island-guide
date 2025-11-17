@@ -7,9 +7,11 @@ import { format } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useState } from "react";
+import { useI18n } from "@/contexts/I18nContext";
 
 export default function Settings() {
   const { hotel, booking, loading } = useGuestContext();
+  const { t } = useI18n();
   const [requesting, setRequesting] = useState(false);
 
   if (loading) {
@@ -23,7 +25,7 @@ export default function Settings() {
   if (!hotel || !booking) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-muted-foreground">Unable to load settings</p>
+        <p className="text-muted-foreground">{t('guest.unableToLoadSettings')}</p>
       </div>
     );
   }
@@ -31,19 +33,19 @@ export default function Settings() {
   const handleDownloadInvoice = () => {
     // Create a simple text-based invoice
     const invoiceContent = `
-BOOKING INVOICE
+${t('common.bookingInvoice')}
 ${hotel.name}
 ${hotel.address || ''}
 
-Booking Details:
-Guest: ${booking.guestName}
-Email: ${booking.guestEmail || 'N/A'}
-Room: ${booking.roomName || 'Standard Room'}
-Check-in: ${format(new Date(booking.checkIn), 'PPP')}
-Check-out: ${format(new Date(booking.checkOut), 'PPP')}
-Status: ${booking.bookingStatus}
+${t('common.bookingDetails')}:
+${t('common.guest')}: ${booking.guestName}
+${t('common.email')}: ${booking.guestEmail || 'N/A'}
+${t('common.room')}: ${booking.roomName || t('common.standardRoom')}
+${t('guest.checkIn')}: ${format(new Date(booking.checkIn), 'PPP')}
+${t('guest.checkOut')}: ${format(new Date(booking.checkOut), 'PPP')}
+${t('common.status')}: ${booking.bookingStatus}
 
-Thank you for choosing ${hotel.name}!
+${t('common.thankYouForChoosing')} ${hotel.name}!
     `.trim();
 
     const blob = new Blob([invoiceContent], { type: 'text/plain' });
@@ -56,7 +58,7 @@ Thank you for choosing ${hotel.name}!
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
-    toast.success("Invoice downloaded");
+    toast.success(t('common.invoiceDownloaded'));
   };
 
   const handleRequestEarlyCheckIn = async () => {
@@ -82,10 +84,10 @@ Thank you for choosing ${hotel.name}!
 
       if (error) throw error;
 
-      toast.success("Early check-in request submitted! Hotel staff will contact you shortly.");
+      toast.success(t('common.earlyCheckInRequestSubmitted'));
     } catch (error) {
       console.error('Error submitting early check-in request:', error);
-      toast.error("Failed to submit request. Please try again or contact reception directly.");
+      toast.error(t('common.failedToSubmitRequest'));
     } finally {
       setRequesting(false);
     }
@@ -94,22 +96,22 @@ Thank you for choosing ${hotel.name}!
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-foreground mb-2">Settings</h1>
-        <p className="text-muted-foreground">Manage your booking and access important information</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">{t('guest.settings')}</h1>
+        <p className="text-muted-foreground">{t('guest.settingsDescription')}</p>
       </div>
 
       {/* Booking Details */}
       <Card>
         <CardHeader>
-          <CardTitle>Booking Details</CardTitle>
-          <CardDescription>Your current reservation information</CardDescription>
+          <CardTitle>{t('guest.bookingDetails')}</CardTitle>
+          <CardDescription>{t('guest.bookingDetailsDescription')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4">
             <div className="flex items-start gap-3">
               <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
               <div>
-                <p className="font-medium text-foreground">Check-in</p>
+                <p className="font-medium text-foreground">{t('guest.checkIn')}</p>
                 <p className="text-sm text-muted-foreground">
                   {format(new Date(booking.checkIn), 'EEEE, MMMM d, yyyy')} at {hotel.checkInTime}
                 </p>
@@ -119,7 +121,7 @@ Thank you for choosing ${hotel.name}!
             <div className="flex items-start gap-3">
               <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
               <div>
-                <p className="font-medium text-foreground">Check-out</p>
+                <p className="font-medium text-foreground">{t('guest.checkOut')}</p>
                 <p className="text-sm text-muted-foreground">
                   {format(new Date(booking.checkOut), 'EEEE, MMMM d, yyyy')} at {hotel.checkOutTime}
                 </p>
@@ -129,15 +131,15 @@ Thank you for choosing ${hotel.name}!
             <div className="flex items-start gap-3">
               <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
               <div>
-                <p className="font-medium text-foreground">Room Type</p>
-                <p className="text-sm text-muted-foreground">{booking.roomName || 'Standard Room'}</p>
+                <p className="font-medium text-foreground">{t('guest.roomType')}</p>
+                <p className="text-sm text-muted-foreground">{booking.roomName || t('common.standardRoom')}</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
               <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
               <div>
-                <p className="font-medium text-foreground">Booking Status</p>
+                <p className="font-medium text-foreground">{t('guest.bookingStatus')}</p>
                 <p className="text-sm text-muted-foreground capitalize">{booking.bookingStatus}</p>
               </div>
             </div>
@@ -152,7 +154,7 @@ Thank you for choosing ${hotel.name}!
               className="flex-1"
             >
               <Download className="h-4 w-4 mr-2" />
-              Download Invoice
+              {t('guest.downloadInvoice')}
             </Button>
             <Button 
               onClick={handleRequestEarlyCheckIn}
@@ -160,7 +162,7 @@ Thank you for choosing ${hotel.name}!
               className="flex-1"
             >
               <Clock className="h-4 w-4 mr-2" />
-              {requesting ? 'Requesting...' : 'Request Early Check-in'}
+              {requesting ? t('guest.requesting') : t('guest.requestEarlyCheckIn')}
             </Button>
           </div>
         </CardContent>
@@ -171,21 +173,21 @@ Thank you for choosing ${hotel.name}!
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <AlertCircle className="h-5 w-5 text-destructive" />
-            Emergency Contacts
+            {t('guest.emergencyContacts')}
           </CardTitle>
-          <CardDescription>Important contact information for your stay</CardDescription>
+          <CardDescription>{t('guest.emergencyContactsDescription')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-3">
             <div className="flex items-start gap-3">
               <Phone className="h-5 w-5 text-muted-foreground mt-0.5" />
               <div className="flex-1">
-                <p className="font-medium text-foreground">Hotel Reception</p>
+                <p className="font-medium text-foreground">{t('guest.hotelReception')}</p>
                 <a 
                   href={`tel:${hotel.phone}`}
                   className="text-sm text-primary hover:underline"
                 >
-                  {hotel.phone || 'Not available'}
+                  {hotel.phone || t('common.notAvailable')}
                 </a>
               </div>
             </div>
@@ -193,12 +195,12 @@ Thank you for choosing ${hotel.name}!
             <div className="flex items-start gap-3">
               <Mail className="h-5 w-5 text-muted-foreground mt-0.5" />
               <div className="flex-1">
-                <p className="font-medium text-foreground">Email</p>
+                <p className="font-medium text-foreground">{t('common.email')}</p>
                 <a 
                   href={`mailto:${hotel.email}`}
                   className="text-sm text-primary hover:underline"
                 >
-                  {hotel.email || 'Not available'}
+                  {hotel.email || t('common.notAvailable')}
                 </a>
               </div>
             </div>
@@ -206,12 +208,12 @@ Thank you for choosing ${hotel.name}!
             <Separator />
 
             <div className="bg-muted/50 p-4 rounded-lg">
-              <p className="text-sm font-medium text-foreground mb-2">Emergency Services (Greece)</p>
+              <p className="text-sm font-medium text-foreground mb-2">{t('guest.emergencyServices')}</p>
               <div className="space-y-1 text-sm text-muted-foreground">
-                <p>• Police: <a href="tel:100" className="text-primary hover:underline font-medium">100</a></p>
-                <p>• Ambulance: <a href="tel:166" className="text-primary hover:underline font-medium">166</a></p>
-                <p>• Fire Department: <a href="tel:199" className="text-primary hover:underline font-medium">199</a></p>
-                <p>• Tourist Police: <a href="tel:171" className="text-primary hover:underline font-medium">171</a></p>
+                <p>• {t('guest.police')}: <a href="tel:100" className="text-primary hover:underline font-medium">100</a></p>
+                <p>• {t('guest.ambulance')}: <a href="tel:166" className="text-primary hover:underline font-medium">166</a></p>
+                <p>• {t('guest.fireDepartment')}: <a href="tel:199" className="text-primary hover:underline font-medium">199</a></p>
+                <p>• {t('guest.touristPolice')}: <a href="tel:171" className="text-primary hover:underline font-medium">171</a></p>
               </div>
             </div>
           </div>
@@ -221,8 +223,8 @@ Thank you for choosing ${hotel.name}!
       {/* Hotel Information */}
       <Card>
         <CardHeader>
-          <CardTitle>Hotel Information</CardTitle>
-          <CardDescription>Location and contact details</CardDescription>
+          <CardTitle>{t('guest.hotelInformation')}</CardTitle>
+          <CardDescription>{t('guest.hotelInformationDescription')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-3">
@@ -230,7 +232,7 @@ Thank you for choosing ${hotel.name}!
               <div className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
                 <div>
-                  <p className="font-medium text-foreground">Address</p>
+                  <p className="font-medium text-foreground">{t('guest.address')}</p>
                   <p className="text-sm text-muted-foreground">{hotel.address}</p>
                 </div>
               </div>
@@ -240,14 +242,14 @@ Thank you for choosing ${hotel.name}!
               <>
                 <Separator />
                 <div className="bg-muted/50 p-4 rounded-lg">
-                  <p className="text-sm font-medium text-foreground mb-2">WiFi Information</p>
+                  <p className="text-sm font-medium text-foreground mb-2">{t('guest.wifiInfo')}</p>
                   <div className="space-y-1 text-sm">
                     <p className="text-muted-foreground">
-                      Network: <span className="font-medium text-foreground">{hotel.guestWifiName}</span>
+                      {t('guest.wifiName')}: <span className="font-medium text-foreground">{hotel.guestWifiName}</span>
                     </p>
                     {hotel.guestWifiPassword && (
                       <p className="text-muted-foreground">
-                        Password: <span className="font-medium text-foreground">{hotel.guestWifiPassword}</span>
+                        {t('guest.wifiPassword')}: <span className="font-medium text-foreground">{hotel.guestWifiPassword}</span>
                       </p>
                     )}
                   </div>

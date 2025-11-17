@@ -2,10 +2,12 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useGuestContext } from "@/contexts/GuestContext";
 import { Calendar, MapPin, Bell, Wifi, Clock, BookOpen, Settings } from "lucide-react";
+import { useI18n } from "@/contexts/I18nContext";
 import { format } from "date-fns";
 
 export const GuestHome: React.FC = () => {
   const { hotel, booking } = useGuestContext();
+  const { t } = useI18n();
   const navigate = useNavigate();
 
   if (!hotel || !booking) return null;
@@ -128,8 +130,8 @@ export const GuestHome: React.FC = () => {
           className="bg-card rounded-xl shadow p-4 text-left hover:shadow-md transition-shadow"
         >
           <Settings className="h-6 w-6 text-primary mb-2" />
-          <div className="font-medium text-sm text-foreground">More</div>
-          <div className="text-xs text-muted-foreground">Settings & contact</div>
+          <div className="font-medium text-sm text-foreground">{t('guest.more')}</div>
+          <div className="text-xs text-muted-foreground">{t('guest.settingsAndContact')}</div>
         </button>
       </section>
     </div>

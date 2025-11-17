@@ -1,12 +1,15 @@
 import React from 'react';
 import { Clock, MapPin, Euro, AlertCircle, CheckCircle, Ship, Calendar } from 'lucide-react';
 import type { FerrySearchResult } from './enhanced/TouristasAITypes';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface FerryDisplayProps {
   ferryResult: FerrySearchResult;
 }
 
 export function FerryDisplay({ ferryResult }: FerryDisplayProps): JSX.Element {
+  const { t } = useI18n();
+  
   const formatRoute = (route: string): string => {
     return route.split('-').map(part => 
       part.charAt(0).toUpperCase() + part.slice(1)
@@ -34,7 +37,7 @@ export function FerryDisplay({ ferryResult }: FerryDisplayProps): JSX.Element {
           <Ship className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h3 className="text-xl font-bold text-gray-800">Ferry Routes Available</h3>
+          <h3 className="text-xl font-bold text-gray-800">{t('ferry.routesAvailable')}</h3>
           <div className="flex items-center gap-2 text-gray-600">
             <MapPin className="w-4 h-4" />
             <span className="font-medium">{formatRoute(ferryResult.route)}</span>
@@ -138,7 +141,7 @@ export function FerryDisplay({ ferryResult }: FerryDisplayProps): JSX.Element {
                      <AlertCircle className="w-4 h-4 flex-shrink-0" />
                    )}
                    <span className="text-sm font-medium whitespace-nowrap">
-                     {ferry.available ? 'Available' : 'Not Available'}
+                     {ferry.available ? t('common.available') : t('common.notAvailable')}
                    </span>
                  </div>
                  <div className={`text-xs px-2 py-1 rounded-full border text-center ${getRefundableBadgeColor(ferry.refundable)}`}>
@@ -158,7 +161,7 @@ export function FerryDisplay({ ferryResult }: FerryDisplayProps): JSX.Element {
                      }
                    `}
                  >
-                   {ferry.available ? 'Select Ferry' : 'Unavailable'}
+                   {ferry.available ? t('ferry.selectFerry') : t('common.notAvailable')}
                  </button>
                </div>
              </div>
@@ -170,17 +173,17 @@ export function FerryDisplay({ ferryResult }: FerryDisplayProps): JSX.Element {
       <div className="mt-6 p-4 bg-blue-50/50 rounded-lg border border-blue-100">
         <div className="flex items-center gap-2 text-sm text-blue-700">
           <AlertCircle className="w-4 h-4" />
-          <span className="font-medium">Travel Tips:</span>
+          <span className="font-medium">{t('ferry.travelTips')}:</span>
         </div>
         <div className="mt-2 text-xs text-blue-600 space-y-1">
-          <p>• Arrive at the port at least 30 minutes before departure</p>
-          <p>• Prices may vary based on season and demand</p>
-          <p>• Check weather conditions before traveling</p>
+          <p>• {t('ferry.arriveEarly')}</p>
+          <p>• {t('ferry.pricesVary')}</p>
+          <p>• {t('ferry.checkWeather')}</p>
         </div>
         
         {/* FerryScanner Attribution */}
         <div className="flex items-center justify-center gap-2 mt-4 pt-3 border-t border-blue-200">
-          <span className="text-xs text-gray-500">Ferry schedules powered by</span>
+          <span className="text-xs text-gray-500">{t('ferry.poweredBy')}</span>
           <a 
             href="https://www.ferryscanner.com" 
             target="_blank" 

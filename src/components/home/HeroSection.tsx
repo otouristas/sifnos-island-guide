@@ -5,20 +5,23 @@ import { Star, Shield, CheckCircle, MapPin, Sparkles, Search, Calendar, Users } 
 import TouristasLogo from '@/components/TouristasLogo';
 import { useI18n } from '@/contexts/I18nContext';
 
-const signatureLocations = [
-  { title: 'Kamares', description: 'Sunset port & calm waters' },
-  { title: 'Platis Gialos', description: 'Beachfront dining & suites' },
-  { title: 'Apollonia', description: 'Cycladic culture & nightlife' },
+// Signature locations - titles are location names, descriptions will be translated
+const getSignatureLocations = (t: (key: string) => string) => [
+  { title: 'Kamares', description: t('homepage.signatureLocations.kamares') },
+  { title: 'Platis Gialos', description: t('homepage.signatureLocations.platisGialos') },
+  { title: 'Apollonia', description: t('homepage.signatureLocations.apollonia') },
 ];
 
 export default function HeroSection() {
   const navigate = useNavigate();
   const { t } = useI18n();
   const guarantees = useMemo(() => ([
-    { icon: Star, label: 'Curated hotels & villas only' },
-    { icon: CheckCircle, label: 'Independent, honest recommendations' },
-    { icon: Shield, label: 'Secure booking via trusted partners' },
-  ]), []);
+    { icon: Star, label: t('homepage.guarantees.curatedHotels') },
+    { icon: CheckCircle, label: t('homepage.guarantees.honestRecommendations') },
+    { icon: Shield, label: t('homepage.guarantees.secureBooking') },
+  ]), [t]);
+  
+  const signatureLocations = useMemo(() => getSignatureLocations(t), [t]);
 
   const [location, setLocation] = useState('any');
   const [checkIn, setCheckIn] = useState('');
@@ -60,7 +63,7 @@ export default function HeroSection() {
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-xl rounded-full border border-white/20 shadow-lg">
               <Sparkles className="h-4 w-4 text-sifnos-beige" />
               <span className="text-xs font-semibold tracking-wider uppercase text-white/90">
-                Curated Cycladic Stays
+                {t('homepage.curatedCycladicStays')}
               </span>
             </div>
           </div>
@@ -68,14 +71,14 @@ export default function HeroSection() {
           {/* Main Headline */}
           <div className="text-center space-y-4 sm:space-y-5 animate-fade-in-up">
             <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-[1.1] tracking-tight">
-              Your Perfect
-              <span className="block text-sifnos-beige mt-2">Sifnos Stay</span>
+              {t('homepage.heroTitleLine1')}
+              <span className="block text-sifnos-beige mt-2">{t('homepage.heroTitleLine2')}</span>
               <span className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl mt-3 text-white/90 font-normal">
-                Awaits
+                {t('homepage.heroTitleLine3')}
               </span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/85 max-w-3xl mx-auto leading-relaxed font-light px-4">
-              Discover handpicked hotels and villas in Sifnos – boutique luxury, beachfront escapes, and family-friendly stays for 2026
+              {t('homepage.heroDescription')}
             </p>
           </div>
 
@@ -89,14 +92,14 @@ export default function HeroSection() {
                 <div className="flex flex-col gap-1.5">
                   <label className="flex items-center gap-1.5 text-xs font-semibold text-sifnos-deep-blue uppercase tracking-wide">
                     <MapPin className="h-3.5 w-3.5 text-sifnos-deep-blue/70" />
-                    Location
+                    {t('homepage.searchForm.location')}
                   </label>
                   <select
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     className="h-12 rounded-lg px-4 text-sm bg-white border border-gray-300 text-sifnos-deep-blue focus:outline-none focus:ring-2 focus:ring-sifnos-beige focus:border-sifnos-beige transition-all"
                   >
-                    <option value="any">Anywhere in Sifnos</option>
+                    <option value="any">{t('homepage.searchForm.anywhereInSifnos')}</option>
                     <option value="kamares">Kamares</option>
                     <option value="platis-gialos">Platis Gialos</option>
                     <option value="apollonia">Apollonia</option>
@@ -108,7 +111,7 @@ export default function HeroSection() {
                 <div className="flex flex-col gap-1.5">
                   <label className="flex items-center gap-1.5 text-xs font-semibold text-sifnos-deep-blue uppercase tracking-wide">
                     <Calendar className="h-3.5 w-3.5 text-sifnos-deep-blue/70" />
-                    Check-in
+                    {t('homepage.searchForm.checkIn')}
                   </label>
                   <input
                     type="date"
@@ -121,7 +124,7 @@ export default function HeroSection() {
                 <div className="flex flex-col gap-1.5">
                   <label className="flex items-center gap-1.5 text-xs font-semibold text-sifnos-deep-blue uppercase tracking-wide">
                     <Calendar className="h-3.5 w-3.5 text-sifnos-deep-blue/70" />
-                    Check-out
+                    {t('homepage.searchForm.checkOut')}
                   </label>
                   <input
                     type="date"
@@ -134,7 +137,7 @@ export default function HeroSection() {
                 <div className="flex flex-col gap-1.5">
                   <label className="flex items-center gap-1.5 text-xs font-semibold text-sifnos-deep-blue uppercase tracking-wide">
                     <Users className="h-3.5 w-3.5 text-sifnos-deep-blue/70" />
-                    Guests
+                    {t('homepage.searchForm.guests')}
                   </label>
                   <input
                     type="number"
@@ -155,7 +158,7 @@ export default function HeroSection() {
                     className="w-full h-12 bg-sifnos-deep-blue text-white hover:bg-sifnos-deep-blue/90 font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     <Search className="h-4 w-4 mr-2" />
-                    Search
+                    {t('homepage.searchForm.search')}
                   </Button>
                 </div>
               </div>

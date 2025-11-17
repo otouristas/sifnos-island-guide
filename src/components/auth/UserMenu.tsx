@@ -11,10 +11,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { User, LogOut, Heart, Settings, LogIn } from 'lucide-react';
+import { useI18n } from '@/contexts/I18nContext';
 import AuthModal from './AuthModal';
 
 export default function UserMenu() {
   const { user, profile, signOut } = useAuth();
+  const { t } = useI18n();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   
   // Get user initials for avatar fallback
@@ -51,7 +53,7 @@ export default function UserMenu() {
           className="flex items-center gap-2"
         >
           <LogIn className="h-4 w-4" />
-          <span>Sign In</span>
+          <span>{t('common.signIn')}</span>
         </Button>
         
         <AuthModal 
@@ -88,19 +90,19 @@ export default function UserMenu() {
           <DropdownMenuItem asChild>
             <Link to="/profile" className="flex items-center">
               <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
+              <span>{t('common.profile')}</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link to="/favorites" className="flex items-center">
               <Heart className="mr-2 h-4 w-4" />
-              <span>Favorites</span>
+              <span>{t('common.favorites')}</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link to="/settings" className="flex items-center">
               <Settings className="mr-2 h-4 w-4" />
-              <span>Settings</span>
+              <span>{t('common.settings')}</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
@@ -109,7 +111,7 @@ export default function UserMenu() {
             onClick={() => signOut()}
           >
             <LogOut className="mr-2 h-4 w-4" />
-            <span>Sign out</span>
+            <span>{t('common.signOut')}</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

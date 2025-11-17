@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useI18n } from '@/contexts/I18nContext';
 import SEO from '@/components/SEO';
 import SchemaGenerator from '@/components/SchemaGenerator';
 import UnifiedHotelCard from '@/components/UnifiedHotelCard';
@@ -54,6 +55,7 @@ const mapQueryLocationToFilterLocation = (value: string): string => {
 };
 
 export default function HotelsPage() {
+  const { t } = useI18n();
   const [hotels, setHotels] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
@@ -436,7 +438,7 @@ export default function HotelsPage() {
                     </span>
                     {activeFiltersCount > 0 && (
                       <Badge variant="secondary">
-                        {activeFiltersCount} {activeFiltersCount === 1 ? 'filter' : 'filters'}
+                        {activeFiltersCount} {activeFiltersCount === 1 ? t('common.filter') : t('common.filters')}
                       </Badge>
                     )}
                   </div>
@@ -470,14 +472,14 @@ export default function HotelsPage() {
                     {/* Sort Dropdown */}
                     <Select value={sortBy} onValueChange={setSortBy}>
                       <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Sort by" />
+                        <SelectValue placeholder={t('hotels.sortBy')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="recommended">Recommended</SelectItem>
-                        <SelectItem value="price-low">Price: Low to High</SelectItem>
-                        <SelectItem value="price-high">Price: High to Low</SelectItem>
-                        <SelectItem value="rating">Rating: High to Low</SelectItem>
-                        <SelectItem value="name">Name: A-Z</SelectItem>
+                        <SelectItem value="recommended">{t('hotels.recommended')}</SelectItem>
+                        <SelectItem value="price-low">{t('hotels.priceLowToHigh')}</SelectItem>
+                        <SelectItem value="price-high">{t('hotels.priceHighToLow')}</SelectItem>
+                        <SelectItem value="rating">{t('hotels.ratingHighToLow')}</SelectItem>
+                        <SelectItem value="name">{t('hotels.nameAZ')}</SelectItem>
                       </SelectContent>
                     </Select>
 
@@ -672,7 +674,7 @@ export default function HotelsPage() {
                             )}
                           </td>
                           <td className="p-4 font-semibold text-sifnos-deep-blue">
-                            {hotel.price ? `€${hotel.price}` : 'Contact'}
+                            {hotel.price ? `€${hotel.price}` : t('common.contact')}
                           </td>
                           <td className="p-4">
                             <div className="flex flex-wrap gap-1">

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useI18n } from '@/contexts/I18nContext';
 import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, PlusCircle, MinusCircle, ExternalLink, Map, ChevronLeft, ChevronRight, Waves, BookOpenCheck, Ship, ArrowRight } from 'lucide-react';
 import { supabase, logSupabaseResponse, getHotelRoomImagePath } from '@/integrations/supabase/client';
 import SEO from '../components/SEO';
@@ -32,6 +33,7 @@ import HotelBookingSidebar from '@/components/hotel/HotelBookingSidebar';
 
 export default function HotelDetailPage() {
   const { slug } = useParams();
+  const { t } = useI18n();
   const [hotel, setHotel] = useState(null);
   const [activeImage, setActiveImage] = useState(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -287,8 +289,8 @@ export default function HotelDetailPage() {
       } catch (error) {
         console.error('Error fetching hotel details:', error);
         toast({
-          title: "Error",
-          description: "Failed to load hotel details. Please try again later.",
+          title: t('common.error'),
+          description: t('hotels.errorLoadingDetails'),
           variant: "destructive"
         });
       } finally {
@@ -587,7 +589,7 @@ export default function HotelDetailPage() {
                                 />
                               ))}
                             </div>
-                            <span className="text-xs text-gray-600">{similarHotel.rating ? `${similarHotel.rating} Review` : 'New'}</span>
+                            <span className="text-xs text-gray-600">{similarHotel.rating ? `${similarHotel.rating} ${t('common.review')}` : t('common.new')}</span>
                           </div>
                           
                           <h3 className="font-bold text-lg text-sifnos-deep-blue mb-2 line-clamp-2 group-hover:text-sifnos-turquoise transition-colors">

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useI18n } from '@/contexts/I18nContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -63,6 +64,7 @@ const TIER_COLORS = {
 };
 
 export default function FeaturedHotelsManagement() {
+  const { t } = useI18n();
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
@@ -287,7 +289,7 @@ export default function FeaturedHotelsManagement() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="none">None</SelectItem>
+                          <SelectItem value="none">{t('common.none')}</SelectItem>
                           <SelectItem value="bronze">Bronze</SelectItem>
                           <SelectItem value="silver">Silver</SelectItem>
                           <SelectItem value="gold">Gold</SelectItem>
@@ -331,7 +333,7 @@ export default function FeaturedHotelsManagement() {
                         {saving === hotel.id ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
                         ) : (
-                          'Remove'
+                          t('common.remove')
                         )}
                       </Button>
                     </TableCell>

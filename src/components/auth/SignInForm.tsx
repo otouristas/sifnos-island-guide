@@ -7,6 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/lib/auth';
 import { Loader2 } from 'lucide-react';
+import { useI18n } from '@/contexts/I18nContext';
 
 // Define form validation schema
 const formSchema = z.object({
@@ -24,6 +25,7 @@ interface SignInFormProps {
 
 export default function SignInForm({ onSuccess, onForgotPassword, redirectUrl }: SignInFormProps) {
   const { signIn } = useAuth();
+  const { t } = useI18n();
   const [isLoading, setIsLoading] = useState(false);
   
   // Initialize form
@@ -62,7 +64,7 @@ export default function SignInForm({ onSuccess, onForgotPassword, redirectUrl }:
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t('common.email')}</FormLabel>
               <FormControl>
                 <Input placeholder="your@email.com" {...field} />
               </FormControl>
@@ -77,14 +79,14 @@ export default function SignInForm({ onSuccess, onForgotPassword, redirectUrl }:
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center justify-between">
-                <FormLabel>Password</FormLabel>
+                <FormLabel>{t('common.password')}</FormLabel>
                 <Button
                   variant="link"
                   className="px-0 text-xs font-normal h-auto"
                   type="button"
                   onClick={onForgotPassword}
                 >
-                  Forgot password?
+                  {t('common.forgotPassword')}
                 </Button>
               </div>
               <FormControl>
@@ -99,10 +101,10 @@ export default function SignInForm({ onSuccess, onForgotPassword, redirectUrl }:
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Signing in...
+              {t('common.signingIn')}
             </>
           ) : (
-            'Sign In'
+            t('common.signIn')
           )}
         </Button>
       </form>

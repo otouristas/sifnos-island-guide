@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useGuestContext } from "@/contexts/GuestContext";
+import { useI18n } from "@/contexts/I18nContext";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   Info, 
@@ -48,6 +49,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 export const GuestGuide: React.FC = () => {
   const { hotel } = useGuestContext();
+  const { t } = useI18n();
   const [sections, setSections] = useState<GuideSection[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -117,9 +119,9 @@ export const GuestGuide: React.FC = () => {
       <div className="max-w-2xl mx-auto">
         <div className="bg-card rounded-xl shadow p-8 text-center">
           <Info className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-          <h3 className="font-semibold text-lg mb-2 text-foreground">No Guide Available</h3>
+          <h3 className="font-semibold text-lg mb-2 text-foreground">{t('guest.noGuideAvailable')}</h3>
           <p className="text-sm text-muted-foreground mb-4">
-            The hotel guide is currently being prepared. Please contact reception for any questions.
+            {t('guest.noGuideAvailableDescription')}
           </p>
           {hotel.phone && (
             <a 

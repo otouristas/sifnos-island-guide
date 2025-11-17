@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '@/lib/auth';
+import { useI18n } from '@/contexts/I18nContext';
 import SEO from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -37,6 +38,7 @@ type TravelPreferencesValues = z.infer<typeof travelPreferencesSchema>;
 
 export default function ProfilePage() {
   const { user, profile, updateProfile } = useAuth();
+  const { t } = useI18n();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   
@@ -103,14 +105,14 @@ export default function ProfilePage() {
       
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold text-sifnos-deep-blue mb-8">Your Profile</h1>
+          <h1 className="text-3xl font-bold text-sifnos-deep-blue mb-8">{t('common.yourProfile')}</h1>
           
           <Tabs defaultValue="profile" className="w-full">
             <TabsList className="mb-8">
-              <TabsTrigger value="profile">Profile</TabsTrigger>
-              <TabsTrigger value="travel-preferences">Travel Preferences</TabsTrigger>
-              <TabsTrigger value="favorites">Favorites</TabsTrigger>
-              <TabsTrigger value="settings">Settings</TabsTrigger>
+              <TabsTrigger value="profile">{t('common.profile')}</TabsTrigger>
+              <TabsTrigger value="travel-preferences">{t('common.travelPreferences')}</TabsTrigger>
+              <TabsTrigger value="favorites">{t('common.favorites')}</TabsTrigger>
+              <TabsTrigger value="settings">{t('common.settings')}</TabsTrigger>
             </TabsList>
             
             <TabsContent value="profile">
@@ -527,9 +529,9 @@ function TravelPreferencesTab({ user, profile }: { user: any; profile: any }) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="yes">Yes, I'll rent a car</SelectItem>
-                      <SelectItem value="no">No, I won't rent a car</SelectItem>
-                      <SelectItem value="maybe">Maybe, depending on plans</SelectItem>
+                      <SelectItem value="yes">{t('common.yesRentCar')}</SelectItem>
+                      <SelectItem value="no">{t('common.noRentCar')}</SelectItem>
+                      <SelectItem value="maybe">{t('common.maybeRentCar')}</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

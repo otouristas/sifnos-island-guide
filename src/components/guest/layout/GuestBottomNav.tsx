@@ -1,16 +1,18 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Home, BookOpen, MapPin, MessageCircle, Settings } from "lucide-react";
-
-const navItems = [
-  { to: "", label: "Home", icon: Home },
-  { to: "guide", label: "Guide", icon: BookOpen },
-  { to: "area", label: "Explore", icon: MapPin },
-  { to: "requests", label: "Requests", icon: MessageCircle },
-  { to: "settings", label: "More", icon: Settings },
-];
+import { useI18n } from "@/contexts/I18nContext";
 
 export const GuestBottomNav: React.FC = () => {
+  const { t } = useI18n();
+  
+  const navItems = [
+    { to: "", label: t('guest.home'), icon: Home },
+    { to: "guide", label: t('guest.guide'), icon: BookOpen },
+    { to: "area", label: t('common.explore'), icon: MapPin },
+    { to: "requests", label: t('guest.requests'), icon: MessageCircle },
+    { to: "settings", label: t('guest.more'), icon: Settings },
+  ];
   return (
     <nav className="fixed bottom-0 left-0 right-0 h-16 border-t bg-card flex items-center justify-around text-xs shadow-lg">
       {navItems.map((item) => (

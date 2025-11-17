@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { LogIn } from 'lucide-react';
 import AuthModal from './AuthModal';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface AuthButtonProps {
   variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
@@ -16,6 +17,7 @@ export default function AuthButton({
   className = '',
   children
 }: AuthButtonProps) {
+  const { t } = useI18n();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   
   return (
@@ -29,7 +31,7 @@ export default function AuthButton({
         {children || (
           <>
             <LogIn className="mr-2 h-4 w-4" />
-            Sign In
+            {t('common.signIn')}
           </>
         )}
       </Button>

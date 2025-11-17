@@ -365,10 +365,10 @@ const Navigation = () => {
                 ) : (
                   <>
                     <Link to="/signin" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">
-                      Sign In
+                      {t('common.signIn')}
                     </Link>
                     <Link to="/signup" className="inline-flex items-center justify-center rounded-md bg-sifnos-deep-blue px-4 py-2 text-sm font-medium text-white hover:bg-sifnos-deep-blue/90 transition-colors">
-                      Sign Up
+                      {t('common.signUp')}
                     </Link>
                   </>
                 )}

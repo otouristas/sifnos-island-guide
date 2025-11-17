@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import SignInForm from './SignInForm';
 import SignUpForm from './SignUpForm';
 import ResetPasswordForm from './ResetPasswordForm';
+import { useI18n } from '@/contexts/I18nContext';
 
 export type AuthView = 'sign-in' | 'sign-up' | 'reset-password';
 
@@ -22,6 +23,7 @@ export default function AuthModal({
   redirectUrl,
   onSuccess
 }: AuthModalProps) {
+  const { t } = useI18n();
   const [view, setView] = useState<AuthView>(defaultView);
   
   // Handle successful authentication
@@ -44,22 +46,22 @@ export default function AuthModal({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl font-bold text-sifnos-deep-blue">
-            {view === 'sign-in' ? 'Welcome Back' : 
-             view === 'sign-up' ? 'Create an Account' : 
-             'Reset Your Password'}
+            {view === 'sign-in' ? t('common.welcomeBack') : 
+             view === 'sign-up' ? t('common.createAccount') : 
+             t('common.resetPassword')}
           </DialogTitle>
           <DialogDescription className="text-center">
-            {view === 'sign-in' ? 'Sign in to your Hotels Sifnos account' : 
-             view === 'sign-up' ? 'Join Hotels Sifnos to save your favorite hotels and get personalized recommendations' : 
-             'Enter your email to receive a password reset link'}
+            {view === 'sign-in' ? t('common.signInDescription') : 
+             view === 'sign-up' ? t('common.signUpDescription') : 
+             t('common.resetPasswordDescription')}
           </DialogDescription>
         </DialogHeader>
         
         {(view === 'sign-in' || view === 'sign-up') && (
           <Tabs defaultValue={view} onValueChange={(value) => setView(value as AuthView)}>
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="sign-in">Sign In</TabsTrigger>
-              <TabsTrigger value="sign-up">Sign Up</TabsTrigger>
+              <TabsTrigger value="sign-in">{t('common.signIn')}</TabsTrigger>
+              <TabsTrigger value="sign-up">{t('common.signUp')}</TabsTrigger>
             </TabsList>
             
             <TabsContent value="sign-in" className="mt-4">

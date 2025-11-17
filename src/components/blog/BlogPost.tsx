@@ -7,6 +7,7 @@ import { blogPosts } from '@/data/blogPosts';
 import { Link, useNavigate } from 'react-router-dom';
 import { slugify } from '@/lib/url-utils';
 import { toast } from 'sonner';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface BlogPostProps {
   slug?: string;
@@ -14,6 +15,7 @@ interface BlogPostProps {
 
 const BlogPost = ({ slug }: BlogPostProps) => {
   const navigate = useNavigate();
+  const { t } = useI18n();
   
   // Find the blog post by slug
   const post = blogPosts.find(post => post.slug === slug);
@@ -21,10 +23,10 @@ const BlogPost = ({ slug }: BlogPostProps) => {
   if (!post) {
     return (
       <div className="p-8 text-center">
-        <h2 className="text-2xl font-bold mb-4">Post Not Found</h2>
-        <p className="mb-4">Sorry, the blog post you're looking for doesn't exist or has been moved.</p>
+        <h2 className="text-2xl font-bold mb-4">{t('blog.postNotFound')}</h2>
+        <p className="mb-4">{t('blog.postNotFoundDescription')}</p>
         <Link to="/blog" className="text-blue-600 hover:underline">
-          Return to Blog
+          {t('blog.returnToBlog')}
         </Link>
       </div>
     );
@@ -69,6 +71,8 @@ const BlogPost = ({ slug }: BlogPostProps) => {
     }
     
     // Show a toast notification to inform the user about the content update
+    // Note: BlogPost doesn't have i18n context, keeping English for now
+    // This is a less critical UI element
     toast.success("Blog content updated with latest information", {
       description: "Removed outdated content and added new restaurant information",
       duration: 5000

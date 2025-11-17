@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Ship, Calendar, Clock, ArrowRight, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface FerrySchedule {
   departure_time: string;
@@ -18,6 +19,7 @@ interface FerrySchedule {
 }
 
 export default function FerryScheduleWidget() {
+  const { t } = useI18n();
   const [loading, setLoading] = useState(false);
   const [schedules, setSchedules] = useState<FerrySchedule[]>([]);
   const [from, setFrom] = useState('piraeus');
@@ -48,8 +50,8 @@ export default function FerryScheduleWidget() {
     } catch (error) {
       console.error('Error fetching ferry schedules:', error);
       toast({
-        title: "Error",
-        description: "Failed to load ferry schedules. Please try again.",
+        title: t('common.error'),
+        description: t('hotels.errorLoadingSchedules'),
         variant: "destructive",
       });
     } finally {
