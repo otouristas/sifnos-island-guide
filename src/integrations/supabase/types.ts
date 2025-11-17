@@ -591,9 +591,15 @@ export type Database = {
           created_at: string
           description: string
           email: string | null
+          featured_end_date: string | null
+          featured_notes: string | null
+          featured_priority: number | null
+          featured_start_date: string | null
+          featured_tier: string | null
           google_map_url: string | null
           hotel_types: string[] | null
           id: string
+          is_featured: boolean | null
           location: string
           logo_path: string | null
           name: string
@@ -615,9 +621,15 @@ export type Database = {
           created_at?: string
           description: string
           email?: string | null
+          featured_end_date?: string | null
+          featured_notes?: string | null
+          featured_priority?: number | null
+          featured_start_date?: string | null
+          featured_tier?: string | null
           google_map_url?: string | null
           hotel_types?: string[] | null
           id?: string
+          is_featured?: boolean | null
           location: string
           logo_path?: string | null
           name: string
@@ -639,9 +651,15 @@ export type Database = {
           created_at?: string
           description?: string
           email?: string | null
+          featured_end_date?: string | null
+          featured_notes?: string | null
+          featured_priority?: number | null
+          featured_start_date?: string | null
+          featured_tier?: string | null
           google_map_url?: string | null
           hotel_types?: string[] | null
           id?: string
+          is_featured?: boolean | null
           location?: string
           logo_path?: string | null
           name?: string

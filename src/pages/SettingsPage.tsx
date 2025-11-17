@@ -284,18 +284,38 @@ function NotificationSettingsTab({ user }: { user: any }) {
   });
   
   useEffect(() => {
-    // Notification preferences feature disabled - field doesn't exist in schema
-    // Will be re-enabled when schema is updated
-    setIsLoading(false);
+    const fetchPreferences = async () => {
+      if (!user) return;
+      
+      setIsLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('notification_preferences')
+          .eq('id', user.id)
+          .single();
+        
+        if (!error && data?.notification_preferences) {
+          setNotificationPrefs({
+            emailNotifications: data.notification_preferences.email_notifications ?? true,
+            whatsappNotifications: data.notification_preferences.whatsapp_notifications ?? false,
+            priceAlerts: data.notification_preferences.price_alerts ?? true,
+            newHotelsAlerts: data.notification_preferences.new_hotels_alerts ?? true,
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching notification preferences:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchPreferences();
   }, [user]);
   
   const handleSave = async () => {
     if (!user) return;
     
-    // Notification preferences feature disabled - field doesn't exist in schema
-    alert('Notification preferences feature is currently unavailable. It will be enabled in a future update.');
-    
-    /* Disabled until schema is updated
     setIsSaving(true);
     try {
       const { error } = await supabase
@@ -319,7 +339,6 @@ function NotificationSettingsTab({ user }: { user: any }) {
     } finally {
       setIsSaving(false);
     }
-    */
   };
   
   if (isLoading) {

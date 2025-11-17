@@ -136,12 +136,12 @@ const UnifiedHotelCard = ({ hotel, onSelect, className }: UnifiedHotelCardProps)
         {(!isFeatured || !featuredTier) && (
           <div className="absolute top-3 left-3">
             {isAgodaHotel ? (
-              <Badge variant="secondary" className="bg-blue-700 text-white hover:bg-blue-800 font-semibold">
+              <Badge variant="secondary" className="bg-blue-600 text-white hover:bg-blue-700">
                 <ExternalLink className="w-3 h-3 mr-1" />
                 Agoda Partner
               </Badge>
             ) : (
-              <Badge variant="secondary" className="bg-green-700 text-white hover:bg-green-800 font-semibold">
+              <Badge variant="secondary" className="bg-green-600 text-white hover:bg-green-700">
                 <Award className="w-3 h-3 mr-1" />
                 {isFeatured ? 'Featured' : 'Local Partner'}
               </Badge>

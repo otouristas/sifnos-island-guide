@@ -65,9 +65,9 @@ export default function HotelGallerySection({ hotel, onImageClick }: HotelGaller
     <>
       <section className="mb-16">
         <div className="page-container">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-2">
-            {/* Main Slider - Left Side (60% on large screens) */}
-            <div className="lg:col-span-3 relative group">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+            {/* Main Slider - Left Side */}
+            <div className="col-span-2 sm:col-span-3 md:col-span-3 lg:col-span-3 relative group">
               <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden rounded-lg bg-gray-100">
                 <img
                   src={currentImageUrl}
@@ -120,7 +120,7 @@ export default function HotelGallerySection({ hotel, onImageClick }: HotelGaller
             </div>
 
             {/* Thumbnail Grid - Right Side (40% on large screens) */}
-            <div className="lg:col-span-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-2 gap-2 max-h-[600px] overflow-y-auto">
+            <div className="lg:col-span-2 grid grid-cols-2 gap-2 max-h-[600px] overflow-y-auto">
               {thumbnailPhotos.map((photo: any, index: number) => {
                 const thumbnailUrl = determineHotelImageUrl(hotel, photo.photo_url);
                 // Find the actual index in the photos array
@@ -143,7 +143,6 @@ export default function HotelGallerySection({ hotel, onImageClick }: HotelGaller
                         src={thumbnailUrl}
                         alt={photo.description || `${hotel.name} thumbnail ${index + 1}`}
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                        loading="lazy"
                       />
                     </div>
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />

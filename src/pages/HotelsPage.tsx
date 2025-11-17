@@ -5,12 +5,12 @@ import SchemaGenerator from '@/components/SchemaGenerator';
 import UnifiedHotelCard from '@/components/UnifiedHotelCard';
 import { supabase } from '@/integrations/supabase/client';
 import { MapPin, Grid, List, Map, SlidersHorizontal, Gem, Home, Waves, Users, GitCompare, X, Star } from 'lucide-react';
+import { generateHotelUrl } from '@/lib/url-utils';
 import TouristasLogo from '@/components/TouristasLogo';
 import { Button } from '@/components/ui/button';
 import FilterSidebar from '@/components/hotel/FilterSidebar';
 import CompareHotels from '@/components/hotel/CompareHotels';
 import LoadingSkeleton from '@/components/shared/LoadingSkeleton';
-import { generateHotelUrl } from '@/lib/url-utils';
 import { 
   Select, 
   SelectContent, 

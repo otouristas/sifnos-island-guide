@@ -317,13 +317,21 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
                         <Reply className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                         Reply
                       </Button>
-                      <div className="ml-auto text-xs text-gray-500 flex items-center">
+                      <div className="ml-auto text-xs text-gray-500 flex items-center flex-shrink-0">
                         <img 
                           src="/uploads/Booking.com.svg" 
                           alt="Booking.com" 
                           className="h-3 mr-1" 
                         />
                         <span className="hidden sm:inline">via Booking.com</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
                       </div>
                     </div>
                   </div>
