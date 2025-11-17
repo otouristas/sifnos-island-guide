@@ -40,6 +40,10 @@ const FeaturedHotelsManagement = lazy(() => import('../pages/dashboard/FeaturedH
 
 // Auth Pages
 const ResetPasswordPage = lazy(() => import('../pages/auth/ResetPasswordPage'));
+const SignInPage = lazy(() => import('../pages/auth/SignInPage'));
+const SignUpPage = lazy(() => import('../pages/auth/SignUpPage'));
+const HotelSignInPage = lazy(() => import('../pages/auth/HotelSignInPage'));
+const HotelSignUpPage = lazy(() => import('../pages/auth/HotelSignUpPage'));
 
 // Test Pages
 const AgodaTestPage = lazy(() => import('../pages/AgodaTestPage'));
@@ -91,6 +95,12 @@ const routeDefinitions = [
   { path: '/privacy-policy', element: <PrivacyPolicyPage /> },
   { path: '/terms-of-service', element: <TermsOfServicePage /> },
   { path: '/cookie-policy', element: <CookiePolicyPage /> },
+  // Auth routes
+  { path: '/signin', element: <SignInPage /> },
+  { path: '/signup', element: <SignUpPage /> },
+  { path: '/hotel-owner/signin', element: <HotelSignInPage /> },
+  { path: '/hotel-owner/signup', element: <HotelSignUpPage /> },
+  // Dashboard routes
   { path: '/dashboard', element: <DashboardOverview /> },
   { path: '/dashboard/messages', element: <DashboardMessages /> },
   { path: '/dashboard/settings', element: <DashboardSettings /> },

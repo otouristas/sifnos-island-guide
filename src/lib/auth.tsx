@@ -3,6 +3,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { Session, User, AuthError } from '@supabase/supabase-js';
 import { useToast } from '@/hooks/use-toast';
 
+// Define account type
+export type AccountType = 'user' | 'hotel_business';
+
+// Define user role
+export type UserRole = 'admin' | 'hotel_owner' | 'user';
+
 // Define types for our auth context
 export type AuthContextType = {
   session: Session | null;
@@ -10,8 +16,18 @@ export type AuthContextType = {
   profile: UserProfile | null;
   isLoading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
-  signUp: (email: string, password: string, metadata?: { first_name?: string; last_name?: string }) => 
-    Promise<{ error: AuthError | null; data: { user: User | null } | null }>;
+  signUp: (
+    email: string, 
+    password: string, 
+    metadata?: { 
+      first_name?: string; 
+      last_name?: string;
+      account_type?: AccountType;
+      business_name?: string;
+      business_phone?: string;
+      business_address?: string;
+    }
+  ) => Promise<{ error: AuthError | null; data: { user: User | null } | null }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: AuthError | null }>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<{ error: Error | null }>;
@@ -20,6 +36,10 @@ export type AuthContextType = {
   checkIsFavorite: (hotelId: string) => Promise<boolean>;
   isHotelOwner: () => Promise<boolean>;
   getOwnedHotels: () => Promise<string[]>;
+  getUserRole: () => Promise<UserRole | null>;
+  isHotelBusiness: () => boolean;
+  canManageHotel: (hotelId: string) => Promise<boolean>;
+  accountType: AccountType | null;
 };
 
 // Define user profile type
@@ -28,6 +48,11 @@ export type UserProfile = {
   first_name: string | null;
   last_name: string | null;
   avatar_url: string | null;
+  account_type: AccountType;
+  business_name: string | null;
+  business_phone: string | null;
+  business_address: string | null;
+  onboarding_completed: boolean;
   created_at: string;
   updated_at: string;
 };
@@ -149,14 +174,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = async (
     email: string, 
     password: string, 
-    metadata?: { first_name?: string; last_name?: string }
+    metadata?: { 
+      first_name?: string; 
+      last_name?: string;
+      account_type?: AccountType;
+      business_name?: string;
+      business_phone?: string;
+      business_address?: string;
+    }
   ) => {
     try {
       const { data, error } = await supabase.auth.signUp({ 
         email, 
         password,
         options: {
-          data: metadata
+          data: {
+            first_name: metadata?.first_name,
+            last_name: metadata?.last_name
+          }
         }
       });
       
@@ -167,6 +202,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           variant: "destructive"
         });
         return { error, data: null };
+      }
+      
+      // After successful signup, update profile with additional fields
+      if (data.user && metadata) {
+        const profileUpdates: any = {};
+        if (metadata.account_type) profileUpdates.account_type = metadata.account_type;
+        if (metadata.business_name) profileUpdates.business_name = metadata.business_name;
+        if (metadata.business_phone) profileUpdates.business_phone = metadata.business_phone;
+        if (metadata.business_address) profileUpdates.business_address = metadata.business_address;
+        
+        if (Object.keys(profileUpdates).length > 0) {
+          await supabase
+            .from('user_profiles')
+            .update(profileUpdates)
+            .eq('id', data.user.id);
+        }
       }
       
       toast({
@@ -425,6 +476,81 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // Get user's role from database
+  const getUserRole = async (): Promise<UserRole | null> => {
+    try {
+      if (!user) {
+        return null;
+      }
+      
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+        
+      if (error) {
+        console.error('Error fetching user role:', error);
+        return null;
+      }
+      
+      return data?.role as UserRole || null;
+    } catch (error) {
+      console.error('Error in getUserRole:', error);
+      return null;
+    }
+  };
+
+  // Check if user has hotel_business account type
+  const isHotelBusiness = (): boolean => {
+    return profile?.account_type === 'hotel_business';
+  };
+
+  // Check if user can manage a specific hotel
+  const canManageHotel = async (hotelId: string): Promise<boolean> => {
+    try {
+      if (!user) {
+        return false;
+      }
+      
+      // Check if user is the owner
+      const { data: hotelData, error: hotelError } = await supabase
+        .from('hotels')
+        .select('owner_user_id')
+        .eq('id', hotelId)
+        .maybeSingle();
+        
+      if (hotelError) {
+        console.error('Error checking hotel ownership:', hotelError);
+        return false;
+      }
+      
+      if (hotelData?.owner_user_id === user.id) {
+        return true;
+      }
+      
+      // Check if user is in hotel_owners table with appropriate role
+      const { data: ownerData, error: ownerError } = await supabase
+        .from('hotel_owners')
+        .select('role')
+        .eq('hotel_id', hotelId)
+        .eq('user_id', user.id)
+        .maybeSingle();
+        
+      if (ownerError) {
+        console.error('Error checking hotel_owners:', ownerError);
+        return false;
+      }
+      
+      return !!ownerData && ['owner', 'manager'].includes(ownerData.role);
+    } catch (error) {
+      console.error('Error in canManageHotel:', error);
+      return false;
+    }
+  };
+
   // Provide auth context to children
   return (
     <AuthContext.Provider value={{
@@ -441,7 +567,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       getFavorites,
       checkIsFavorite,
       isHotelOwner,
-      getOwnedHotels
+      getOwnedHotels,
+      getUserRole,
+      isHotelBusiness,
+      canManageHotel,
+      accountType: profile?.account_type || null
     }}>
       {children}
     </AuthContext.Provider>
