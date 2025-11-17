@@ -25,7 +25,6 @@ import WhyChooseUsSection from '@/components/home/WhyChooseUsSection';
 import LocalInsightsSection from '@/components/home/LocalInsightsSection';
 import TrendingNowSection from '@/components/home/TrendingNowSection';
 import SeasonalRecommendationsSection from '@/components/home/SeasonalRecommendationsSection';
-import StickyBookingWidget from '@/components/booking/StickyBookingWidget';
 import TrustBadges from '@/components/shared/TrustBadges';
 import ExitIntentPopup from '@/components/shared/ExitIntentPopup';
 import TouristasAIBanner from '@/components/shared/TouristasAIBanner';
@@ -270,9 +269,6 @@ export default function HomePage() {
           ]
         }}
       />
-      
-      {/* Sticky Booking Widget */}
-      <StickyBookingWidget />
       
       {/* Exit Intent Popup */}
       <ExitIntentPopup />

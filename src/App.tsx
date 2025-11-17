@@ -20,6 +20,12 @@ import LoadingSkeleton from "./components/shared/LoadingSkeleton";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 
+// Layouts
+const DashboardLayout = lazy(() => import("./layouts/DashboardLayout"));
+
+// Protected Route Component
+import ProtectedRoute from "./components/ProtectedRoute";
+
 // Lazy load pages for code splitting
 const HomePage = lazy(() => import("./pages/HomePage"));
 const HotelsPage = lazy(() => import("./pages/HotelsPage"));
@@ -178,12 +184,14 @@ const App = () => (
                   <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
                   <Route path="/terms-of-service" element={<TermsOfServicePage />} />
                   <Route path="/cookie-policy" element={<CookiePolicyPage />} />
-                  {/* Dashboard routes */}
-                  <Route path="/dashboard" element={<DashboardOverview />} />
-                  <Route path="/dashboard/messages" element={<DashboardMessages />} />
-                  <Route path="/dashboard/settings" element={<DashboardSettings />} />
-                  <Route path="/dashboard/my-hotels" element={<MyHotels />} />
-                  <Route path="/dashboard/featured-hotels" element={<FeaturedHotelsManagement />} />
+                  {/* Dashboard routes - Protected and wrapped with DashboardLayout */}
+                  <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+                    <Route index element={<DashboardOverview />} />
+                    <Route path="messages" element={<DashboardMessages />} />
+                    <Route path="settings" element={<DashboardSettings />} />
+                    <Route path="my-hotels" element={<MyHotels />} />
+                    <Route path="featured-hotels" element={<FeaturedHotelsManagement />} />
+                  </Route>
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
