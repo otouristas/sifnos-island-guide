@@ -116,6 +116,15 @@ export default function Footer() {
               <li><Link to="/guest-support" className="hover:text-white transition-colors">Guest Support</Link></li>
               <li><Link to="/booking-policies" className="hover:text-white transition-colors">Booking Policies</Link></li>
               <li><Link to="/guest-experience" className="hover:text-white transition-colors">Guest Experience</Link></li>
+              <li>
+                <Link 
+                  to="/h/demo-hotel/g/demo-guest-token" 
+                  className="hover:text-white transition-colors inline-flex items-center gap-1.5 text-sifnos-beige font-medium"
+                >
+                  <span className="text-xs bg-sifnos-beige/20 px-2 py-0.5 rounded">DEMO</span>
+                  Try Guest Portal
+                </Link>
+              </li>
             </ul>
             <h5 className="font-heading font-semibold mt-6 mb-3 text-sifnos-beige text-lg">{t('footer.resources')}</h5>
             <ul className="space-y-2 text-white/70 text-sm">
