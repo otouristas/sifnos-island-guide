@@ -70,7 +70,6 @@ const addCachePreventionMeta = () => {
     
     // Preload key resources
     const preloadLinks = [
-      '/fonts/inter.woff2',
       '/uploads/touristas-ai-logo.svg'
     ];
     
@@ -78,12 +77,7 @@ const addCachePreventionMeta = () => {
       const link = document.createElement('link');
       link.rel = 'preload';
       link.href = url;
-      link.as = url.endsWith('.woff2') ? 'font' : 
-                url.endsWith('.svg') ? 'image' : 
-                'fetch';
-      if (url.endsWith('.woff2')) {
-        link.setAttribute('crossorigin', 'anonymous');
-      }
+      link.as = url.endsWith('.svg') ? 'image' : 'fetch';
       document.head.appendChild(link);
     });
     
