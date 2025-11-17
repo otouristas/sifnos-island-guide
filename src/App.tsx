@@ -78,9 +78,7 @@ const Requests = lazy(() => import("./components/guest/Requests").then(m => ({ d
 const AreaGuide = lazy(() => import("./components/guest/AreaGuide").then(m => ({ default: m.AreaGuide })));
 const GuestSettings = lazy(() => import("./components/guest/Settings"));
 
-console.log('[APP.TSX] 🎯 Creating QueryClient and components');
 const queryClient = new QueryClient();
-console.log('[APP.TSX] ✅ QueryClient created');
 
 // Layout wrapper to conditionally show navigation/footer
 const LayoutWrapper = ({ children }: { children: ReactNode }) => {
