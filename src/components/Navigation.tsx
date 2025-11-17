@@ -131,7 +131,7 @@ const DesktopNavItems = memo(({ location, openDropdown, toggleDropdown, navItems
               {isOpen && (
                 <div 
                   data-dropdown={item.name}
-                  className="absolute top-full left-0 pt-1 w-56 z-[10000]"
+                  className="absolute top-full left-0 pt-1 w-56 z-[60]"
                   onMouseEnter={() => {
                     const timeout = hoverTimeouts.current.get(item.name);
                     if (timeout) {
@@ -317,7 +317,7 @@ const Navigation = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 w-full z-[9999] bg-white shadow-sm h-14 md:h-[72px]">
+      <header className="fixed top-0 left-0 right-0 w-full z-50 bg-white shadow-sm h-14 md:h-[72px]">
         <div className="max-w-[2000px] mx-auto h-full pl-0">
           <div className="flex items-center h-full">
             <div className="flex items-center space-x-12">

@@ -32,7 +32,7 @@ export const LanguageSelector = () => {
           <span className="hidden sm:inline">{currentLang.name}</span>
         </SelectValue>
       </SelectTrigger>
-      <SelectContent className="bg-popover/95 backdrop-blur-md border-border z-[10000]">
+      <SelectContent className="bg-popover/95 backdrop-blur-md border-border z-[60]">
         {languages.map((lang) => (
           <SelectItem key={lang.code} value={lang.code} className="cursor-pointer">
             <span className="mr-2">{lang.flag}</span>
