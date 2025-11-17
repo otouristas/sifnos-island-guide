@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 export type Language = 'en' | 'el' | 'fr' | 'it' | 'de' | 'sv' | 'ru' | 'tr';
 
@@ -60,37 +60,35 @@ export const I18nProvider = ({ children }: I18nProviderProps) => {
   }, [language]);
 
   // Translation function with nested key support (e.g., "common.home")
-  const t = useMemo(() => {
-    return (key: string, params?: Record<string, string>): string => {
-      if (!translations || Object.keys(translations).length === 0) {
-        return key; // Return key if translations not loaded yet
-      }
+  const t = (key: string, params?: Record<string, string>): string => {
+    if (!translations || Object.keys(translations).length === 0) {
+      return key; // Return key if translations not loaded yet
+    }
 
-      const keys = key.split('.');
-      let value: any = translations;
-      
-      for (const k of keys) {
-        if (value && typeof value === 'object' && k in value) {
-          value = value[k];
-        } else {
-          return key; // Return key if translation not found
-        }
+    const keys = key.split('.');
+    let value: any = translations;
+    
+    for (const k of keys) {
+      if (value && typeof value === 'object' && k in value) {
+        value = value[k];
+      } else {
+        return key; // Return key if translation not found
       }
-      
-      if (typeof value !== 'string') {
-        return key;
-      }
-      
-      // Replace parameters if provided
-      if (params) {
-        return value.replace(/\{\{(\w+)\}\}/g, (match, paramKey) => {
-          return params[paramKey] || match;
-        });
-      }
-      
-      return value;
-    };
-  }, [translations]);
+    }
+    
+    if (typeof value !== 'string') {
+      return key;
+    }
+    
+    // Replace parameters if provided
+    if (params) {
+      return value.replace(/\{\{(\w+)\}\}/g, (match, paramKey) => {
+        return params[paramKey] || match;
+      });
+    }
+    
+    return value;
+  };
 
   return (
     <I18nContext.Provider value={{ language, setLanguage, t }}>

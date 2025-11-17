@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, ReactNode } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -79,7 +79,7 @@ const GuestSettings = lazy(() => import("./components/guest/Settings"));
 const queryClient = new QueryClient();
 
 // Layout wrapper to conditionally show navigation/footer
-const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
+const LayoutWrapper = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
   const isGuestPortal = location.pathname.startsWith('/h/');
   
