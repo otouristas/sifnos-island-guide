@@ -1,3 +1,4 @@
+import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,56 +14,53 @@ import { I18nProvider } from "./contexts/I18nContext";
 import TouristasChat from "./components/TouristasChat";
 import { TouristasToggle } from "./components/TouristasToggle";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import LoadingSkeleton from "./components/shared/LoadingSkeleton";
 
-// Pages
-import HomePage from "./pages/HomePage";
-import HotelsPage from "./pages/HotelsPage";
-import HotelDetailPage from "./pages/HotelDetailPage";
-import ContactPage from "./pages/ContactPage";
-import AboutPage from "./pages/AboutPage";
-import FAQPage from "./pages/FAQPage";
-import NotFound from "./pages/NotFound";
-import TravelGuidePage from "./pages/TravelGuidePage";
-import BeachesPage from "./pages/BeachesPage";
-import AboutUsPage from "./pages/AboutUsPage";
-import LocationsPage from "./pages/LocationsPage";
-import LocationPage from "./pages/LocationPage";
-import HotelTypesPage from "./pages/HotelTypesPage";
-import HotelTypePage from "./pages/HotelTypePage";
-import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
-import TermsOfServicePage from "./pages/TermsOfServicePage";
-import CookiePolicyPage from "./pages/CookiePolicyPage";
-import Index from "./pages/Index";
-import PricingPage from "./pages/PricingPage";
-import ThankYouPage from "./pages/ThankYouPage";
-import TouristasAIPage from "./pages/TouristasAIPage";
-import BlogPage from "./pages/BlogPage";
-import BlogPostPage from "./pages/BlogPostPage";
-import FerryTicketsPage from "./pages/FerryTicketsPage";
-import ProfilePage from "./pages/ProfilePage";
-import FavoritesPage from "./pages/FavoritesPage";
-import SettingsPage from "./pages/SettingsPage";
-
-// Dashboard Pages
-import DashboardOverview from "./pages/dashboard/DashboardOverview";
-import DashboardMessages from "./pages/dashboard/DashboardMessages";
-import DashboardSettings from "./pages/dashboard/DashboardSettings";
-import MyHotels from "./pages/dashboard/MyHotels";
-import FeaturedHotelsManagement from "./pages/dashboard/FeaturedHotelsManagement";
-
-// Auth Pages
-import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
-import AgodaTestPage from './pages/AgodaTestPage';
-import AgodaDirectTestPage from './pages/AgodaDirectTestPage';
-import HotelMatchingTestPage from './pages/HotelMatchingTestPage';
-import WhereToStaySifnosPage from './pages/WhereToStaySifnosPage';
-import BestBeachesSifnosPage from './pages/BestBeachesSifnosPage';
-import LuxuryHotelsSifnosPage from './pages/LuxuryHotelsSifnosPage';
-import TravelPackagesPage from './pages/TravelPackagesPage';
-
-// Components
+// Components (not lazy loaded - needed immediately)
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
+
+// Lazy load pages for code splitting
+const HomePage = lazy(() => import("./pages/HomePage"));
+const HotelsPage = lazy(() => import("./pages/HotelsPage"));
+const HotelDetailPage = lazy(() => import("./pages/HotelDetailPage"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
+const AboutPage = lazy(() => import("./pages/AboutPage"));
+const FAQPage = lazy(() => import("./pages/FAQPage"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const TravelGuidePage = lazy(() => import("./pages/TravelGuidePage"));
+const BeachesPage = lazy(() => import("./pages/BeachesPage"));
+const AboutUsPage = lazy(() => import("./pages/AboutUsPage"));
+const LocationsPage = lazy(() => import("./pages/LocationsPage"));
+const LocationPage = lazy(() => import("./pages/LocationPage"));
+const HotelTypesPage = lazy(() => import("./pages/HotelTypesPage"));
+const HotelTypePage = lazy(() => import("./pages/HotelTypePage"));
+const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
+const TermsOfServicePage = lazy(() => import("./pages/TermsOfServicePage"));
+const CookiePolicyPage = lazy(() => import("./pages/CookiePolicyPage"));
+const Index = lazy(() => import("./pages/Index"));
+const PricingPage = lazy(() => import("./pages/PricingPage"));
+const ThankYouPage = lazy(() => import("./pages/ThankYouPage"));
+const TouristasAIPage = lazy(() => import("./pages/TouristasAIPage"));
+const BlogPage = lazy(() => import("./pages/BlogPage"));
+const BlogPostPage = lazy(() => import("./pages/BlogPostPage"));
+const FerryTicketsPage = lazy(() => import("./pages/FerryTicketsPage"));
+const ProfilePage = lazy(() => import("./pages/ProfilePage"));
+const FavoritesPage = lazy(() => import("./pages/FavoritesPage"));
+const SettingsPage = lazy(() => import("./pages/SettingsPage"));
+const DashboardOverview = lazy(() => import("./pages/dashboard/DashboardOverview"));
+const DashboardMessages = lazy(() => import("./pages/dashboard/DashboardMessages"));
+const DashboardSettings = lazy(() => import("./pages/dashboard/DashboardSettings"));
+const MyHotels = lazy(() => import("./pages/dashboard/MyHotels"));
+const FeaturedHotelsManagement = lazy(() => import("./pages/dashboard/FeaturedHotelsManagement"));
+const ResetPasswordPage = lazy(() => import("./pages/auth/ResetPasswordPage"));
+const AgodaTestPage = lazy(() => import('./pages/AgodaTestPage'));
+const AgodaDirectTestPage = lazy(() => import('./pages/AgodaDirectTestPage'));
+const HotelMatchingTestPage = lazy(() => import('./pages/HotelMatchingTestPage'));
+const WhereToStaySifnosPage = lazy(() => import('./pages/WhereToStaySifnosPage'));
+const BestBeachesSifnosPage = lazy(() => import('./pages/BestBeachesSifnosPage'));
+const LuxuryHotelsSifnosPage = lazy(() => import('./pages/LuxuryHotelsSifnosPage'));
+const TravelPackagesPage = lazy(() => import('./pages/TravelPackagesPage'));
 
 const queryClient = new QueryClient();
 
@@ -94,61 +92,67 @@ const App = () => (
             {/* Spacer for fixed header */}
             <div className="h-14 md:h-[72px]" />
             <main>
-              <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/hotels" element={<HotelsPage />} />
-              {/* Hotel detail route */}
-              <Route path="/hotels/:slug" element={<HotelDetailPage />} />
-              {/* Location routes */}
-              <Route path="/locations" element={<LocationsPage />} />
-              <Route path="/locations/:slug" element={<LocationPage />} />
-              {/* Hotel types routes */}
-              <Route path="/hotel-types" element={<HotelTypesPage />} />
-              <Route path="/hotel-types/:slug" element={<HotelTypePage />} />
-              {/* Blog routes */}
-              <Route path="/blog" element={<BlogPage />} />
-              <Route path="/blog/:slug" element={<BlogPostPage />} />
-              {/* Ferry tickets route */}
-              <Route path="/ferry-tickets" element={<FerryTicketsPage />} />
-              {/* Travel packages route */}
-              <Route path="/packages" element={<TravelPackagesPage />} />
-              {/* SEO-optimized content pages */}
-              <Route path="/where-to-stay-sifnos" element={<WhereToStaySifnosPage />} />
-              <Route path="/best-beaches-sifnos-guide" element={<BestBeachesSifnosPage />} />
-              <Route path="/luxury-hotels-sifnos" element={<LuxuryHotelsSifnosPage />} />
-              {/* Touristas AI route */}
-              <Route path="/touristas-ai" element={<TouristasAIPage />} />
-              {/* User account routes */}
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/favorites" element={<FavoritesPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
-              {/* Auth routes */}
-              <Route path="/reset-password" element={<ResetPasswordPage />} />
-              <Route path="/agoda-test" element={<AgodaTestPage />} />
-              <Route path="/agoda-direct-test" element={<AgodaDirectTestPage />} />
-              <Route path="/hotel-matching-test" element={<HotelMatchingTestPage />} />
-              {/* Other routes */}
-              <Route path="/beaches" element={<BeachesPage />} />
-              <Route path="/travel-guide" element={<TravelGuidePage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/about-us" element={<AboutUsPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/faq" element={<FAQPage />} />
-              {/* Pricing and registration */}
-              <Route path="/pricing" element={<PricingPage />} />
-              <Route path="/thank-you" element={<ThankYouPage />} />
-              {/* Legal pages */}
-              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-              <Route path="/terms-of-service" element={<TermsOfServicePage />} />
-              <Route path="/cookie-policy" element={<CookiePolicyPage />} />
-              {/* Dashboard routes */}
-              <Route path="/dashboard" element={<DashboardOverview />} />
-              <Route path="/dashboard/messages" element={<DashboardMessages />} />
-              <Route path="/dashboard/settings" element={<DashboardSettings />} />
-              <Route path="/dashboard/my-hotels" element={<MyHotels />} />
-              <Route path="/dashboard/featured-hotels" element={<FeaturedHotelsManagement />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <Suspense fallback={
+                <div className="container mx-auto py-12 px-4">
+                  <LoadingSkeleton type="text" count={3} />
+                </div>
+              }>
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/hotels" element={<HotelsPage />} />
+                  {/* Hotel detail route */}
+                  <Route path="/hotels/:slug" element={<HotelDetailPage />} />
+                  {/* Location routes */}
+                  <Route path="/locations" element={<LocationsPage />} />
+                  <Route path="/locations/:slug" element={<LocationPage />} />
+                  {/* Hotel types routes */}
+                  <Route path="/hotel-types" element={<HotelTypesPage />} />
+                  <Route path="/hotel-types/:slug" element={<HotelTypePage />} />
+                  {/* Blog routes */}
+                  <Route path="/blog" element={<BlogPage />} />
+                  <Route path="/blog/:slug" element={<BlogPostPage />} />
+                  {/* Ferry tickets route */}
+                  <Route path="/ferry-tickets" element={<FerryTicketsPage />} />
+                  {/* Travel packages route */}
+                  <Route path="/packages" element={<TravelPackagesPage />} />
+                  {/* SEO-optimized content pages */}
+                  <Route path="/where-to-stay-sifnos" element={<WhereToStaySifnosPage />} />
+                  <Route path="/best-beaches-sifnos-guide" element={<BestBeachesSifnosPage />} />
+                  <Route path="/luxury-hotels-sifnos" element={<LuxuryHotelsSifnosPage />} />
+                  {/* Touristas AI route */}
+                  <Route path="/touristas-ai" element={<TouristasAIPage />} />
+                  {/* User account routes */}
+                  <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/favorites" element={<FavoritesPage />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                  {/* Auth routes */}
+                  <Route path="/reset-password" element={<ResetPasswordPage />} />
+                  <Route path="/agoda-test" element={<AgodaTestPage />} />
+                  <Route path="/agoda-direct-test" element={<AgodaDirectTestPage />} />
+                  <Route path="/hotel-matching-test" element={<HotelMatchingTestPage />} />
+                  {/* Other routes */}
+                  <Route path="/beaches" element={<BeachesPage />} />
+                  <Route path="/travel-guide" element={<TravelGuidePage />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/about-us" element={<AboutUsPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/faq" element={<FAQPage />} />
+                  {/* Pricing and registration */}
+                  <Route path="/pricing" element={<PricingPage />} />
+                  <Route path="/thank-you" element={<ThankYouPage />} />
+                  {/* Legal pages */}
+                  <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                  <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+                  <Route path="/cookie-policy" element={<CookiePolicyPage />} />
+                  {/* Dashboard routes */}
+                  <Route path="/dashboard" element={<DashboardOverview />} />
+                  <Route path="/dashboard/messages" element={<DashboardMessages />} />
+                  <Route path="/dashboard/settings" element={<DashboardSettings />} />
+                  <Route path="/dashboard/my-hotels" element={<MyHotels />} />
+                  <Route path="/dashboard/featured-hotels" element={<FeaturedHotelsManagement />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
             </main>
             <Footer />
             <CookieConsent />
