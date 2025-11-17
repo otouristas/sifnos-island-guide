@@ -89,7 +89,7 @@ export default function FerryTicketsPage() {
               <select 
                 value={fromPort} 
                 onChange={(e) => setFromPort(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sifnos-turquoise focus:border-sifnos-turquoise"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
               >
                 <option value="">Select departure</option>
                 <option value="piraeus">Piraeus (Athens)</option>
@@ -150,11 +150,21 @@ export default function FerryTicketsPage() {
           </div>
           
           <div className="text-center">
-            <button className="inline-flex items-center gap-2 px-8 py-4 bg-sifnos-beige text-sifnos-deep-blue rounded-lg hover:bg-[#d7cab7] transition-colors font-semibold text-lg shadow-lg">
+            <a 
+              href="https://www.ferryhopper.com/en/ferries/greece/athens/sifnos?aid=YOUR_AFFILIATE_ID"
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-semibold text-lg shadow-lg"
+            >
               <Ticket className="h-5 w-5" />
-              Search Ferry Tickets
-            </button>
-            <p className="text-sm text-gray-600 mt-2">Best price guarantee • Instant confirmation • Free cancellation</p>
+              Search & Book Ferry Tickets
+            </a>
+            <p className="text-sm text-muted-foreground mt-3">
+              ✅ Best price guarantee • 🎟️ Instant confirmation • 🔄 Free cancellation available
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Powered by Ferryhopper - Greece's #1 ferry booking platform
+            </p>
           </div>
         </div>
 
