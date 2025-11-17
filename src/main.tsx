@@ -3,6 +3,38 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
+// Global error handler for uncaught errors
+window.addEventListener('error', (event) => {
+  console.error('🚨 [GLOBAL ERROR HANDLER] Uncaught error:', {
+    message: event.message,
+    filename: event.filename,
+    lineno: event.lineno,
+    colno: event.colno,
+    error: event.error,
+    stack: event.error?.stack,
+    timestamp: new Date().toISOString(),
+  });
+  
+  // Prevent default browser error handling
+  event.preventDefault();
+});
+
+// Global handler for unhandled promise rejections
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('🚨 [GLOBAL ERROR HANDLER] Unhandled promise rejection:', {
+    reason: event.reason,
+    promise: event.promise,
+    stack: event.reason?.stack,
+    timestamp: new Date().toISOString(),
+  });
+  
+  // Prevent default browser error handling
+  event.preventDefault();
+});
+
+// Log when the error handlers are registered
+console.log('✅ Global error handlers registered');
+
 // Generate a unique version identifier for this build
 const buildVersion = `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
