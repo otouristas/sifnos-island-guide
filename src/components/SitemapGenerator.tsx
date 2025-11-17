@@ -240,52 +240,46 @@ export default function SitemapGenerator() {
       try {
         const { data: hotels, error } = await supabase
           .from('hotels')
-          .select('id, name, updated_at, hotel_types, rating');
+          .select('id, name, updated_at, hotel_types, rating, is_featured, featured_tier, featured_priority');
         
         if (!error && hotels) {
           // Create sitemap entries for each hotel with correct type handling
-          hotelPages = hotels.map((hotel) => {
+          hotelPages = hotels.map((hotel: any) => {
+            // Featured hotels get higher priority based on tier
+            let priority = (hotel.rating && hotel.rating >= 4) ? 0.8 : 0.7;
+            let changefreq: 'daily' | 'weekly' = 'weekly';
+            
+            if (hotel.is_featured) {
+              // Set priority based on featured tier
+              switch (hotel.featured_tier) {
+                case 'platinum':
+                  priority = 0.95;
+                  break;
+                case 'gold':
+                  priority = 0.9;
+                  break;
+                case 'silver':
+                  priority = 0.85;
+                  break;
+                case 'bronze':
+                  priority = 0.8;
+                  break;
+                default:
+                  priority = 0.85;
+              }
+              changefreq = 'daily';
+            }
+            
             return {
               loc: `${baseURL}/hotels/${generateHotelUrl(hotel.name)}`,
-              lastmod: new Date(hotel.updated_at).toISOString().split('T')[0],
-              changefreq: 'weekly' as const,
-              // Use optional chaining and nullish coalescing to safely handle missing rating
-              priority: (hotel.rating && hotel.rating >= 4) ? 0.8 : 0.7
+              lastmod: hotel.updated_at ? new Date(hotel.updated_at).toISOString().split('T')[0] : currentDate,
+              changefreq: changefreq,
+              priority: priority
             };
           });
           
-          // Add featured hotels with higher priority
-          const featuredHotels = [
-            {name: "Meropi Rooms and Apartments", id: "meropi-rooms-and-apartments", priority: 0.9},
-            {name: "Filadaki Villas", id: "filadaki-villas", priority: 0.9},
-            {name: "ALK Hotel Sifnos", id: "alk-hotel-sifnos", priority: 0.8},
-            {name: "Villa Olivia Clara", id: "villa-olivia-clara", priority: 0.8},
-            {name: "Morpheas Pension & Apartments", id: "morpheas-pension-apartments", priority: 0.8}
-          ];
-          
-          // Add each featured hotel, ensuring no duplicates
-          featuredHotels.forEach(featured => {
-            const urlSlug = generateHotelUrl(featured.name);
-            const featureUrl = `${baseURL}/hotels/${urlSlug}`;
-            
-            // Check if it's already in hotelPages with this exact URL
-            const existingIndex = hotelPages.findIndex(page => page.loc === featureUrl);
-            
-            if (existingIndex >= 0) {
-              // Update the existing entry with higher priority
-              hotelPages[existingIndex].priority = featured.priority;
-              hotelPages[existingIndex].changefreq = 'daily';
-              hotelPages[existingIndex].lastmod = currentDate; // Ensure the date is current
-            } else {
-              // Add new entry
-              hotelPages.push({
-                loc: featureUrl,
-                lastmod: currentDate,
-                changefreq: 'daily',
-                priority: featured.priority
-              });
-            }
-          });
+          // Sort by priority (highest first) to ensure featured hotels appear early
+          hotelPages.sort((a, b) => b.priority - a.priority);
         }
       } catch (error) {
         console.error('Error fetching hotels for sitemap:', error);

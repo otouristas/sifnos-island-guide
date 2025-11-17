@@ -14,7 +14,7 @@ export default function LocationsPage() {
   return (
     <>
       <SEO 
-        title="Sifnos Locations Guide - Where to Stay on the Island | Hotels Sifnos 2025" 
+        title="Sifnos Locations Guide - Where to Stay on the Island | Hotels Sifnos 2026" 
         description="Insider's guide to Sifnos' distinct areas - from lively Apollonia and beachside Kamares to tranquil Vathi and historic Kastro. Compare neighborhoods by amenities, atmosphere, and accessibility to find your perfect base for exploring this Cycladic gem."
         keywords={['sifnos locations', 'where to stay sifnos', 'best areas sifnos', 'sifnos villages', 'sifnos accommodation locations', 'apollonia sifnos', 'kamares sifnos', 'platis gialos sifnos']}
         schemaType="TouristDestination"

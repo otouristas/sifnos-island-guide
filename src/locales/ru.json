@@ -1,0 +1,43 @@
+{
+  "common": {
+    "home": "Главная",
+    "hotels": "Отели",
+    "explore": "Исследовать",
+    "ferryTickets": "Билеты на Паром",
+    "blog": "Блог",
+    "contact": "Контакты",
+    "allHotels": "Все Отели",
+    "luxuryHotels": "Роскошные Отели",
+    "beachHotels": "Пляжные Отели",
+    "villas": "Виллы",
+    "budgetHotels": "Бюджетные Отели",
+    "allLocations": "Все Места",
+    "beaches": "Пляжи",
+    "travelGuide": "Путеводитель",
+    "bookNow": "Забронировать Сейчас",
+    "viewMore": "Смотреть Больше",
+    "learnMore": "Узнать Больше",
+    "readMore": "Читать Больше"
+  },
+  "homepage": {
+    "heroTitle": "Откройте для Себя Идеальное Место для Отдыха на Сифносе",
+    "heroSubtitle": "Тщательно отобранные отели, виллы и аутентичные варианты размещения на этом жемчужине Киклад",
+    "askTouristasAI": "Спросить Touristas AI",
+    "browseAllHotels": "Просмотреть Все Отели"
+  },
+  "footer": {
+    "poweredBy": "при поддержке",
+    "touristasAI": "Touristas AI",
+    "companyInfo": "Ваш надежный гид по острову Сифнос. Мы предлагаем аутентичные впечатления, тщательно отобранные варианты размещения и местные знания.",
+    "popularLocations": "Популярные Места",
+    "hotelTypes": "Типы Отелей",
+    "resources": "Ресурсы",
+    "company": "Компания",
+    "aboutUs": "О Нас",
+    "listYourHotel": "Добавить Ваш Отель",
+    "privacyPolicy": "Политика Конфиденциальности",
+    "termsOfService": "Условия Использования",
+    "allRightsReserved": "Все права защищены"
+  }
+}
+

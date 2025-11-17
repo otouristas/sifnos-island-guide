@@ -1,0 +1,43 @@
+{
+  "common": {
+    "home": "Startseite",
+    "hotels": "Hotels",
+    "explore": "Entdecken",
+    "ferryTickets": "Fährtickets",
+    "blog": "Blog",
+    "contact": "Kontakt",
+    "allHotels": "Alle Hotels",
+    "luxuryHotels": "Luxushotels",
+    "beachHotels": "Strandhotels",
+    "villas": "Villen",
+    "budgetHotels": "Budget-Hotels",
+    "allLocations": "Alle Standorte",
+    "beaches": "Strände",
+    "travelGuide": "Reiseführer",
+    "bookNow": "Jetzt Buchen",
+    "viewMore": "Mehr Anzeigen",
+    "learnMore": "Mehr Erfahren",
+    "readMore": "Mehr Lesen"
+  },
+  "homepage": {
+    "heroTitle": "Entdecken Sie Ihren Perfekten Aufenthalt auf Sifnos",
+    "heroSubtitle": "Handverlesene Hotels, Villen und authentische Unterkünfte auf diesem Juwel der Kykladen",
+    "askTouristasAI": "Touristas AI Fragen",
+    "browseAllHotels": "Alle Hotels Durchsuchen"
+  },
+  "footer": {
+    "poweredBy": "unterstützt von",
+    "touristasAI": "Touristas AI",
+    "companyInfo": "Ihr vertrauenswürdiger Führer zur Erkundung der Insel Sifnos. Wir bieten authentische Erfahrungen, ausgewählte Unterkünfte und lokale Einblicke.",
+    "popularLocations": "Beliebte Standorte",
+    "hotelTypes": "Hoteltypen",
+    "resources": "Ressourcen",
+    "company": "Unternehmen",
+    "aboutUs": "Über Uns",
+    "listYourHotel": "Ihr Hotel Auflisten",
+    "privacyPolicy": "Datenschutzrichtlinie",
+    "termsOfService": "Nutzungsbedingungen",
+    "allRightsReserved": "Alle Rechte vorbehalten"
+  }
+}
+

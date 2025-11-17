@@ -37,7 +37,10 @@ export class DataSourceOrchestrator {
     const startTime = Date.now();
     
     try {
-      let query = supabase
+      const now = new Date().toISOString();
+      
+      // First, get featured hotels (prioritized)
+      let featuredQuery = supabase
         .from('hotels')
         .select(`
           *,
@@ -45,13 +48,49 @@ export class DataSourceOrchestrator {
           hotel_photos(id, photo_url, is_main_photo),
           hotel_rooms(id, name, price, capacity),
           hotel_reviews(rating, comment, reviewer_name)
-        `);
+        `)
+        .eq('is_featured', true)
+        .order('featured_priority', { ascending: false })
+        .order('rating', { ascending: false });
 
       if (location) {
-        query = query.ilike('location', `%${location}%`);
+        featuredQuery = featuredQuery.ilike('location', `%${location}%`);
       }
 
-      const { data: hotels, error } = await query;
+      const { data: featuredHotels, error: featuredError } = await featuredQuery.limit(10);
+      
+      // Filter featured hotels by date range
+      const nowDate = new Date(now);
+      const validFeaturedHotels = (featuredHotels || []).filter(hotel => {
+        const startDate = hotel.featured_start_date ? new Date(hotel.featured_start_date) : null;
+        const endDate = hotel.featured_end_date ? new Date(hotel.featured_end_date) : null;
+        const validStart = !startDate || startDate <= nowDate;
+        const validEnd = !endDate || endDate >= nowDate;
+        return validStart && validEnd;
+      });
+
+      // Then get regular hotels (non-featured)
+      let regularQuery = supabase
+        .from('hotels')
+        .select(`
+          *,
+          hotel_amenities(amenity),
+          hotel_photos(id, photo_url, is_main_photo),
+          hotel_rooms(id, name, price, capacity),
+          hotel_reviews(rating, comment, reviewer_name)
+        `)
+        .eq('is_featured', false)
+        .order('rating', { ascending: false });
+
+      if (location) {
+        regularQuery = regularQuery.ilike('location', `%${location}%`);
+      }
+
+      const { data: regularHotels, error: regularError } = await regularQuery.limit(20);
+      
+      // Combine: featured first, then regular
+      const hotels = [...validFeaturedHotels, ...(regularHotels || [])];
+      const error = featuredError || regularError;
 
       if (error) {
         console.error('Error fetching local hotels:', error);

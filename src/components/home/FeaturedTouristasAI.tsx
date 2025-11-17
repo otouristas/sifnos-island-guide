@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Bot, Sparkles, Zap, Target, TrendingUp } from 'lucide-react';
+import { determineHotelLogoUrl } from '@/utils/image-utils';
 
 export default function FeaturedTouristasAI() {
   const navigate = useNavigate();
@@ -77,7 +78,24 @@ export default function FeaturedTouristasAI() {
                       
                       <div className="bg-background/80 rounded-lg p-3 border border-border/50 hover:border-primary/50 transition-colors cursor-pointer">
                         <div className="flex gap-3">
-                          <div className="w-16 h-16 bg-gradient-to-br from-primary/10 to-accent/10 rounded-lg flex-shrink-0" />
+                          <div className="w-16 h-16 bg-gradient-to-br from-primary/10 to-accent/10 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
+                            {(() => {
+                              const meropiHotel = { name: 'Meropi Rooms and Apartments', logo_path: 'meropi-logo.svg' };
+                              const logoUrl = determineHotelLogoUrl(meropiHotel);
+                              return logoUrl ? (
+                                <img 
+                                  src={logoUrl} 
+                                  alt="Meropi Rooms" 
+                                  className="w-12 h-12 object-contain"
+                                  onError={(e) => {
+                                    e.currentTarget.style.display = 'none';
+                                  }}
+                                />
+                              ) : (
+                                <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-accent/20 rounded" />
+                              );
+                            })()}
+                          </div>
                           <div className="flex-1 min-w-0">
                             <h4 className="font-heading font-semibold text-sm text-foreground truncate">Meropi Rooms</h4>
                             <p className="text-xs text-muted-foreground">Platis Gialos Beach</p>

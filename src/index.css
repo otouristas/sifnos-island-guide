@@ -4,101 +4,107 @@
 
 @layer base {
   :root {
-    /* Premium Color Palette */
+    /* Sifnos Brand Color Palette */
+    /* Brand blue: #1E2E48  -> hsl(215 42% 20%) */
+    /* Brand beige: #E3D7C3 -> hsl(36 36% 85%) */
+
     --background: 0 0% 100%;
-    --foreground: 210 50% 12%;
+    --foreground: 215 42% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 50% 12%;
+    --card-foreground: 215 42% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 50% 12%;
+    --popover-foreground: 215 42% 20%;
 
-    --primary: 210 50% 12%;
+    /* Brand tokens */
+    --primary: 215 42% 20%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 200 30% 45%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 36 36% 85%;
+    --secondary-foreground: 215 42% 20%;
 
-    --accent: 42 90% 55%;
-    --accent-foreground: 210 50% 12%;
+    /* Accent strictly within blue/beige system */
+    --accent: 215 42% 20%;
+    --accent-foreground: 0 0% 100%;
 
-    --muted: 30 15% 95%;
-    --muted-foreground: 210 20% 40%;
+    --muted: 30 10% 96%;
+    --muted-foreground: 215 15% 35%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 15% 88%;
-    --input: 210 15% 88%;
-    --ring: 210 50% 12%;
+    --border: 215 20% 90%;
+    --input: 215 20% 90%;
+    --ring: 215 42% 20%;
 
     --radius: 0.75rem;
 
-    /* Accent Light */
-    --accent-light: 48 85% 85%;
+    /* Accent Light (soft beige wash) */
+    --accent-light: 36 36% 90%;
     
-    /* Primary Accent */
-    --primary-accent: 200 30% 25%;
+    /* Primary Accent (slightly lighter blue for gradients) */
+    --primary-accent: 215 35% 28%;
 
-    /* Premium Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(210 50% 12%) 0%, hsl(200 30% 25%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(42 90% 55%) 0%, hsl(38 85% 48%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(30 15% 98%) 100%);
+    /* Brand-aligned Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(215 42% 18%) 0%, hsl(215 35% 28%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(215 42% 20%) 0%, hsl(36 36% 85%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(36 36% 96%) 100%);
 
-    /* Shadows */
-    --shadow-elegant: 0 10px 40px -10px hsl(210 50% 12% / 0.15);
-    --shadow-elegant-lg: 0 20px 60px -15px hsl(210 50% 12% / 0.25);
-    --shadow-premium: 0 20px 60px -15px hsl(210 50% 12% / 0.25);
-    --shadow-glow: 0 0 40px hsl(42 90% 55% / 0.2);
-    --shadow-glow-lg: 0 0 60px hsl(42 90% 55% / 0.3);
+    /* Shadows (blue-tinted, no gold) */
+    --shadow-elegant: 0 10px 40px -10px hsl(215 42% 20% / 0.15);
+    --shadow-elegant-lg: 0 20px 60px -15px hsl(215 42% 20% / 0.25);
+    --shadow-premium: 0 20px 60px -15px hsl(215 42% 20% / 0.25);
+    --shadow-glow: 0 0 40px hsl(215 42% 20% / 0.20);
+    --shadow-glow-lg: 0 0 60px hsl(215 42% 20% / 0.30);
 
     /* Toast Colors */
     --toast-success-background: 142 76% 36%;
     --toast-success-foreground: 0 0% 100%;
     --toast-error-background: 0 84% 60%;
     --toast-error-foreground: 0 0% 100%;
-    --toast-default-background: 210 50% 12%;
+    --toast-default-background: 215 42% 20%;
     --toast-default-foreground: 0 0% 100%;
   }
 
   .dark {
-    --background: 210 50% 5%;
+    --background: 215 40% 6%;
     --foreground: 0 0% 98%;
 
-    --card: 210 45% 8%;
+    --card: 215 35% 10%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 210 45% 8%;
+    --popover: 215 35% 10%;
     --popover-foreground: 0 0% 98%;
 
     --primary: 0 0% 98%;
-    --primary-foreground: 210 50% 12%;
+    --primary-foreground: 215 42% 20%;
 
-    --secondary: 200 30% 25%;
+    --secondary: 215 30% 18%;
     --secondary-foreground: 0 0% 98%;
 
-    --accent: 42 90% 55%;
-    --accent-foreground: 210 50% 12%;
+    /* Accent uses brand blue in dark mode */
+    --accent: 215 42% 60%;
+    --accent-foreground: 215 42% 15%;
 
-    --muted: 210 30% 15%;
-    --muted-foreground: 210 15% 65%;
+    --muted: 215 30% 15%;
+    --muted-foreground: 215 15% 70%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 210 30% 18%;
-    --input: 210 30% 18%;
-    --ring: 42 90% 55%;
+    --border: 215 30% 18%;
+    --input: 215 30% 18%;
+    --ring: 215 42% 60%;
     
-    --sidebar-background: 210 50% 8%;
+    --sidebar-background: 215 40% 8%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 42 90% 55%;
-    --sidebar-primary-foreground: 210 50% 12%;
-    --sidebar-accent: 210 30% 15%;
+    --sidebar-primary: 215 42% 60%;
+    --sidebar-primary-foreground: 215 42% 15%;
+    --sidebar-accent: 215 30% 18%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 210 30% 18%;
-    --sidebar-ring: 42 90% 55%;
+    --sidebar-border: 215 30% 22%;
+    --sidebar-ring: 215 42% 60%;
   }
 }
 

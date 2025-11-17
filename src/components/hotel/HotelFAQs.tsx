@@ -241,26 +241,28 @@ const HotelFAQs = ({ hotelName }: HotelFAQsProps) => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-0">
       {faqs.map((faq, index) => (
         <div 
           key={index} 
-          className="border-b pb-4 last:border-b-0 last:pb-0"
+          className="border-b border-gray-200 last:border-b-0"
         >
           <button 
-            className="flex justify-between items-center w-full text-left font-medium text-gray-800 py-2"
+            className={`flex justify-between items-center w-full text-left font-semibold text-sifnos-deep-blue py-4 px-0 hover:text-sifnos-turquoise transition-colors ${
+              openFaqIndex === index ? 'text-sifnos-turquoise' : ''
+            }`}
             onClick={() => toggleFaq(index)}
           >
-            <span>{faq.question}</span>
+            <span className="text-base md:text-lg pr-4">{faq.question}</span>
             {openFaqIndex === index ? (
-              <MinusCircle size={18} className="text-sifnos-turquoise flex-shrink-0" />
+              <MinusCircle size={20} className="text-sifnos-turquoise flex-shrink-0" />
             ) : (
-              <PlusCircle size={18} className="text-sifnos-turquoise flex-shrink-0" />
+              <PlusCircle size={20} className="text-sifnos-turquoise flex-shrink-0" />
             )}
           </button>
           
           {openFaqIndex === index && (
-            <div className="mt-2 text-gray-600 pl-2 whitespace-pre-line">
+            <div className="pb-4 text-gray-700 leading-relaxed whitespace-pre-line">
               {faq.answer}
             </div>
           )}

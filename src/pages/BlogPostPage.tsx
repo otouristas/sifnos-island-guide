@@ -1,22 +1,41 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Hotel, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import TouristasLogo from '@/components/TouristasLogo';
 import BlogSidebar from '@/components/blog/BlogSidebar';
 import BlogPost from '@/components/blog/BlogPost';
+import ReadingProgress from '@/components/blog/ReadingProgress';
+import SocialSharing from '@/components/blog/SocialSharing';
+import RelatedContentCarousel from '@/components/blog/RelatedContentCarousel';
 import SEO from '@/components/SEO';
 import { blogPosts } from '@/data/blogPosts';
 import { slugify } from '@/lib/url-utils';
 import { toast } from "sonner";
 import SchemaGenerator from '@/components/SchemaGenerator';
+import { useTouristas } from '@/contexts/TouristasContext';
 
 const BlogPostPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const { openChatWithPrompt } = useTouristas();
   
   // Find the blog post by slug
   const post = blogPosts.find(post => post.slug === slug);
+  
+  // Get related posts (same category, excluding current post)
+  const relatedPosts = useMemo(() => {
+    if (!post) return [];
+    
+    return blogPosts
+      .filter(p => 
+        p.slug !== post.slug &&
+        p.categories.some(cat => post.categories.includes(cat))
+      )
+      .slice(0, 3);
+  }, [post]);
   
   // Ensure URLs are canonical - redirect if needed
   useEffect(() => {
@@ -26,7 +45,7 @@ const BlogPostPage = () => {
     }
     
     // Special notification for the Sifnian cuisine guide
-    if (slug === 'sifnian-cuisine-guide-2025') {
+    if (slug === 'sifnian-cuisine-guide-2026') {
       console.log('Displaying updated Sifnian cuisine guide with removed content');
     }
   }, [slug, post, navigate]);
@@ -39,35 +58,35 @@ const BlogPostPage = () => {
 
   // Enhanced SEO title generation based on post content
   const generateSeoTitle = () => {
-    if (!post) return 'Blog Post | Sifnos Travel Guide 2025';
+    if (!post) return 'Blog Post | Sifnos Travel Guide 2026';
     
     // Specific custom titles for certain blog posts
-    if (post.slug === 'ultimate-guide-to-sifnos-hotels-2025') {
-      return 'Sifnos Hotels Guide 2025 | Best Areas & Stays to Book | Hotels Sifnos';
+    if (post.slug === 'ultimate-guide-to-sifnos-hotels-2026') {
+      return 'Sifnos Hotels Guide 2026 | Best Areas & Stays to Book | Hotels Sifnos';
     }
     
-    if (post.slug === 'top-beaches-sifnos-2025') {
-      return 'Best Beaches in Sifnos 2025 | Hidden Coves & Popular Shores | Sifnos Guide';
+    if (post.slug === 'top-beaches-sifnos-2026') {
+      return 'Best Beaches in Sifnos 2026 | Hidden Coves & Popular Shores | Sifnos Guide';
     }
     
-    if (post.slug === 'family-friendly-sifnos-travel-guide') {
-      return 'Family-Friendly Sifnos Guide 2025 | Activities, Hotels & Tips for Kids';
+    if (post.slug === 'family-friendly-sifnos-guide-2026') {
+      return 'Family-Friendly Sifnos Guide 2026 | Activities, Hotels & Tips for Kids';
     }
     
-    if (post.slug === 'luxury-stays-sifnos-island-2025') {
-      return 'Luxury Sifnos Hotels & Villas 2025 | Premium Stays with Stunning Views';
+    if (post.slug === 'luxury-getaways-sifnos-2026') {
+      return 'Luxury Sifnos Hotels & Villas 2026 | Premium Stays with Stunning Views';
     }
     
     if (post.slug === 'perfect-sifnos-itinerary-7-days') {
-      return '7 Days in Sifnos | Perfect Itinerary 2025 | Day by Day Travel Guide';
+      return '7 Days in Sifnos | Perfect Itinerary 2026 | Day by Day Travel Guide';
     }
     
     if (post.slug === 'sifnos-food-guide-best-restaurants-cuisine') {
-      return 'Sifnos Food Guide 2025 | Best Restaurants, Local Dishes & Culinary Experiences';
+      return 'Sifnos Food Guide 2026 | Best Restaurants, Local Dishes & Culinary Experiences';
     }
     
     // Default title format for other posts
-    return `${post.title} | Sifnos Island Travel Guide 2025`;
+    return `${post.title} | Sifnos Island Travel Guide 2026`;
   };
   
   // Enhanced SEO description generation
@@ -76,23 +95,23 @@ const BlogPostPage = () => {
     
     // Create a more compelling and keyword-rich description based on post content
     if (post.categories.includes('Beaches')) {
-      return `Discover the best beaches in Sifnos for 2025, from secluded coves to popular shores. Find information on facilities, access, water conditions, and nearby accommodations for your perfect beach day.`;
+      return `Discover the best beaches in Sifnos for 2026, from secluded coves to popular shores. Find information on facilities, access, water conditions, and nearby accommodations for your perfect beach day.`;
     }
     
     if (post.categories.includes('Family Travel')) {
-      return `Plan your family vacation to Sifnos with our comprehensive 2025 guide. Find family-friendly hotels, kid-approved activities, safe beaches, and practical tips for traveling with children of all ages.`;
+      return `Plan your family vacation to Sifnos with our comprehensive 2026 guide. Find family-friendly hotels, kid-approved activities, safe beaches, and practical tips for traveling with children of all ages.`;
     }
     
     if (post.categories.includes('Luxury')) {
-      return `Experience luxury in Sifnos with our exclusive guide to premium accommodations, upscale dining, private beaches, and bespoke experiences. Find the perfect high-end villa or 5-star hotel for your 2025 vacation.`;
+      return `Experience luxury in Sifnos with our exclusive guide to premium accommodations, upscale dining, private beaches, and bespoke experiences. Find the perfect high-end villa or 5-star hotel for your 2026 vacation.`;
     }
     
     if (post.categories.includes('Itineraries')) {
-      return `Follow our perfect 7-day Sifnos itinerary for 2025. Day-by-day guide with the best beaches, villages, restaurants, and cultural experiences to make the most of your Greek island vacation.`;
+      return `Follow our perfect 7-day Sifnos itinerary for 2026. Day-by-day guide with the best beaches, villages, restaurants, and cultural experiences to make the most of your Greek island vacation.`;
     }
     
     if (post.categories.includes('Food')) {
-      return `Explore Sifnos' renowned culinary scene with our 2025 food guide. Discover traditional dishes, award-winning restaurants, cooking classes, and the best places to experience authentic Greek cuisine.`;
+      return `Explore Sifnos' renowned culinary scene with our 2026 food guide. Discover traditional dishes, award-winning restaurants, cooking classes, and the best places to experience authentic Greek cuisine.`;
     }
     
     // Default description using the post excerpt
@@ -101,6 +120,9 @@ const BlogPostPage = () => {
   
   return (
     <div>
+      {/* Reading Progress Bar */}
+      <ReadingProgress />
+      
       <SEO
         title={generateSeoTitle()}
         description={generateSeoDescription()}
@@ -113,7 +135,7 @@ const BlogPostPage = () => {
         author={post?.author || "Hotels Sifnos Editorial Team"}
         keywords={post ? [
           ...post.categories.map(category => category.toLowerCase()),
-          'sifnos travel guide 2025',
+          'sifnos travel guide 2026',
           'cyclades islands',
           'greece travel blog',
           'sifnos vacation tips',
@@ -167,11 +189,54 @@ const BlogPostPage = () => {
           <div className="w-full md:w-2/3">
             <div className="bg-white p-8 rounded-lg shadow-sm">
               <BlogPost slug={slug} />
+              
+              {/* Social Sharing */}
+              {post && (
+                <SocialSharing
+                  title={post.title}
+                  url={`https://hotelssifnos.com/blog/${post.slug}`}
+                  description={post.excerpt}
+                />
+              )}
             </div>
+            
+            {/* Related Content Carousel */}
+            {post && (
+              <RelatedContentCarousel currentPost={post} />
+            )}
           </div>
           
-          {/* Sidebar */}
-          <BlogSidebar />
+          {/* Sidebar with Sticky CTA */}
+          <div className="w-full md:w-1/3">
+            <div className="sticky top-24 space-y-8">
+              {/* Sticky CTA - Matching BlogSidebar Card Style */}
+              <Card className="bg-gradient-to-br from-sifnos-deep-blue to-[#0b1626] border-0 overflow-hidden">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-xl font-semibold text-white">Plan Your Sifnos Trip</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0 space-y-3">
+                  <Button
+                    onClick={() => openChatWithPrompt(`I'm reading about ${post?.title}. Help me plan my trip to Sifnos.`)}
+                    className="w-full bg-sifnos-beige text-sifnos-deep-blue hover:bg-sifnos-beige/90 font-semibold"
+                  >
+                    <TouristasLogo size="sm" className="mr-2" />
+                    Ask Touristas AI
+                  </Button>
+                  <Button
+                    onClick={() => navigate('/hotels')}
+                    variant="outline"
+                    className="w-full border-2 border-white text-white hover:bg-white hover:text-sifnos-deep-blue"
+                  >
+                    <Hotel size={18} className="mr-2" />
+                    Browse Sifnos Hotels
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              {/* Regular Sidebar */}
+              <BlogSidebar />
+            </div>
+          </div>
         </div>
       </div>
     </div>

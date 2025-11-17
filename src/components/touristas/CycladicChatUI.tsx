@@ -1,7 +1,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Send, Loader2, Hotel, Star, MapPin, X, User, Bot } from 'lucide-react';
+import { Send, Loader2, Hotel, Star, MapPin, X, User } from 'lucide-react';
+import TouristasLogo from '@/components/TouristasLogo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -283,7 +284,7 @@ export default function CycladicChatUI() {
                 </div>
               ) : (
                 <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center flex-shrink-0">
-                  <Bot className="h-4 w-4" />
+                  <TouristasLogo size="sm" />
                 </div>
               )}
               

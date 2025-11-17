@@ -1,8 +1,10 @@
 
 import { useEffect, useState } from 'react';
-import { Star, Flag } from 'lucide-react';
+import { Star, Flag, Reply, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface Review {
   id: string;
@@ -203,22 +205,23 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xl font-semibold flex items-center">
+        <h3 className="text-2xl font-montserrat font-bold text-sifnos-deep-blue flex items-center">
           <img 
             src="/uploads/Booking.com.svg" 
             alt="Booking.com" 
             className="h-6 mr-2" 
           />
           Reviews
-          <span className="ml-2 text-sm text-gray-600">({reviews.length})</span>
+          <span className="ml-2 text-lg text-gray-600 font-normal">({reviews.length})</span>
         </h3>
         
-        <button
+        <Button
           onClick={fetchBookingReviews}
           disabled={refreshing}
-          className="text-sifnos-turquoise hover:text-sifnos-deep-blue flex items-center"
+          variant="outline"
+          className="border-sifnos-turquoise text-sifnos-deep-blue hover:bg-sifnos-turquoise/10"
         >
           {refreshing ? (
             <>
@@ -228,72 +231,109 @@ const BookingReviews = ({ hotelId }: BookingReviewsProps) => {
           ) : (
             <>Refresh Reviews</>
           )}
-        </button>
+        </Button>
       </div>
       
       {reviews.length === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-gray-600">No Booking.com reviews available yet.</p>
-          <button
-            onClick={fetchBookingReviews}
-            className="mt-4 text-sifnos-turquoise hover:text-sifnos-deep-blue"
-          >
-            Fetch Reviews from Booking.com
-          </button>
-        </div>
+        <Card className="p-8">
+          <CardContent className="text-center">
+            <p className="text-gray-600 mb-4">No Booking.com reviews available yet.</p>
+            <Button
+              onClick={fetchBookingReviews}
+              className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white"
+            >
+              Fetch Reviews from Booking.com
+            </Button>
+          </CardContent>
+        </Card>
       ) : (
         <div className="space-y-6">
           {reviews.map((review) => (
-            <div key={review.id} className="border-b pb-6 last:border-b-0 last:pb-0">
-              <div className="flex items-start">
-                <div className="w-10 h-10 rounded-full bg-sifnos-turquoise/20 overflow-hidden mr-4 flex-shrink-0 flex items-center justify-center text-sifnos-turquoise font-medium">
-                  {review.reviewer_name.charAt(0).toUpperCase()}
-                </div>
-                
-                <div className="flex-1">
-                  <div className="flex flex-wrap justify-between">
-                    <div>
-                      <h4 className="font-semibold">{review.reviewer_name}</h4>
-                      {review.country && (
-                        <div className="flex items-center text-sm text-gray-600 mt-1">
-                          <Flag size={14} className="mr-1" />
-                          {review.country}
-                        </div>
-                      )}
+            <Card key={review.id} className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-4">
+                  {/* Avatar */}
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-sifnos-turquoise to-sifnos-deep-blue overflow-hidden flex-shrink-0 flex items-center justify-center text-white font-semibold text-lg">
+                    {review.reviewer_name.charAt(0).toUpperCase()}
+                  </div>
+                  
+                  <div className="flex-1">
+                    {/* Header */}
+                    <div className="flex flex-wrap justify-between items-start mb-3">
+                      <div>
+                        <h4 className="font-semibold text-lg text-sifnos-deep-blue">{review.reviewer_name}</h4>
+                        {review.country && (
+                          <div className="flex items-center text-sm text-gray-600 mt-1">
+                            <Flag size={14} className="mr-1" />
+                            {review.country}
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-sm text-gray-500">
+                        {formatDate(review.date)}
+                      </span>
                     </div>
-                    <span className="text-sm text-gray-500">
-                      {formatDate(review.date)}
-                    </span>
-                  </div>
-                  
-                  <div className="flex my-2">
-                    {renderStarRating(review.rating)}
-                    <span className="ml-2 text-sm font-medium">{Number(review.rating).toFixed(1)}</span>
-                  </div>
-                  
-                  <p className="text-gray-700">{review.comment}</p>
-                  
-                  <div className="mt-2 text-xs text-gray-500 flex items-center">
-                    <img 
-                      src="/uploads/Booking.com.svg" 
-                      alt="Booking.com" 
-                      className="h-3 mr-1" 
-                    />
-                    via Booking.com
+                    
+                    {/* Rating */}
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="flex">
+                        {renderStarRating(review.rating)}
+                      </div>
+                      <span className="text-sm font-semibold text-gray-700">{Number(review.rating).toFixed(1)}</span>
+                    </div>
+                    
+                    {/* Comment */}
+                    <p className="text-gray-700 leading-relaxed mb-4">{review.comment}</p>
+                    
+                    {/* Actions */}
+                    <div className="flex items-center gap-4 pt-3 border-t border-gray-100">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-gray-600 hover:text-sifnos-turquoise"
+                      >
+                        <ThumbsUp className="h-4 w-4 mr-1" />
+                        Helpful
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-gray-600 hover:text-sifnos-turquoise"
+                      >
+                        <ThumbsDown className="h-4 w-4 mr-1" />
+                        Not Helpful
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-gray-600 hover:text-sifnos-turquoise"
+                      >
+                        <Reply className="h-4 w-4 mr-1" />
+                        Reply
+                      </Button>
+                      <div className="ml-auto text-xs text-gray-500 flex items-center">
+                        <img 
+                          src="/uploads/Booking.com.svg" 
+                          alt="Booking.com" 
+                          className="h-3 mr-1" 
+                        />
+                        via Booking.com
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       )}
       
-      <div className="mt-4 text-center">
+      <div className="mt-6 text-center">
         <a 
           href={bookingUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sifnos-turquoise hover:text-sifnos-deep-blue inline-flex items-center"
+          className="text-sifnos-turquoise hover:text-sifnos-deep-blue inline-flex items-center font-medium"
         >
           See all reviews on Booking.com
           <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

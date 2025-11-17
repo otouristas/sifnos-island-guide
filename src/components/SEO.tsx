@@ -1,5 +1,6 @@
 
 import { Helmet } from 'react-helmet';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface SEOProps {
   title: string;
@@ -58,6 +59,7 @@ export default function SEO({
   hotelData,
   alternateLanguages = []
 }: SEOProps) {
+  const { language } = useI18n();
   
   // Enhanced image selection with page-specific defaults
   const getOptimizedImage = () => {
@@ -112,14 +114,14 @@ export default function SEO({
   
   const formattedCanonical = getCanonicalUrl();
   
-  // ENHANCED: Super-optimized title generation for 2025 SEO
+  // ENHANCED: Super-optimized title generation for 2026 SEO
   const generateSuperOptimizedTitle = (): string => {
     switch (pageType) {
       case 'homepage':
-        return `Best Sifnos Hotels 2025 - Luxury Resorts & Villas | Instant Booking & Best Prices`;
+        return `Best Sifnos Hotels 2026 - Luxury Resorts & Villas | Instant Booking & Best Prices`;
         
       case 'hotels':
-        return `Sifnos Hotels 2025 - Compare 25+ Premium Properties | Best Price Guarantee`;
+        return `Sifnos Hotels 2026 - Compare 25+ Premium Properties | Best Price Guarantee`;
         
       case 'location':
         if (locationData) {
@@ -129,25 +131,25 @@ export default function SEO({
             'village': 'Traditional Village Hotels & Authentic Stays',
             'capital': 'Central Hotels & Boutique Accommodations'
           };
-          return `${locationData.name} Hotels 2025 - ${locationTypeMap[locationData.type]} | ${locationData.hotelsCount || '10+'} Verified Properties`;
+          return `${locationData.name} Hotels 2026 - ${locationTypeMap[locationData.type]} | ${locationData.hotelsCount || '10+'} Verified Properties`;
         }
         return title;
         
       case 'hotel-detail':
         if (hotelData) {
           const propertyType = hotelData.type === 'Villa' ? 'Luxury Villa' : 'Premium Hotel';
-          return `${hotelData.name} - ${propertyType} ${hotelData.location}, Sifnos | Book Direct 2025`;
+          return `${hotelData.name} - ${propertyType} ${hotelData.location}, Sifnos | Book Direct 2026`;
         }
         return title;
         
       case 'ferry-tickets':
-        return `Sifnos Ferry Tickets 2025 - Book Online | Hotels & Transport Package Deals`;
+        return `Sifnos Ferry Tickets 2026 - Book Online | Hotels & Transport Package Deals`;
         
       case 'travel-guide':
-        return `Ultimate Sifnos Travel Guide 2025 - Best Hotels, Beaches & Local Secrets`;
+        return `Ultimate Sifnos Travel Guide 2026 - Best Hotels, Beaches & Local Secrets`;
         
       case 'beaches':
-        return `Best Sifnos Beaches 2025 - Complete Guide with Beachfront Hotels`;
+        return `Best Sifnos Beaches 2026 - Complete Guide with Beachfront Hotels`;
         
       case 'about':
         return `About Hotels Sifnos - Your Trusted Island Accommodation Experts Since 2020`;
@@ -156,18 +158,18 @@ export default function SEO({
         return `Contact Hotels Sifnos - 24/7 Expert Support | Premium Booking Service`;
         
       case 'faq':
-        return `Sifnos Hotels FAQ 2025 - Everything You Need to Know | Expert Answers`;
+        return `Sifnos Hotels FAQ 2026 - Everything You Need to Know | Expert Answers`;
         
       case 'pricing':
-        return `List Your Sifnos Property 2025 - Premium Marketing & Direct Bookings Platform`;
+        return `List Your Sifnos Property 2026 - Premium Marketing & Direct Bookings Platform`;
         
       case 'blog':
-        return `Sifnos Travel Blog 2025 - Expert Guides, Hotel Reviews & Island Secrets`;
+        return `Sifnos Travel Blog 2026 - Expert Guides, Hotel Reviews & Island Secrets`;
         
       default:
         return title.includes("Sifnos") ? 
-          `${title} | Hotels Sifnos 2025` : 
-          `${title} - Sifnos Island 2025 | Hotels Sifnos`;
+          `${title} | Hotels Sifnos 2026` : 
+          `${title} - Sifnos Island 2026 | Hotels Sifnos`;
     }
   };
 
@@ -243,17 +245,17 @@ export default function SEO({
     noIndex = false;
   }
 
-  // ENHANCED: Keywords based on page type with 2025 targeting
+  // ENHANCED: Keywords based on page type with 2026 targeting
   const generateOptimizedKeywords = (): string[] => {
-    const baseKeywords = keywords.length > 0 ? keywords : ['sifnos hotels 2025', 'greece accommodation', 'cyclades islands'];
+    const baseKeywords = keywords.length > 0 ? keywords : ['sifnos hotels 2026', 'greece accommodation', 'cyclades islands'];
     
     const pageSpecificKeywords = {
-      'homepage': ['best sifnos hotels 2025', 'luxury sifnos resorts', 'sifnos villas', 'book sifnos hotels', 'cyclades accommodation'],
-      'hotels': ['compare sifnos hotels', 'sifnos hotel deals 2025', 'best rates sifnos', 'instant booking sifnos', 'verified hotels sifnos'],
+      'homepage': ['best sifnos hotels 2026', 'luxury sifnos resorts', 'sifnos villas', 'book sifnos hotels', 'cyclades accommodation'],
+      'hotels': ['compare sifnos hotels', 'sifnos hotel deals 2026', 'best rates sifnos', 'instant booking sifnos', 'verified hotels sifnos'],
       'ferry-tickets': ['sifnos ferry tickets', 'book ferry sifnos', 'sifnos transport', 'greece ferry booking', 'cyclades ferry'],
-      'travel-guide': ['sifnos travel guide 2025', 'sifnos vacation planning', 'best time visit sifnos', 'sifnos attractions'],
+      'travel-guide': ['sifnos travel guide 2026', 'sifnos vacation planning', 'best time visit sifnos', 'sifnos attractions'],
       'beaches': ['best sifnos beaches', 'sifnos beach guide', 'beachfront hotels sifnos', 'sifnos swimming beaches'],
-      'location': locationData ? [`${locationData.name.toLowerCase()} hotels`, `hotels in ${locationData.name.toLowerCase()}`, `${locationData.name.toLowerCase()} accommodation 2025`] : [],
+      'location': locationData ? [`${locationData.name.toLowerCase()} hotels`, `hotels in ${locationData.name.toLowerCase()}`, `${locationData.name.toLowerCase()} accommodation 2026`] : [],
       'hotel-detail': hotelData ? [`${hotelData.name.toLowerCase()}`, `${hotelData.location.toLowerCase()} hotels`, 'book direct sifnos'] : []
     };
     
@@ -372,7 +374,16 @@ export default function SEO({
       {/* FIXED: Canonical URL */}
       <link rel="canonical" href={formattedCanonical} />
       
-      {/* Alternate Language Links */}
+      {/* Hreflang Tags - Enhanced with auto-generation for all supported languages */}
+      <link rel="alternate" hrefLang="en" href={formattedCanonical} />
+      <link rel="alternate" hrefLang="el" href={formattedCanonical} />
+      <link rel="alternate" hrefLang="fr" href={formattedCanonical} />
+      <link rel="alternate" hrefLang="it" href={formattedCanonical} />
+      <link rel="alternate" hrefLang="de" href={formattedCanonical} />
+      <link rel="alternate" hrefLang="sv" href={formattedCanonical} />
+      <link rel="alternate" hrefLang="ru" href={formattedCanonical} />
+      <link rel="alternate" hrefLang="tr" href={formattedCanonical} />
+      <link rel="alternate" hrefLang="x-default" href={formattedCanonical} />
       {alternateLanguages.map((lang) => (
         <link key={lang.hreflang} rel="alternate" hrefLang={lang.hreflang} href={lang.href} />
       ))}
@@ -387,7 +398,7 @@ export default function SEO({
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content={optimizedTitle} />
       <meta property="og:site_name" content="Hotels Sifnos" />
-      <meta property="og:locale" content="en_US" />
+      <meta property="og:locale" content={language === 'el' ? 'el_GR' : language === 'fr' ? 'fr_FR' : language === 'it' ? 'it_IT' : language === 'de' ? 'de_DE' : language === 'sv' ? 'sv_SE' : language === 'ru' ? 'ru_RU' : language === 'tr' ? 'tr_TR' : 'en_US'} />
       <meta property="article:publisher" content="https://www.facebook.com/hotelssifnos" />
       
       {/* Enhanced Twitter Cards */}

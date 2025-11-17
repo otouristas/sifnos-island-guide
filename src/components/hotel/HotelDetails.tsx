@@ -2,6 +2,7 @@
 import React from 'react';
 import HotelLogo from './HotelLogo';
 import { Badge } from '../ui/badge';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface HotelDetailsProps {
   hotel: any;
@@ -10,6 +11,7 @@ interface HotelDetailsProps {
 }
 
 const HotelDetails = ({ hotel, hotelLogoUrl, showLogo }: HotelDetailsProps) => {
+  const { t } = useI18n();
   // Determine if the property is a villa or hotel
   const isVilla = hotel.hotel_types?.includes('villas');
   const propertyType = isVilla ? 'Villa' : 'Hotel';
@@ -66,7 +68,7 @@ const HotelDetails = ({ hotel, hotelLogoUrl, showLogo }: HotelDetailsProps) => {
           ))}
           {hotel.hotel_amenities.length > 3 && (
             <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-              +{hotel.hotel_amenities.length - 3} more
+              +{hotel.hotel_amenities.length - 3} {t('common.more')}
             </span>
           )}
         </div>

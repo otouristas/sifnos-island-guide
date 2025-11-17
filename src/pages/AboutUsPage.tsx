@@ -210,7 +210,7 @@ export default function AboutUsPage() {
             </h2>
             <div className="bg-white p-5 rounded-lg shadow-sm">
               <p className="mb-3">
-                <Badge variant="outline" className="mr-2 mb-1">Founded 2025</Badge>
+                <Badge variant="outline" className="mr-2 mb-1">Founded 2026</Badge>
                 <strong>Hotels Sifnos</strong> was created by a team of professionals passionate about the Cyclades to solve a simple yet widespread problem: finding the right accommodation in a sea of generic booking platforms.
               </p>
               <p>

@@ -137,10 +137,10 @@ export default function BeachesPage() {
   return (
     <>
       <SEO 
-        title="Best Sifnos Beaches 2025 - Complete Guide to Paradise | Hotels Sifnos"
-        description="Discover Sifnos' most beautiful beaches: from golden Platis Gialos to secluded Vroulidia. Complete guide with photos, facilities, access info & nearby hotels. Find your perfect beach paradise on this stunning Cycladic island."
+        title="15 Best Beaches in Sifnos 2026 + Map & Hotels Nearby"
+        description="Discover the best beaches in Sifnos for 2026  from golden Platis Gialos to secluded Vroulidia. Complete guide with photos, facilities, access tips and nearby hotel recommendations to plan your perfect beach day."
         keywords={[
-          'best sifnos beaches 2025', 'sifnos beach guide', 'platis gialos beach', 
+          'best sifnos beaches 2026', 'sifnos beach guide 2026', 'platis gialos beach', 
           'vathi beach sifnos', 'kamares beach', 'faros beach sifnos', 'chrysopigi beach',
           'family beaches sifnos', 'secluded beaches sifnos', 'cyclades beaches',
           'greece beach guide', 'swimming sifnos', 'beach holidays greece'
@@ -156,7 +156,7 @@ export default function BeachesPage() {
         <div className="page-container">
           <div className="text-center text-white">
             <h1 className="font-montserrat text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-              Beaches of Sifnos Island
+              Best Beaches in Sifnos Island 2026
             </h1>
             <p className="text-lg md:text-xl max-w-3xl mx-auto mb-8">
               Discover the pristine golden shores, crystal clear waters, and hidden coves of this enchanting Cycladic island

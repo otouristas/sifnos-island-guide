@@ -2,7 +2,8 @@
 import React from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { User, Bot } from 'lucide-react';
+import { User } from 'lucide-react';
+import TouristasLogo from '@/components/TouristasLogo';
 import HotelDisplayUnified from './HotelDisplayUnified';
 import { UnifiedHotel } from '@/services/hotelSearch';
 
@@ -42,8 +43,8 @@ export default function ChatMessages({ messages, messagesEndRef }: ChatMessagesP
               ) : (
                 <>
                   <AvatarImage src="/uploads/touristas-ai-logo.svg" alt="Touristas AI" />
-                  <AvatarFallback className="bg-sifnos-turquoise text-white">
-                    <Bot className="h-4 w-4" />
+                  <AvatarFallback className="bg-sifnos-turquoise text-white flex items-center justify-center">
+                    <TouristasLogo size="sm" />
                   </AvatarFallback>
                 </>
               )}

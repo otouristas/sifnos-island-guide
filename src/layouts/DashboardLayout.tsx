@@ -10,7 +10,8 @@ import {
   Menu, 
   X, 
   ChevronRight,
-  User
+  User,
+  Award
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -56,8 +57,13 @@ export default function DashboardLayout() {
     },
     { 
       name: 'My Hotels', 
-      path: '/dashboard/hotels', 
+      path: '/dashboard/my-hotels', 
       icon: <Hotel size={20} /> 
+    },
+    { 
+      name: 'Featured Hotels', 
+      path: '/dashboard/featured-hotels', 
+      icon: <Award size={20} /> 
     },
     { 
       name: 'Messages', 

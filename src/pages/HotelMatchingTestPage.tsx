@@ -113,7 +113,7 @@ export default function HotelMatchingTestPage() {
       
       unusedLocal.forEach((localHotel, localIndex) => {
         const similarity = calculateNameSimilarity(localHotel.name, agodaHotel.hotelName);
-        console.log(`🔍 Comparing "${localHotel.name}" vs "${agodaHotel.hotelName}" = ${similarity.toFixed(3)}`);
+        console.log(`Comparing "${localHotel.name}" vs "${agodaHotel.hotelName}" = ${similarity.toFixed(3)}`);
         
         if (similarity > 0.6 && (!bestMatch || similarity > bestMatch.similarity)) {
           bestMatch = { hotel: localHotel, index: localIndex, similarity };
@@ -121,7 +121,8 @@ export default function HotelMatchingTestPage() {
       });
       
       if (bestMatch) {
-        console.log(`✅ MATCH: "${bestMatch.hotel.name}" <-> "${agodaHotel.hotelName}" (${bestMatch.similarity.toFixed(3)})`);
+        console.log(`MATCH: "${bestMatch.hotel.name}" <-> "${agodaHotel.hotelName}" (${bestMatch.similarity.toFixed(3)})`);
+        
         matched.push({
           local: bestMatch.hotel,
           agoda: agodaHotel,
@@ -140,14 +141,16 @@ export default function HotelMatchingTestPage() {
 
   const fetchLocalHotels = async () => {
     try {
-      console.log('🔍 Fetching local hotels from Supabase...');
+      console.log('Fetching local hotels from Supabase...');
+      
       const { data, error } = await supabase
         .from('hotels')
         .select('id, name, location, price, rating, description')
         .order('rating', { ascending: false });
 
       if (error) throw error;
-      console.log(`📊 Found ${data?.length || 0} local hotels`);
+      console.log(`Found ${data?.length || 0} local hotels`);
+      
       return data || [];
     } catch (error) {
       console.error('Error fetching local hotels:', error);
@@ -157,7 +160,7 @@ export default function HotelMatchingTestPage() {
 
   const fetchAgodaHotels = async () => {
     try {
-      console.log('🔍 Searching Agoda with dates:', searchDates);
+      console.log('Searching Agoda with dates:', searchDates);
       
       const agodaResults = await searchHotels({
         checkInDate: searchDates.checkIn,
@@ -171,8 +174,9 @@ export default function HotelMatchingTestPage() {
         .filter(hotel => hotel.source === 'agoda' && hotel.agoda_data)
         .map(hotel => hotel.agoda_data);
 
-      console.log('📊 Found Agoda hotels:', agodaOnly.length);
-      console.log('📊 Agoda hotel names:', agodaOnly.map(h => h.hotelName));
+      console.log('Found Agoda hotels:', agodaOnly.length);
+      console.log('Agoda hotel names:', agodaOnly.map(h => h.hotelName));
+      
       return agodaOnly;
     } catch (error) {
       console.error('Error fetching Agoda hotels:', error);
@@ -194,7 +198,7 @@ export default function HotelMatchingTestPage() {
         fetchAgodaHotels()
       ]);
 
-      console.log('📊 Fetched:', { locals: locals.length, agodas: agodas.length });
+      console.log('Fetched:', { locals: locals.length, agodas: agodas.length });
 
       if (locals.length === 0) {
         toast({
@@ -215,7 +219,8 @@ export default function HotelMatchingTestPage() {
       }
 
       // Perform matching
-      console.log('🔄 Starting hotel matching process...');
+      console.log('Starting hotel matching process...');
+      
       const results = matchHotels(locals, agodas);
       
       setLocalHotels(locals);
@@ -225,7 +230,7 @@ export default function HotelMatchingTestPage() {
       setUnmatchedAgoda(results.unusedAgoda);
 
       toast({
-        title: "Matching Complete! 🎉",
+        title: "Matching Complete",
         description: `Found ${results.matched.length} matches out of ${locals.length} local and ${agodas.length} Agoda hotels.`,
       });
 
@@ -363,11 +368,11 @@ export default function HotelMatchingTestPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              🔍 Hotel Matching Test
+              Hotel Matching Test
             </h1>
             <p className="text-gray-600 mb-6">
               This page demonstrates matching between local Supabase hotels and live Agoda data.
-              Perfect match example: "ALK HOTEL™" (local) ↔ "ALK Hotelᵀᴹ" (Agoda)
+              Perfect match example: "ALK HOTEL" (local) "ALK Hotel" (Agoda)
             </p>
             
             {/* Search Controls */}

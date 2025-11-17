@@ -1,0 +1,43 @@
+{
+  "common": {
+    "home": "Hem",
+    "hotels": "Hotell",
+    "explore": "Utforska",
+    "ferryTickets": "Färjbiljetter",
+    "blog": "Blogg",
+    "contact": "Kontakt",
+    "allHotels": "Alla Hotell",
+    "luxuryHotels": "Lyxhotell",
+    "beachHotels": "Strandhotell",
+    "villas": "Villor",
+    "budgetHotels": "Budget Hotell",
+    "allLocations": "Alla Platser",
+    "beaches": "Strander",
+    "travelGuide": "Reseguide",
+    "bookNow": "Boka Nu",
+    "viewMore": "Visa Mer",
+    "learnMore": "Lär Dig Mer",
+    "readMore": "Läs Mer"
+  },
+  "homepage": {
+    "heroTitle": "Upptäck Din Perfekta Vistelse på Sifnos",
+    "heroSubtitle": "Handplockade hotell, villor och autentiska boenden på denna Kykladiska pärla",
+    "askTouristasAI": "Fråga Touristas AI",
+    "browseAllHotels": "Bläddra Alla Hotell"
+  },
+  "footer": {
+    "poweredBy": "drivs av",
+    "touristasAI": "Touristas AI",
+    "companyInfo": "Din pålitliga guide för att utforska ön Sifnos. Vi erbjuder autentiska upplevelser, handplockade boenden och lokala insikter.",
+    "popularLocations": "Populära Platser",
+    "hotelTypes": "Hotelltyper",
+    "resources": "Resurser",
+    "company": "Företag",
+    "aboutUs": "Om Oss",
+    "listYourHotel": "Lista Ditt Hotell",
+    "privacyPolicy": "Integritetspolicy",
+    "termsOfService": "Användarvillkor",
+    "allRightsReserved": "Alla rättigheter förbehållna"
+  }
+}
+

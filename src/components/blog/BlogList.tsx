@@ -1,14 +1,74 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CalendarIcon, User, ArrowRight } from 'lucide-react';
+import { CalendarIcon, User, ArrowRight, Search as SearchIcon } from 'lucide-react';
 import { blogPosts } from '@/data/blogPosts';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 const BlogList = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeCategory, setActiveCategory] = useState<string>('All');
+
+  const categories = Array.from(
+    new Set(blogPosts.flatMap((post) => post.categories))
+  );
+
+  const filteredPosts = blogPosts.filter((post) => {
+    const matchesCategory =
+      activeCategory === 'All' || post.categories.includes(activeCategory);
+    const normalizedSearch = searchTerm.toLowerCase().trim();
+    const matchesSearch =
+      normalizedSearch === '' ||
+      post.title.toLowerCase().includes(normalizedSearch) ||
+      post.excerpt.toLowerCase().includes(normalizedSearch);
+    return matchesCategory && matchesSearch;
+  });
+
   return (
     <div className="space-y-10">
-      {blogPosts.map((post) => (
+      <div className="mb-6 space-y-4">
+        <div className="flex items-center gap-2">
+          <div className="relative w-full">
+            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search Sifnos guides, hotels, beaches, family tips..."
+              className="pl-9"
+            />
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2 text-sm">
+          <button
+            type="button"
+            onClick={() => setActiveCategory('All')}
+            className={`px-3 py-1 rounded-full border text-xs md:text-sm transition-colors ${
+              activeCategory === 'All'
+                ? 'bg-sifnos-deep-blue text-white border-sifnos-deep-blue'
+                : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+            }`}
+          >
+            All topics
+          </button>
+          {categories.map((category) => (
+            <button
+              key={category}
+              type="button"
+              onClick={() => setActiveCategory(category)}
+              className={`px-3 py-1 rounded-full border text-xs md:text-sm transition-colors ${
+                activeCategory === category
+                  ? 'bg-sifnos-deep-blue text-white border-sifnos-deep-blue'
+                  : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {filteredPosts.map((post) => (
         <div key={post.id} className="border-b border-gray-200 pb-10 last:border-0">
           <Link to={`/blog/${post.slug}`} className="block group">
             <div className="relative mb-6 overflow-hidden rounded-lg">

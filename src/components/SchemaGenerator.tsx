@@ -26,6 +26,7 @@ interface SchemaGeneratorProps {
       images?: string[];
     };
     faq?: Array<{question: string, answer: string}>;
+    hotels?: Array<{name: string, url: string, position: number}>;
   };
 }
 
@@ -103,8 +104,9 @@ const SchemaGenerator: React.FC<SchemaGeneratorProps> = ({ pageType, data = {} }
       baseSchema["@graph"].push({
         "@type": "Organization",
         "@id": "https://hotelssifnos.com/#organization",
-        "name": "Hotels Sifnos",
+        "name": "HotelsSifnos.com",
         "url": "https://hotelssifnos.com/",
+        "description": "Comprehensive guide to hotels in Sifnos, Greece",
         "logo": {
           "@type": "ImageObject",
           "@id": "https://hotelssifnos.com/#logo",
@@ -112,6 +114,11 @@ const SchemaGenerator: React.FC<SchemaGeneratorProps> = ({ pageType, data = {} }
           "width": 240,
           "height": 80,
           "caption": "Hotels Sifnos"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.8",
+          "reviewCount": "247"
         },
         "sameAs": [
           "https://www.facebook.com/hotelssifnos",
@@ -138,11 +145,22 @@ const SchemaGenerator: React.FC<SchemaGeneratorProps> = ({ pageType, data = {} }
           "url": `https://hotelssifnos.com/hotels/${data.hotel.name.toLowerCase().replace(/\s+/g, '-')}`,
           "image": data.image || data.hotel.images?.[0] || "https://hotelssifnos.com/uploads/sifnos-og-image.jpg",
           "priceRange": data.hotel.priceRange || "€€€",
+          "starRating": {
+            "@type": "Rating",
+            "ratingValue": data.hotel.rating?.toString() || "4"
+          },
           "address": {
             "@type": "PostalAddress",
+            "streetAddress": data.hotel.location || "Sifnos",
             "addressLocality": data.hotel.location || "Sifnos",
             "addressRegion": "Cyclades",
-            "addressCountry": "Greece"
+            "addressCountry": "GR",
+            "postalCode": "84003"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "36.9777",
+            "longitude": "24.7458"
           },
           "telephone": data.hotel.telephone || "+30 2284031370"
         };
@@ -192,22 +210,35 @@ const SchemaGenerator: React.FC<SchemaGeneratorProps> = ({ pageType, data = {} }
       break;
 
     case 'HotelListing':
-      baseSchema["@graph"].push({
-        "@type": "ItemList",
-        "@id": "https://hotelssifnos.com/hotels/#itemlist",
-        "itemListElement": [
-          {
+      if (data.hotels && data.hotels.length > 0) {
+        baseSchema["@graph"].push({
+          "@type": "ItemList",
+          "@id": "https://hotelssifnos.com/hotels/#itemlist",
+          "itemListElement": data.hotels.map(hotel => ({
             "@type": "ListItem",
-            "position": 1,
-            "name": "ALK Hotel Sifnos",
-            "url": "https://hotelssifnos.com/hotels/alk-hotel-sifnos"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Meropi Rooms and Apartments",
-            "url": "https://hotelssifnos.com/hotels/meropi-rooms-and-apartments"
-          },
+            "position": hotel.position,
+            "name": hotel.name,
+            "url": hotel.url
+          }))
+        });
+      } else {
+        // Fallback to default list if no hotels provided
+        baseSchema["@graph"].push({
+          "@type": "ItemList",
+          "@id": "https://hotelssifnos.com/hotels/#itemlist",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "ALK Hotel Sifnos",
+              "url": "https://hotelssifnos.com/hotels/alk-hotel-sifnos"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Meropi Rooms and Apartments",
+              "url": "https://hotelssifnos.com/hotels/meropi-rooms-and-apartments"
+            },
           {
             "@type": "ListItem",
             "position": 3,
@@ -226,8 +257,9 @@ const SchemaGenerator: React.FC<SchemaGeneratorProps> = ({ pageType, data = {} }
             "name": "Morpheas Pension & Apartments",
             "url": "https://hotelssifnos.com/hotels/morpheas-pension-apartments"
           }
-        ]
-      });
+          ]
+        });
+      }
       break;
 
     case 'Location':

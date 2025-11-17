@@ -4,32 +4,75 @@ import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
 import SponsoredHotelCard from '@/components/SponsoredHotelCard';
 import SchemaGenerator from '@/components/SchemaGenerator';
+import {
+  Building2,
+  Sparkles,
+  Home,
+  Waves,
+  Ship,
+  MapPin,
+  BookOpenCheck,
+  Bot,
+} from 'lucide-react';
 
 // Import our component sections
 import HeroSection from '@/components/home/HeroSection';
 import FeaturedTouristasAI from '@/components/home/FeaturedTouristasAI';
 import FeaturedHotelsSection from '@/components/home/FeaturedHotelsSection';
 import LocationsSection from '@/components/home/LocationsSection';
-import LocationsIntroSection from '@/components/home/LocationsIntroSection';
 import HotelTypesSection from '@/components/home/HotelTypesSection';
-import HotelTypesIntroSection from '@/components/home/HotelTypesIntroSection';
-import ListYourHotelSection from '@/components/home/ListYourHotelSection';
 import WhyChooseUsSection from '@/components/home/WhyChooseUsSection';
-import SEOSection from '@/components/home/SEOSection';
-import IslandGuideSection from '@/components/home/IslandGuideSection';
+import LocalInsightsSection from '@/components/home/LocalInsightsSection';
+import TrendingNowSection from '@/components/home/TrendingNowSection';
+import SeasonalRecommendationsSection from '@/components/home/SeasonalRecommendationsSection';
+
+const quickLinks = [
+  { to: '/hotels', label: 'All Hotels', icon: Building2 },
+  { to: '/hotel-types/luxury-hotels', label: 'Luxury Hotels', icon: Sparkles },
+  { to: '/hotel-types/villas', label: 'Private Villas', icon: Home },
+  { to: '/hotel-types/beach-hotels', label: 'Beach Hotels', icon: Waves },
+  { to: '/ferry-tickets', label: 'Ferry Tickets', icon: Ship },
+  { to: '/where-to-stay-sifnos', label: 'Where to Stay', icon: MapPin },
+];
+
+const planningLinks = [
+  {
+    to: '/ferry-tickets',
+    title: 'Ferry Tickets',
+    description: 'Book your ferry to Sifnos with best prices',
+    icon: Ship,
+  },
+  {
+    to: '/best-beaches-sifnos-guide',
+    title: 'Beach Guide',
+    description: 'Discover the best beaches & coastal hotels',
+    icon: Waves,
+  },
+  {
+    to: '/travel-guide',
+    title: 'Travel Guide',
+    description: 'Complete guide to attractions & activities',
+    icon: BookOpenCheck,
+  },
+  {
+    to: '/touristas-ai',
+    title: 'AI Assistant',
+    description: 'Get personalized recommendations',
+    icon: Bot,
+  },
+];
 
 export default function HomePage() {
   return (
     <>
       <SEO 
-        title="Best Sifnos Hotels 2025 - Luxury Resorts & Villas | Instant Booking & Best Prices"
-        description="Discover Sifnos' finest hotels, luxury villas & boutique resorts. Instant booking, best price guarantee, verified reviews & 24/7 support. Your perfect Cycladic escape starts here - book now & save!"
+        title="Sifnos Hotels 2026: Boutique Stays, Villas & Beach Resorts"
+        description="Discover authentic Sifnos hotels, from luxury villas with pools to family-friendly beach resorts. Expert local guides + best rates. Book your Cycladic escape."
         keywords={[
-          'best sifnos hotels 2025', 'luxury sifnos resorts', 'sifnos villas', 
-          'boutique hotels cyclades', 'beachfront hotels sifnos', 'sifnos accommodation',
-          'book sifnos hotels', 'cyclades island hotels', 'greece luxury accommodation',
-          'sifnos beach resorts', 'traditional greek hotels', 'instant booking sifnos',
-          'where to stay sifnos', 'sifnos hotel deals', 'premium sifnos stays'
+          'sifnos hotels 2026', 'sifnos villas 2026', 'best sifnos hotels', 
+          'luxury sifnos resorts', 'sifnos accommodation', 'sifnos boutique hotels',
+          'beachfront hotels sifnos', 'family hotels sifnos', 'where to stay in sifnos',
+          'cyclades island hotels', 'greece island accommodation'
         ]}
         pageType="homepage"
         schemaType="WebPage"
@@ -50,208 +93,168 @@ export default function HomePage() {
         }}
       />
       
-      {/* Hero Section with Enhanced Search */}
+      {/* 1. Hero Section */}
       <HeroSection />
       
-      {/* Featured Touristas AI Section */}
+      {/* 2. Featured Touristas AI */}
       <FeaturedTouristasAI />
 
-      {/* Quick Links Bar - NEW for better internal linking */}
-      <div className="bg-sifnos-deep-blue py-4">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center gap-4 text-sm">
-            <Link to="/hotels" className="text-white hover:text-sifnos-turquoise transition-colors px-3 py-1 rounded-full border border-white/20 hover:border-sifnos-turquoise">
-              🏨 All Hotels
-            </Link>
-            <Link to="/hotel-types/luxury-hotels" className="text-white hover:text-sifnos-turquoise transition-colors px-3 py-1 rounded-full border border-white/20 hover:border-sifnos-turquoise">
-              ✨ Luxury Hotels
-            </Link>
-            <Link to="/hotel-types/villas" className="text-white hover:text-sifnos-turquoise transition-colors px-3 py-1 rounded-full border border-white/20 hover:border-sifnos-turquoise">
-              🏡 Private Villas
-            </Link>
-            <Link to="/locations/platis-gialos" className="text-white hover:text-sifnos-turquoise transition-colors px-3 py-1 rounded-full border border-white/20 hover:border-sifnos-turquoise">
-              🏖️ Beach Hotels
-            </Link>
-            <Link to="/ferry-tickets" className="text-white hover:text-sifnos-turquoise transition-colors px-3 py-1 rounded-full border border-white/20 hover:border-sifnos-turquoise">
-              ⛴️ Ferry Tickets
-            </Link>
-            <Link to="/where-to-stay-sifnos" className="text-white hover:text-sifnos-turquoise transition-colors px-3 py-1 rounded-full border border-white/20 hover:border-sifnos-turquoise">
-              📍 Where to Stay
-            </Link>
+      {/* 3. Quick Actions Bar */}
+      <div className="bg-sifnos-deep-blue py-5">
+        <div className="max-w-[1400px] mx-auto px-6">
+          <div className="flex flex-wrap justify-center gap-3">
+            {quickLinks.map(({ to, label, icon: Icon }) => (
+              <Link
+                key={label}
+                to={to}
+                className="inline-flex items-center gap-2 text-sifnos-beige border border-sifnos-beige/30 hover:bg-sifnos-beige hover:text-sifnos-deep-blue transition-all duration-300 px-5 py-2.5 rounded-full font-medium text-sm"
+              >
+                <Icon className="h-4 w-4" />
+                <span>{label}</span>
+              </Link>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Featured Hotels Section - Enhanced with better CTAs */}
+      {/* 4. Featured Hotels Carousel */}
       <FeaturedHotelsSection />
       
-      {/* Popular Categories Section - NEW for internal linking */}
-      <div className="py-12 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-montserrat font-bold text-sifnos-deep-blue mb-8 text-center">
-            🌟 Popular Hotel Categories in Sifnos 2025
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <Link to="/hotel-types/luxury-hotels" className="group text-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all">
-              <div className="text-4xl mb-3">✨</div>
-              <h3 className="font-semibold text-sifnos-deep-blue group-hover:text-sifnos-turquoise">Luxury Resorts</h3>
-              <p className="text-sm text-gray-600 mt-1">Premium amenities & service</p>
-            </Link>
-            <Link to="/hotel-types/villas" className="group text-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all">
-              <div className="text-4xl mb-3">🏡</div>
-              <h3 className="font-semibold text-sifnos-deep-blue group-hover:text-sifnos-turquoise">Private Villas</h3>
-              <p className="text-sm text-gray-600 mt-1">Exclusive luxury & privacy</p>
-            </Link>
-            <Link to="/hotel-types/beach-hotels" className="group text-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all">
-              <div className="text-4xl mb-3">🏖️</div>
-              <h3 className="font-semibold text-sifnos-deep-blue group-hover:text-sifnos-turquoise">Beach Hotels</h3>
-              <p className="text-sm text-gray-600 mt-1">Oceanfront locations</p>
-            </Link>
-            <Link to="/hotel-types/family-friendly-hotels" className="group text-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all">
-              <div className="text-4xl mb-3">👨‍👩‍👧‍👦</div>
-              <h3 className="font-semibold text-sifnos-deep-blue group-hover:text-sifnos-turquoise">Family Hotels</h3>
-              <p className="text-sm text-gray-600 mt-1">Kid-friendly facilities</p>
-            </Link>
-          </div>
-        </div>
-      </div>
+      {/* 4.5. Trending Now Section */}
+      <TrendingNowSection />
       
-      {/* Hotel Types Introduction Text */}
-      <HotelTypesIntroSection />
-      
-      {/* Hotel Types Section */}
-      <HotelTypesSection />
-      
-      {/* Locations Introduction Text */}
-      <LocationsIntroSection />
-      
-      {/* Top Destinations Grid - Enhanced with better internal linking */}
-      <div className="py-12 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-montserrat font-bold text-sifnos-deep-blue mb-8 text-center">
-            🗺️ Best Areas to Stay in Sifnos Island
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <Link to="/locations/apollonia" className="group block bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all">
-              <div className="h-48 bg-gradient-to-br from-sifnos-turquoise to-sifnos-deep-blue flex items-center justify-center">
-                <div className="text-white text-center">
-                  <div className="text-4xl mb-2">🏛️</div>
-                  <h3 className="text-xl font-bold">Apollonia</h3>
-                  <p className="text-sm opacity-90">Capital & Nightlife</p>
-                </div>
-              </div>
-              <div className="p-4">
-                <p className="text-gray-600 text-sm">Central location with restaurants, bars, and authentic Cycladic charm. Perfect for first-time visitors.</p>
-              </div>
-            </Link>
-            <Link to="/locations/kamares" className="group block bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all">
-              <div className="h-48 bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
-                <div className="text-white text-center">
-                  <div className="text-4xl mb-2">⛵</div>
-                  <h3 className="text-xl font-bold">Kamares</h3>
-                  <p className="text-sm opacity-90">Port & Beach</p>
-                </div>
-              </div>
-              <div className="p-4">
-                <p className="text-gray-600 text-sm">Main port with beachfront hotels, waterfront dining, and convenient ferry connections.</p>
-              </div>
-            </Link>
-            <Link to="/locations/platis-gialos" className="group block bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all">
-              <div className="h-48 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
-                <div className="text-white text-center">
-                  <div className="text-4xl mb-2">🏖️</div>
-                  <h3 className="text-xl font-bold">Platis Gialos</h3>
-                  <p className="text-sm opacity-90">Best Beach</p>
-                </div>
-              </div>
-              <div className="p-4">
-                <p className="text-gray-600 text-sm">Popular beach resort area with shallow waters, perfect for families and beach lovers.</p>
-              </div>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link to="/where-to-stay-sifnos" className="inline-flex items-center px-6 py-3 bg-sifnos-turquoise text-white rounded-lg hover:bg-sifnos-deep-blue transition-colors font-medium">
-              Complete Where to Stay Guide →
-            </Link>
-          </div>
-        </div>
-      </div>
-      
-      {/* Locations Section */}
+      {/* 5. Discover Sifnos - Consolidated Locations */}
       <LocationsSection />
       
-      {/* Island Guide Section */}
-      <IslandGuideSection />
+      {/* 5.5. Local Insights Section */}
+      <LocalInsightsSection />
       
-      {/* Travel Planning Links - NEW section for better internal linking */}
-      <div className="py-12 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-montserrat font-bold text-sifnos-deep-blue mb-8 text-center">
-            🎯 Plan Your Perfect Sifnos Trip
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Link to="/ferry-tickets" className="text-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all group">
-              <div className="text-4xl mb-4">⛴️</div>
-              <h3 className="font-semibold text-sifnos-deep-blue group-hover:text-sifnos-turquoise mb-2">Ferry Tickets</h3>
-              <p className="text-sm text-gray-600">Book your ferry to Sifnos with best prices</p>
-            </Link>
-            <Link to="/best-beaches-sifnos-guide" className="text-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all group">
-              <div className="text-4xl mb-4">🏖️</div>
-              <h3 className="font-semibold text-sifnos-deep-blue group-hover:text-sifnos-turquoise mb-2">Beach Guide</h3>
-              <p className="text-sm text-gray-600">Discover the best beaches & coastal hotels</p>
-            </Link>
-            <Link to="/travel-guide" className="text-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all group">
-              <div className="text-4xl mb-4">📚</div>
-              <h3 className="font-semibold text-sifnos-deep-blue group-hover:text-sifnos-turquoise mb-2">Travel Guide</h3>
-              <p className="text-sm text-gray-600">Complete guide to attractions & activities</p>
-            </Link>
-            <Link to="/touristas-ai" className="text-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all group">
-              <div className="text-4xl mb-4">🤖</div>
-              <h3 className="font-semibold text-sifnos-deep-blue group-hover:text-sifnos-turquoise mb-2">AI Assistant</h3>
-              <p className="text-sm text-gray-600">Get personalized recommendations</p>
-            </Link>
-          </div>
-        </div>
-      </div>
+      {/* 5.6. Seasonal Recommendations */}
+      <SeasonalRecommendationsSection />
       
-      {/* List Your Hotel Section */}
-      <ListYourHotelSection />
+      {/* 6. Hotel Categories - Consolidated */}
+      <HotelTypesSection />
       
-      {/* Why Choose Us Section */}
+      {/* 7. Why Book With Us + Social Proof */}
       <WhyChooseUsSection />
       
-      {/* Enhanced SEO Section with better internal linking */}
-      <SEOSection />
-
-      {/* FAQ Section - NEW for SEO */}
-      <div className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-montserrat font-bold text-sifnos-deep-blue mb-8 text-center">
-              ❓ Frequently Asked Questions About Sifnos Hotels
+      {/* 8. Travel Planning Hub + FAQ */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-[1400px] mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-heading font-bold text-sifnos-deep-blue mb-4">
+              Plan Your Perfect Sifnos Trip
             </h2>
-            <div className="space-y-6">
-              <div className="bg-gray-50 p-6 rounded-lg">
-                <h3 className="text-xl font-semibold text-sifnos-deep-blue mb-3">What are the best areas to stay in Sifnos?</h3>
-                <p className="text-gray-700">The most popular areas are <Link to="/locations/apollonia" className="text-sifnos-turquoise hover:underline">Apollonia</Link> (capital with nightlife), <Link to="/locations/kamares" className="text-sifnos-turquoise hover:underline">Kamares</Link> (port with beach), and <Link to="/locations/platis-gialos" className="text-sifnos-turquoise hover:underline">Platis Gialos</Link> (best beach). Each offers different experiences and hotel options.</p>
-              </div>
-              <div className="bg-gray-50 p-6 rounded-lg">
-                <h3 className="text-xl font-semibold text-sifnos-deep-blue mb-3">When is the best time to book Sifnos hotels?</h3>
-                <p className="text-gray-700">Book 2-3 months in advance for summer (June-August) for best rates and availability. Spring (April-May) and fall (September-October) offer great weather with lower prices and fewer crowds.</p>
-              </div>
-              <div className="bg-gray-50 p-6 rounded-lg">
-                <h3 className="text-xl font-semibold text-sifnos-deep-blue mb-3">Do you offer luxury villa rentals in Sifnos?</h3>
-                <p className="text-gray-700">Yes! We feature exclusive <Link to="/hotel-types/villas" className="text-sifnos-turquoise hover:underline">luxury villas</Link> with private pools, sea views, and premium amenities. Perfect for families or groups seeking privacy and luxury.</p>
-              </div>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Everything you need for an unforgettable island experience
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {planningLinks.map(({ to, title, description, icon: Icon }) => (
+              <Link 
+                key={title} 
+                to={to} 
+                className="group text-center p-8 bg-white rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
+              >
+                <div className="mb-5 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-sifnos-beige/30 text-sifnos-deep-blue group-hover:bg-sifnos-beige group-hover:scale-110 transition-all duration-300">
+                  <Icon className="h-7 w-7" />
+                </div>
+                <h3 className="font-heading font-bold text-sifnos-deep-blue mb-2 text-lg">{title}</h3>
+                <p className="text-sm text-gray-600">{description}</p>
+              </Link>
+            ))}
+          </div>
+          
+          {/* FAQ Accordion - SEO Optimized for Featured Snippets */}
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-heading font-bold text-sifnos-deep-blue mb-8 text-center">
+              Frequently Asked Questions
+            </h2>
+            <div className="space-y-4">
+              <details className="group bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
+                <summary className="flex items-center justify-between cursor-pointer font-semibold text-sifnos-deep-blue text-lg">
+                  <h3>What is the best area to stay in Sifnos?</h3>
+                  <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <p className="mt-4 text-gray-700 leading-relaxed">
+                  The best area to stay in Sifnos depends on your travel style. <Link to="/locations/platis-gialos" className="text-sifnos-deep-blue hover:underline font-medium">Platis Gialos</Link> offers the longest beach with family-friendly hotels. <Link to="/locations/apollonia" className="text-sifnos-deep-blue hover:underline font-medium">Apollonia</Link> provides central access and nightlife. <Link to="/locations/artemonas" className="text-sifnos-deep-blue hover:underline font-medium">Artemonas</Link> attracts couples seeking elegant village atmosphere. <Link to="/locations/kamares" className="text-sifnos-deep-blue hover:underline font-medium">Kamares</Link> suits travelers wanting port convenience.
+                </p>
+              </details>
+              <details className="group bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
+                <summary className="flex items-center justify-between cursor-pointer font-semibold text-sifnos-deep-blue text-lg">
+                  <h3>How many days do you need in Sifnos?</h3>
+                  <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <p className="mt-4 text-gray-700 leading-relaxed">
+                  Most travelers need 3-4 days in Sifnos to experience the island properly. This allows time to visit the best beaches (Platis Gialos, Kamares, Vathi), explore historic villages (Kastro, Apollonia), enjoy the renowned food scene, and take a pottery workshop.
+                </p>
+              </details>
+              <details className="group bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
+                <summary className="flex items-center justify-between cursor-pointer font-semibold text-sifnos-deep-blue text-lg">
+                  <h3>Is Sifnos expensive?</h3>
+                  <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <p className="mt-4 text-gray-700 leading-relaxed">
+                  Sifnos offers accommodation for all budgets. Budget hotels start around €40-€80 per night, mid-range options range €80-€150, while luxury hotels and villas cost €200-€500+ per night. Dining costs €25-€80 per day depending on preferences. Overall, Sifnos is more affordable than Mykonos or Santorini.
+                </p>
+              </details>
+              <details className="group bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
+                <summary className="flex items-center justify-between cursor-pointer font-semibold text-sifnos-deep-blue text-lg">
+                  <h3>When is the best time to visit Sifnos?</h3>
+                  <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <p className="mt-4 text-gray-700 leading-relaxed">
+                  The best time to visit Sifnos is from May to October when the weather is warm and ideal for swimming. July and August are peak months with higher temperatures and crowds. For a more peaceful experience with pleasant weather, consider visiting in June or September when the sea is still warm but the crowds have thinned out.
+                </p>
+              </details>
+              <details className="group bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
+                <summary className="flex items-center justify-between cursor-pointer font-semibold text-sifnos-deep-blue text-lg">
+                  <h3>How do I get to Sifnos from Athens?</h3>
+                  <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <p className="mt-4 text-gray-700 leading-relaxed">
+                  Sifnos is accessible by ferry from Piraeus port in Athens. The journey takes approximately 2.5 to 5 hours depending on the type of ferry (high-speed or conventional). There is no airport on Sifnos, so sea travel is the only option. <Link to="/ferry-tickets" className="text-sifnos-deep-blue hover:underline font-medium">Book ferry tickets</Link> in advance during peak season.
+                </p>
+              </details>
             </div>
-            <div className="text-center mt-8">
-              <Link to="/faq" className="inline-flex items-center px-6 py-3 border-2 border-sifnos-turquoise text-sifnos-turquoise rounded-lg hover:bg-sifnos-turquoise hover:text-white transition-colors font-medium">
-                View All FAQs →
+            <div className="text-center mt-10">
+              <Link to="/faq" className="inline-flex items-center gap-2 px-8 py-4 border-2 border-sifnos-deep-blue text-sifnos-deep-blue rounded-xl hover:bg-sifnos-deep-blue hover:text-white transition-all duration-300 font-semibold text-lg hover:-translate-y-1 shadow-lg hover:shadow-xl">
+                View All FAQs
+                <span className="text-xl">→</span>
               </Link>
             </div>
           </div>
         </div>
-      </div>
+      </section>
+      
+      {/* FAQ Schema for Featured Snippets */}
+      <SchemaGenerator
+        pageType="FAQ"
+        data={{
+          faq: [
+            {
+              question: 'What is the best area to stay in Sifnos?',
+              answer: 'The best area to stay in Sifnos depends on your travel style. Platis Gialos offers the longest beach with family-friendly hotels. Apollonia provides central access and nightlife. Artemonas attracts couples seeking elegant village atmosphere. Kamares suits travelers wanting port convenience.'
+            },
+            {
+              question: 'How many days do you need in Sifnos?',
+              answer: 'Most travelers need 3-4 days in Sifnos to experience the island properly. This allows time to visit the best beaches (Platis Gialos, Kamares, Vathi), explore historic villages (Kastro, Apollonia), enjoy the renowned food scene, and take a pottery workshop.'
+            },
+            {
+              question: 'Is Sifnos expensive?',
+              answer: 'Sifnos offers accommodation for all budgets. Budget hotels start around €40-€80 per night, mid-range options range €80-€150, while luxury hotels and villas cost €200-€500+ per night. Dining costs €25-€80 per day depending on preferences. Overall, Sifnos is more affordable than Mykonos or Santorini.'
+            },
+            {
+              question: 'When is the best time to visit Sifnos?',
+              answer: 'The best time to visit Sifnos is from May to October when the weather is warm and ideal for swimming. July and August are peak months with higher temperatures and crowds. For a more peaceful experience with pleasant weather, consider visiting in June or September when the sea is still warm but the crowds have thinned out.'
+            },
+            {
+              question: 'How do I get to Sifnos from Athens?',
+              answer: 'Sifnos is accessible by ferry from Piraeus port in Athens. The journey takes approximately 2.5 to 5 hours depending on the type of ferry (high-speed or conventional). There is no airport on Sifnos, so sea travel is the only option. Book ferry tickets in advance during peak season.'
+            }
+          ]
+        }}
+      />
     </>
   );
 }

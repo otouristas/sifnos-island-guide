@@ -19,7 +19,12 @@ export const determineHotelImageUrl = (hotel: any, mainPhoto?: string): string =
   const timestamp = Date.now();
   const randomValue = Math.floor(Math.random() * 1000);
   
-  // Special case for hotels with local images saved in specific directories
+  // If a specific photo URL is provided, use it (this allows different photos to be displayed)
+  if (mainPhoto) {
+    return `/uploads/hotels/${mainPhoto}?v=${timestamp}-${randomValue}`;
+  }
+  
+  // Special case for hotels with local images saved in specific directories (only as fallback when no mainPhoto provided)
   if (hotel.name === "Meropi Rooms and Apartments") {
     return `/uploads/hotels/meropirooms-hero.webp?v=${timestamp}-${randomValue}`;
   } else if (hotel.name === "Filadaki Villas") {
@@ -34,9 +39,6 @@ export const determineHotelImageUrl = (hotel: any, mainPhoto?: string): string =
   } else if (hotel.name === "ALK HOTEL™") {
     // Updated ALK HOTEL feature image path
     return `/uploads/hotels/alk-hotel-sifnos/alk-hotel-feature.jpeg?v=${timestamp}-${randomValue}`;
-  } else if (mainPhoto) {
-    // For other hotels, use the photos from the database with cache-busting
-    return `/uploads/hotels/${mainPhoto}?v=${timestamp}-${randomValue}`;
   }
   
   return `/placeholder.svg?v=${timestamp}-${randomValue}`;

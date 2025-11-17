@@ -19,6 +19,24 @@ interface UnifiedHotelCardProps {
 const UnifiedHotelCard = ({ hotel, onSelect, className }: UnifiedHotelCardProps) => {
   const isAgodaHotel = hotel.source === 'agoda';
   const isLocalHotel = hotel.source === 'local';
+  const isFeatured = (hotel as any).is_featured || (hotel as any).isSponsored;
+  const featuredTier = (hotel as any).featured_tier;
+  
+  // Tier badge colors
+  const getTierBadgeClass = (tier: string) => {
+    switch (tier) {
+      case 'platinum':
+        return 'bg-purple-600 text-white border-purple-700';
+      case 'gold':
+        return 'bg-yellow-600 text-white border-yellow-700';
+      case 'silver':
+        return 'bg-gray-400 text-white border-gray-500';
+      case 'bronze':
+        return 'bg-orange-600 text-white border-orange-700';
+      default:
+        return 'bg-green-600 text-white border-green-700';
+    }
+  };
   
   // Generate appropriate URL and image
   const hotelUrl = isAgodaHotel 
@@ -104,20 +122,32 @@ const UnifiedHotelCard = ({ hotel, onSelect, className }: UnifiedHotelCardProps)
           }}
         />
         
-        {/* Source badge */}
-        <div className="absolute top-3 left-3">
-          {isAgodaHotel ? (
-            <Badge variant="secondary" className="bg-blue-600 text-white hover:bg-blue-700">
-              <ExternalLink className="w-3 h-3 mr-1" />
-              Agoda Partner
-            </Badge>
-          ) : (
-            <Badge variant="secondary" className="bg-green-600 text-white hover:bg-green-700">
+        {/* Featured tier badge - highest priority */}
+        {isFeatured && featuredTier && (
+          <div className="absolute top-3 left-3 z-10">
+            <Badge className={`${getTierBadgeClass(featuredTier)} border-2 font-bold shadow-lg`}>
               <Award className="w-3 h-3 mr-1" />
-              Local Partner
+              {featuredTier.charAt(0).toUpperCase() + featuredTier.slice(1)} Featured
             </Badge>
-          )}
-        </div>
+          </div>
+        )}
+        
+        {/* Source badge - show if not featured or if featured but no tier */}
+        {(!isFeatured || !featuredTier) && (
+          <div className="absolute top-3 left-3">
+            {isAgodaHotel ? (
+              <Badge variant="secondary" className="bg-blue-600 text-white hover:bg-blue-700">
+                <ExternalLink className="w-3 h-3 mr-1" />
+                Agoda Partner
+              </Badge>
+            ) : (
+              <Badge variant="secondary" className="bg-green-600 text-white hover:bg-green-700">
+                <Award className="w-3 h-3 mr-1" />
+                {isFeatured ? 'Featured' : 'Local Partner'}
+              </Badge>
+            )}
+          </div>
+        )}
 
         {/* Discount badge for Agoda */}
         {isAgodaHotel && hotel.agoda_data?.discountPercentage > 0 && (
@@ -128,8 +158,8 @@ const UnifiedHotelCard = ({ hotel, onSelect, className }: UnifiedHotelCardProps)
           </div>
         )}
 
-        {/* Local hotel quality indicator */}
-        {isLocalHotel && starRating >= 4 && (
+        {/* Local hotel quality indicator - only if not featured */}
+        {isLocalHotel && !isFeatured && starRating >= 4 && (
           <div className="absolute top-3 right-3">
             <Badge variant="secondary" className="bg-amber-500 text-white">
               <Award className="w-3 h-3 mr-1" />

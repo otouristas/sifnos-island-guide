@@ -18,10 +18,10 @@ const PricingPage = () => {
   return (
     <>
       <SEO 
-        title="List Your Sifnos Hotel 2025 - Premium Marketing & Direct Bookings | Hotels Sifnos"
+        title="List Your Sifnos Hotel 2026 - Premium Marketing & Direct Bookings | Hotels Sifnos"
         description="List your Sifnos hotel with the island's leading accommodation platform. Reach thousands of travelers, increase direct bookings & maximize revenue. Premium marketing tools, dedicated support & competitive commission rates."
         keywords={[
-          'list sifnos hotel 2025', 'sifnos hotel marketing', 'hotel advertising sifnos', 
+          'list sifnos hotel 2026', 'sifnos hotel marketing', 'hotel advertising sifnos', 
           'premium hotel listing', 'sifnos accommodation marketing', 'hotel promotion sifnos',
           'direct booking increase', 'sifnos hotel revenue', 'cyclades hotel marketing'
         ]}

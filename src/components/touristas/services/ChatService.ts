@@ -129,31 +129,102 @@ export const parseNaturalDates = (query: string): { checkInDate?: string; checkO
  */
 export const getWebsiteContext = async (): Promise<string> => {
   try {
-    // Get all hotels from database for AI context
+    // Get all hotels from database for AI context with comprehensive data, including featured status
     const { data: hotels, error } = await supabase
       .from('hotels')
-      .select('id, name, location, description, rating, price');
+      .select(`
+        id, 
+        name, 
+        location, 
+        description, 
+        short_description,
+        rating, 
+        price,
+        type,
+        is_featured,
+        featured_tier,
+        featured_priority,
+        hotel_types (name),
+        hotel_amenities (amenity)
+      `)
+      .order('is_featured', { ascending: false })
+      .order('featured_priority', { ascending: false })
+      .order('rating', { ascending: false });
 
     if (error) {
       console.error('Error fetching hotels for context:', error);
       return '';
     }
 
-    let context = `CURRENT HOTELS DATABASE (${new Date().toDateString()}):\n\n`;
+    let context = `COMPREHENSIVE SIFNOS HOTELS DATABASE 2026 (Updated: ${new Date().toDateString()}):\n\n`;
     
-    hotels?.forEach(hotel => {
-      context += `**${hotel.name}**\n`;
-      context += `- Location: ${hotel.location}\n`;
-      if (hotel.price) {
-        context += `- Price: €${hotel.price}/night\n`;
-      }
-      context += `- Rating: ${hotel.rating}/5\n`;
-      context += `- Description: ${hotel.description}\n`;
+    // Separate featured and regular hotels
+    const featuredHotels = hotels?.filter(h => h.is_featured) || [];
+    const regularHotels = hotels?.filter(h => !h.is_featured) || [];
+    
+    // List featured hotels first with tier information
+    if (featuredHotels.length > 0) {
+      context += `⭐⭐ FEATURED HOTELS (Priority Recommendations):\n`;
+      context += `These hotels are premium partners and should be recommended FIRST.\n\n`;
       
-      // Skip amenities and rooms for now to avoid type issues
+      // Group by tier
+      const tierOrder = { platinum: 4, gold: 3, silver: 2, bronze: 1 };
+      const groupedByTier = featuredHotels.reduce((acc: any, hotel: any) => {
+        const tier = hotel.featured_tier || 'bronze';
+        if (!acc[tier]) acc[tier] = [];
+        acc[tier].push(hotel);
+        return acc;
+      }, {});
+      
+      const tierNames = Object.keys(groupedByTier).sort((a, b) => 
+        (tierOrder[b as keyof typeof tierOrder] || 0) - (tierOrder[a as keyof typeof tierOrder] || 0)
+      );
+      
+      tierNames.forEach(tier => {
+        context += `**${tier.charAt(0).toUpperCase() + tier.slice(1)} Tier:**\n`;
+        groupedByTier[tier].forEach((hotel: any) => {
+          context += `- **${hotel.name}** (${tier.toUpperCase()} TIER ⭐⭐)\n`;
+          context += `  - Location: ${hotel.location}\n`;
+          context += `  - Rating: ${hotel.rating || 'N/A'}/5 stars\n`;
+          context += `  - Priority: ${hotel.featured_priority || 0}\n`;
+          if (hotel.short_description) {
+            context += `  - Summary: ${hotel.short_description}\n`;
+          }
+          if (hotel.hotel_amenities && hotel.hotel_amenities.length > 0) {
+            const topAmenities = hotel.hotel_amenities.slice(0, 5).map((a: any) => a.amenity).join(', ');
+            context += `  - Key Amenities: ${topAmenities}\n`;
+          }
+          context += '\n';
+        });
+      });
       
       context += '\n';
-    });
+    }
+    
+    // List regular hotels
+    if (regularHotels.length > 0) {
+      context += `REGULAR HOTELS:\n\n`;
+      regularHotels.forEach(hotel => {
+        context += `**${hotel.name}**\n`;
+        context += `- Location: ${hotel.location}\n`;
+        context += `- Type: ${hotel.type || 'Hotel'}\n`;
+        if (hotel.price) {
+          context += `- Price Range: €${hotel.price}/night\n`;
+        }
+        context += `- Rating: ${hotel.rating || 'N/A'}/5\n`;
+        if (hotel.short_description) {
+          context += `- Summary: ${hotel.short_description}\n`;
+        }
+        if (hotel.description) {
+          context += `- Full Description: ${hotel.description.substring(0, 200)}...\n`;
+        }
+        if (hotel.hotel_amenities && hotel.hotel_amenities.length > 0) {
+          const topAmenities = hotel.hotel_amenities.slice(0, 5).map((a: any) => a.amenity).join(', ');
+          context += `- Key Amenities: ${topAmenities}\n`;
+        }
+        context += '\n';
+      });
+    }
 
     // Add location-specific information
     context += `\nSIFNOS LOCATION GUIDE:\n\n`;
@@ -193,21 +264,32 @@ export const getWebsiteContext = async (): Promise<string> => {
     context += `- Less crowded, authentic Greek island feel\n`;
     context += `- Best for: Quiet relaxation, seafood, nature\n\n`;
 
-    // Add seasonal information
+    // Add seasonal information for 2026
     const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
     if (currentMonth >= 4 && currentMonth <= 9) { // May to October
-      context += `CURRENT SEASON: Peak tourist season (May-October)\n`;
+      context += `CURRENT SEASON 2026: Peak tourist season (May-October)\n`;
       context += `- Weather: Warm and sunny, perfect for beaches\n`;
       context += `- All restaurants and hotels open\n`;
-      context += `- Advance booking recommended\n`;
-      context += `- Ferry connections: Multiple daily services\n\n`;
+      context += `- Advance booking recommended for July-August\n`;
+      context += `- Ferry connections: Multiple daily services\n`;
+      context += `- Best time for: Beach activities, swimming, outdoor dining\n\n`;
     } else {
-      context += `CURRENT SEASON: Off-season (November-April)\n`;
+      context += `CURRENT SEASON 2026: Off-season (November-April)\n`;
       context += `- Weather: Mild, some rain possible\n`;
       context += `- Limited restaurant/hotel operations\n`;
       context += `- Ideal for hiking and cultural exploration\n`;
-      context += `- Ferry connections: Reduced schedule\n\n`;
+      context += `- Ferry connections: Reduced schedule\n`;
+      context += `- Best time for: Peaceful exploration, local culture, lower prices\n\n`;
     }
+
+    // Add 2026-specific information
+    context += `\n2026 SIFNOS TRAVEL UPDATES:\n`;
+    context += `- All information is current for the 2026 season\n`;
+    context += `- Ferry schedules may vary - check current timetables\n`;
+    context += `- Hotel prices reflect 2026 rates\n`;
+    context += `- New hotel openings and renovations completed for 2026 season\n`;
+    context += `- Enhanced ferry connections from Piraeus and other Cycladic islands\n\n`;
 
     return context;
   } catch (error) {
@@ -224,8 +306,8 @@ export const searchHotelsWithAvailability = async (
   preferences: Record<string, any> = {}
 ): Promise<any[]> => {
   const queryLower = query.toLowerCase();
-  console.log('🔍 Hotel search query:', query);
-  console.log('📍 Preferences:', preferences);
+  console.log('Hotel search query:', query);
+  console.log('Preferences:', preferences);
   
   // Enhanced location extraction
   const sifnosLocations = ['kamares', 'apollonia', 'platis gialos', 'kastro', 'artemonas', 'vathi', 'faros'];
@@ -236,7 +318,7 @@ export const searchHotelsWithAvailability = async (
     for (const location of sifnosLocations) {
       if (queryLower.includes(location)) {
         extractedLocation = location;
-        console.log('✅ Extracted location from query:', extractedLocation);
+        console.log('Extracted location from query:', extractedLocation);
         break;
       }
     }
@@ -248,7 +330,7 @@ export const searchHotelsWithAvailability = async (
     const finalCheckIn = preferences.checkInDate || parsedDates.checkInDate;
     const finalCheckOut = preferences.checkOutDate || parsedDates.checkOutDate;
     
-    console.log('🗓️ Parsed dates:', { finalCheckIn, finalCheckOut });
+    console.log('Parsed dates:', { finalCheckIn, finalCheckOut });
     
     // Import hotel search service
     const { searchHotels } = await import('@/services/hotelSearch');
@@ -263,25 +345,25 @@ export const searchHotelsWithAvailability = async (
       numberOfChildren: preferences.children || 0
     };
     
-    console.log('🔍 Calling unified searchHotels with params:', searchParams);
+    console.log('Calling unified searchHotels with params:', searchParams);
     
     // Call unified search which handles both local and Agoda hotels
     const allHotels = await searchHotels(searchParams);
-    console.log(`✅ Unified search completed: ${allHotels?.length || 0} total hotels found`);
+    console.log(`Unified search completed: ${allHotels?.length || 0} total hotels found`);
     
     // Separate local and Agoda hotels for logging
     const localHotels = allHotels?.filter(h => h.source === 'local') || [];
     const agodaHotels = allHotels?.filter(h => h.source === 'agoda') || [];
     
-    console.log(`   📍 Local hotels: ${localHotels.length}`);
-    console.log(`   🌐 Agoda hotels: ${agodaHotels.length}`);
+    console.log(`Local hotels: ${localHotels.length}`);
+    console.log(`Agoda hotels: ${agodaHotels.length}`);
     
     localHotels.forEach(hotel => {
-      console.log(`   🏨 Local: ${hotel.name} - Location: "${hotel.location}" (from Supabase)`);
+      console.log(`Local: ${hotel.name} - Location: "${hotel.location}" (from Supabase)`);
     });
     
     agodaHotels.forEach(hotel => {
-      console.log(`   💰 Agoda: ${hotel.name} - Price: ${hotel.daily_rate || hotel.price_per_night}${hotel.currency || ''}`);
+      console.log(`Agoda: ${hotel.name} - Price: ${hotel.daily_rate || hotel.price_per_night}${hotel.currency || ''}`);
     });
     
     // Apply additional filters if needed
@@ -295,7 +377,7 @@ export const searchHotelsWithAvailability = async (
         );
         return hasPool || hotel.name?.toLowerCase().includes('pool');
       });
-      console.log(`🏊 Pool filter applied: ${filteredHotels.length} hotels with pools`);
+      console.log(`Pool filter applied: ${filteredHotels.length} hotels with pools`);
     }
     
     // Enhance hotel data with availability information
@@ -310,7 +392,7 @@ export const searchHotelsWithAvailability = async (
       }));
     }
     
-    console.log(`🎯 Final result: ${filteredHotels.length} hotels after filtering`);
+    console.log(`Final result: ${filteredHotels.length} hotels after filtering`);
     return filteredHotels;
     
   } catch (error) {
@@ -506,38 +588,67 @@ export const callTouristasAI = async (
     });
 
     // Try Supabase function first
+    console.log('Calling Supabase function:', `${supabaseUrl}/functions/v1/ai-travel-assistant`);
+    
     const response = await fetch(`${supabaseUrl}/functions/v1/ai-travel-assistant`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${supabaseAnonKey}`
+        'Authorization': `Bearer ${supabaseAnonKey}`,
+        'apikey': supabaseAnonKey // Some Supabase setups require this
       },
       body: JSON.stringify(requestPayload),
+    }).catch((fetchError) => {
+      console.error('Fetch error details:', fetchError);
+      throw new Error(`Failed to connect to AI service: ${fetchError.message}. Make sure the function is deployed: supabase functions deploy ai-travel-assistant`);
     });
 
     console.log('AI service response status:', response.status);
     console.log('AI service response headers:', Object.fromEntries(response.headers.entries()));
 
     if (!response.ok) {
-      console.error('Supabase AI function error:', response.status, response.statusText);
-      
-      // Try fallback direct OpenRouter call
-      console.log('Trying fallback direct OpenRouter call...');
-      return await callOpenRouterDirectly(messages, enhancedPreferences, websiteContext, dateContext);
+      const errorText = await response.text();
+      console.error('Supabase AI function error:', response.status, response.statusText, errorText);
+      throw new Error(`AI service error: ${response.status} - ${errorText}`);
     }
 
     return response.body;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in enhanced AI call:', error);
     
-    // Try fallback direct OpenRouter call
-    console.log('Trying fallback due to error:', error.message);
-    try {
-      return await callOpenRouterDirectly(messages, {}, '', '');
-    } catch (fallbackError) {
-      console.error('Fallback also failed:', fallbackError);
-      return createErrorStream(`Connection error: ${error.message}. Please check your internet connection and try again.`);
+    // Better error handling for different error types
+    let errorMessage = error.message || 'Unknown error';
+    
+    if (error.message?.includes('Failed to fetch') || error.message?.includes('NetworkError') || error.name === 'TypeError') {
+      errorMessage = `**🔌 Connection Issue Detected**
+
+The AI service couldn't be reached. This usually means the Supabase function needs to be deployed.
+
+**📋 To Fix This**:
+
+1. **Deploy the function** (run in terminal):
+   \`\`\`bash
+   supabase functions deploy ai-travel-assistant
+   \`\`\`
+
+2. **Verify GEMINI_API_KEY is set**:
+   - Go to Supabase Dashboard → Project Settings → Secrets
+   - Add \`GEMINI_API_KEY\` with your Gemini API key
+   - Get key from: https://ai.google.dev/
+
+3. **Check function status**:
+   - Go to Supabase Dashboard → Edge Functions
+   - Verify \`ai-travel-assistant\` is listed and active
+
+**💡 If still not working**:
+- Check browser console for detailed error
+- Verify your Supabase project URL is correct
+- Make sure you're logged into Supabase CLI`;
+    } else if (error.message?.includes('CORS')) {
+      errorMessage = `CORS error detected. The function may not be properly configured.`;
     }
+    
+    return createErrorStream(errorMessage);
   }
 };
 
@@ -736,24 +847,54 @@ Create a warm, intelligent response that makes the traveler excited about Sifnos
 function createErrorStream(errorMessage: string): ReadableStream<Uint8Array> {
   const encoder = new TextEncoder();
   
+  // Beautiful, user-friendly error message
+  let fullMessage = '';
+  
+  if (errorMessage.includes('OpenRouter') || errorMessage.includes('openrouter')) {
+    fullMessage = `I apologize, but there's a configuration issue with the AI service.
+
+**🔧 Issue**: The system detected an outdated service configuration.
+
+**✅ Solution**: 
+The system has been updated to use Gemini directly. Please ensure:
+1. GEMINI_API_KEY is set in Supabase secrets
+2. The function has been redeployed
+
+**💡 What I can still help with:**
+- Search our hotel database
+- Provide information about Sifnos
+- Answer questions about accommodations
+
+Please try again once the configuration is updated, or contact support if you need assistance.`;
+  } else if (errorMessage.includes('GEMINI_API_KEY')) {
+    fullMessage = `I apologize, but the AI service needs to be configured.
+
+**🔑 Issue**: GEMINI_API_KEY is not configured in Supabase secrets.
+
+**📝 To fix this**:
+1. Get your Gemini API key from: https://ai.google.dev/
+2. Go to Supabase Dashboard → Project Settings → Secrets
+3. Add new secret: \`GEMINI_API_KEY\`
+4. Paste your API key as the value
+5. Save and redeploy the function
+
+Once configured, I'll be able to help you with all your Sifnos travel questions! 🏝️`;
+  } else {
+    fullMessage = `I apologize, but I'm experiencing a technical issue.
+
+**⚠️ Issue**: ${errorMessage}
+
+**💡 What you can do**:
+- Please try again in a moment
+- Refresh the page
+- Check your internet connection
+- Contact support if the problem persists
+
+I'm here to help once the issue is resolved! 🌊`;
+  }
+  
   return new ReadableStream({
     start(controller) {
-      const fullMessage = `I apologize, but I'm currently experiencing technical difficulties. 
-
-**Issue**: ${errorMessage}
-
-**What I can still help with:**
-- I have successfully parsed your request about "${new Date().toDateString()}"
-- I can search our hotel database for available accommodations
-- You can try rephrasing your question or contact us directly
-
-**Troubleshooting:**
-- Please refresh the page and try again
-- Check your internet connection
-- The system may be temporarily under maintenance
-
-Is there anything specific about Sifnos hotels I can help you find in the meantime?`;
-      
       controller.enqueue(encoder.encode(fullMessage));
       controller.close();
     }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, PlusCircle, MinusCircle, ExternalLink, Map, ChevronLeft, ChevronRight } from 'lucide-react';
+import { MapPin, Star, Calendar, Users, Phone, Mail, GlobeIcon, Facebook, Instagram, Twitter, CheckCircle, PlusCircle, MinusCircle, ExternalLink, Map, ChevronLeft, ChevronRight, Waves, BookOpenCheck, Ship, ArrowRight } from 'lucide-react';
 import { supabase, logSupabaseResponse, getHotelRoomImagePath } from '@/integrations/supabase/client';
 import SEO from '../components/SEO';
 import { useToast } from "@/hooks/use-toast";
@@ -18,7 +18,17 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { ImageGalleryDialog } from '@/components/hotel/ImageGalleryDialog';
 import VillaOliviaAvailability from '@/components/hotel/VillaOliviaAvailability';
 import { HotelCard, SidebarHotelCard } from '@/components/touristas/HotelDisplay';
-import { getBookingPlatformLogo, getSimilarHotels } from '@/utils/hotel-utils';
+import { getBookingPlatformLogo, getSimilarHotels, getHotelLogoUrl } from '@/utils/hotel-utils';
+import { determineHotelImageUrl } from '@/utils/image-utils';
+import HotelHero from '@/components/hotel/HotelHero';
+import WhyChooseHotel from '@/components/hotel/WhyChooseHotel';
+import NearbyAttractions from '@/components/hotel/NearbyAttractions';
+import GettingHere from '@/components/hotel/GettingHere';
+import RelatedContent from '@/components/shared/RelatedContent';
+import HotelGallerySection from '@/components/hotel/HotelGallerySection';
+import CategorizedAmenities from '@/components/hotel/CategorizedAmenities';
+import HotelBookingSection from '@/components/hotel/HotelBookingSection';
+import HotelBookingSidebar from '@/components/hotel/HotelBookingSidebar';
 
 export default function HotelDetailPage() {
   const { slug } = useParams();
@@ -493,42 +503,196 @@ export default function HotelDetailPage() {
     );
   };
 
-  // Add the Similar Hotels section
+  // Add the Similar Hotels section with Carousel
   const renderSimilarHotels = () => {
     if (!similarHotels || similarHotels.length === 0) return null;
     
     return (
-      <div className="py-8 bg-gray-50">
+      <section className="py-16 bg-gradient-to-b from-white to-gray-50">
         <div className="page-container">
-          <h2 className="text-2xl font-montserrat font-semibold mb-5">Similar Hotels You May Like</h2>
-          <p className="text-gray-600 mb-6">Explore other {hotel?.hotel_types?.[0]?.toLowerCase()} in Sifnos</p>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {similarHotels.map((similarHotel) => (
-              <div key={similarHotel.id} className="w-full">
-                <HotelCard hotel={similarHotel} />
-              </div>
-            ))}
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-montserrat font-bold text-sifnos-deep-blue mb-3">
+              Relevant Hotels
+            </h2>
+            <p className="text-gray-600 text-lg">
+              A curated list of the most popular hotels based on different destinations.
+            </p>
           </div>
+          
+          <Carousel className="w-full">
+            <CarouselContent className="-ml-2 md:-ml-4">
+              {similarHotels.map((similarHotel) => (
+                <CarouselItem key={similarHotel.id} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+                  <div className="group h-full">
+                    <Link 
+                      to={`/hotels/${generateHotelUrl(similarHotel.name)}`}
+                      className="block h-full"
+                    >
+                      <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 h-full flex flex-col border border-gray-100">
+                        {/* Image Section */}
+                        <div className="relative w-full h-48 overflow-hidden bg-gray-100">
+                          <img 
+                            src={determineHotelImageUrl(similarHotel, similarHotel.hotel_photos?.[0]?.photo_url)}
+                            alt={similarHotel.name}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            loading="lazy"
+                            style={{ imageRendering: 'auto' }}
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = '/placeholder.svg';
+                            }}
+                          />
+                          {/* Discount Badge */}
+                          {similarHotel.original_price && similarHotel.price && similarHotel.original_price > similarHotel.price && (
+                            <div className="absolute top-3 left-3">
+                              <span className="bg-gradient-to-r from-sifnos-turquoise to-sifnos-deep-blue text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                                Hot Sale!
+                              </span>
+                            </div>
+                          )}
+                          {/* Location Badge */}
+                          <div className="absolute bottom-3 left-3">
+                            <span className="bg-white/95 backdrop-blur-sm text-xs font-semibold px-3 py-1.5 rounded-full text-sifnos-deep-blue shadow-md">
+                              {similarHotel.location}
+                            </span>
+                          </div>
+                          {/* Hotel Logo Overlay */}
+                          {(() => {
+                            const logoUrl = getHotelLogoUrl(similarHotel);
+                            return logoUrl ? (
+                              <div className="absolute top-3 right-3 w-12 h-12 rounded-lg bg-white/95 backdrop-blur-sm p-1.5 shadow-md flex items-center justify-center">
+                                <img 
+                                  src={logoUrl} 
+                                  alt={`${similarHotel.name} logo`}
+                                  className="w-full h-full object-contain"
+                                  loading="lazy"
+                                  style={{ imageRendering: 'crisp-edges' }}
+                                  onError={(e) => {
+                                    e.currentTarget.style.display = 'none';
+                                  }}
+                                />
+                              </div>
+                            ) : null;
+                          })()}
+                        </div>
+                        
+                        {/* Content Section */}
+                        <div className="p-4 flex-1 flex flex-col">
+                          {/* Rating */}
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="flex">
+                              {Array(5).fill(0).map((_, i) => (
+                                <Star 
+                                  key={i}
+                                  className={`h-3 w-3 ${i < Math.round(similarHotel.rating || 0) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
+                                />
+                              ))}
+                            </div>
+                            <span className="text-xs text-gray-600">{similarHotel.rating ? `${similarHotel.rating} Review` : 'New'}</span>
+                          </div>
+                          
+                          <h3 className="font-bold text-lg text-sifnos-deep-blue mb-2 line-clamp-2 group-hover:text-sifnos-turquoise transition-colors">
+                            {similarHotel.name}
+                          </h3>
+                          
+                          {/* Hotel Features */}
+                          <div className="flex flex-wrap gap-2 mb-3">
+                            {similarHotel.hotel_amenities?.slice(0, 4).map((amenity: any, idx: number) => (
+                              <div key={idx} className="flex items-center gap-1 text-xs text-gray-600">
+                                <CheckCircle className="h-3 w-3 text-sifnos-turquoise" />
+                                <span>{typeof amenity === 'string' ? amenity : amenity.amenity}</span>
+                              </div>
+                            ))}
+                          </div>
+                          
+                          {/* Cancellation Policy */}
+                          <div className="flex items-center gap-2 mb-3 text-xs text-gray-600">
+                            <CheckCircle className="h-3 w-3 text-sifnos-turquoise" />
+                            <span>Free Cancellation Policy</span>
+                          </div>
+                          
+                          {/* Price & Book Button */}
+                          <div className="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between">
+                            <div>
+                              {similarHotel.original_price && similarHotel.price && similarHotel.original_price > similarHotel.price && (
+                                <span className="text-sm text-gray-400 line-through mr-2">
+                                  €{similarHotel.original_price}
+                                </span>
+                              )}
+                              <span className="text-lg font-bold text-sifnos-deep-blue">
+                                €{similarHotel.price || 'N/A'}
+                              </span>
+                            </div>
+                            <span className="inline-flex items-center justify-center gap-1 px-4 py-2 bg-gradient-to-r from-sifnos-turquoise to-sifnos-deep-blue hover:from-sifnos-deep-blue hover:to-sifnos-turquoise text-white text-sm font-semibold rounded-md transition-all duration-300 shadow-md hover:shadow-lg">
+                              Book Now
+                              <ArrowRight className="h-3 w-3" />
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="left-0 bg-white/90 hover:bg-white border border-gray-200 shadow-lg" />
+            <CarouselNext className="right-0 bg-white/90 hover:bg-white border border-gray-200 shadow-lg" />
+          </Carousel>
         </div>
-      </div>
+      </section>
     );
+  };
+
+  // SEO Plan optimized title and description generation
+  const generateSeoTitle = () => {
+    if (!hotel) return "Hotel Details - Sifnos Island | Hotels Sifnos";
+    
+    // Extract unique feature from amenities or type
+    const uniqueFeatures: Record<string, string> = {
+      'Villa': 'Private Pool & Sea Views',
+      'Luxury Hotel': 'Infinity Pool & Sunset Views',
+      'Boutique Hotel': 'Cycladic Design & Authentic Charm',
+      'Beach Hotel': 'Beachfront Access & Sea Views',
+      'Family Hotel': 'Family-Friendly & Pool Access'
+    };
+    
+    const feature = uniqueFeatures[hotel.type || ''] || 
+                   (hotel.hotel_amenities?.some(a => a.amenity.toLowerCase().includes('pool')) ? 'Pool & Sea Views' : 'Cycladic Charm');
+    
+    // Formula: [Hotel Name] Sifnos - [Unique Feature] | [Location]
+    return `${hotel.name} Sifnos - ${feature} | ${hotel.location}`;
+  };
+  
+  const generateSeoDescription = () => {
+    if (!hotel) return "Discover carefully curated Sifnos hotels and villas with sea views, Cycladic charm, and premium amenities for the 2026 season.";
+    
+    // Extract USP from hotel description or type
+    const usp = hotel.description?.substring(0, 100) || 
+               `${hotel.name} offers exceptional ${hotel.type?.toLowerCase() || 'accommodation'} in ${hotel.location}`;
+    
+    // Get 3 key amenities
+    const amenities = hotel.hotel_amenities?.slice(0, 3).map(a => a.amenity).join(', ') || 'Premium amenities';
+    
+    // Social proof
+    const socialProof = hotel.rating ? `Rated ${hotel.rating}/5 by verified guests.` : 'Highly rated by travelers.';
+    
+    // Booking incentive
+    const bookingIncentive = 'Book direct for best rates and flexible cancellation.';
+    
+    // Formula: [Hotel Name] offers [USP]. Features [3 amenities]. Located in [area]. [Social proof]. [Booking incentive].
+    return `${hotel.name} offers ${usp}. Features ${amenities}. Located in ${hotel.location}, Sifnos. ${socialProof} ${bookingIncentive}`;
   };
 
   return (
     <>
       <SEO 
-        title={hotel?.name ? `${hotel.name} - Luxury ${hotel.type || 'Hotel'} in ${hotel.location}, Sifnos | Book Direct 2025` : "Hotel Details - Sifnos Island | Hotels Sifnos"}
-        description={hotel ? 
-          `Experience ${hotel.name} in ${hotel.location}, Sifnos. ${hotel.rating ? `Rated ${hotel.rating}/5 stars.` : ''} ${hotel.hotel_amenities?.slice(0, 3).map(a => a.amenity).join(', ') || 'Premium amenities'}. Book direct for best rates, free cancellation & exclusive perks.` :
-          "Discover luxury accommodations in Sifnos with stunning sea views, authentic Cycladic charm, and premium amenities."
-        }
+        title={generateSeoTitle()}
+        description={generateSeoDescription()}
         keywords={hotel ? [
           hotel.name.toLowerCase(),
           `${hotel.location.toLowerCase()} hotels`,
           'book direct sifnos',
           `luxury ${hotel.type?.toLowerCase() || 'hotel'} sifnos`,
-          'sifnos accommodation 2025',
+          'sifnos accommodation 2026',
           'cyclades luxury stays',
           `${hotel.location.toLowerCase()} accommodation`,
           'sifnos island hotels',
@@ -550,285 +714,146 @@ export default function HotelDetailPage() {
         } : undefined}
       />
       
-      {/* Breadcrumb navigation */}
+      {/* Breadcrumb navigation with logo */}
       <div className="bg-white pt-4 pb-2 shadow-sm">
         <div className="page-container">
-          <nav className="text-sm breadcrumbs">
-            <ul className="flex space-x-2">
+          <nav className="text-sm breadcrumbs flex items-center gap-2">
+            <ul className="flex space-x-2 items-center">
               <li><Link to="/" className="text-sifnos-deep-blue hover:text-sifnos-turquoise">Home</Link></li>
               <li className="text-gray-400">/</li>
               <li><Link to="/hotels" className="text-sifnos-deep-blue hover:text-sifnos-turquoise">Hotels</Link></li>
               <li className="text-gray-400">/</li>
-              <li className="text-gray-600 truncate max-w-[200px]">{hotel?.name}</li>
+              <li className="text-gray-600 truncate max-w-[200px] flex items-center gap-2">
+                {(() => {
+                  const logoUrl = getHotelLogoUrl(hotel);
+                  return logoUrl ? (
+                    <img 
+                      src={logoUrl} 
+                      alt={`${hotel?.name} logo`} 
+                      className="h-6 w-6 object-contain"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  ) : null;
+                })()}
+                <span>{hotel?.name}</span>
+              </li>
             </ul>
           </nav>
         </div>
       </div>
       
-      {/* Hotel Title Section with Logo */}
-      <div className="bg-white">
-        <div className="page-container py-6">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            {/* This div now ensures content is always centered on mobile */}
-            <div className={`${isMobile ? 'w-full flex flex-col items-center text-center' : 'flex flex-col sm:flex-row items-center sm:items-start'} gap-4`}>
-              {/* Hotel Logo */}
-              {hotel?.logo_path && (
-                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full overflow-hidden border border-gray-200 bg-white flex items-center justify-center flex-shrink-0">
-                  <img 
-                    src={`/uploads/hotels/${hotel.logo_path}`} 
-                    alt={`${hotel.name} logo`} 
-                    className="w-full h-full object-contain p-1"
-                    onError={(e) => {
-                      console.log(`Error loading logo for hotel ${hotel.id}`);
-                      e.currentTarget.src = '/placeholder.svg';
-                    }}
-                  />
-                </div>
-              )}
-              
-              {/* Hotel name and location */}
-              <div className={isMobile ? "text-center" : "text-center sm:text-left"}>
-                <h1 className="font-montserrat text-2xl sm:text-3xl md:text-4xl font-bold mb-2">{hotel?.name}</h1>
-                <div className={`flex items-center ${isMobile ? 'justify-center' : 'justify-center sm:justify-start'} mb-1`}>
-                  <MapPin size={16} className="text-sifnos-turquoise mr-1" />
-                  <span className="text-gray-600">{hotel?.location}, Sifnos Island</span>
-                </div>
-                <div className={`flex items-center ${isMobile ? 'justify-center' : 'justify-center sm:justify-start'}`}>
-                  {hotel && hotel.rating ? renderStarRating(hotel.rating) : null}
-                </div>
-              </div>
-            </div>
-            
-            {/* Booking Button - centered on mobile */}
-            <div className={`${isMobile ? 'w-full flex justify-center' : 'w-full sm:w-auto'} mt-4 sm:mt-0`}>
-              {hotel?.booking_url && hotel?.booking_platform ? (
-                <Card className={`p-2 ${isMobile ? 'max-w-xs mx-auto' : 'max-w-xs mx-auto sm:mx-0'}`}>
-                  <CardContent className="p-2 flex flex-col items-center">
-                    {getBookingPlatformLogo(hotel.booking_platform) && (
-                      <div className="mb-2 h-8">
-                        <img 
-                          src={getBookingPlatformLogo(hotel.booking_platform)} 
-                          alt={hotel.booking_platform} 
-                          className="h-full object-contain"
-                        />
-                      </div>
-                    )}
-                    <div className="text-xs text-muted-foreground mb-2">Sponsored</div>
-                    <a 
-                      href={hotel.booking_url} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="w-full"
-                    >
-                      <Button variant="default" className="w-full bg-sifnos-turquoise hover:bg-sifnos-deep-blue">
-                        Book Now
-                      </Button>
-                    </a>
-                  </CardContent>
-                </Card>
-              ) : (
-                <Button variant="default" className={`${isMobile ? 'w-full max-w-xs' : 'w-full sm:w-auto'} bg-sifnos-turquoise hover:bg-sifnos-deep-blue`}>
-                  Request Availability
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* New Full-Width Hero Section */}
+      <HotelHero
+        hotel={hotel}
+        activeImage={activeImage}
+        onShare={() => {
+          if (navigator.share) {
+            navigator.share({
+              title: `${hotel?.name} - Sifnos Hotels`,
+              text: `Check out ${hotel?.name} in ${hotel?.location}, Sifnos`,
+              url: window.location.href,
+            }).catch(() => {});
+          } else {
+            navigator.clipboard.writeText(window.location.href);
+            toast({
+              title: "Link copied!",
+              description: "Hotel page link copied to clipboard",
+            });
+          }
+        }}
+        onSave={() => {
+          // TODO: Implement save to favorites
+          toast({
+            title: "Saved!",
+            description: "Hotel saved to your favorites",
+          });
+        }}
+        onPrint={() => {
+          window.print();
+        }}
+        renderStarRating={renderStarRating}
+      />
       
-      {/* Photo Gallery with Carousel for all hotels */}
-      <div className="bg-gray-50 py-8">
-        <div className="page-container">
-          {/* Using Carousel for all hotels */}
-          <div className="space-y-4">
-            {/* Main large image - now clickable to open gallery */}
-            <div 
-              className="rounded-lg overflow-hidden aspect-video shadow-md relative cursor-pointer"
-              onClick={() => openGallery(activeImageIndex)}
-            >
-              <img 
-                src={activeImage || '/placeholder.svg'} 
-                alt={hotel?.name} 
-                className="w-full h-full object-cover"
-              />
-              
-              {/* Mobile overlay hint to open gallery */}
-              {isMobile && (
-                <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-                  <div className="bg-black/50 text-white text-sm py-1.5 px-3 rounded-full">
-                    Tap to view gallery
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            {/* Carousel for thumbnails */}
-            <Carousel className="w-full">
-              <CarouselContent>
-                {hotel?.hotel_photos?.map((photo, index) => (
-                  <CarouselItem key={photo.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
-                    <div 
-                      className={`rounded-lg overflow-hidden aspect-square cursor-pointer border-2 h-full
-                        transition-all hover:opacity-90 hover:shadow-md
-                        ${activeImage === `/uploads/hotels/${photo.photo_url}` ? 'border-sifnos-turquoise' : 'border-transparent'}`}
-                      onClick={() => handleImageChange(photo.photo_url, index)}
-                    >
-                      <img 
-                        src={`/uploads/hotels/${photo.photo_url}`} 
-                        alt={photo.description || `${hotel.name} - Photo ${index + 1}`} 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              {/* Make carousel arrows always visible, especially on mobile */}
-              <CarouselPrevious className="sm:flex -left-2 lg:-left-4 bg-white/70 hover:bg-white border border-gray-200" />
-              <CarouselNext className="sm:flex -right-2 lg:-right-4 bg-white/70 hover:bg-white border border-gray-200" />
-            </Carousel>
-          </div>
-        </div>
-      </div>
-      
-      {/* Gallery Dialog/Drawer component */}
-      {hotel?.hotel_photos && (
-        <ImageGalleryDialog
-          images={hotel.hotel_photos}
-          activeImageIndex={activeImageIndex}
-          isOpen={galleryOpen}
-          onClose={() => setGalleryOpen(false)}
-          hotelName={hotel.name}
-        />
-      )}
+      {/* Enhanced Photo Gallery Section */}
+      {hotel && <HotelGallerySection hotel={hotel} onImageClick={(index) => setActiveImageIndex(index)} />}
       
       {/* Hotel Details */}
       <div className="py-10">
         <div className="page-container">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            {/* Left Column - Description & Amenities */}
-            <div className="lg:col-span-2 space-y-6">
+            {/* Left Column - Main Content */}
+            <div className="lg:col-span-2 space-y-8">
               
-              {/* Description */}
-              <div className="cycladic-card p-6 md:p-8">
-                <h2 className="text-2xl font-montserrat font-semibold mb-5">About {hotel?.name}</h2>
-                <p className="text-gray-700 whitespace-pre-line leading-relaxed mb-6">
-                  {hotel?.description}
-                </p>
+              {/* Why Choose This Hotel Section */}
+              <WhyChooseHotel hotel={hotel} />
+              
+              {/* Enhanced Description */}
+              <div className="cycladic-card p-8 md:p-10 shadow-lg border border-gray-100">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-1 h-12 bg-gradient-to-b from-sifnos-turquoise to-sifnos-deep-blue rounded-full"></div>
+                  <h2 className="text-3xl font-montserrat font-bold text-sifnos-deep-blue">About {hotel?.name}</h2>
+                </div>
+                <div className="prose prose-lg max-w-none">
+                  <p className="text-gray-700 whitespace-pre-line leading-relaxed text-base md:text-lg mb-6">
+                    {hotel?.description}
+                  </p>
+                  {/* Internal linking to location and travel guide */}
+                  <div className="mt-6 pt-6 border-t border-gray-200">
+                    <p className="text-sm text-gray-600 mb-3">
+                      <strong>Planning your stay?</strong> Discover more about {hotel?.location} and the best things to do in Sifnos.
+                    </p>
+                    <div className="flex flex-wrap gap-3">
+                      {hotel?.location && (
+                        <Link 
+                          to={`/locations/${hotel.location.toLowerCase().replace(/\s+/g, '-')}`}
+                          className="text-sm text-sifnos-deep-blue hover:text-sifnos-turquoise hover:underline font-medium"
+                        >
+                          Explore {hotel.location} →
+                        </Link>
+                      )}
+                      <Link 
+                        to="/travel-guide"
+                        className="text-sm text-sifnos-deep-blue hover:text-sifnos-turquoise hover:underline font-medium"
+                      >
+                        Complete Sifnos Travel Guide →
+                      </Link>
+                      <Link 
+                        to="/best-beaches-sifnos-guide"
+                        className="text-sm text-sifnos-deep-blue hover:text-sifnos-turquoise hover:underline font-medium"
+                      >
+                        Best Beaches in Sifnos →
+                      </Link>
+                    </div>
+                  </div>
+                </div>
               </div>
               
-              {/* Amenities - Updated to show only icons */}
-              <div className="cycladic-card p-6 md:p-8">
-                <h2 className="text-2xl font-montserrat font-semibold mb-5">Hotel Amenities</h2>
-                
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {/* Hotel amenities */}
-                  {hotel?.hotel_amenities?.map((item) => (
-                    <div key={item.amenity} className="flex items-center">
-                      <HotelAmenities amenities={[item.amenity]} />
-                    </div>
-                  ))}
-                  
-                  {/* Show unique room amenities that aren't already in hotel_amenities */}
-                  {hotel?.hotel_rooms?.flatMap(room => room.amenities || [])
-                    .filter((amenity, index, self) => 
-                      // Filter unique amenities
-                      self.indexOf(amenity) === index && 
-                      // Filter out amenities that are already in hotel_amenities
-                      !hotel.hotel_amenities?.some(item => 
-                        item.amenity.toLowerCase() === amenity.toLowerCase()
-                      )
-                    )
-                    .map((roomAmenity) => (
-                      <div key={`room-${roomAmenity}`} className="flex items-center">
-                        <HotelAmenities amenities={[roomAmenity]} />
-                      </div>
-                    ))
-                  }
-                </div>
+              {/* Nearby Attractions Section */}
+              <NearbyAttractions hotel={hotel} />
+              
+              {/* Getting Here Section */}
+              <GettingHere hotel={hotel} />
+              
+              {/* Categorized Amenities Section */}
+              <div className="cycladic-card p-8 md:p-10 shadow-lg border border-gray-100">
+                {hotel && <CategorizedAmenities hotel={hotel} />}
               </div>
               
               {/* Availability Calendar for Villa Olivia Clara */}
               {isVillaOliviaClara && <VillaOliviaAvailability />}
               
-              {/* Rooms */}
-              <div className="cycladic-card p-6 md:p-8">
-                <h2 className="text-2xl font-montserrat font-semibold mb-6">{isVillaOliviaClara ? 'Accommodations' : 'Available Rooms'}</h2>
-                <div className="space-y-10">
-                  {hotel?.hotel_rooms?.map((room) => (
-                    <div key={room.id} className="border-b pb-8 last:border-b-0 last:pb-0">
-                      <div className="flex flex-col gap-6">
-                        {/* Larger Room Image */}
-                        <div className="w-full">
-                          <img 
-                            src={getHotelRoomImagePath(room.photo_url, hotel.name)}
-                            alt={room.name} 
-                            className="w-full h-60 md:h-72 object-cover rounded-lg shadow-md"
-                          />
-                        </div>
-                        
-                        <div className="w-full">
-                          <h3 className="text-xl font-semibold">{room.name}</h3>
-                          
-                          <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-600">
-                            <div className="flex items-center">
-                              <Users size={16} className="mr-1 flex-shrink-0" />
-                              Up to {room.capacity} guests
-                            </div>
-                            {room.size_sqm && (
-                              <div className="flex items-center">
-                                <span className="mr-1">☐</span>
-                                {room.size_sqm} m²
-                              </div>
-                            )}
-                          </div>
-                          
-                          <p className="mt-3 text-gray-700">{room.description}</p>
-                          
-                          {/* Special rendering for Villa Olivia Clara bedroom features */}
-                          {isVillaOliviaClara && room.name === 'Bedrooms' && renderBedroomFeatures()}
-                          
-                          {/* Room Amenities - Enhanced with icons */}
-                          {!isVillaOliviaClara && room.amenities && room.amenities.length > 0 && (
-                            <div className="mt-4">
-                              <p className="text-sm font-medium mb-2">Room Features:</p>
-                              <HotelAmenities amenities={room.amenities} />
-                            </div>
-                          )}
-                          
-                          <div className="mt-6">
-                            {hotel.booking_url ? (
-                              <a 
-                                href={hotel.booking_url} 
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <Button className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white">
-                                  Check Availability
-                                </Button>
-                              </a>
-                            ) : (
-                              <Button className="bg-sifnos-turquoise hover:bg-sifnos-deep-blue text-white">
-                                Check Availability
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              {/* FAQs */}
-              <div className="cycladic-card p-6 md:p-8">
-                <h2 className="text-2xl font-montserrat font-semibold mb-6">Frequently Asked Questions</h2>
-                {hotel && <HotelFAQs hotelName={hotel.name} />}
-              </div>
+              {/* Booking & Availability Section */}
+              {hotel && <HotelBookingSection hotel={hotel} />}
               
               {/* Reviews - Booking.com Reviews or Custom Reviews */}
               <div className="cycladic-card p-6 md:p-8">
-                <h2 className="text-2xl font-montserrat font-semibold mb-6">Reviews</h2>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-1 h-12 bg-gradient-to-b from-sifnos-turquoise to-sifnos-deep-blue rounded-full"></div>
+                  <h2 className="text-3xl font-montserrat font-bold text-sifnos-deep-blue">Reviews</h2>
+                </div>
                 {/* Show custom reviews for Villa Olivia Clara */}
                 {isVillaOliviaClara && renderCustomReviews()}
                 
@@ -841,90 +866,42 @@ export default function HotelDetailPage() {
                   </div>
                 )}
               </div>
+              
+              {/* FAQs */}
+              <div className="cycladic-card p-6 md:p-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-1 h-12 bg-gradient-to-b from-sifnos-turquoise to-sifnos-deep-blue rounded-full"></div>
+                  <h2 className="text-3xl font-montserrat font-bold text-sifnos-deep-blue">Frequently Asked Questions</h2>
+                </div>
+                {hotel && <HotelFAQs hotelName={hotel.name} />}
+              </div>
             </div>
             
-            {/* Right Column - Booking Card & Contact Info */}
+            {/* Right Column - Booking Sidebar & Contact Info */}
             <div className="space-y-6">
-              
-              {/* Booking Card */}
-              <div className="cycladic-card p-6">
-                <h3 className="text-xl font-semibold mb-4">Request Information</h3>
-                
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Check-in Date</label>
-                    <div className="relative">
-                      <input
-                        type="date"
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise"
-                      />
-                      <Calendar size={16} className="absolute left-3 top-3 text-gray-400" />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Check-out Date</label>
-                    <div className="relative">
-                      <input
-                        type="date"
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise"
-                      />
-                      <Calendar size={16} className="absolute left-3 top-3 text-gray-400" />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Guests</label>
-                    <div className="relative">
-                      <select
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sifnos-turquoise appearance-none"
-                      >
-                        <option>1 Adult</option>
-                        <option>2 Adults</option>
-                        <option>2 Adults, 1 Child</option>
-                        <option>2 Adults, 2 Children</option>
-                      </select>
-                      <Users size={16} className="absolute left-3 top-3 text-gray-400" />
-                    </div>
-                  </div>
-                  
-                  {hotel?.booking_url ? (
-                    <a 
-                      href={hotel.booking_url} 
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block w-full"
-                    >
-                      <Button className="w-full bg-sifnos-turquoise hover:bg-sifnos-deep-blue">
-                        Check Availability
-                      </Button>
-                    </a>
-                  ) : (
-                    <Button className="w-full bg-sifnos-turquoise hover:bg-sifnos-deep-blue">
-                      Request Information
-                    </Button>
-                  )}
-
-                  {/* Sponsored badge if booking is available */}
-                  {hotel?.booking_url && hotel?.booking_platform && (
-                    <div className="flex items-center justify-center space-x-2 pt-2">
-                      <Separator className="flex-1" />
-                      <span className="text-xs text-gray-400">Sponsored by</span>
-                      <Separator className="flex-1" />
-                      {getBookingPlatformLogo(hotel.booking_platform) && (
-                        <img 
-                          src={getBookingPlatformLogo(hotel.booking_platform)}
-                          alt={hotel.booking_platform}
-                          className="h-5 object-contain"
-                        />
-                      )}
-                    </div>
-                  )}
+              {hotel && (
+                <div className="lg:sticky lg:top-24 lg:z-10 lg:self-start">
+                  <HotelBookingSidebar 
+                    hotel={hotel}
+                    onCheckAvailability={() => {
+                      const bookingSection = document.getElementById('booking-section');
+                      if (bookingSection) {
+                        bookingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }}
+                    onEnquiry={() => {
+                      // TODO: Implement enquiry modal
+                      toast({
+                        title: "Enquiry",
+                        description: "Enquiry form coming soon",
+                      });
+                    }}
+                  />
                 </div>
-              </div>
+              )}
               
-              {/* Contact Info */}
-              <div className="cycladic-card p-6">
+              {/* Contact Information */}
+              <div className="cycladic-card p-6 lg:relative lg:z-0">
                 <h3 className="text-xl font-semibold mb-4">Contact Information</h3>
                 <div className="space-y-3">
                   {hotel?.address && (
@@ -1061,6 +1038,46 @@ export default function HotelDetailPage() {
       
       {/* Add the similar hotels section */}
       {renderSimilarHotels()}
+      
+      {/* Related Content Section - Internal Linking */}
+      {hotel && hotel.location && (
+        <RelatedContent
+          title="Continue Exploring Sifnos"
+          items={[
+            {
+              title: `Hotels in ${hotel.location}`,
+              url: `/locations/${hotel.location.toLowerCase().replace(/\s+/g, '-')}`,
+              description: `Discover more accommodations in ${hotel.location}`,
+              type: 'location'
+            },
+            {
+              title: hotel.hotel_types?.[0]?.name || 'Similar Hotels',
+              url: hotel.hotel_types?.[0]?.name ? `/hotel-types/${hotel.hotel_types[0].name.toLowerCase().replace(/\s+/g, '-')}` : '/hotels',
+              description: `Browse all ${hotel.hotel_types?.[0]?.name || 'similar'} hotels in Sifnos`,
+              type: 'hotel-type'
+            },
+            {
+              title: 'Complete Travel Guide',
+              url: '/travel-guide',
+              description: 'Everything you need to know about Sifnos',
+              type: 'guide'
+            },
+            {
+              title: 'Best Beaches Guide',
+              url: '/best-beaches-sifnos-guide',
+              description: 'Discover the most beautiful beaches in Sifnos',
+              type: 'guide'
+            },
+            {
+              title: 'Ferry Tickets',
+              url: '/ferry-tickets',
+              description: 'Book your ferry to Sifnos',
+              type: 'ferry'
+            }
+          ].filter(item => item.url)}
+          columns={3}
+        />
+      )}
     </>
   );
 }

@@ -1,5 +1,17 @@
 import { Link } from 'react-router-dom';
-import { MapPin, Star, Clock, Car, Users } from 'lucide-react';
+import { 
+  MapPin, 
+  Star, 
+  Clock, 
+  Car, 
+  Users,
+  Waves,
+  Landmark,
+  UtensilsCrossed,
+  Target,
+  CalendarDays
+} from 'lucide-react';
+
 import SEO from '@/components/SEO';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -64,10 +76,10 @@ export default function BestBeachesSifnosPage() {
   return (
     <>
       <SEO 
-        title="Best Beaches in Sifnos 2025 - Complete Guide & Hotel Recommendations"
-        description="Discover Sifnos' most beautiful beaches from family-friendly Platis Gialos to secluded Vroulidia. Complete guide with hotel recommendations, access tips, and insider secrets for each beach."
+        title="17 Best Beaches in Sifnos: Complete Guide with Maps"
+        description="Discover Sifnos' most beautiful beaches: from family-friendly Platis Gialos to secret coves locals love. Photos, directions, amenities, nearby hotels."
         keywords={[
-          'best beaches sifnos', 'sifnos beaches guide', 'platis gialos beach',
+          'best beaches sifnos 2026', 'sifnos beaches guide', 'platis gialos beach',
           'sifnos beach hotels', 'best beaches sifnos greece', 'sifnos travel guide'
         ]}
         pageType="general"
@@ -78,9 +90,10 @@ export default function BestBeachesSifnosPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-sifnos-deep-blue mb-6">
-            🏖️ Best Beaches in Sifnos: Complete Guide 2025
-          </h1>
+          <div className="flex items-center justify-center gap-3 mb-4 text-sifnos-deep-blue">
+            <Waves className="h-8 w-8" />
+            <h1 className="text-4xl md:text-5xl font-bold">Best Beaches in Sifnos: Complete Guide 2026</h1>
+          </div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             From the popular organized beaches to hidden gems accessible only by hiking, 
             discover Sifnos' most spectacular coastlines and the best hotels to stay nearby.
@@ -92,17 +105,23 @@ export default function BestBeachesSifnosPage() {
           <h2 className="text-3xl font-bold mb-6 text-center">Why Sifnos Beaches Are Special</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
-              <div className="text-4xl mb-2">🌊</div>
+              <div className="mb-2 flex items-center justify-center">
+                <Waves className="h-8 w-8" />
+              </div>
               <h3 className="text-xl font-semibold mb-2">Crystal Clear Waters</h3>
               <p>Pristine Aegean waters with exceptional visibility and varying shades of blue</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl mb-2">🏛️</div>
+              <div className="mb-2 flex items-center justify-center">
+                <Landmark className="h-8 w-8" />
+              </div>
               <h3 className="text-xl font-semibold mb-2">Rich History</h3>
               <p>Ancient monasteries, traditional fishing villages, and archaeological sites</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl mb-2">🍽️</div>
+              <div className="mb-2 flex items-center justify-center">
+                <UtensilsCrossed className="h-8 w-8" />
+              </div>
               <h3 className="text-xl font-semibold mb-2">Culinary Excellence</h3>
               <p>Beachside tavernas serving fresh seafood and famous Sifnian specialties</p>
             </div>
@@ -178,9 +197,10 @@ export default function BestBeachesSifnosPage() {
 
         {/* Beach Tips Section */}
         <section className="mb-16 bg-gray-50 p-8 rounded-xl">
-          <h2 className="text-3xl font-bold text-sifnos-deep-blue mb-8 text-center">
-            🎯 Insider Beach Tips for Sifnos
-          </h2>
+          <div className="flex items-center justify-center gap-3 text-sifnos-deep-blue mb-8">
+            <Target className="h-6 w-6" />
+            <h2 className="text-3xl font-bold">Insider Beach Tips for Sifnos</h2>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-6">
@@ -239,9 +259,10 @@ export default function BestBeachesSifnosPage() {
 
         {/* Hotel Recommendations by Beach */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-sifnos-deep-blue mb-8 text-center">
-            🏨 Best Hotels by Beach Location
-          </h2>
+          <div className="flex items-center justify-center gap-3 text-sifnos-deep-blue mb-8">
+            <Landmark className="h-6 w-6" />
+            <h2 className="text-3xl font-bold">Best Hotels by Beach Location</h2>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card className="p-6 text-center hover:shadow-lg transition-shadow">

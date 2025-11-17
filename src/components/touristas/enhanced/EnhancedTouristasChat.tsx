@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Loader2, Bot, User, Sparkles, Mic, MicOff, Download, MapPin, Star } from 'lucide-react';
+import { Send, Loader2, User, Sparkles, Mic, MicOff, Download, MapPin, Star } from 'lucide-react';
+import TouristasLogo from '@/components/TouristasLogo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -15,14 +16,14 @@ import { FerryDisplay } from '../FerryDisplay';
 import { TravelPackageDisplay } from '../TravelPackageDisplay';
 
 const QUICK_PROMPTS: QuickPrompt[] = [
-  { id: '1', text: "🌅 Hotels for next weekend getaway", category: "real_time" },
-  { id: '2', text: "🚢 Show me ferry schedules from Piraeus to Sifnos", category: "real_time" },
-  { id: '3', text: "🏖️ Hidden beaches locals love", category: "local_content" },
-  { id: '4', text: "🏨 Romantic spots with sunset views", category: "local_hotels" },
-  { id: '5', text: "✨ Plan my perfect Sifnos adventure", category: "hybrid" },
-  { id: '6', text: "🌤️ What's the weather for my dates?", category: "general" },
-  { id: '7', text: "🎯 Best hotels considering weather", category: "weather_aware" },
-  { id: '8', text: "🎁 Complete travel packages", category: "hybrid" }
+  { id: '1', text: "Hotels for next weekend getaway", category: "real_time" },
+  { id: '2', text: "Show me ferry schedules from Piraeus to Sifnos", category: "real_time" },
+  { id: '3', text: "Hidden beaches locals love", category: "local_content" },
+  { id: '4', text: "Romantic spots with sunset views", category: "local_hotels" },
+  { id: '5', text: "Plan my perfect Sifnos adventure", category: "hybrid" },
+  { id: '6', text: "What's the weather for my dates?", category: "general" },
+  { id: '7', text: "Best hotels considering weather", category: "weather_aware" },
+  { id: '8', text: "Complete travel packages", category: "hybrid" }
 ];
 
 export default function EnhancedTouristasChat() {
@@ -38,7 +39,7 @@ export default function EnhancedTouristasChat() {
       id: 'welcome',
       type: 'bot',
       role: 'assistant',
-      content: 'Γεια σου! ✨ I\'m Touristas, your intelligent Sifnos travel companion! I combine authentic Greek island charm with modern AI to help you discover perfect accommodations AND ferry schedules. I understand natural dates like "next weekend", check real-time availability, consider current weather, and can create complete travel packages combining ferries + hotels. Ready to explore Sifnos together? 🚢',
+      content: 'Γεια σου! I\'m Touristas, your intelligent Sifnos travel companion! I combine authentic Greek island charm with modern AI to help you discover perfect accommodations AND ferry schedules. I understand natural dates like "next weekend", check real-time availability, consider current weather, and can create complete travel packages combining ferries + hotels. Ready to explore Sifnos together?',
       timestamp: new Date(),
       suggestions: [
         'Hotels available for next weekend',
@@ -750,20 +751,38 @@ Please try again in a few moments or contact support if the issue persists.`
       if (relevantHotels.length > 0) {
         console.log('🎯 Displaying hotel cards - found', relevantHotels.length, 'hotels');
         
-        const formattedHotels = relevantHotels.slice(0, 6).map(hotel => ({
-          id: hotel.id?.toString() || Math.random().toString(),
-          name: hotel.name,
-          // 🎯 FIXED: Use REAL location from Supabase database! Only fallback to 'Sifnos, Greece' for Agoda hotels
-          location: hotel.location || (hotel.source === 'agoda' ? 'Sifnos, Greece' : 'Sifnos'),
-          price: hotel.price_per_night || hotel.daily_rate || hotel.price || 0,
-          rating: hotel.rating || hotel.review_score || 4.0,
-          image: hotel.image_url || '/placeholder.svg',
-          amenities: hotel.amenities || hotel.hotel_amenities?.map((a: any) => a.amenity) || ['WiFi', 'Sea View'],
-          source: hotel.source || 'local',
-          description: hotel.description || 'Beautiful accommodation in Sifnos',
-          bestFor: ['travelers'],
-          bookingUrl: hotel.landing_url || hotel.booking_url || '#'
-        }));
+        const formattedHotels = relevantHotels.slice(0, 6).map(hotel => {
+          // Fix photo URL - prioritize hotel_photos from Supabase
+          let imageUrl = '/placeholder.svg';
+          if (hotel.hotel_photos && hotel.hotel_photos.length > 0) {
+            const mainPhoto = hotel.hotel_photos.find((p: any) => p.is_main_photo) || hotel.hotel_photos[0];
+            if (mainPhoto?.photo_url) {
+              // Handle both absolute and relative paths
+              if (mainPhoto.photo_url.startsWith('/')) {
+                imageUrl = mainPhoto.photo_url;
+              } else {
+                imageUrl = `/uploads/hotels/${mainPhoto.photo_url}`;
+              }
+            }
+          } else if (hotel.image_url) {
+            imageUrl = hotel.image_url;
+          }
+
+          return {
+            id: hotel.id?.toString() || Math.random().toString(),
+            name: hotel.name,
+            // 🎯 FIXED: Use REAL location from Supabase database! Only fallback to 'Sifnos, Greece' for Agoda hotels
+            location: hotel.location || (hotel.source === 'agoda' ? 'Sifnos, Greece' : 'Sifnos'),
+            price: hotel.price_per_night || hotel.daily_rate || hotel.price || 0,
+            rating: hotel.rating || hotel.review_score || 4.0,
+            image: imageUrl,
+            amenities: hotel.amenities || hotel.hotel_amenities?.map((a: any) => a.amenity) || ['WiFi', 'Sea View'],
+            source: hotel.source || 'local',
+            description: hotel.description || hotel.short_description || 'Beautiful accommodation in Sifnos',
+            bestFor: ['travelers'],
+            bookingUrl: hotel.landing_url || hotel.booking_url || '#'
+          };
+        });
         
         console.log('🏨 Formatted hotels for display:', formattedHotels.map(h => h.name));
         
@@ -844,7 +863,7 @@ Please refresh the page and try again. If the problem persists, contact support.
             <Avatar className="w-10 h-10 md:w-12 md:h-12 border-2 border-white/30 shadow-lg transition-all duration-300 hover:scale-110">
               <AvatarImage src="/uploads/touristas-ai-logo.svg" alt="Touristas" />
               <AvatarFallback className="bg-white/20">
-                <Bot className="h-5 w-5 md:h-6 md:w-6" />
+                <TouristasLogo size="md" className="h-5 w-5 md:h-6 md:w-6" />
               </AvatarFallback>
             </Avatar>
             <div className="absolute -bottom-1 -right-1 w-3 h-3 md:w-4 md:h-4 bg-green-400 border-2 border-white rounded-full animate-pulse shadow-lg"></div>
@@ -915,7 +934,7 @@ Please refresh the page and try again. If the problem persists, contact support.
                   <>
                     <AvatarImage src="/uploads/touristas-ai-logo.svg" alt="TouristasAI" />
                     <AvatarFallback className="text-white" style={{ backgroundColor: '#1E2E48' }}>
-                      <Bot className="h-3 w-3 md:h-4 md:w-4" />
+                      <TouristasLogo size="sm" className="h-3 w-3 md:h-4 md:w-4" />
                     </AvatarFallback>
                   </>
                 )}
@@ -1264,7 +1283,7 @@ Please refresh the page and try again. If the problem persists, contact support.
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={isListening ? "🎤 Listening..." : "Ask about hotels, get recommendations..."}
+            placeholder={isListening ? "Listening..." : "Ask about hotels, get recommendations..."}
             className="flex-1 rounded-full pl-4 pr-3 py-3 md:pl-6 md:pr-4 md:py-4 lg:py-5 text-sm md:text-base lg:text-lg border-2 transition-all duration-300 backdrop-blur-sm"
             style={{ 
               '--tw-ring-color': '#E3D7C3',

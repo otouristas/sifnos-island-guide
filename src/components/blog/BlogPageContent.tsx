@@ -32,7 +32,9 @@ const BlogPageContent = () => {
           </div>
           
           {/* Sidebar */}
-          <BlogSidebar />
+          <div className="w-full md:w-1/3">
+            <BlogSidebar />
+          </div>
         </div>
       </div>
     </>

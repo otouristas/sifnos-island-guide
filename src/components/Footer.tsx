@@ -1,183 +1,174 @@
 
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Twitter, Mail, MapPin } from 'lucide-react';
-import MailerLiteForm from '@/components/newsletter/MailerLiteForm';
+import { Facebook, Instagram, Youtube, Twitter, Mail, MapPin, Phone, Clock, Shield, CheckCircle, Headphones, TrendingUp, Star, Award } from 'lucide-react';
+import TouristasLogo from '@/components/TouristasLogo';
+import { useI18n } from '@/contexts/I18nContext';
 
 export default function Footer() {
+  const { t } = useI18n();
+  
   return (
-    <footer className="bg-sifnos-deep-blue text-white pt-12 pb-6">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Logo and About */}
-          <div>
-            <Link to="/" className="flex items-center mb-4">
-              <span className="font-montserrat font-bold text-xl text-white">
-                Hotels<span className="text-sifnos-teal">Sifnos</span>
-              </span>
-            </Link>
-            <p className="text-sm text-gray-300 mb-4">
-              Find the perfect accommodation for your dream vacation on the beautiful island of Sifnos, Greece.
-            </p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-white hover:text-sifnos-teal transition-colors">
-                <Facebook size={20} />
-              </a>
-              <a href="#" className="text-white hover:text-sifnos-teal transition-colors">
-                <Instagram size={20} />
-              </a>
-              <a href="#" className="text-white hover:text-sifnos-teal transition-colors">
-                <Twitter size={20} />
-              </a>
+    <footer className="bg-sifnos-deep-blue text-white">
+      {/* Stats Section */}
+      <div className="bg-sifnos-deep-blue/90 border-b border-sifnos-beige/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div>
+              <div className="text-3xl font-heading font-bold text-sifnos-beige mb-1">25+</div>
+              <div className="text-sm text-white/70">Hotels</div>
+            </div>
+            <div>
+              <div className="text-3xl font-heading font-bold text-sifnos-beige mb-1">10</div>
+              <div className="text-sm text-white/70">Locations</div>
+            </div>
+            <div>
+              <div className="text-3xl font-heading font-bold text-sifnos-beige mb-1">5K+</div>
+              <div className="text-sm text-white/70">Happy Travelers</div>
+            </div>
+            <div>
+              <div className="text-3xl font-heading font-bold text-sifnos-beige mb-1">4.8★</div>
+              <div className="text-sm text-white/70">Average Rating</div>
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* Quick Links */}
+      {/* Main Footer Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12 lg:mb-16">
+          {/* Company Info */}
           <div>
-            <h3 className="font-montserrat font-semibold text-lg mb-4 border-b border-sifnos-turquoise pb-2">
-              Explore
-            </h3>
-            <ul className="space-y-2">
-              <li><Link to="/hotels" className="text-gray-300 hover:text-sifnos-teal transition-colors">All Hotels</Link></li>
-              <li><Link to="/locations" className="text-gray-300 hover:text-sifnos-teal transition-colors">Locations</Link></li>
-              <li><Link to="/hotel-types" className="text-gray-300 hover:text-sifnos-teal transition-colors">Hotel Types</Link></li>
-              <li><Link to="/beaches" className="text-gray-300 hover:text-sifnos-teal transition-colors">Beaches</Link></li>
-              <li><Link to="/blog" className="text-gray-300 hover:text-sifnos-teal transition-colors">Blog</Link></li>
-              <li><Link to="/travel-guide" className="text-gray-300 hover:text-sifnos-teal transition-colors">Travel Guide</Link></li>
-              <li><Link to="/faq" className="text-gray-300 hover:text-sifnos-teal transition-colors">FAQ</Link></li>
-              <li><Link to="/pricing" className="text-gray-300 hover:text-sifnos-teal transition-colors">List Your Hotel</Link></li>
-            </ul>
-          </div>
-          
-          {/* Locations */}
-          <div>
-            <h3 className="font-montserrat font-semibold text-lg mb-4 border-b border-sifnos-turquoise pb-2">
-              Locations
-            </h3>
-            <ul className="space-y-2">
-              <li><Link to="/locations/apollonia" className="text-gray-300 hover:text-sifnos-teal transition-colors">Apollonia</Link></li>
-              <li><Link to="/locations/kamares" className="text-gray-300 hover:text-sifnos-teal transition-colors">Kamares</Link></li>
-              <li><Link to="/locations/platis-gialos" className="text-gray-300 hover:text-sifnos-teal transition-colors">Platis Gialos</Link></li>
-              <li><Link to="/locations/kastro" className="text-gray-300 hover:text-sifnos-teal transition-colors">Kastro</Link></li>
-              <li><Link to="/locations/vathi" className="text-gray-300 hover:text-sifnos-teal transition-colors">Vathi</Link></li>
-              <li><Link to="/locations/faros" className="text-gray-300 hover:text-sifnos-teal transition-colors">Faros</Link></li>
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h3 className="font-montserrat font-semibold text-lg mb-4 border-b border-sifnos-turquoise pb-2">
-              Contact Us
-            </h3>
-            <ul className="space-y-3">
-              <li className="flex items-center">
-                <Mail size={16} className="mr-2 text-sifnos-teal" />
-                <a href="mailto:hello@hotelssifnos.com" className="text-gray-300 hover:text-sifnos-teal transition-colors">
-                  hello@hotelssifnos.com
-                </a>
-              </li>
-              <li className="flex items-center">
-                <MapPin size={16} className="mr-2 text-sifnos-teal" />
-                <span className="text-gray-300">
-                  Sifnos Island, Cyclades, Greece
+            <Link to="/" className="mb-6 inline-block">
+              <div className="flex flex-col gap-1">
+                <span className="text-2xl font-heading font-bold text-white">
+                  Hotels<span className="text-sifnos-beige">Sifnos</span>
                 </span>
-              </li>
-            </ul>
-            
-            {/* Newsletter */}
-            <div className="mt-6">
-              <h4 className="text-sm font-semibold mb-2">Subscribe to our newsletter</h4>
-              <MailerLiteForm className="mt-2" />
-            </div>
-          </div>
-        </div>
-
-        {/* Partners Section */}
-        <div className="mt-8 pt-6 border-t border-gray-700">
-          <h3 className="text-center font-montserrat font-semibold text-lg mb-6">Our Partners</h3>
-          <div className="flex flex-wrap justify-center items-center gap-8">
-            <a 
-              href="https://greececyclades.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="hover:opacity-80 transition-opacity"
-            >
-              <img 
-                src="/lovable-uploads/35309f91-b85f-4eef-a002-341d80d7ced4.png" 
-                alt="Discover Cyclades" 
-                className="h-8 w-auto brightness-0 invert"
-              />
-            </a>
-            <a 
-              href="https://cycladesrentacar.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="hover:opacity-80 transition-opacity"
-            >
-              <img 
-                src="https://cycladesrentacar.com/cycladesrentacar.svg" 
-                alt="Cyclades Rent A Car" 
-                className="h-8 w-auto"
-              />
-            </a>
-          </div>
-        </div>
-
-        {/* Bottom Footer */}
-        <div className="mt-8 pt-6 border-t border-gray-700">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-sm text-gray-400 mb-4 md:mb-0">
-              &copy; {new Date().getFullYear()} HotelsSifnos.com. All rights reserved.
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] text-white/60 font-medium">{t('footer.poweredBy')}</span>
+                  <TouristasLogo size="sm" className="h-3 w-3" />
+                  <span className="text-[10px] text-white/60 font-medium">{t('footer.touristasAI')}</span>
+                </div>
+              </div>
+            </Link>
+            <p className="text-white/70 text-sm leading-relaxed mb-6">
+              {t('footer.companyInfo')}
             </p>
-            
-            <div className="flex space-x-4 text-sm text-gray-400">
-              <Link to="/about-us" className="hover:text-sifnos-teal transition-colors">About Us</Link>
-              <Link to="/contact" className="hover:text-sifnos-teal transition-colors">Contact</Link>
-              <Link to="/privacy-policy" className="hover:text-sifnos-teal transition-colors">Privacy Policy</Link>
-              <Link to="/terms-of-service" className="hover:text-sifnos-teal transition-colors">Terms of Service</Link>
-              <Link to="/cookie-policy" className="hover:text-sifnos-teal transition-colors">Cookie Policy</Link>
+            <div className="space-y-3 text-white/70 text-sm mb-6">
+              <div className="flex items-center">
+                <MapPin className="h-4 w-4 mr-3 text-sifnos-beige flex-shrink-0" />
+                <span>Sifnos Island, Cyclades, Greece</span>
+              </div>
+              <div className="flex items-center">
+                <Mail className="h-4 w-4 mr-3 text-sifnos-beige flex-shrink-0" />
+                <span>hello@hotelssifnos.com</span>
+              </div>
+              <div className="flex items-center">
+                <Clock className="h-4 w-4 mr-3 text-sifnos-beige flex-shrink-0" />
+                <span>24/7 Support Available</span>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <a href="#" className="text-white/70 hover:text-sifnos-beige transition-colors">
+                <Facebook className="h-5 w-5" />
+              </a>
+              <a href="#" className="text-white/70 hover:text-sifnos-beige transition-colors">
+                <Instagram className="h-5 w-5" />
+              </a>
+              <a href="#" className="text-white/70 hover:text-sifnos-beige transition-colors">
+                <Youtube className="h-5 w-5" />
+              </a>
+              <a href="#" className="text-white/70 hover:text-sifnos-beige transition-colors">
+                <Twitter className="h-5 w-5" />
+              </a>
             </div>
           </div>
-          
-          {/* SEO Footer Links */}
-          <div className="mt-6 pt-6 border-t border-gray-800 text-xs text-gray-500 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <h4 className="font-semibold mb-2">Popular Searches</h4>
-              <ul className="space-y-1">
-                <li><Link to="/hotels" className="hover:text-sifnos-teal">Sifnos Hotels</Link></li>
-                <li><Link to="/hotel-types/luxury-hotels" className="hover:text-sifnos-teal">Luxury Hotels in Sifnos</Link></li>
-                <li><Link to="/hotel-types/beach-hotels" className="hover:text-sifnos-teal">Sifnos Hotels on the Beach</Link></li>
-                <li><Link to="/hotel-types/boutique-hotels" className="hover:text-sifnos-teal">Boutique Hotels in Sifnos</Link></li>
-              </ul>
+
+          {/* Popular Locations */}
+          <div>
+            <h4 className="font-heading font-semibold mb-6 text-sifnos-beige text-lg">{t('footer.popularLocations')}</h4>
+            <ul className="space-y-3 text-white/70 text-sm">
+              <li><Link to="/locations/apollonia" className="hover:text-white transition-colors">Apollonia</Link></li>
+              <li><Link to="/locations/kamares" className="hover:text-white transition-colors">Kamares</Link></li>
+              <li><Link to="/locations/platis-gialos" className="hover:text-white transition-colors">Platis Gialos</Link></li>
+              <li><Link to="/locations/kastro" className="hover:text-white transition-colors">Kastro</Link></li>
+              <li><Link to="/locations/vathi" className="hover:text-white transition-colors">Vathi</Link></li>
+              <li><Link to="/locations/faros" className="hover:text-white transition-colors">Faros</Link></li>
+            </ul>
+          </div>
+
+          {/* Hotel Types */}
+          <div>
+            <h4 className="font-heading font-semibold mb-6 text-sifnos-beige text-lg">{t('footer.hotelTypes')}</h4>
+            <ul className="space-y-3 text-white/70 text-sm">
+              <li><Link to="/hotels" className="hover:text-white transition-colors">{t('common.allHotels')}</Link></li>
+              <li><Link to="/hotel-types/luxury-hotels" className="hover:text-white transition-colors">{t('common.luxuryHotels')}</Link></li>
+              <li><Link to="/hotel-types/beach-hotels" className="hover:text-white transition-colors">{t('common.beachHotels')}</Link></li>
+              <li><Link to="/hotel-types/villas" className="hover:text-white transition-colors">{t('common.villas')}</Link></li>
+              <li><Link to="/hotel-types/boutique-hotels" className="hover:text-white transition-colors">Boutique Hotels</Link></li>
+              <li><Link to="/hotel-types/budget-hotels" className="hover:text-white transition-colors">{t('common.budgetHotels')}</Link></li>
+            </ul>
+          </div>
+
+          {/* Resources */}
+          <div>
+            <h4 className="font-heading font-semibold mb-6 text-sifnos-beige text-lg">{t('footer.resources')}</h4>
+            <ul className="space-y-3 text-white/70 text-sm">
+              <li><Link to="/travel-guide" className="hover:text-white transition-colors">{t('common.travelGuide')}</Link></li>
+              <li><Link to="/best-beaches-sifnos-guide" className="hover:text-white transition-colors">{t('common.beaches')} Guide</Link></li>
+              <li><Link to="/ferry-tickets" className="hover:text-white transition-colors">{t('common.ferryTickets')}</Link></li>
+              <li><Link to="/blog" className="hover:text-white transition-colors">{t('common.blog')}</Link></li>
+              <li><Link to="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
+              <li><Link to="/contact" className="hover:text-white transition-colors">{t('common.contact')}</Link></li>
+            </ul>
+            <h5 className="font-heading font-semibold mt-6 mb-3 text-sifnos-beige">{t('footer.company')}</h5>
+            <ul className="space-y-2 text-white/70 text-sm">
+              <li><Link to="/about-us" className="hover:text-white transition-colors">{t('footer.aboutUs')}</Link></li>
+              <li><Link to="/pricing" className="hover:text-white transition-colors">{t('footer.listYourHotel')}</Link></li>
+              <li><Link to="/privacy-policy" className="hover:text-white transition-colors">{t('footer.privacyPolicy')}</Link></li>
+              <li><Link to="/terms-of-service" className="hover:text-white transition-colors">{t('footer.termsOfService')}</Link></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Trust Badges */}
+        <div className="border-t border-sifnos-beige/20 pt-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div className="flex flex-col items-center">
+              <Shield className="h-8 w-8 text-sifnos-beige mb-3" />
+              <div className="text-sm font-medium mb-1">Secure Booking</div>
+              <div className="text-xs text-white/60">SSL Protected</div>
             </div>
-            
-            <div>
-              <h4 className="font-semibold mb-2">Top Locations</h4>
-              <ul className="space-y-1">
-                <li><Link to="/locations/apollonia" className="hover:text-sifnos-teal">Hotels in Apollonia</Link></li>
-                <li><Link to="/locations/platis-gialos" className="hover:text-sifnos-teal">Platis Gialos Accommodations</Link></li>
-                <li><Link to="/locations/kamares" className="hover:text-sifnos-teal">Kamares Beach Hotels</Link></li>
-                <li><Link to="/locations/kastro" className="hover:text-sifnos-teal">Kastro Traditional Hotels</Link></li>
-              </ul>
+            <div className="flex flex-col items-center">
+              <CheckCircle className="h-8 w-8 text-sifnos-beige mb-3" />
+              <div className="text-sm font-medium mb-1">Best Price</div>
+              <div className="text-xs text-white/60">Guaranteed</div>
             </div>
-            
-            <div>
-              <h4 className="font-semibold mb-2">Beaches</h4>
-              <ul className="space-y-1">
-                <li><Link to="/beaches" className="hover:text-sifnos-teal">Best Beaches in Sifnos</Link></li>
-                <li><Link to="/beaches" className="hover:text-sifnos-teal">Platis Gialos Beach</Link></li>
-                <li><Link to="/beaches" className="hover:text-sifnos-teal">Vathi Beach</Link></li>
-                <li><Link to="/beaches" className="hover:text-sifnos-teal">Kamares Beach</Link></li>
-              </ul>
+            <div className="flex flex-col items-center">
+              <Headphones className="h-8 w-8 text-sifnos-beige mb-3" />
+              <div className="text-sm font-medium mb-1">24/7 Support</div>
+              <div className="text-xs text-white/60">Always Here</div>
             </div>
-            
-            <div>
-              <h4 className="font-semibold mb-2">Travel Information</h4>
-              <ul className="space-y-1">
-                <li><Link to="/travel-guide" className="hover:text-sifnos-teal">Sifnos Travel Guide</Link></li>
-                <li><Link to="/travel-guide" className="hover:text-sifnos-teal">How to Get to Sifnos</Link></li>
-                <li><Link to="/travel-guide" className="hover:text-sifnos-teal">Best Time to Visit Sifnos</Link></li>
-                <li><Link to="/faq" className="hover:text-sifnos-teal">Frequently Asked Questions</Link></li>
-              </ul>
+            <div className="flex flex-col items-center">
+              <Star className="h-8 w-8 text-sifnos-beige mb-3" />
+              <div className="text-sm font-medium mb-1">Top Rated</div>
+              <div className="text-xs text-white/60">4.8/5 Rating</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Bar */}
+      <div className="border-t border-sifnos-beige/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-white/60 text-sm text-center md:text-left">
+              <p>© {new Date().getFullYear()} Hotels Sifnos. {t('footer.allRightsReserved')}.</p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-6 text-xs text-white/60">
+              <Link to="/privacy-policy" className="hover:text-sifnos-beige transition-colors">Privacy</Link>
+              <Link to="/terms-of-service" className="hover:text-sifnos-beige transition-colors">Terms</Link>
+              <Link to="/cookie-policy" className="hover:text-sifnos-beige transition-colors">Cookies</Link>
+              <Link to="/sitemap" className="hover:text-sifnos-beige transition-colors">Sitemap</Link>
             </div>
           </div>
         </div>

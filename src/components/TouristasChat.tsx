@@ -7,6 +7,7 @@ import { useTouristas } from '@/contexts/TouristasContext';
 import { supabase } from '@/integrations/supabase/client';
 import { hotelTypes } from '@/data/hotelTypes';
 import { sifnosLocations } from '@/data/locations';
+import { determineHotelLogoUrl, determineHotelImageUrl } from '@/utils/image-utils';
 
 interface Message {
   id: string;
@@ -29,7 +30,7 @@ interface HotelData {
 }
 
 export function TouristasChat() {
-  const { isOpen, closeChat } = useTouristas();
+  const { isOpen, closeChat, initialPrompt } = useTouristas();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -63,19 +64,31 @@ export function TouristasChat() {
     fetchHotels();
   }, []);
 
-  // Initial greeting when chat opens
+  // Initial greeting when chat opens (supports pre-filled prompts)
   useEffect(() => {
-    if (isOpen && messages.length === 0) {
+    if (!isOpen) return;
+
+    if (messages.length === 0) {
       const greeting: Message = {
         id: Date.now().toString(),
-        content: "Welcome to Touristas AI. I can help you find the perfect hotel in Sifnos. What are you looking for?",
+        content: "Welcome to Touristas AI! I'm your complete Sifnos travel expert. I can help you with:\n\n🏨 Hotels & Accommodation\n🚢 Ferries & Transportation\n🏖️ Beaches & Activities\n🍽️ Restaurants & Dining\n📍 Local Tips & Recommendations\n\nWhat would you like to know about Sifnos?",
         sender: 'touristas',
         timestamp: new Date(),
-        suggestions: ['Budget hotels', 'Luxury hotels', 'Beach hotels', 'Show all hotels']
+        suggestions: ['Budget hotels', 'Luxury hotels', 'How to get to Sifnos', 'Best beaches']
       };
       setMessages([greeting]);
     }
   }, [isOpen]);
+
+  // Handle initial prompt separately
+  useEffect(() => {
+    if (initialPrompt && isOpen && messages.length === 1) {
+      // Only the greeting message exists
+      setTimeout(() => {
+        handleSend(initialPrompt);
+      }, 500);
+    }
+  }, [initialPrompt, isOpen]);
 
   // Auto-scroll to bottom
   const scrollToBottom = () => {
@@ -289,7 +302,7 @@ export function TouristasChat() {
     };
   };
 
-  const handleSend = (messageText?: string) => {
+  const handleSend = async (messageText?: string) => {
     const textToSend = messageText || input.trim();
     
     if (!textToSend) return;
@@ -306,12 +319,78 @@ export function TouristasChat() {
     setInput('');
     setIsTyping(true);
 
-    // Simulate AI thinking time
-    setTimeout(() => {
+    try {
+      // Call the real AI function instead of pattern matching
+      const { callTouristasAI, processStreamingResponse } = await import('./touristas/services/ChatService');
+      
+      const aiMessages = [
+        ...messages.map(msg => ({
+          role: msg.sender === 'user' ? 'user' : 'assistant',
+          content: msg.content,
+          id: msg.id
+        })),
+        {
+          role: 'user' as const,
+          content: textToSend,
+          id: userMessage.id
+        }
+      ];
+
+      const response = await callTouristasAI(aiMessages, {}, []);
+      
+      if (!response) {
+        throw new Error('No response from AI');
+      }
+
+      // Add assistant message placeholder
+      const assistantId = (Date.now() + 1).toString();
+      const assistantMessage: Message = {
+        id: assistantId,
+        content: '',
+        sender: 'touristas',
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, assistantMessage]);
+
+      // Process streaming response
+      const reader = response.getReader();
+      const decoder = new TextDecoder();
+      let fullContent = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        fullContent += chunk;
+
+        // Update message with streaming content
+        setMessages(prev =>
+          prev.map(msg =>
+            msg.id === assistantId
+              ? { ...msg, content: fullContent }
+              : msg
+          )
+        );
+      }
+
+      // Final update
+      setMessages(prev =>
+        prev.map(msg =>
+          msg.id === assistantId
+            ? { ...msg, content: fullContent }
+            : msg
+        )
+      );
+
+    } catch (error) {
+      console.error('Error calling AI:', error);
+      // Fallback to pattern matching if AI fails
       const aiResponse = getAIResponse(textToSend);
       setMessages(prev => [...prev, aiResponse]);
+    } finally {
       setIsTyping(false);
-    }, 1000 + Math.random() * 1000);
+    }
   };
 
   const handleSuggestionClick = (suggestion: string) => {
@@ -385,19 +464,58 @@ export function TouristasChat() {
                         className="block bg-background border-2 border-border hover:border-accent rounded-xl p-3 transition-all duration-200 hover:shadow-lg group"
                       >
                         <div className="flex gap-3">
-                          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-muted">
-                            {hotel.hotel_photos?.[0]?.photo_url ? (
-                              <img
-                                src={hotel.hotel_photos[0].photo_url}
-                                alt={hotel.name}
-                                className="w-full h-full object-cover"
-                                loading="lazy"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                                <MessageSquare className="h-8 w-8" />
-                              </div>
-                            )}
+                          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-muted relative">
+                            {(() => {
+                              // Try to get hotel logo first
+                              const logoUrl = determineHotelLogoUrl(hotel);
+                              if (logoUrl) {
+                                return (
+                                  <div className="w-full h-full flex items-center justify-center bg-white p-2">
+                                    <img
+                                      src={logoUrl}
+                                      alt={`${hotel.name} logo`}
+                                      className="w-full h-full object-contain"
+                                      loading="lazy"
+                                      onError={(e) => {
+                                        // Fallback to hotel photo if logo fails
+                                        const photoUrl = hotel.hotel_photos?.[0]?.photo_url;
+                                        if (photoUrl) {
+                                          const imageUrl = determineHotelImageUrl(hotel, photoUrl);
+                                          e.currentTarget.src = imageUrl;
+                                          e.currentTarget.className = 'w-full h-full object-cover';
+                                        } else {
+                                          e.currentTarget.style.display = 'none';
+                                          e.currentTarget.parentElement!.innerHTML = '<div class="w-full h-full flex items-center justify-center text-muted-foreground"><svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg></div>';
+                                        }
+                                      }}
+                                    />
+                                  </div>
+                                );
+                              }
+                              // Fallback to hotel photo
+                              const photoUrl = hotel.hotel_photos?.[0]?.photo_url;
+                              if (photoUrl) {
+                                const imageUrl = determineHotelImageUrl(hotel, photoUrl);
+                                return (
+                                  <img
+                                    src={imageUrl}
+                                    alt={hotel.name}
+                                    className="w-full h-full object-cover"
+                                    loading="lazy"
+                                    onError={(e) => {
+                                      e.currentTarget.style.display = 'none';
+                                      e.currentTarget.parentElement!.innerHTML = '<div class="w-full h-full flex items-center justify-center text-muted-foreground"><svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg></div>';
+                                    }}
+                                  />
+                                );
+                              }
+                              // Final fallback to icon
+                              return (
+                                <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                                  <MessageSquare className="h-8 w-8" />
+                                </div>
+                              );
+                            })()}
                           </div>
                           <div className="flex-1 min-w-0">
                             <h4 className="font-heading font-bold text-sm text-foreground group-hover:text-accent transition-colors mb-1 truncate">

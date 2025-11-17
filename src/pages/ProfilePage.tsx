@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,7 +11,10 @@ import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2, User, Camera } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Loader2, User, Camera, MapPin, Waves, Users, Car } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 // Define form validation schema
 const profileFormSchema = z.object({
@@ -21,6 +24,16 @@ const profileFormSchema = z.object({
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
+
+// Travel preferences schema
+const travelPreferencesSchema = z.object({
+  budgetPerNight: z.string().optional(),
+  preferredBeachTypes: z.array(z.string()).optional(),
+  travelStyles: z.array(z.string()).optional(),
+  carRental: z.string().optional(),
+});
+
+type TravelPreferencesValues = z.infer<typeof travelPreferencesSchema>;
 
 export default function ProfilePage() {
   const { user, profile, updateProfile } = useAuth();
@@ -95,6 +108,7 @@ export default function ProfilePage() {
           <Tabs defaultValue="profile" className="w-full">
             <TabsList className="mb-8">
               <TabsTrigger value="profile">Profile</TabsTrigger>
+              <TabsTrigger value="travel-preferences">Travel Preferences</TabsTrigger>
               <TabsTrigger value="favorites">Favorites</TabsTrigger>
               <TabsTrigger value="settings">Settings</TabsTrigger>
             </TabsList>
@@ -206,6 +220,10 @@ export default function ProfilePage() {
               </div>
             </TabsContent>
             
+            <TabsContent value="travel-preferences">
+              <TravelPreferencesTab user={user} profile={profile} />
+            </TabsContent>
+            
             <TabsContent value="favorites">
               <Card>
                 <CardHeader>
@@ -306,5 +324,229 @@ function FavoritesContent() {
         return <HotelCard key={hotel.id} hotel={hotel} showLogo={true} />;
       })}
     </div>
+  );
+}
+
+// Travel Preferences Tab Component
+function TravelPreferencesTab({ user, profile }: { user: any; profile: any }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  
+  const form = useForm<TravelPreferencesValues>({
+    resolver: zodResolver(travelPreferencesSchema),
+    defaultValues: {
+      budgetPerNight: profile?.travel_preferences?.budget_per_night || '',
+      preferredBeachTypes: profile?.travel_preferences?.preferred_beach_types || [],
+      travelStyles: profile?.travel_preferences?.travel_styles || [],
+      carRental: profile?.travel_preferences?.car_rental || '',
+    },
+  });
+  
+  useEffect(() => {
+    if (profile?.travel_preferences) {
+      form.reset({
+        budgetPerNight: profile.travel_preferences.budget_per_night || '',
+        preferredBeachTypes: profile.travel_preferences.preferred_beach_types || [],
+        travelStyles: profile.travel_preferences.travel_styles || [],
+        carRental: profile.travel_preferences.car_rental || '',
+      });
+    }
+  }, [profile, form]);
+  
+  const onSubmit = async (values: TravelPreferencesValues) => {
+    if (!user) return;
+    
+    setIsSaving(true);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          travel_preferences: {
+            budget_per_night: values.budgetPerNight || null,
+            preferred_beach_types: values.preferredBeachTypes || [],
+            travel_styles: values.travelStyles || [],
+            car_rental: values.carRental || null,
+          }
+        })
+        .eq('id', user.id);
+      
+      if (error) throw error;
+      
+      // Show success message
+      alert('Travel preferences saved successfully!');
+    } catch (error) {
+      console.error('Error saving travel preferences:', error);
+      alert('Failed to save preferences. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+  
+  const beachTypes = ['Sandy', 'Pebble', 'Organized', 'Quiet', 'Remote', 'Family-friendly'];
+  const travelStyles = ['Family', 'Romantic', 'Adventure', 'Foodie', 'Relaxation', 'Culture', 'Nightlife'];
+  
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Travel Preferences</CardTitle>
+        <CardDescription>
+          Set your preferences to get personalized hotel and beach recommendations
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="budgetPerNight"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2">
+                    <MapPin size={16} />
+                    Budget per Night
+                  </FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select budget range" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="<50">Less than €50</SelectItem>
+                      <SelectItem value="50-100">€50 - €100</SelectItem>
+                      <SelectItem value="100-200">€100 - €200</SelectItem>
+                      <SelectItem value="200-500">€200 - €500</SelectItem>
+                      <SelectItem value="500+">€500+</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="preferredBeachTypes"
+              render={() => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2">
+                    <Waves size={16} />
+                    Preferred Beach Types
+                  </FormLabel>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {beachTypes.map((type) => (
+                      <FormField
+                        key={type}
+                        control={form.control}
+                        name="preferredBeachTypes"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value?.includes(type)}
+                                onCheckedChange={(checked) => {
+                                  const current = field.value || [];
+                                  return checked
+                                    ? field.onChange([...current, type])
+                                    : field.onChange(current.filter(v => v !== type));
+                                }}
+                              />
+                            </FormControl>
+                            <FormLabel className="font-normal cursor-pointer">
+                              {type}
+                            </FormLabel>
+                          </FormItem>
+                        )}
+                      />
+                    ))}
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="travelStyles"
+              render={() => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2">
+                    <Users size={16} />
+                    Travel Style
+                  </FormLabel>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {travelStyles.map((style) => (
+                      <FormField
+                        key={style}
+                        control={form.control}
+                        name="travelStyles"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value?.includes(style)}
+                                onCheckedChange={(checked) => {
+                                  const current = field.value || [];
+                                  return checked
+                                    ? field.onChange([...current, style])
+                                    : field.onChange(current.filter(v => v !== style));
+                                }}
+                              />
+                            </FormControl>
+                            <FormLabel className="font-normal cursor-pointer">
+                              {style}
+                            </FormLabel>
+                          </FormItem>
+                        )}
+                      />
+                    ))}
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="carRental"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2">
+                    <Car size={16} />
+                    Car Rental Plans
+                  </FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select car rental preference" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="yes">Yes, I'll rent a car</SelectItem>
+                      <SelectItem value="no">No, I won't rent a car</SelectItem>
+                      <SelectItem value="maybe">Maybe, depending on plans</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <div className="flex justify-end">
+              <Button type="submit" disabled={isSaving}>
+                {isSaving ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  'Save Preferences'
+                )}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }

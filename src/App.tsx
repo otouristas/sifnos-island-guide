@@ -9,8 +9,10 @@ import CookieConsent from "./components/CookieConsent";
 import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "./lib/auth";
 import { TouristasProvider } from "./contexts/TouristasContext";
+import { I18nProvider } from "./contexts/I18nContext";
 import { TouristasChat } from "./components/TouristasChat";
 import { TouristasToggle } from "./components/TouristasToggle";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 // Pages
 import HomePage from "./pages/HomePage";
@@ -46,6 +48,7 @@ import DashboardOverview from "./pages/dashboard/DashboardOverview";
 import DashboardMessages from "./pages/dashboard/DashboardMessages";
 import DashboardSettings from "./pages/dashboard/DashboardSettings";
 import MyHotels from "./pages/dashboard/MyHotels";
+import FeaturedHotelsManagement from "./pages/dashboard/FeaturedHotelsManagement";
 
 // Auth Pages
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
@@ -66,6 +69,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
+        <I18nProvider>
         <TouristasProvider>
         <SEO 
           title="Find Your Perfect Stay in Sifnos - Best Hotels & Accommodation"
@@ -83,10 +87,13 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <ScrollToTop />
-          <Navigation />
-          <main>
-            <Routes>
+          <ErrorBoundary>
+            <ScrollToTop />
+            <Navigation />
+            {/* Spacer for fixed header */}
+            <div className="h-14 md:h-[72px]" />
+            <main>
+              <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/hotels" element={<HotelsPage />} />
               {/* Hotel detail route */}
@@ -136,15 +143,18 @@ const App = () => (
               <Route path="/dashboard/messages" element={<DashboardMessages />} />
               <Route path="/dashboard/settings" element={<DashboardSettings />} />
               <Route path="/dashboard/my-hotels" element={<MyHotels />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          <Footer />
-          <CookieConsent />
-          <TouristasToggle />
-          <TouristasChat />
+              <Route path="/dashboard/featured-hotels" element={<FeaturedHotelsManagement />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            <Footer />
+            <CookieConsent />
+            <TouristasToggle />
+            <TouristasChat />
+          </ErrorBoundary>
         </BrowserRouter>
         </TouristasProvider>
+        </I18nProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>

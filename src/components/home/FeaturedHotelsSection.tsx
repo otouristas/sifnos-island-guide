@@ -33,54 +33,69 @@ export default function FeaturedHotelsSection() {
     const fetchHotels = async () => {
       try {
         setLoading(true);
-        const { data, error } = await supabase
+        const now = new Date().toISOString();
+        
+        // Query featured hotels first, then fallback to top-rated
+        const { data: featuredData, error: featuredError } = await supabase
           .from('hotels')
           .select(`
             *,
             hotel_amenities(amenity),
             hotel_photos(id, photo_url, is_main_photo)
           `)
+          .eq('is_featured', true)
+          .order('featured_priority', { ascending: false })
           .order('rating', { ascending: false })
-          .limit(12);
+          .limit(20); // Get more to filter by dates
+        
+        // Filter by date range in JavaScript
+        const nowDate = new Date(now);
+        const validFeaturedHotels = (featuredData || []).filter(hotel => {
+          const startDate = hotel.featured_start_date ? new Date(hotel.featured_start_date) : null;
+          const endDate = hotel.featured_end_date ? new Date(hotel.featured_end_date) : null;
+          
+          // Hotel is valid if:
+          // - No start date OR start date <= now
+          // - AND no end date OR end date >= now
+          const validStart = !startDate || startDate <= nowDate;
+          const validEnd = !endDate || endDate >= nowDate;
+          
+          return validStart && validEnd;
+        }).slice(0, 12);
+        
+        let data = validFeaturedHotels;
+        let error = featuredError;
+        
+        // If no featured hotels or not enough, supplement with top-rated
+        if (!error && (!data || data.length < 12)) {
+          const { data: topRatedData, error: topRatedError } = await supabase
+            .from('hotels')
+            .select(`
+              *,
+              hotel_amenities(amenity),
+              hotel_photos(id, photo_url, is_main_photo)
+            `)
+            .order('rating', { ascending: false })
+            .limit(12 - (data?.length || 0));
+          
+          if (!topRatedError && topRatedData) {
+            // Combine featured and top-rated, avoiding duplicates
+            const featuredIds = new Set((data || []).map(h => h.id));
+            const additionalHotels = topRatedData.filter(h => !featuredIds.has(h.id));
+            data = [...(data || []), ...additionalHotels].slice(0, 12);
+          }
+        }
         
         if (error) throw error;
         
         logSupabaseResponse('fetch featured hotels', data, error);
         
-        // Process hotels and enhance sponsored ones
-        const sponsoredNames = ['ALK HOTEL™', 'Morpheas Pension & Apartments', 'Meropi Rooms and Apartments'];
-        const processedHotels = data?.map(hotel => {
-          const isSponsored = sponsoredNames.includes(hotel.name);
-          const enhanced = { 
-            ...hotel,
-            isSponsored,
-            source: 'local'
-          };
-          
-          // Add custom photos for sponsored hotels
-          if (hotel.name === 'ALK HOTEL™') {
-            enhanced.logo_path = 'alk-hotel-sifnos/logo.png';
-            enhanced.hotel_photos = [
-              { id: 'alk-1', photo_url: 'alk-hotel-sifnos/alk-hotel-feature.jpeg', is_main_photo: true },
-              { id: 'alk-2', photo_url: 'alk-hotel-sifnos/1.jpg_1.jpeg', is_main_photo: false },
-              { id: 'alk-3', photo_url: 'alk-hotel-sifnos/3.jpg.jpeg', is_main_photo: false },
-            ];
-          } else if (hotel.name === 'Morpheas Pension & Apartments') {
-            enhanced.logo_path = 'morpheas-pension/logo.png';
-            enhanced.hotel_photos = [
-              { id: 'morpheas-1', photo_url: 'morpheas-pension/sifnos-accommodation.jpg.jpeg', is_main_photo: true },
-              { id: 'morpheas-2', photo_url: 'morpheas-pension/sifnos-morpheas-pension3.jpg.jpeg', is_main_photo: false },
-            ];
-          } else if (hotel.name === 'Meropi Rooms and Apartments') {
-            enhanced.logo_path = 'meropi-logo.svg';
-            enhanced.hotel_photos = [
-              { id: 'meropi-1', photo_url: 'meropirooms-hero.webp', is_main_photo: true },
-              { id: 'meropi-2', photo_url: 'meropirooms-one.webp', is_main_photo: false },
-            ];
-          }
-          
-          return enhanced;
-        }) || [];
+        // Process hotels - mark featured ones
+        const processedHotels = data?.map(hotel => ({
+          ...hotel,
+          isSponsored: hotel.is_featured || false,
+          source: 'local'
+        })) || [];
         
         setHotels(processedHotels);
       } catch (error) {
@@ -125,31 +140,34 @@ export default function FeaturedHotelsSection() {
     <section className="py-16 bg-background">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h2 className="text-4xl font-heading font-bold text-foreground mb-3">
+        <div className="text-center mb-12">
+          <Badge variant="outline" className="mb-4 px-4 py-1.5 text-sm font-medium border-sifnos-beige/30">
+            <Sparkles className="h-3.5 w-3.5 mr-1.5 text-sifnos-beige" />
+            Curated Selection
+          </Badge>
+          <h2 className="text-4xl md:text-5xl font-heading font-bold text-sifnos-deep-blue mb-4">
             Discover Our Handpicked Collection
           </h2>
-          <div className="h-1 w-24 bg-accent mx-auto mb-6"></div>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Carefully selected hotels, villas, and apartments for your perfect Sifnos escape
           </p>
         </div>
 
         {/* Filter Pills */}
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
           {filterOptions.map((filter) => {
             const Icon = filter.icon;
             const isActive = activeFilter === filter.id;
             return (
               <Button
                 key={filter.id}
-                variant={isActive ? "default" : "outline"}
+                variant="outline"
                 size="lg"
                 onClick={() => setActiveFilter(filter.id)}
-                className={`gap-2 transition-all duration-300 ${
+                className={`gap-2 transition-all duration-300 font-medium ${
                   isActive 
-                    ? 'shadow-elegant' 
-                    : 'hover:shadow-md hover:scale-105'
+                    ? 'bg-sifnos-beige text-sifnos-deep-blue border-sifnos-beige hover:bg-sifnos-beige/90 shadow-lg' 
+                    : 'border-gray-300 text-gray-700 hover:border-sifnos-beige hover:text-sifnos-deep-blue hover:scale-105'
                 }`}
               >
                 <Icon className="h-4 w-4" />
@@ -196,11 +214,10 @@ export default function FeaturedHotelsSection() {
           <Link to="/hotels">
             <Button 
               size="lg" 
-              variant="premium"
-              className="gap-2 shadow-elegant hover:shadow-elegant-lg transition-all duration-300"
+              className="gap-2 bg-sifnos-deep-blue text-white hover:bg-sifnos-deep-blue/90 px-8 py-6 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
             >
-              View All Hotels
-              <span className="text-lg">→</span>
+              View All {filteredHotels.length}+ Hotels
+              <span className="text-xl">→</span>
             </Button>
           </Link>
         </div>

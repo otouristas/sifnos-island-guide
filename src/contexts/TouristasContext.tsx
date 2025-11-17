@@ -4,18 +4,32 @@ interface TouristasContextType {
   isOpen: boolean;
   openChat: () => void;
   closeChat: () => void;
+  openChatWithPrompt: (prompt: string) => void;
+  initialPrompt: string | null;
 }
 
 const TouristasContext = createContext<TouristasContextType | undefined>(undefined);
 
 export function TouristasProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [initialPrompt, setInitialPrompt] = useState<string | null>(null);
 
-  const openChat = () => setIsOpen(true);
-  const closeChat = () => setIsOpen(false);
+  const openChat = () => {
+    setIsOpen(true);
+  };
+
+  const openChatWithPrompt = (prompt: string) => {
+    setInitialPrompt(prompt);
+    setIsOpen(true);
+  };
+
+  const closeChat = () => {
+    setIsOpen(false);
+    setInitialPrompt(null);
+  };
 
   return (
-    <TouristasContext.Provider value={{ isOpen, openChat, closeChat }}>
+    <TouristasContext.Provider value={{ isOpen, openChat, closeChat, openChatWithPrompt, initialPrompt }}>
       {children}
     </TouristasContext.Provider>
   );

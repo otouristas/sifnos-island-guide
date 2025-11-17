@@ -29,9 +29,10 @@ const getCategories = () => {
 
 const BlogSidebar = () => {
   const categories = getCategories();
+  const popularPosts = blogPosts.slice(0, 3);
   
   return (
-    <div className="w-full md:w-1/3 space-y-8">
+    <div className="w-full space-y-8">
       {/* Sponsored Hotel */}
       <Card className="overflow-hidden">
         <CardHeader className="pb-3">
@@ -81,6 +82,26 @@ const BlogSidebar = () => {
               <span className="font-medium">May-October</span>
             </li>
           </ul>
+        </CardContent>
+      </Card>
+
+      {/* Popular Posts */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg font-semibold">Popular Posts</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0 space-y-3">
+          {popularPosts.map((post) => (
+            <div key={post.id} className="text-sm">
+              <Link
+                to={`/blog/${post.slug}`}
+                className="font-medium text-sifnos-deep-blue hover:text-sifnos-turquoise hover:underline block"
+              >
+                {post.title}
+              </Link>
+              <p className="text-gray-500 text-xs line-clamp-2">{post.excerpt}</p>
+            </div>
+          ))}
         </CardContent>
       </Card>
       

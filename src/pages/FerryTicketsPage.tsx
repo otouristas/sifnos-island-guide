@@ -2,7 +2,24 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
-import { Calendar, MapPin, Ship, Clock, Star, ArrowRight, Phone, Mail } from 'lucide-react';
+import { 
+  Calendar, 
+  MapPin, 
+  Ship, 
+  Clock, 
+  Star, 
+  ArrowRight, 
+  Phone, 
+  Mail,
+  Ticket,
+  Building2,
+  Gem,
+  Home,
+  Waves,
+  Users,
+  Car,
+  Compass
+} from 'lucide-react';
 
 export default function FerryTicketsPage() {
   const [fromPort, setFromPort] = useState('');
@@ -14,10 +31,10 @@ export default function FerryTicketsPage() {
   return (
     <>
       <SEO 
-        title="Sifnos Ferry Tickets 2025 - Book Online | Hotels & Transport Package Deals"
-        description="Book Sifnos ferry tickets online with best prices guaranteed. Complete travel packages with hotels, car rentals & exclusive island deals. Your seamless Sifnos journey starts here."
+        title="Sifnos Ferry Tickets: Schedules & Booking from Athens"
+        description="Book Sifnos ferries from Piraeus, Milos, Serifos, and more. Current 2026 schedules, prices, travel tips. Fast ferries and slow boats explained. Reserve now."
         keywords={[
-          'sifnos ferry tickets', 'book ferry sifnos', 'sifnos transport 2025',
+          'sifnos ferry tickets', 'book ferry sifnos', 'sifnos transport 2026',
           'greece ferry booking', 'cyclades ferry', 'piraeus sifnos ferry',
           'sifnos ferry schedule', 'sifnos hotels ferry package', 'athens sifnos ferry',
           'sifnos ferry prices', 'online ferry booking greece', 'sifnos travel packages'
@@ -31,7 +48,7 @@ export default function FerryTicketsPage() {
         {/* Enhanced Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-sifnos-deep-blue mb-6">
-            Sifnos Ferry Tickets & Hotel Packages 2025
+            Sifnos Ferry Tickets & Hotel Packages 2026
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
             Book your ferry to Sifnos with guaranteed best prices. Complete travel packages with premium hotels, 
@@ -61,9 +78,10 @@ export default function FerryTicketsPage() {
 
         {/* Ferry Booking Form - Enhanced */}
         <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 mb-12">
-          <h2 className="text-2xl font-bold text-sifnos-deep-blue mb-6 text-center">
-            ⛴️ Book Your Sifnos Ferry Tickets
-          </h2>
+          <div className="flex items-center justify-center gap-3 text-sifnos-deep-blue mb-6">
+            <Ship className="h-6 w-6" />
+            <h2 className="text-2xl font-bold">Book Your Sifnos Ferry Tickets</h2>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
             <div>
@@ -132,8 +150,9 @@ export default function FerryTicketsPage() {
           </div>
           
           <div className="text-center">
-            <button className="px-8 py-4 bg-sifnos-turquoise text-white rounded-lg hover:bg-sifnos-deep-blue transition-colors font-semibold text-lg shadow-lg">
-              🎫 Search Ferry Tickets
+            <button className="inline-flex items-center gap-2 px-8 py-4 bg-sifnos-beige text-sifnos-deep-blue rounded-lg hover:bg-[#d7cab7] transition-colors font-semibold text-lg shadow-lg">
+              <Ticket className="h-5 w-5" />
+              Search Ferry Tickets
             </button>
             <p className="text-sm text-gray-600 mt-2">Best price guarantee • Instant confirmation • Free cancellation</p>
           </div>
@@ -141,9 +160,10 @@ export default function FerryTicketsPage() {
 
         {/* Ferry Routes & Schedule */}
         <div className="mb-12">
-          <h2 className="text-3xl font-bold text-sifnos-deep-blue mb-8 text-center">
-            🗺️ Popular Ferry Routes to Sifnos
-          </h2>
+          <div className="flex items-center justify-center gap-3 text-sifnos-deep-blue mb-8">
+            <Compass className="h-6 w-6" />
+            <h2 className="text-3xl font-bold">Popular Ferry Routes to Sifnos</h2>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="bg-white rounded-xl p-6 shadow-lg">
@@ -225,9 +245,10 @@ export default function FerryTicketsPage() {
 
         {/* NEW: Where to Stay in Sifnos Section */}
         <div className="mb-12 bg-gray-50 rounded-2xl p-8">
-          <h2 className="text-3xl font-bold text-sifnos-deep-blue mb-8 text-center">
-            🏨 Where to Stay in Sifnos - Premium Hotels & Villas
-          </h2>
+          <div className="flex items-center justify-center gap-3 text-sifnos-deep-blue mb-8">
+            <Building2 className="h-6 w-6" />
+            <h2 className="text-3xl font-bold">Where to Stay in Sifnos - Premium Hotels & Villas</h2>
+          </div>
           <p className="text-lg text-gray-700 text-center mb-8 max-w-3xl mx-auto">
             Complete your ferry booking with our exclusive hotel packages. From luxury beachfront resorts to traditional Cycladic villas, 
             we offer the finest accommodations with special ferry + hotel deals.
@@ -236,46 +257,54 @@ export default function FerryTicketsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <Link to="/hotel-types/luxury-hotels" className="group bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all">
               <div className="text-center">
-                <div className="text-4xl mb-3">✨</div>
-                <h3 className="font-semibold text-sifnos-deep-blue group-hover:text-sifnos-turquoise mb-2">Luxury Hotels</h3>
+                <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full bg-sifnos-beige/40 text-sifnos-deep-blue">
+                  <Gem className="h-5 w-5" />
+                </div>
+                <h3 className="font-semibold text-sifnos-deep-blue mb-2">Luxury Hotels</h3>
                 <p className="text-sm text-gray-600 mb-3">Premium resorts with spa, pools & fine dining</p>
-                <div className="text-xs text-sifnos-turquoise font-medium">From €150/night</div>
+                <div className="text-xs text-sifnos-deep-blue font-medium">From €150/night</div>
               </div>
             </Link>
             
             <Link to="/hotel-types/villas" className="group bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all">
               <div className="text-center">
-                <div className="text-4xl mb-3">🏡</div>
-                <h3 className="font-semibold text-sifnos-deep-blue group-hover:text-sifnos-turquoise mb-2">Private Villas</h3>
+                <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full bg-sifnos-beige/40 text-sifnos-deep-blue">
+                  <Home className="h-5 w-5" />
+                </div>
+                <h3 className="font-semibold text-sifnos-deep-blue mb-2">Private Villas</h3>
                 <p className="text-sm text-gray-600 mb-3">Exclusive properties with sea views & pools</p>
-                <div className="text-xs text-sifnos-turquoise font-medium">From €200/night</div>
+                <div className="text-xs text-sifnos-deep-blue font-medium">From €200/night</div>
               </div>
             </Link>
             
             <Link to="/hotel-types/beach-hotels" className="group bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all">
               <div className="text-center">
-                <div className="text-4xl mb-3">🏖️</div>
-                <h3 className="font-semibold text-sifnos-deep-blue group-hover:text-sifnos-turquoise mb-2">Beach Hotels</h3>
+                <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full bg-sifnos-beige/40 text-sifnos-deep-blue">
+                  <Waves className="h-5 w-5" />
+                </div>
+                <h3 className="font-semibold text-sifnos-deep-blue mb-2">Beach Hotels</h3>
                 <p className="text-sm text-gray-600 mb-3">Waterfront locations with beach access</p>
-                <div className="text-xs text-sifnos-turquoise font-medium">From €90/night</div>
+                <div className="text-xs text-sifnos-deep-blue font-medium">From €90/night</div>
               </div>
             </Link>
             
             <Link to="/hotel-types/family-friendly-hotels" className="group bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all">
               <div className="text-center">
-                <div className="text-4xl mb-3">👨‍👩‍👧‍👦</div>
-                <h3 className="font-semibold text-sifnos-deep-blue group-hover:text-sifnos-turquoise mb-2">Family Hotels</h3>
+                <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full bg-sifnos-beige/40 text-sifnos-deep-blue">
+                  <Users className="h-5 w-5" />
+                </div>
+                <h3 className="font-semibold text-sifnos-deep-blue mb-2">Family Hotels</h3>
                 <p className="text-sm text-gray-600 mb-3">Kid-friendly with pools & activities</p>
-                <div className="text-xs text-sifnos-turquoise font-medium">From €80/night</div>
+                <div className="text-xs text-sifnos-deep-blue font-medium">From €80/night</div>
               </div>
             </Link>
           </div>
           
           <div className="text-center">
-            <Link to="/where-to-stay-sifnos" className="inline-flex items-center px-6 py-3 bg-sifnos-turquoise text-white rounded-lg hover:bg-sifnos-deep-blue transition-colors font-medium mr-4">
+            <Link to="/where-to-stay-sifnos" className="inline-flex items-center px-6 py-3 bg-sifnos-beige text-sifnos-deep-blue rounded-lg hover:bg-[#d7cab7] transition-colors font-medium mr-4">
               Complete Where to Stay Guide <ArrowRight size={16} className="ml-2" />
             </Link>
-            <Link to="/hotels" className="inline-flex items-center px-6 py-3 border-2 border-sifnos-turquoise text-sifnos-turquoise rounded-lg hover:bg-sifnos-turquoise hover:text-white transition-colors font-medium">
+            <Link to="/hotels" className="inline-flex items-center px-6 py-3 border-2 border-sifnos-deep-blue text-sifnos-deep-blue rounded-lg hover:bg-sifnos-deep-blue hover:text-white transition-colors font-medium">
               Browse All Hotels <ArrowRight size={16} className="ml-2" />
             </Link>
           </div>
@@ -283,9 +312,10 @@ export default function FerryTicketsPage() {
 
         {/* NEW: Rent a Car in Sifnos Section */}
         <div className="mb-12 bg-white rounded-2xl shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-sifnos-deep-blue mb-8 text-center">
-            🚗 Rent a Car in Sifnos - Complete Island Exploration
-          </h2>
+          <div className="flex items-center justify-center gap-3 text-sifnos-deep-blue mb-8">
+            <Car className="h-6 w-6" />
+            <h2 className="text-3xl font-bold">Rent a Car in Sifnos - Complete Island Exploration</h2>
+          </div>
           <p className="text-lg text-gray-700 text-center mb-8 max-w-3xl mx-auto">
             Discover every corner of Sifnos with our trusted car rental partner. From scenic coastal drives to hidden village gems, 
             having your own transport unlocks the true beauty of this enchanting Cycladic island.
@@ -293,32 +323,35 @@ export default function FerryTicketsPage() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-sifnos-turquoise rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl text-white">🏖️</span>
+              <div className="w-16 h-16 bg-sifnos-beige rounded-full flex items-center justify-center mx-auto mb-4">
+                <Waves className="h-7 w-7 text-sifnos-deep-blue" />
               </div>
               <h3 className="font-semibold text-sifnos-deep-blue mb-2">Reach Every Beach</h3>
               <p className="text-sm text-gray-600">Access remote beaches like Chrysopigi, Faros, and hidden coves that buses don't reach</p>
             </div>
             
             <div className="text-center">
-              <div className="w-16 h-16 bg-sifnos-turquoise rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl text-white">🏘️</span>
+              <div className="w-16 h-16 bg-sifnos-beige rounded-full flex items-center justify-center mx-auto mb-4">
+                <Home className="h-7 w-7 text-sifnos-deep-blue" />
               </div>
               <h3 className="font-semibold text-sifnos-deep-blue mb-2">Explore Villages</h3>
               <p className="text-sm text-gray-600">Visit traditional settlements like Exambela, Kato Petali, and mountain villages at your pace</p>
             </div>
             
             <div className="text-center">
-              <div className="w-16 h-16 bg-sifnos-turquoise rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl text-white">⏰</span>
+              <div className="w-16 h-16 bg-sifnos-beige rounded-full flex items-center justify-center mx-auto mb-4">
+                <Clock className="h-7 w-7 text-sifnos-deep-blue" />
               </div>
               <h3 className="font-semibold text-sifnos-deep-blue mb-2">Ultimate Freedom</h3>
               <p className="text-sm text-gray-600">No bus schedules, no waiting. Explore sunset spots, late-night tavernas, and early morning beaches</p>
             </div>
           </div>
           
-          <div className="bg-gradient-to-r from-sifnos-turquoise to-sifnos-deep-blue rounded-xl p-6 text-white text-center">
-            <h3 className="text-xl font-bold mb-3">🚙 Book with Cyclades Rent A Car</h3>
+          <div className="bg-gradient-to-r from-sifnos-deep-blue to-[#0b1626] rounded-xl p-6 text-white text-center">
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <Car className="h-5 w-5" />
+              <h3 className="text-xl font-bold">Book with Cyclades Rent A Car</h3>
+            </div>
             <p className="mb-4 opacity-90">Island's most trusted car rental service • Free delivery to port • Best rates guaranteed</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 

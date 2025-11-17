@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { CalendarIcon, User } from 'lucide-react';
+import { CalendarIcon, User, Clock } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { blogPosts } from '@/data/blogPosts';
 import { Link, useNavigate } from 'react-router-dom';
@@ -34,7 +34,7 @@ const BlogPost = ({ slug }: BlogPostProps) => {
   let processedContent = post.content;
   
   // Special handling for the Sifnian cuisine guide
-  if (post.slug === 'sifnian-cuisine-guide-2025') {
+  if (post.slug === 'sifnian-cuisine-guide-2026') {
     console.log("Processing Sifnian cuisine guide content - removing specified sections");
     
     // More thorough removal of DOSA in Faros references
@@ -75,6 +75,16 @@ const BlogPost = ({ slug }: BlogPostProps) => {
     });
   }
   
+  // Calculate reading time (average 200 words per minute)
+  const calculateReadingTime = (content: string): number => {
+    const textContent = content.replace(/<[^>]*>/g, ''); // Remove HTML tags
+    const wordCount = textContent.split(/\s+/).filter(word => word.length > 0).length;
+    const readingTime = Math.ceil(wordCount / 200);
+    return readingTime;
+  };
+  
+  const readingTime = calculateReadingTime(post.content);
+  
   // Create enhanced schema markup for the blog post with more detailed metadata
   const postSchema = {
     "@context": "https://schema.org",
@@ -102,7 +112,8 @@ const BlogPost = ({ slug }: BlogPostProps) => {
     },
     "keywords": post.categories.join(', ').toLowerCase(),
     "articleSection": post.categories[0] || "Travel",
-    "wordCount": post.content.split(' ').length.toString()
+    "wordCount": post.content.split(' ').length.toString(),
+    "timeRequired": `PT${readingTime}M`
   };
   
   return (
@@ -113,15 +124,19 @@ const BlogPost = ({ slug }: BlogPostProps) => {
         </script>
       </Helmet>
       
-      {/* Post meta */}
-      <div className="flex items-center text-sm text-gray-500 space-x-4 mb-6 border-b border-gray-200 pb-4">
+      {/* Post meta with reading time */}
+      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-6 border-b border-gray-200 pb-4">
         <div className="flex items-center">
-          <CalendarIcon size={16} className="mr-1" />
+          <CalendarIcon size={16} className="mr-1.5" />
           <span>{post.date}</span>
         </div>
         <div className="flex items-center">
-          <User size={16} className="mr-1" />
+          <User size={16} className="mr-1.5" />
           <span>{post.author}</span>
+        </div>
+        <div className="flex items-center">
+          <Clock size={16} className="mr-1.5" />
+          <span>{readingTime} min read</span>
         </div>
       </div>
       
@@ -129,13 +144,13 @@ const BlogPost = ({ slug }: BlogPostProps) => {
       <img 
         src={post.featuredImage} 
         alt={post.title} 
-        className="w-full h-[300px] md:h-[400px] object-cover rounded-lg mb-8"
+        className="w-full h-[300px] md:h-[400px] object-cover rounded-lg mb-6"
       />
       
       {/* Categories */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="flex flex-wrap gap-2 mb-8">
         {post.categories.map((category) => (
-          <Badge key={category} variant="secondary" className="bg-purple-100 text-purple-800 hover:bg-purple-200">
+          <Badge key={category} variant="secondary" className="bg-purple-100 text-purple-800 hover:bg-purple-200 px-3 py-1">
             <Link to={`/blog/category/${slugify(category)}`}>
               {category}
             </Link>
@@ -144,7 +159,7 @@ const BlogPost = ({ slug }: BlogPostProps) => {
       </div>
       
       {/* Post content */}
-      <div className="mt-8 space-y-6" dangerouslySetInnerHTML={{ __html: post.slug === 'sifnian-cuisine-guide-2025' ? processedContent : post.content }} />
+      <div className="mt-8 space-y-6" dangerouslySetInnerHTML={{ __html: post.slug === 'sifnian-cuisine-guide-2026' ? processedContent : post.content }} />
       
       {/* Author note */}
       <div className="mt-10 pt-6 border-t border-gray-200">

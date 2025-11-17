@@ -49,7 +49,7 @@ const ports: Port[] = [
 const FerryHero = () => {
   const [fromPort, setFromPort] = useState("PIR");
   const [toPort, setToPort] = useState("PAS");
-  const [departureDate, setDepartureDate] = useState("2025-05-22");
+  const [departureDate, setDepartureDate] = useState("2026-05-22");
   
   // Create the ferry search URL
   const buildFerrySearchUrl = () => {
@@ -76,7 +76,7 @@ const FerryHero = () => {
             
             <h1 className="text-3xl md:text-5xl font-montserrat font-bold mb-6">
               Ferry Tickets to Sifnos
-              <span className="block text-[#E3D7C3]">2025 Complete Guide</span>
+              <span className="block text-[#E3D7C3]">2026 Complete Guide</span>
             </h1>
             
             <p className="text-lg md:text-xl max-w-3xl mx-auto mb-8 text-white/90">

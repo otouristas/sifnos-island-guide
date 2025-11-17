@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,7 +11,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2, AlertCircle } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { Loader2, AlertCircle, Mail, MessageCircle, Bell, DollarSign } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -262,19 +263,182 @@ export default function SettingsPage() {
             </TabsContent>
             
             <TabsContent value="notifications">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Notification Settings</CardTitle>
-                  <CardDescription>Control what notifications you receive</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-500">Notification settings will be available soon.</p>
-                </CardContent>
-              </Card>
+              <NotificationSettingsTab user={user} />
             </TabsContent>
           </Tabs>
         </div>
       </div>
     </>
+  );
+}
+
+// Notification Settings Tab Component
+function NotificationSettingsTab({ user }: { user: any }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [notificationPrefs, setNotificationPrefs] = useState({
+    emailNotifications: true,
+    whatsappNotifications: false,
+    priceAlerts: true,
+    newHotelsAlerts: true,
+  });
+  
+  useEffect(() => {
+    const fetchPreferences = async () => {
+      if (!user) return;
+      
+      setIsLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('notification_preferences')
+          .eq('id', user.id)
+          .single();
+        
+        if (!error && data?.notification_preferences) {
+          setNotificationPrefs({
+            emailNotifications: data.notification_preferences.email_notifications ?? true,
+            whatsappNotifications: data.notification_preferences.whatsapp_notifications ?? false,
+            priceAlerts: data.notification_preferences.price_alerts ?? true,
+            newHotelsAlerts: data.notification_preferences.new_hotels_alerts ?? true,
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching notification preferences:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchPreferences();
+  }, [user]);
+  
+  const handleSave = async () => {
+    if (!user) return;
+    
+    setIsSaving(true);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          notification_preferences: {
+            email_notifications: notificationPrefs.emailNotifications,
+            whatsapp_notifications: notificationPrefs.whatsappNotifications,
+            price_alerts: notificationPrefs.priceAlerts,
+            new_hotels_alerts: notificationPrefs.newHotelsAlerts,
+          }
+        })
+        .eq('id', user.id);
+      
+      if (error) throw error;
+      
+      alert('Notification preferences saved successfully!');
+    } catch (error) {
+      console.error('Error saving notification preferences:', error);
+      alert('Failed to save preferences. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+  
+  if (isLoading) {
+    return (
+      <Card>
+        <CardContent className="py-12">
+          <div className="flex justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-sifnos-turquoise" />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+  
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Notification Settings</CardTitle>
+        <CardDescription>Control what notifications you receive</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+            <div className="flex items-center gap-3">
+              <Mail className="h-5 w-5 text-sifnos-deep-blue" />
+              <div>
+                <h3 className="font-semibold text-sifnos-deep-blue">Email Notifications</h3>
+                <p className="text-sm text-gray-600">Receive updates via email</p>
+              </div>
+            </div>
+            <Switch
+              checked={notificationPrefs.emailNotifications}
+              onCheckedChange={(checked) =>
+                setNotificationPrefs({ ...notificationPrefs, emailNotifications: checked })
+              }
+            />
+          </div>
+          
+          <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+            <div className="flex items-center gap-3">
+              <MessageCircle className="h-5 w-5 text-sifnos-deep-blue" />
+              <div>
+                <h3 className="font-semibold text-sifnos-deep-blue">WhatsApp Notifications</h3>
+                <p className="text-sm text-gray-600">Receive updates via WhatsApp (if integrated)</p>
+              </div>
+            </div>
+            <Switch
+              checked={notificationPrefs.whatsappNotifications}
+              onCheckedChange={(checked) =>
+                setNotificationPrefs({ ...notificationPrefs, whatsappNotifications: checked })
+              }
+            />
+          </div>
+          
+          <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+            <div className="flex items-center gap-3">
+              <DollarSign className="h-5 w-5 text-sifnos-deep-blue" />
+              <div>
+                <h3 className="font-semibold text-sifnos-deep-blue">Price Alerts</h3>
+                <p className="text-sm text-gray-600">Get notified when prices drop for your favorite hotels</p>
+              </div>
+            </div>
+            <Switch
+              checked={notificationPrefs.priceAlerts}
+              onCheckedChange={(checked) =>
+                setNotificationPrefs({ ...notificationPrefs, priceAlerts: checked })
+              }
+            />
+          </div>
+          
+          <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+            <div className="flex items-center gap-3">
+              <Bell className="h-5 w-5 text-sifnos-deep-blue" />
+              <div>
+                <h3 className="font-semibold text-sifnos-deep-blue">New Hotels Alerts</h3>
+                <p className="text-sm text-gray-600">Get notified when new hotels are added in your preferred areas</p>
+              </div>
+            </div>
+            <Switch
+              checked={notificationPrefs.newHotelsAlerts}
+              onCheckedChange={(checked) =>
+                setNotificationPrefs({ ...notificationPrefs, newHotelsAlerts: checked })
+              }
+            />
+          </div>
+        </div>
+        
+        <div className="flex justify-end pt-4 border-t border-gray-200">
+          <Button onClick={handleSave} disabled={isSaving}>
+            {isSaving ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              'Save Preferences'
+            )}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

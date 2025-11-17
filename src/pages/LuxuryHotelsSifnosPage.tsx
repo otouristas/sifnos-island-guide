@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Star, MapPin, Crown, Sparkles } from 'lucide-react';
+import { Star, MapPin, Crown, Sparkles, Gem, Landmark, Phone, Car, Target } from 'lucide-react';
+
 import SEO from '@/components/SEO';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
@@ -56,8 +57,8 @@ export default function LuxuryHotelsSifnosPage() {
   return (
     <>
       <SEO 
-        title="Luxury Hotels Sifnos 2025 - Premium Villas & Boutique Resorts | Hotels Sifnos"
-        description="Discover Sifnos' finest luxury hotels and villas. From exclusive beachfront resorts to private clifftop retreats, experience unparalleled comfort and authentic Cycladic elegance with premium amenities."
+        title="Luxury Hotels Sifnos 2026 - Premium Villas & Boutique Resorts | Hotels Sifnos"
+        description="Discover Sifnos' finest luxury hotels and villas for the 2026 season. From exclusive beachfront resorts to private clifftop retreats, experience unparalleled comfort and authentic Cycladic elegance with premium amenities."
         keywords={[
           'luxury hotels sifnos', 'sifnos luxury villas', 'boutique hotels sifnos',
           '5 star hotels sifnos', 'premium hotels sifnos greece', 'exclusive sifnos accommodation'
@@ -70,10 +71,10 @@ export default function LuxuryHotelsSifnosPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-4">
-            <Crown className="text-yellow-500 mr-2" size={32} />
-            <h1 className="text-4xl md:text-5xl font-bold text-sifnos-deep-blue">
-              Luxury Hotels in Sifnos 2025
+          <div className="flex items-center justify-center gap-3 mb-4 text-sifnos-deep-blue">
+            <Crown className="h-9 w-9" />
+            <h1 className="text-4xl md:text-5xl font-bold">
+              Luxury Hotels in Sifnos 2026
             </h1>
           </div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -84,9 +85,10 @@ export default function LuxuryHotelsSifnosPage() {
 
         {/* Luxury Features */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-sifnos-deep-blue mb-8 text-center">
-            ✨ What Makes Sifnos Luxury Hotels Special
-          </h2>
+          <div className="flex items-center justify-center gap-3 text-sifnos-deep-blue mb-8">
+            <Gem className="h-6 w-6" />
+            <h2 className="text-3xl font-bold">What Makes Sifnos Luxury Hotels Special</h2>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {luxuryFeatures.map((feature, index) => (
@@ -103,9 +105,10 @@ export default function LuxuryHotelsSifnosPage() {
 
         {/* Premium Hotels Showcase */}
         <section className="mb-16 bg-gradient-to-r from-purple-50 to-blue-50 p-8 rounded-xl">
-          <h2 className="text-3xl font-bold text-sifnos-deep-blue mb-8 text-center">
-            👑 Featured Luxury Properties
-          </h2>
+          <div className="flex items-center justify-center gap-3 text-sifnos-deep-blue mb-8">
+            <Crown className="h-6 w-6" />
+            <h2 className="text-3xl font-bold">Featured Luxury Properties</h2>
+          </div>
           
           {/* Highlighted Properties */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
@@ -156,7 +159,7 @@ export default function LuxuryHotelsSifnosPage() {
                 </div>
               </div>
               <CardContent className="p-6">
-                <h3 className="text-2xl font-bold text-sifnos-deep-blue mb-2">ALK HOTEL™</h3>
+                <h3 className="text-2xl font-bold text-sifnos-deep-blue mb-2">ALK HOTEL</h3>
                 <div className="flex items-center mb-3">
                   <MapPin size={16} className="mr-1 text-gray-500" />
                   <span className="text-gray-600">Kamares</span>
@@ -184,9 +187,10 @@ export default function LuxuryHotelsSifnosPage() {
 
         {/* All Luxury Hotels */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-sifnos-deep-blue mb-8 text-center">
-            🏨 All Luxury Hotels & Villas in Sifnos
-          </h2>
+          <div className="flex items-center justify-center gap-3 text-sifnos-deep-blue mb-8">
+            <Landmark className="h-6 w-6" />
+            <h2 className="text-3xl font-bold">All Luxury Hotels & Villas in Sifnos</h2>
+          </div>
           
           {loading ? (
             <div className="flex justify-center py-12">
@@ -207,9 +211,10 @@ export default function LuxuryHotelsSifnosPage() {
 
         {/* Luxury Experience Guide */}
         <section className="mb-16 bg-gray-50 p-8 rounded-xl">
-          <h2 className="text-3xl font-bold text-sifnos-deep-blue mb-8 text-center">
-            💎 Your Luxury Sifnos Experience
-          </h2>
+          <div className="flex items-center justify-center gap-3 text-sifnos-deep-blue mb-8">
+            <Gem className="h-6 w-6" />
+            <h2 className="text-3xl font-bold">Your Luxury Sifnos Experience</h2>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-6">
@@ -271,22 +276,30 @@ export default function LuxuryHotelsSifnosPage() {
           <h2 className="text-3xl font-bold mb-6 text-center">Exclusive Benefits When You Book With Us</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="text-4xl mb-2">🎯</div>
+              <div className="mb-2 flex items-center justify-center">
+                <Target className="h-7 w-7" />
+              </div>
               <h3 className="text-xl font-semibold mb-2">Best Rate Guarantee</h3>
               <p>We match any lower rate found elsewhere</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl mb-2">🍾</div>
+              <div className="mb-2 flex items-center justify-center">
+                <Sparkles className="h-7 w-7" />
+              </div>
               <h3 className="text-xl font-semibold mb-2">VIP Welcome</h3>
               <p>Complimentary champagne and local treats</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl mb-2">🚗</div>
+              <div className="mb-2 flex items-center justify-center">
+                <Car className="h-7 w-7" />
+              </div>
               <h3 className="text-xl font-semibold mb-2">Free Transfers</h3>
               <p>Airport and port pickup included</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl mb-2">📞</div>
+              <div className="mb-2 flex items-center justify-center">
+                <Phone className="h-7 w-7" />
+              </div>
               <h3 className="text-xl font-semibold mb-2">24/7 Concierge</h3>
               <p>Personal assistance throughout your stay</p>
             </div>

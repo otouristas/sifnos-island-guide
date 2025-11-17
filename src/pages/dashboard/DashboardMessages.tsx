@@ -64,7 +64,7 @@ export default function DashboardMessages() {
             message: 'Hello, I am interested in booking a room at your hotel for the first week of July. Do you have availability for 2 adults and 1 child? We would prefer a room with a sea view if possible. Also, could you please let me know if breakfast is included in the room rate? Thank you!',
             hotel_id: '1',
             hotel_name: 'Your Hotel',
-            created_at: '2025-05-10T14:30:00Z',
+            created_at: '2026-05-10T14:30:00Z',
             is_read: true
           },
           {
@@ -75,7 +75,7 @@ export default function DashboardMessages() {
             message: 'Hi there, I have booked a room for next week and wanted to inquire about some special requirements. I have a gluten allergy and was wondering if your breakfast options include gluten-free items. Additionally, I would appreciate a quiet room away from the elevator if possible. Looking forward to my stay!',
             hotel_id: '1',
             hotel_name: 'Your Hotel',
-            created_at: '2025-05-09T09:15:00Z',
+            created_at: '2026-05-09T09:15:00Z',
             is_read: false
           },
           {
@@ -86,7 +86,7 @@ export default function DashboardMessages() {
             message: 'Hello, I will be arriving at the airport on June 15th at 2:30 PM. Do you offer airport transfer services? If so, what is the cost and how can I book this in advance? Thank you for your assistance.',
             hotel_id: '1',
             hotel_name: 'Your Hotel',
-            created_at: '2025-05-08T16:45:00Z',
+            created_at: '2026-05-08T16:45:00Z',
             is_read: false
           }
         ];

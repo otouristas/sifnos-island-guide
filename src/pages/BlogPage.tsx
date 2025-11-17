@@ -48,8 +48,8 @@ const BlogPage = () => {
   return (
     <div>
       <SEO
-        title="Sifnos Travel Blog | Hotel Guides, Beaches & Local Tips for 2025"
-        description="Plan your perfect Sifnos vacation with our expert travel guides, hotel reviews, beach recommendations, and local insights. Get insider tips for your 2025 Greek island getaway."
+        title="Sifnos Travel Guide: Expert Tips from Island Locals"
+        description="Plan your perfect Sifnos trip with insider guides to beaches, restaurants, hiking, hidden gems. Written by locals who call this island home. Start exploring."
         keywords={['sifnos blog', 'sifnos travel guide', 'sifnos hotels guide', 'where to stay in sifnos', 'sifnos beaches', 'greek island travel']}
         schemaType="Article"
         canonical="/blog"

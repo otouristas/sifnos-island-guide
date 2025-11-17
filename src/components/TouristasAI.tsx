@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
-import { Hotel, Search, Loader2, Bot, Sparkles } from 'lucide-react';
+import { Hotel, Search, Loader2, Sparkles } from 'lucide-react';
+import TouristasLogo from '@/components/TouristasLogo';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -154,7 +155,7 @@ export default function TouristasAI() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 mb-1">
-        <Bot className="h-5 w-5 text-white" />
+        <TouristasLogo size="md" className="text-white" />
         <h2 className="text-xl font-semibold text-white">AI Hotel Recommendation</h2>
       </div>
       <p className="text-white">Tell me your preferences and I'll find your perfect stay in Sifnos</p>

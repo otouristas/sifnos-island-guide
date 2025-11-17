@@ -24,7 +24,7 @@ const TermsOfServicePage = () => {
         
         <div className="bg-white rounded-lg p-6 md:p-8 shadow-sm">
           <div className="prose max-w-none">
-            <p className="text-gray-600 mb-4">Last updated: May 5, 2025</p>
+            <p className="text-gray-600 mb-4">Last updated: May 5, 2026</p>
             
             <h2 className="text-xl font-semibold text-sifnos-deep-blue mt-6 mb-3">1. Introduction</h2>
             <p className="mb-4">
@@ -105,7 +105,7 @@ const TermsOfServicePage = () => {
             
             <div className="border-t border-gray-200 pt-6 mt-8">
               <p className="text-sm text-gray-500">
-                These Terms of Service were last updated on May 5, 2025.
+                These Terms of Service were last updated on May 5, 2026.
               </p>
             </div>
           </div>

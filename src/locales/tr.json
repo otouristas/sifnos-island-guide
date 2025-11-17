@@ -1,0 +1,43 @@
+{
+  "common": {
+    "home": "Ana Sayfa",
+    "hotels": "Otel",
+    "explore": "Keşfet",
+    "ferryTickets": "Feribot Bileti",
+    "blog": "Blog",
+    "contact": "İletişim",
+    "allHotels": "Tüm Oteller",
+    "luxuryHotels": "Lüks Oteller",
+    "beachHotels": "Plaj Otelleri",
+    "villas": "Villalar",
+    "budgetHotels": "Bütçe Otelleri",
+    "allLocations": "Tüm Konumlar",
+    "beaches": "Plajlar",
+    "travelGuide": "Seyahat Rehberi",
+    "bookNow": "Şimdi Rezervasyon Yap",
+    "viewMore": "Daha Fazla Gör",
+    "learnMore": "Daha Fazla Öğren",
+    "readMore": "Daha Fazla Oku"
+  },
+  "homepage": {
+    "heroTitle": "Sifnos'ta Mükemmel Konaklamanızı Keşfedin",
+    "heroSubtitle": "Bu Kiklad incisinde özenle seçilmiş oteller, villalar ve otantik konaklama yerleri",
+    "askTouristasAI": "Touristas AI'ya Sor",
+    "browseAllHotels": "Tüm Otelleri Görüntüle"
+  },
+  "footer": {
+    "poweredBy": "destekleyen",
+    "touristasAI": "Touristas AI",
+    "companyInfo": "Sifnos adasını keşfetmek için güvenilir rehberiniz. Otantik deneyimler, özenle seçilmiş konaklama yerleri ve yerel bilgiler sunuyoruz.",
+    "popularLocations": "Popüler Konumlar",
+    "hotelTypes": "Otel Türleri",
+    "resources": "Kaynaklar",
+    "company": "Şirket",
+    "aboutUs": "Hakkımızda",
+    "listYourHotel": "Otelinizi Listele",
+    "privacyPolicy": "Gizlilik Politikası",
+    "termsOfService": "Hizmet Şartları",
+    "allRightsReserved": "Tüm hakları saklıdır"
+  }
+}
+

@@ -14,21 +14,21 @@ export interface BlogPost {
 export const blogPosts: BlogPost[] = [
   {
     id: 1,
-    title: "The Ultimate Guide to Sifnos Hotels in 2025: Discover Where to Stay on This Authentic Greek Island",
-    slug: "ultimate-guide-to-sifnos-hotels-2025",
+    title: "The Ultimate Guide to Sifnos Hotels in 2026: Discover Where to Stay on This Authentic Greek Island",
+    slug: "ultimate-guide-to-sifnos-hotels-2026",
     author: "Touristas AI",
-    date: "May 5, 2025",
+    date: "May 5, 2026",
     featuredImage: "/uploads/beaches/plats-gialos.webp",
-    excerpt: "Find your perfect accommodation in Sifnos with our comprehensive 2025 guide. From boutique hotels to beach resorts, discover the best places to stay on this authentic Greek island.",
+    excerpt: "Find your perfect accommodation in Sifnos with our comprehensive 2026 guide. From boutique hotels to beach resorts, discover the best places to stay on this authentic Greek island.",
     categories: ["Travel Tips", "Accommodation", "Guides"],
     content: `
       <p>Sifnos, a picturesque Cycladic island nestled in the heart of the Aegean Sea, is the perfect mix of luxury, authenticity, and tranquility. Whether you're a beach lover, a cultural explorer, or a food enthusiast, Sifnos offers something for everyone. With the power of <strong>HotelsSifnos.com</strong> and the smart recommendations of <strong>Touristas AI</strong>, this comprehensive guide will help you find your ideal place to stay — all while exploring one of Greece's most cherished destinations.</p>
       
       <hr class="my-8 border-t border-gray-200" />
       
-      <h2 class="text-2xl font-bold mb-4 text-sifnos-deep-blue">Why Visit Sifnos in 2025?</h2>
+      <h2 class="text-2xl font-bold mb-4 text-sifnos-deep-blue">Why Visit Sifnos in 2026?</h2>
       
-      <p>Plan your unforgettable 2025 escape to Sifnos, Greece — an island known for its vibrant culinary scene, picturesque whitewashed villages, and tranquil sandy beaches. Explore ancient monasteries, hike scenic coastal trails, visit local pottery studios, and indulge in dishes made with Cycladic tradition and heart.</p>
+      <p>Plan your unforgettable 2026 escape to Sifnos, Greece — an island known for its vibrant culinary scene, picturesque whitewashed villages, and tranquil sandy beaches. Explore ancient monasteries, hike scenic coastal trails, visit local pottery studios, and indulge in dishes made with Cycladic tradition and heart.</p>
       
       <p class="font-bold mt-4">Is Sifnos worth visiting?</p>
       <p>Absolutely. Sifnos blends authenticity, laid-back luxury, and stunning scenery. With fewer tourists than Santorini or Mykonos, it's perfect for peaceful beaches, gourmet food, and traditional Cycladic charm — minus the crowds.</p>
@@ -169,7 +169,7 @@ export const blogPosts: BlogPost[] = [
       
       <hr class="my-8 border-t border-gray-200" />
       
-      <h2 class="text-2xl font-bold mb-4 text-sifnos-deep-blue">Featured Accommodations: Handpicked for 2025</h2>
+      <h2 class="text-2xl font-bold mb-4 text-sifnos-deep-blue">Featured Accommodations: Handpicked for 2026</h2>
       
       <ul class="list-disc pl-6 mb-6">
         <li><strong><a href="https://hotelssifnos.com/hotels/meropi-rooms-and-apartments" class="text-blue-600 hover:underline">Meropi Rooms and Apartments</a></strong> – Excellent family option in central Kamares.</li>
@@ -247,15 +247,15 @@ export const blogPosts: BlogPost[] = [
   },
   {
     id: 2,
-    title: "Top 7 Beaches in Sifnos: Hidden Gems and Popular Shores for Summer 2025",
-    slug: "top-beaches-sifnos-2025",
+    title: "Top 7 Beaches in Sifnos: Hidden Gems and Popular Shores for Summer 2026",
+    slug: "top-beaches-sifnos-2026",
     author: "Touristas AI",
-    date: "May 12, 2025",
+    date: "May 12, 2026",
     featuredImage: "/uploads/beaches/vathi.webp",
-    excerpt: "Discover Sifnos' most beautiful beaches, from secluded coves to family-friendly shores. Our 2025 beach guide helps you find the perfect spot for swimming, sunbathing, and relaxation.",
+    excerpt: "Discover Sifnos' most beautiful beaches, from secluded coves to family-friendly shores. Our 2026 beach guide helps you find the perfect spot for swimming, sunbathing, and relaxation.",
     categories: ["Beaches", "Travel Tips", "Summer"],
     content: `
-      <p>Sifnos may be known for its pottery and gastronomy, but its stunning beaches are equally impressive. With crystal-clear waters in varying shades of blue, golden sands, and spectacular settings, the island's coastline offers diverse options for every type of beach lover. Here's our hand-picked selection of the best beaches in Sifnos for your 2025 visit.</p>
+      <p>Sifnos may be known for its pottery and gastronomy, but its stunning beaches are equally impressive. With crystal-clear waters in varying shades of blue, golden sands, and spectacular settings, the island's coastline offers diverse options for every type of beach lover. Here's our hand-picked selection of the best beaches in Sifnos for your 2026 visit.</p>
       
       <hr class="my-8 border-t border-gray-200" />
       
@@ -472,20 +472,20 @@ export const blogPosts: BlogPost[] = [
         <li>Check weather conditions, particularly wind forecasts, as some beaches can become rough on windy days.</li>
       </ul>
       
-      <p>With this guide to Sifnos' most beautiful beaches, you're ready to enjoy the stunning coastline that makes this Cycladic gem such a beloved destination. Whether you prefer organized beaches with all the amenities or secluded coves where you can connect with nature, Sifnos offers the perfect spot for your 2025 Greek island adventure.</p>
+      <p>With this guide to Sifnos' most beautiful beaches, you're ready to enjoy the stunning coastline that makes this Cycladic gem such a beloved destination. Whether you prefer organized beaches with all the amenities or secluded coves where you can connect with nature, Sifnos offers the perfect spot for your 2026 Greek island adventure.</p>
     `
   },
   {
     id: 3,
-    title: "Family-Friendly Sifnos: The Ultimate Guide to Traveling with Kids in 2025",
-    slug: "family-friendly-sifnos-guide-2025",
+    title: "Family-Friendly Sifnos: The Ultimate Guide to Traveling with Kids in 2026",
+    slug: "family-friendly-sifnos-guide-2026",
     author: "Touristas AI",
-    date: "May 19, 2025",
+    date: "May 19, 2026",
     featuredImage: "/uploads/beaches/kamares.webp",
     excerpt: "Planning a family vacation to Sifnos? Discover the best kid-friendly hotels, beaches, activities, and practical tips for an unforgettable family holiday on this welcoming Greek island.",
     categories: ["Family Travel", "Travel Tips", "Kid-Friendly"],
     content: `
-      <p>Sifnos offers the perfect combination of safety, beauty, and authentic Greek experiences that make it an ideal destination for families. With its relaxed atmosphere, child-friendly beaches, and welcoming locals, this Cycladic gem provides everything needed for a memorable family vacation. This comprehensive guide will help you plan every aspect of your family trip to Sifnos in 2025.</p>
+      <p>Sifnos offers the perfect combination of safety, beauty, and authentic Greek experiences that make it an ideal destination for families. With its relaxed atmosphere, child-friendly beaches, and welcoming locals, this Cycladic gem provides everything needed for a memorable family vacation. This comprehensive guide will help you plan every aspect of your family trip to Sifnos in 2026.</p>
       
       <hr class="my-8 border-t border-gray-200" />
       
@@ -705,17 +705,17 @@ export const blogPosts: BlogPost[] = [
       
       <p>With its welcoming atmosphere, safe beaches, family-friendly accommodations, and variety of activities to keep children engaged, Sifnos offers an authentic Greek island experience that the whole family can enjoy. Unlike more commercialized destinations, Sifnos provides an opportunity for children to connect with local culture and nature while parents relax in beautiful surroundings.</p>
       
-      <p>Start planning your 2025 family adventure to Sifnos today with our <a href="https://hotelssifnos.com/hotel-types/family-friendly-hotels" class="text-blue-600 hover:underline font-bold">family-friendly hotel listings</a> and <a href="https://hotelssifnos.com/touristas-ai" class="text-blue-600 hover:underline font-bold">AI travel assistant</a>.</p>
+      <p>Start planning your 2026 family adventure to Sifnos today with our <a href="https://hotelssifnos.com/hotel-types/family-friendly-hotels" class="text-blue-600 hover:underline font-bold">family-friendly hotel listings</a> and <a href="https://hotelssifnos.com/touristas-ai" class="text-blue-600 hover:underline font-bold">AI travel assistant</a>.</p>
     `
   },
   {
     id: 4,
-    title: "Luxury Getaways in Sifnos: 2025 Guide to Upscale Accommodations and Experiences",
-    slug: "luxury-getaways-sifnos-2025",
+    title: "Luxury Getaways in Sifnos: 2026 Guide to Upscale Accommodations and Experiences",
+    slug: "luxury-getaways-sifnos-2026",
     author: "Touristas AI",
-    date: "May 26, 2025",
+    date: "May 26, 2026",
     featuredImage: "/uploads/hotels/villa-olivia-clara/Villa-Olivia-Clara_001_pool-side-cabana-min-scaled.jpg.jpeg",
-    excerpt: "Discover Sifnos' sophisticated side with our 2025 luxury travel guide. From exclusive villas and boutique hotels to fine dining and bespoke experiences, plan your premium Greek island escape.",
+    excerpt: "Discover Sifnos' sophisticated side with our 2026 luxury travel guide. From exclusive villas and boutique hotels to fine dining and bespoke experiences, plan your premium Greek island escape.",
     categories: ["Luxury Travel", "Accommodations", "Fine Dining"],
     content: `
       <p>While Sifnos embodies authentic Cycladic charm with its whitewashed villages and traditional character, the island also caters exceptionally well to luxury travelers seeking refined experiences. This hidden gem combines understated elegance with genuine Greek hospitality, offering sophisticated accommodations and exclusive experiences without the crowds of more famous luxury destinations like Mykonos or Santorini.</p>
@@ -971,14 +971,14 @@ export const blogPosts: BlogPost[] = [
   {
     id: 5,
     title: "Sifnos 7-Day Itinerary: The Perfect Week in the Cyclades' Culinary Paradise",
-    slug: "sifnos-7-day-itinerary-2025",
+    slug: "sifnos-7-day-itinerary-2026",
     author: "Touristas AI",
-    date: "June 2, 2025",
+    date: "June 2, 2026",
     featuredImage: "/uploads/beaches/kastro.webp",
     excerpt: "Plan the perfect week in Sifnos with our comprehensive 7-day itinerary. From stunning beaches and traditional villages to cultural highlights and culinary experiences, make the most of your Cycladic holiday.",
     categories: ["Itineraries", "Travel Tips", "Food & Wine"],
     content: `
-      <p>Sifnos offers the perfect blend of stunning beaches, authentic villages, rich culture, and exceptional cuisine for a week-long Greek island escape. This carefully crafted 7-day itinerary balances relaxation, exploration, and cultural immersion to help you experience the best of this Cycladic gem without feeling rushed. Whether you're a first-time visitor or returning to discover more, this guide ensures you'll make the most of your stay in 2025.</p>
+      <p>Sifnos offers the perfect blend of stunning beaches, authentic villages, rich culture, and exceptional cuisine for a week-long Greek island escape. This carefully crafted 7-day itinerary balances relaxation, exploration, and cultural immersion to help you experience the best of this Cycladic gem without feeling rushed. Whether you're a first-time visitor or returning to discover more, this guide ensures you'll make the most of your stay in 2026.</p>
       
       <hr class="my-8 border-t border-gray-200" />
       
@@ -1209,9 +1209,9 @@ export const blogPosts: BlogPost[] = [
   {
     id: 6,
     title: "Traditional Sifnian Cuisine: A Culinary Guide to the Island's Most Iconic Dishes",
-    slug: "sifnian-cuisine-guide-2025",
+    slug: "sifnian-cuisine-guide-2026",
     author: "Touristas AI",
-    date: "June 9, 2025",
+    date: "June 9, 2026",
     featuredImage: "/uploads/beaches/exampela.webp",
     excerpt: "Explore the rich culinary heritage of Sifnos, from chickpea stew and mastelo lamb to manoura cheese and honey pie. Discover traditional cooking methods, the best restaurants, and authentic food experiences across the island.",
     categories: ["Food & Wine", "Culture", "Local Experiences"],
