@@ -83,7 +83,7 @@ export default function FeaturedHotelsManagement() {
         .order('rating', { ascending: false });
 
       if (error) throw error;
-      setHotels(data || []);
+      setHotels((data || []) as Hotel[]);
     } catch (error) {
       console.error('Error fetching hotels:', error);
       toast({

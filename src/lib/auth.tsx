@@ -34,6 +34,7 @@ export type AuthContextType = {
   toggleFavorite: (hotelId: string) => Promise<boolean>;
   getFavorites: () => Promise<string[]>;
   checkIsFavorite: (hotelId: string) => Promise<boolean>;
+  removeFavorite: (hotelId: string) => Promise<boolean>;
   isHotelOwner: () => Promise<boolean>;
   getOwnedHotels: () => Promise<string[]>;
   getUserRole: () => Promise<UserRole | null>;
@@ -312,6 +313,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
   
+  // Remove a hotel from favorites
+  const removeFavorite = async (hotelId: string): Promise<boolean> => {
+    try {
+      if (!user) {
+        toast({
+          title: "Authentication required",
+          description: "Please sign in to manage favorites",
+          variant: "destructive"
+        });
+        return false;
+      }
+      
+      const { error } = await supabase
+        .from('user_favorites')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('hotel_id', hotelId);
+        
+      if (error) {
+        console.error('Error removing favorite:', error);
+        toast({
+          title: "Error",
+          description: "Failed to remove from favorites",
+          variant: "destructive"
+        });
+        return false;
+      }
+      
+      toast({
+        title: "Removed from favorites",
+      });
+      
+      return true;
+    } catch (error) {
+      console.error('Error in removeFavorite:', error);
+      return false;
+    }
+  };
+  
   // Toggle hotel favorite status
   const toggleFavorite = async (hotelId: string): Promise<boolean> => {
     try {
@@ -566,6 +606,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       toggleFavorite,
       getFavorites,
       checkIsFavorite,
+      removeFavorite,
       isHotelOwner,
       getOwnedHotels,
       getUserRole,
