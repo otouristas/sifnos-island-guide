@@ -1,8 +1,18 @@
+console.log('[MAIN.TSX] 🚀 Starting main.tsx execution');
+console.log('[MAIN.TSX] React available?', typeof React !== 'undefined');
+console.log('[MAIN.TSX] ReactDOM available?', typeof ReactDOM !== 'undefined');
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+
+console.log('[MAIN.TSX] ✅ React imported successfully:', React);
+console.log('[MAIN.TSX] ✅ ReactDOM imported successfully:', ReactDOM);
+
 import App from './App.tsx';
+console.log('[MAIN.TSX] ✅ App imported successfully');
+
 import './index.css';
+console.log('[MAIN.TSX] ✅ CSS imported successfully');
 
 // Generate a unique version identifier for this build
 const buildVersion = `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
@@ -93,8 +103,13 @@ const addCachePreventionMeta = () => {
 const isSSR = typeof window === 'undefined' || import.meta.env.SSR;
 
 // Client-side rendering
+console.log('[MAIN.TSX] 🎯 Starting client-side rendering');
+console.log('[MAIN.TSX] isSSR:', isSSR);
+
 if (!isSSR) {
+  console.log('[MAIN.TSX] 📍 Looking for root element');
   const root = document.getElementById('root');
+  console.log('[MAIN.TSX] Root element found:', root);
   
   if (root) {
     // Add cache prevention meta tags
@@ -115,12 +130,22 @@ if (!isSSR) {
       ? React.StrictMode 
       : React.Fragment;
     
+    console.log('[MAIN.TSX] 🎨 Creating React root and rendering App');
+    console.log('[MAIN.TSX] StrictModeWrapper:', StrictModeWrapper);
+    console.log('[MAIN.TSX] App component:', App);
+    
     ReactDOM.createRoot(root).render(
       <StrictModeWrapper>
         <App />
       </StrictModeWrapper>
     );
+    
+    console.log('[MAIN.TSX] ✅ Render complete');
+  } else {
+    console.error('[MAIN.TSX] ❌ Root element not found!');
   }
+} else {
+  console.log('[MAIN.TSX] ⚠️ SSR mode detected, skipping client render');
 }
 
 // For SSR, export the App component

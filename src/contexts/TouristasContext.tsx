@@ -1,4 +1,6 @@
+console.log('[TOURISTAS] 🚀 Starting TouristasContext.tsx module evaluation');
 import { createContext, useContext, useState, ReactNode } from 'react';
+console.log('[TOURISTAS] ✅ React hooks imported');
 
 interface TouristasContextType {
   isOpen: boolean;
@@ -8,7 +10,9 @@ interface TouristasContextType {
   initialPrompt: string | null;
 }
 
+console.log('[TOURISTAS] 🎯 Creating TouristasContext');
 const TouristasContext = createContext<TouristasContextType | undefined>(undefined);
+console.log('[TOURISTAS] ✅ TouristasContext created');
 
 export function TouristasProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);

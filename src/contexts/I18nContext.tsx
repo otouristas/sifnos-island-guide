@@ -1,4 +1,10 @@
+console.log('[I18N] 🚀 Starting I18nContext.tsx module evaluation');
+console.log('[I18N] React available before import?', typeof window !== 'undefined' ? 'yes' : 'SSR');
+
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+
+console.log('[I18N] ✅ React hooks imported');
+console.log('[I18N] createContext:', typeof createContext);
 
 export type Language = 'en' | 'el' | 'fr' | 'it' | 'de' | 'sv' | 'ru' | 'tr';
 
@@ -8,7 +14,12 @@ interface I18nContextType {
   t: (key: string, params?: Record<string, string>) => string;
 }
 
+console.log('[I18N] 🎯 About to call createContext...');
+console.log('[I18N] createContext function:', createContext);
+
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
+
+console.log('[I18N] ✅ I18nContext created successfully:', I18nContext);
 
 export const useI18n = () => {
   const context = useContext(I18nContext);
@@ -23,7 +34,9 @@ interface I18nProviderProps {
 }
 
 // Dynamic translation loader
+console.log('[I18N] 📦 Defining loadTranslations function');
 const loadTranslations = async (lang: Language): Promise<Record<string, any>> => {
+  console.log('[I18N] 🔄 Loading translations for:', lang);
   try {
     const translations = await import(`../locales/${lang}.json`);
     return translations.default;
@@ -36,6 +49,7 @@ const loadTranslations = async (lang: Language): Promise<Record<string, any>> =>
 };
 
 export const I18nProvider = ({ children }: I18nProviderProps) => {
+  console.log('[I18N] 🎨 I18nProvider rendering');
   const [language, setLanguageState] = useState<Language>(() => {
     // Get from localStorage or default to English
     const saved = localStorage.getItem('language') as Language;
