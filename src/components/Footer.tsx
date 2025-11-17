@@ -68,32 +68,16 @@ export default function Footer() {
               </div>
             </div>
             <div className="flex gap-3">
-              <a 
-                href="#" 
-                className="text-white/70 hover:text-sifnos-beige transition-colors"
-                aria-label="Visit our Facebook page"
-              >
+              <a href="#" className="text-white/70 hover:text-sifnos-beige transition-colors">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a 
-                href="#" 
-                className="text-white/70 hover:text-sifnos-beige transition-colors"
-                aria-label="Visit our Instagram profile"
-              >
+              <a href="#" className="text-white/70 hover:text-sifnos-beige transition-colors">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a 
-                href="#" 
-                className="text-white/70 hover:text-sifnos-beige transition-colors"
-                aria-label="Subscribe to our YouTube channel"
-              >
+              <a href="#" className="text-white/70 hover:text-sifnos-beige transition-colors">
                 <Youtube className="h-5 w-5" />
               </a>
-              <a 
-                href="#" 
-                className="text-white/70 hover:text-sifnos-beige transition-colors"
-                aria-label="Follow us on Twitter"
-              >
+              <a href="#" className="text-white/70 hover:text-sifnos-beige transition-colors">
                 <Twitter className="h-5 w-5" />
               </a>
             </div>

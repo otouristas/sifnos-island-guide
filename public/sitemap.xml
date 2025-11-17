@@ -1,236 +1,19 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
-  <!-- Homepage - All Languages -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Main Pages -->
   <url>
     <loc>https://hotelssifnos.com/</loc>
     <lastmod>2025-11-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hotelssifnos.com/" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://hotelssifnos.com/gr" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://hotelssifnos.com/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://hotelssifnos.com/it" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://hotelssifnos.com/de" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://hotelssifnos.com/sv" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://hotelssifnos.com/ru" />
-    <xhtml:link rel="alternate" hreflang="tr" href="https://hotelssifnos.com/tr" />
   </url>
-  <url>
-    <loc>https://hotelssifnos.com/gr</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hotelssifnos.com/" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://hotelssifnos.com/gr" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://hotelssifnos.com/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://hotelssifnos.com/it" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://hotelssifnos.com/de" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://hotelssifnos.com/sv" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://hotelssifnos.com/ru" />
-    <xhtml:link rel="alternate" hreflang="tr" href="https://hotelssifnos.com/tr" />
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/fr</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hotelssifnos.com/" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://hotelssifnos.com/gr" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://hotelssifnos.com/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://hotelssifnos.com/it" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://hotelssifnos.com/de" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://hotelssifnos.com/sv" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://hotelssifnos.com/ru" />
-    <xhtml:link rel="alternate" hreflang="tr" href="https://hotelssifnos.com/tr" />
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/it</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hotelssifnos.com/" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://hotelssifnos.com/gr" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://hotelssifnos.com/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://hotelssifnos.com/it" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://hotelssifnos.com/de" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://hotelssifnos.com/sv" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://hotelssifnos.com/ru" />
-    <xhtml:link rel="alternate" hreflang="tr" href="https://hotelssifnos.com/tr" />
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/de</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hotelssifnos.com/" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://hotelssifnos.com/gr" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://hotelssifnos.com/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://hotelssifnos.com/it" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://hotelssifnos.com/de" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://hotelssifnos.com/sv" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://hotelssifnos.com/ru" />
-    <xhtml:link rel="alternate" hreflang="tr" href="https://hotelssifnos.com/tr" />
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/sv</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hotelssifnos.com/" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://hotelssifnos.com/gr" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://hotelssifnos.com/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://hotelssifnos.com/it" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://hotelssifnos.com/de" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://hotelssifnos.com/sv" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://hotelssifnos.com/ru" />
-    <xhtml:link rel="alternate" hreflang="tr" href="https://hotelssifnos.com/tr" />
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/ru</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hotelssifnos.com/" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://hotelssifnos.com/gr" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://hotelssifnos.com/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://hotelssifnos.com/it" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://hotelssifnos.com/de" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://hotelssifnos.com/sv" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://hotelssifnos.com/ru" />
-    <xhtml:link rel="alternate" hreflang="tr" href="https://hotelssifnos.com/tr" />
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/tr</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hotelssifnos.com/" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://hotelssifnos.com/gr" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://hotelssifnos.com/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://hotelssifnos.com/it" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://hotelssifnos.com/de" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://hotelssifnos.com/sv" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://hotelssifnos.com/ru" />
-    <xhtml:link rel="alternate" hreflang="tr" href="https://hotelssifnos.com/tr" />
-  </url>
-
-  <!-- Hotels Page - All Languages -->
   <url>
     <loc>https://hotelssifnos.com/hotels</loc>
     <lastmod>2025-11-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hotelssifnos.com/hotels" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://hotelssifnos.com/gr/hotels" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://hotelssifnos.com/fr/hotels" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://hotelssifnos.com/it/hotels" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://hotelssifnos.com/de/hotels" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://hotelssifnos.com/sv/hotels" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://hotelssifnos.com/ru/hotels" />
-    <xhtml:link rel="alternate" hreflang="tr" href="https://hotelssifnos.com/tr/hotels" />
   </url>
-  <url>
-    <loc>https://hotelssifnos.com/gr/hotels</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hotelssifnos.com/hotels" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://hotelssifnos.com/gr/hotels" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://hotelssifnos.com/fr/hotels" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://hotelssifnos.com/it/hotels" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://hotelssifnos.com/de/hotels" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://hotelssifnos.com/sv/hotels" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://hotelssifnos.com/ru/hotels" />
-    <xhtml:link rel="alternate" hreflang="tr" href="https://hotelssifnos.com/tr/hotels" />
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/fr/hotels</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hotelssifnos.com/hotels" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://hotelssifnos.com/gr/hotels" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://hotelssifnos.com/fr/hotels" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://hotelssifnos.com/it/hotels" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://hotelssifnos.com/de/hotels" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://hotelssifnos.com/sv/hotels" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://hotelssifnos.com/ru/hotels" />
-    <xhtml:link rel="alternate" hreflang="tr" href="https://hotelssifnos.com/tr/hotels" />
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/it/hotels</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hotelssifnos.com/hotels" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://hotelssifnos.com/gr/hotels" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://hotelssifnos.com/fr/hotels" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://hotelssifnos.com/it/hotels" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://hotelssifnos.com/de/hotels" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://hotelssifnos.com/sv/hotels" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://hotelssifnos.com/ru/hotels" />
-    <xhtml:link rel="alternate" hreflang="tr" href="https://hotelssifnos.com/tr/hotels" />
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/de/hotels</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hotelssifnos.com/hotels" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://hotelssifnos.com/gr/hotels" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://hotelssifnos.com/fr/hotels" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://hotelssifnos.com/it/hotels" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://hotelssifnos.com/de/hotels" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://hotelssifnos.com/sv/hotels" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://hotelssifnos.com/ru/hotels" />
-    <xhtml:link rel="alternate" hreflang="tr" href="https://hotelssifnos.com/tr/hotels" />
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/sv/hotels</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hotelssifnos.com/hotels" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://hotelssifnos.com/gr/hotels" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://hotelssifnos.com/fr/hotels" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://hotelssifnos.com/it/hotels" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://hotelssifnos.com/de/hotels" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://hotelssifnos.com/sv/hotels" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://hotelssifnos.com/ru/hotels" />
-    <xhtml:link rel="alternate" hreflang="tr" href="https://hotelssifnos.com/tr/hotels" />
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/ru/hotels</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hotelssifnos.com/hotels" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://hotelssifnos.com/gr/hotels" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://hotelssifnos.com/fr/hotels" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://hotelssifnos.com/it/hotels" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://hotelssifnos.com/de/hotels" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://hotelssifnos.com/sv/hotels" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://hotelssifnos.com/ru/hotels" />
-    <xhtml:link rel="alternate" hreflang="tr" href="https://hotelssifnos.com/tr/hotels" />
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/tr/hotels</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hotelssifnos.com/hotels" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://hotelssifnos.com/gr/hotels" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://hotelssifnos.com/fr/hotels" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://hotelssifnos.com/it/hotels" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://hotelssifnos.com/de/hotels" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://hotelssifnos.com/sv/hotels" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://hotelssifnos.com/ru/hotels" />
-    <xhtml:link rel="alternate" hreflang="tr" href="https://hotelssifnos.com/tr/hotels" />
-  </url>
-
-  <!-- Where to Stay Page - All Languages -->
   <url>
     <loc>https://hotelssifnos.com/where-to-stay-sifnos</loc>
     <lastmod>2025-11-17</lastmod>
@@ -238,99 +21,11 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://hotelssifnos.com/gr/where-to-stay-sifnos</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/fr/where-to-stay-sifnos</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/it/where-to-stay-sifnos</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/de/where-to-stay-sifnos</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/sv/where-to-stay-sifnos</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/ru/where-to-stay-sifnos</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/tr/where-to-stay-sifnos</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- Ferry Tickets Page - All Languages -->
-  <url>
     <loc>https://hotelssifnos.com/ferry-tickets</loc>
     <lastmod>2025-11-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-  <url>
-    <loc>https://hotelssifnos.com/gr/ferry-tickets</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/fr/ferry-tickets</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/it/ferry-tickets</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/de/ferry-tickets</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/sv/ferry-tickets</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/ru/ferry-tickets</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/tr/ferry-tickets</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- Touristas AI Page - All Languages -->
   <url>
     <loc>https://hotelssifnos.com/touristas-ai</loc>
     <lastmod>2025-11-17</lastmod>
@@ -338,99 +33,11 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://hotelssifnos.com/gr/touristas-ai</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/fr/touristas-ai</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/it/touristas-ai</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/de/touristas-ai</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/sv/touristas-ai</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/ru/touristas-ai</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/tr/touristas-ai</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- Beaches Guide Page - All Languages -->
-  <url>
     <loc>https://hotelssifnos.com/best-beaches-sifnos-guide</loc>
     <lastmod>2025-11-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://hotelssifnos.com/gr/best-beaches-sifnos-guide</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/fr/best-beaches-sifnos-guide</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/it/best-beaches-sifnos-guide</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/de/best-beaches-sifnos-guide</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/sv/best-beaches-sifnos-guide</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/ru/best-beaches-sifnos-guide</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/tr/best-beaches-sifnos-guide</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Luxury Hotels Page - All Languages -->
   <url>
     <loc>https://hotelssifnos.com/luxury-hotels-sifnos</loc>
     <lastmod>2025-11-17</lastmod>
@@ -438,99 +45,11 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://hotelssifnos.com/gr/luxury-hotels-sifnos</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/fr/luxury-hotels-sifnos</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/it/luxury-hotels-sifnos</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/de/luxury-hotels-sifnos</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/sv/luxury-hotels-sifnos</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/ru/luxury-hotels-sifnos</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/tr/luxury-hotels-sifnos</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Beaches Page - All Languages -->
-  <url>
     <loc>https://hotelssifnos.com/beaches</loc>
     <lastmod>2025-11-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://hotelssifnos.com/gr/beaches</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/fr/beaches</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/it/beaches</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/de/beaches</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/sv/beaches</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/ru/beaches</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/tr/beaches</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Travel Guide Page - All Languages -->
   <url>
     <loc>https://hotelssifnos.com/travel-guide</loc>
     <lastmod>2025-11-17</lastmod>
@@ -538,99 +57,11 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://hotelssifnos.com/gr/travel-guide</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/fr/travel-guide</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/it/travel-guide</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/de/travel-guide</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/sv/travel-guide</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/ru/travel-guide</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/tr/travel-guide</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- About Page - All Languages -->
-  <url>
     <loc>https://hotelssifnos.com/about</loc>
     <lastmod>2025-11-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-  <url>
-    <loc>https://hotelssifnos.com/gr/about</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/fr/about</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/it/about</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/de/about</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/sv/about</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/ru/about</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/tr/about</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <!-- About Us Page (alternate) - All Languages -->
   <url>
     <loc>https://hotelssifnos.com/about-us</loc>
     <lastmod>2025-11-17</lastmod>
@@ -638,99 +69,11 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://hotelssifnos.com/gr/about-us</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/fr/about-us</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/it/about-us</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/de/about-us</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/sv/about-us</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/ru/about-us</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/tr/about-us</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <!-- FAQ Page - All Languages -->
-  <url>
     <loc>https://hotelssifnos.com/faq</loc>
     <lastmod>2025-11-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-  <url>
-    <loc>https://hotelssifnos.com/gr/faq</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/fr/faq</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/it/faq</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/de/faq</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/sv/faq</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/ru/faq</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/tr/faq</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <!-- Contact Page - All Languages -->
   <url>
     <loc>https://hotelssifnos.com/contact</loc>
     <lastmod>2025-11-17</lastmod>
@@ -738,99 +81,11 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://hotelssifnos.com/gr/contact</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/fr/contact</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/it/contact</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/de/contact</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/sv/contact</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/ru/contact</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/tr/contact</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-
-  <!-- Pricing Page - All Languages -->
-  <url>
     <loc>https://hotelssifnos.com/pricing</loc>
     <lastmod>2025-11-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-  <url>
-    <loc>https://hotelssifnos.com/gr/pricing</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/fr/pricing</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/it/pricing</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/de/pricing</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/sv/pricing</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/ru/pricing</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/tr/pricing</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Privacy Policy - All Languages -->
   <url>
     <loc>https://hotelssifnos.com/privacy-policy</loc>
     <lastmod>2025-11-17</lastmod>
@@ -838,148 +93,18 @@
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://hotelssifnos.com/gr/privacy-policy</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/fr/privacy-policy</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/it/privacy-policy</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/de/privacy-policy</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/sv/privacy-policy</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/ru/privacy-policy</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/tr/privacy-policy</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <!-- Terms of Service - All Languages -->
-  <url>
     <loc>https://hotelssifnos.com/terms-of-service</loc>
     <lastmod>2025-11-17</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://hotelssifnos.com/gr/terms-of-service</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/fr/terms-of-service</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/it/terms-of-service</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/de/terms-of-service</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/sv/terms-of-service</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/ru/terms-of-service</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/tr/terms-of-service</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <!-- Cookie Policy - All Languages -->
-  <url>
     <loc>https://hotelssifnos.com/cookie-policy</loc>
     <lastmod>2025-11-17</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
-  <url>
-    <loc>https://hotelssifnos.com/gr/cookie-policy</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/fr/cookie-policy</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/it/cookie-policy</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/de/cookie-policy</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/sv/cookie-policy</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/ru/cookie-policy</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://hotelssifnos.com/tr/cookie-policy</loc>
-    <lastmod>2025-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
+  
   <!-- Blog Pages -->
   <url>
     <loc>https://hotelssifnos.com/blog</loc>
@@ -1023,7 +148,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
+  
   <!-- Locations Pages -->
   <url>
     <loc>https://hotelssifnos.com/locations</loc>
@@ -1085,7 +210,7 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
-
+  
   <!-- Hotel Types Pages -->
   <url>
     <loc>https://hotelssifnos.com/hotel-types</loc>
@@ -1129,7 +254,7 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
-
+  
   <!-- Featured Hotel Pages - High Priority -->
   <url>
     <loc>https://hotelssifnos.com/hotels/meropi-rooms-and-apartments</loc>

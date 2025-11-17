@@ -53,7 +53,7 @@ export default function CookieConsent() {
             href="/privacy-policy"
             className="text-sifnos-turquoise hover:text-sifnos-deep-blue text-sm underline flex items-center"
           >
-            Read our Cookie Policy
+            Learn more
           </a>
         </div>
       </div>

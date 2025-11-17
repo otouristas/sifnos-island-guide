@@ -335,25 +335,27 @@ function TravelPreferencesTab({ user, profile }: { user: any; profile: any }) {
   const form = useForm<TravelPreferencesValues>({
     resolver: zodResolver(travelPreferencesSchema),
     defaultValues: {
-      budgetPerNight: '',
-      preferredBeachTypes: [],
-      travelStyles: [],
-      carRental: '',
+      budgetPerNight: profile?.travel_preferences?.budget_per_night || '',
+      preferredBeachTypes: profile?.travel_preferences?.preferred_beach_types || [],
+      travelStyles: profile?.travel_preferences?.travel_styles || [],
+      carRental: profile?.travel_preferences?.car_rental || '',
     },
   });
   
-  // Travel preferences feature disabled - field doesn't exist in schema
   useEffect(() => {
-    // Will be re-enabled when schema is updated
+    if (profile?.travel_preferences) {
+      form.reset({
+        budgetPerNight: profile.travel_preferences.budget_per_night || '',
+        preferredBeachTypes: profile.travel_preferences.preferred_beach_types || [],
+        travelStyles: profile.travel_preferences.travel_styles || [],
+        carRental: profile.travel_preferences.car_rental || '',
+      });
+    }
   }, [profile, form]);
   
   const onSubmit = async (values: TravelPreferencesValues) => {
     if (!user) return;
     
-    // Travel preferences feature disabled - field doesn't exist in schema
-    alert('Travel preferences feature is currently unavailable. It will be enabled in a future update.');
-    
-    /* Disabled until schema is updated
     setIsSaving(true);
     try {
       const { error } = await supabase
@@ -378,7 +380,6 @@ function TravelPreferencesTab({ user, profile }: { user: any; profile: any }) {
     } finally {
       setIsSaving(false);
     }
-    */
   };
   
   const beachTypes = ['Sandy', 'Pebble', 'Organized', 'Quiet', 'Remote', 'Family-friendly'];

@@ -2,11 +2,9 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Bot, Sparkles, Zap, Target, TrendingUp } from 'lucide-react';
 import { determineHotelLogoUrl } from '@/utils/image-utils';
-import { useI18n } from '@/contexts/I18nContext';
 
 export default function FeaturedTouristasAI() {
   const navigate = useNavigate();
-  const { t } = useI18n();
 
   return (
     <section className="relative py-20 bg-gradient-to-br from-accent-light/20 via-background to-accent-light/10 overflow-hidden">
@@ -26,11 +24,11 @@ export default function FeaturedTouristasAI() {
                 </div>
                 <div>
                   <h3 className="font-heading font-semibold text-white">Touristas AI</h3>
-                  <p className="text-xs text-white/80">{t('touristasAI.title')}</p>
+                  <p className="text-xs text-white/80">Your Personal Travel Assistant</p>
                 </div>
                 <div className="ml-auto flex items-center gap-1">
                   <span className="inline-block w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                  <span className="text-xs text-white/80">{t('touristasAI.online')}</span>
+                  <span className="text-xs text-white/80">Online</span>
                 </div>
               </div>
               
@@ -40,7 +38,7 @@ export default function FeaturedTouristasAI() {
                 <div className="flex justify-end">
                   <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-sm px-4 py-3 max-w-[80%] shadow-sm">
                     <p className="font-body text-sm">
-                      {t('touristasAI.chatPlaceholder')}
+                      I'm looking for a luxury hotel near the beach, under €200 per night
                     </p>
                   </div>
                 </div>
@@ -132,15 +130,15 @@ export default function FeaturedTouristasAI() {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full text-primary text-sm font-medium mb-4">
                 <Sparkles className="h-4 w-4" />
-                {t('touristasAI.badge')}
+                AI-Powered
               </div>
               
               <h2 className="font-heading text-4xl md:text-5xl font-bold text-foreground mb-4 leading-tight">
-                {t('touristasAI.title')}
+                Meet Touristas AI
               </h2>
               
               <p className="font-body text-lg text-muted-foreground mb-6">
-                {t('touristasAI.subtitle')}
+                Your personal travel assistant that understands exactly what you're looking for. Just tell us your preferences and let AI find your perfect match.
               </p>
             </div>
             
@@ -151,8 +149,8 @@ export default function FeaturedTouristasAI() {
                   <Zap className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-heading font-semibold text-foreground mb-1">{t('touristasAI.benefit1Title')}</h4>
-                  <p className="font-body text-sm text-muted-foreground">{t('touristasAI.benefit1Desc')}</p>
+                  <h4 className="font-heading font-semibold text-foreground mb-1">Instant Recommendations</h4>
+                  <p className="font-body text-sm text-muted-foreground">Get personalized hotel suggestions in seconds based on your preferences</p>
                 </div>
               </div>
               
@@ -161,8 +159,8 @@ export default function FeaturedTouristasAI() {
                   <Target className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-heading font-semibold text-foreground mb-1">{t('touristasAI.benefit2Title')}</h4>
-                  <p className="font-body text-sm text-muted-foreground">{t('touristasAI.benefit2Desc')}</p>
+                  <h4 className="font-heading font-semibold text-foreground mb-1">Perfect Matches</h4>
+                  <p className="font-body text-sm text-muted-foreground">AI analyzes your budget, location, and amenity preferences for ideal results</p>
                 </div>
               </div>
               
@@ -171,8 +169,8 @@ export default function FeaturedTouristasAI() {
                   <TrendingUp className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-heading font-semibold text-foreground mb-1">{t('touristasAI.benefit3Title')}</h4>
-                  <p className="font-body text-sm text-muted-foreground">{t('touristasAI.benefit3Desc')}</p>
+                  <h4 className="font-heading font-semibold text-foreground mb-1">Smart & Learning</h4>
+                  <p className="font-body text-sm text-muted-foreground">Gets better with each interaction, learning from what travelers love</p>
                 </div>
               </div>
             </div>
@@ -186,11 +184,11 @@ export default function FeaturedTouristasAI() {
                 className="w-full text-base shadow-elegant hover:shadow-elegant-lg transition-all duration-300 hover:scale-105"
               >
                 <Bot className="mr-2 h-5 w-5" />
-                {t('touristasAI.tryNow')}
+                Try Touristas AI Now
               </Button>
               
               <p className="text-center text-xs text-muted-foreground mt-3">
-                {t('touristasAI.tryNowSubtitle')}
+                Free to use • No registration required • Instant results
               </p>
             </div>
           </div>
