@@ -1,18 +1,7 @@
-console.log('[MAIN.TSX] 🚀 Starting main.tsx execution');
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-
-console.log('[MAIN.TSX] ✅ React imported successfully:', React);
-console.log('[MAIN.TSX] ✅ ReactDOM imported successfully:', ReactDOM);
-console.log('[MAIN.TSX] React available?', typeof React !== 'undefined');
-console.log('[MAIN.TSX] ReactDOM available?', typeof ReactDOM !== 'undefined');
-
 import App from './App.tsx';
-console.log('[MAIN.TSX] ✅ App imported successfully');
-
 import './index.css';
-console.log('[MAIN.TSX] ✅ CSS imported successfully');
 
 // Generate a unique version identifier for this build
 const buildVersion = `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
@@ -95,33 +84,19 @@ const addCachePreventionMeta = () => {
     window.mailerliteReady = true;
   `;
   document.head.appendChild(forceReload);
-  
-  console.log('Added cache prevention meta tags with build version:', buildVersion);
 };
 
 // Enhanced SSR detection
 const isSSR = typeof window === 'undefined' || import.meta.env.SSR;
 
 // Client-side rendering
-console.log('[MAIN.TSX] 🎯 Starting client-side rendering');
-console.log('[MAIN.TSX] isSSR:', isSSR);
-
 if (!isSSR) {
-  console.log('[MAIN.TSX] 📍 Looking for root element');
   const root = document.getElementById('root');
-  console.log('[MAIN.TSX] Root element found:', root);
   
   if (root) {
     // Add cache prevention meta tags
     addCachePreventionMeta();
     
-    // Initialize performance monitoring
-    if (process.env.NODE_ENV === 'production') {
-      console.log('Initializing performance monitoring');
-      // Here you would normally initialize real performance monitoring
-      // like Google Analytics, New Relic, etc.
-    }
-
     // Set initial scroll position
     window.scrollTo(0, 0);
     
@@ -130,22 +105,12 @@ if (!isSSR) {
       ? React.StrictMode 
       : React.Fragment;
     
-    console.log('[MAIN.TSX] 🎨 Creating React root and rendering App');
-    console.log('[MAIN.TSX] StrictModeWrapper:', StrictModeWrapper);
-    console.log('[MAIN.TSX] App component:', App);
-    
     ReactDOM.createRoot(root).render(
       <StrictModeWrapper>
         <App />
       </StrictModeWrapper>
     );
-    
-    console.log('[MAIN.TSX] ✅ Render complete');
-  } else {
-    console.error('[MAIN.TSX] ❌ Root element not found!');
   }
-} else {
-  console.log('[MAIN.TSX] ⚠️ SSR mode detected, skipping client render');
 }
 
 // For SSR, export the App component
