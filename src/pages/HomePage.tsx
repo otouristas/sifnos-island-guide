@@ -25,6 +25,10 @@ import WhyChooseUsSection from '@/components/home/WhyChooseUsSection';
 import LocalInsightsSection from '@/components/home/LocalInsightsSection';
 import TrendingNowSection from '@/components/home/TrendingNowSection';
 import SeasonalRecommendationsSection from '@/components/home/SeasonalRecommendationsSection';
+import StickyBookingWidget from '@/components/booking/StickyBookingWidget';
+import TrustBadges from '@/components/shared/TrustBadges';
+import ExitIntentPopup from '@/components/shared/ExitIntentPopup';
+import TouristasAIBanner from '@/components/shared/TouristasAIBanner';
 
 const quickLinks = [
   { to: '/hotels', label: 'All Hotels', icon: Building2 },
@@ -96,10 +100,21 @@ export default function HomePage() {
       {/* 1. Hero Section */}
       <HeroSection />
       
-      {/* 2. Featured Touristas AI */}
-      <FeaturedTouristasAI />
+      {/* 2. Trust Badges */}
+      <section className="py-12 bg-secondary/20">
+        <div className="max-w-[1400px] mx-auto px-6">
+          <TrustBadges />
+        </div>
+      </section>
 
-      {/* 3. Quick Actions Bar */}
+      {/* 3. Featured Touristas AI */}
+      <section className="py-16 bg-background">
+        <div className="max-w-[1400px] mx-auto px-6">
+          <TouristasAIBanner variant="inline" />
+        </div>
+      </section>
+
+      {/* 4. Quick Actions Bar */}
       <div className="bg-sifnos-deep-blue py-5">
         <div className="max-w-[1400px] mx-auto px-6">
           <div className="flex flex-wrap justify-center gap-3">
@@ -117,28 +132,28 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 4. Featured Hotels Carousel */}
+      {/* 5. Featured Hotels Carousel */}
       <FeaturedHotelsSection />
       
-      {/* 4.5. Trending Now Section */}
+      {/* 6. Trending Now Section */}
       <TrendingNowSection />
       
-      {/* 5. Discover Sifnos - Consolidated Locations */}
+      {/* 7. Discover Sifnos - Consolidated Locations */}
       <LocationsSection />
       
-      {/* 5.5. Local Insights Section */}
+      {/* 8. Local Insights Section */}
       <LocalInsightsSection />
       
-      {/* 5.6. Seasonal Recommendations */}
+      {/* 9. Seasonal Recommendations */}
       <SeasonalRecommendationsSection />
       
-      {/* 6. Hotel Categories - Consolidated */}
+      {/* 10. Hotel Categories - Consolidated */}
       <HotelTypesSection />
       
-      {/* 7. Why Book With Us + Social Proof */}
+      {/* 11. Why Book With Us + Social Proof */}
       <WhyChooseUsSection />
       
-      {/* 8. Travel Planning Hub + FAQ */}
+      {/* 12. Travel Planning Hub + FAQ */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-[1400px] mx-auto px-6">
           <div className="text-center mb-12">
@@ -255,6 +270,12 @@ export default function HomePage() {
           ]
         }}
       />
+      
+      {/* Sticky Booking Widget */}
+      <StickyBookingWidget />
+      
+      {/* Exit Intent Popup */}
+      <ExitIntentPopup />
     </>
   );
 }

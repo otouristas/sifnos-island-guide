@@ -110,6 +110,14 @@ const UnifiedHotelCard = ({ hotel, onSelect, className }: UnifiedHotelCardProps)
     }
   };
 
+  const getBookingUrl = () => {
+    if (hotel.source === 'agoda') {
+      return hotel.agoda_data?.landingURL || hotel.landing_url;
+    }
+    // Fallback to Booking.com search
+    return `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(hotel.name + ', Sifnos')}&aid=YOUR_AFFILIATE_ID`;
+  };
+
   const CardContent = () => (
     <Card className={`overflow-hidden hover:shadow-lg transition-shadow duration-300 group ${className || ''}`}>
       <div className="relative">

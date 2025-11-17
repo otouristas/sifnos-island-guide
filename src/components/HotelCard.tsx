@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { ExternalLink } from 'lucide-react';
 import { generateHotelUrl } from '@/lib/url-utils';
 import { getHotelTypeIcon } from './icons/HotelTypeIcons';
+import { Button } from '@/components/ui/button';
 import HotelImage from './hotel/HotelImage';
 import HotelLogo from './hotel/HotelLogo';
 import HotelDetails from './hotel/HotelDetails';
 import { determineHotelImageUrl, determineHotelLogoUrl } from '@/utils/image-utils';
-import FavoriteButton from './auth/FavoriteButton'; // Import FavoriteButton
+import FavoriteButton from './auth/FavoriteButton';
 
 // Define the HotelCard component that creates proper URLs
 const HotelCard = ({ hotel, showLogo = true, ...props }) => {
@@ -82,6 +84,26 @@ const HotelCard = ({ hotel, showLogo = true, ...props }) => {
           showLogo={showLogo}
         />
       </Link>
+      
+      {/* Booking.com Affiliate Button */}
+      <div className="px-4 pb-4">
+        <Button 
+          asChild
+          className="w-full bg-[#003580] hover:bg-[#002855] text-white"
+          size="sm"
+        >
+          <a 
+            href={`https://www.booking.com/searchresults.html?ss=${encodeURIComponent(hotel.name + ', Sifnos')}&aid=YOUR_AFFILIATE_ID`}
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            className="flex items-center justify-center gap-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ExternalLink className="h-4 w-4" />
+            Check Availability on Booking.com
+          </a>
+        </Button>
+      </div>
     </div>
   );
 };
