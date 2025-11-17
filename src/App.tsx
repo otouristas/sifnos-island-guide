@@ -1,4 +1,6 @@
+console.log('[APP.TSX] 🚀 Starting App.tsx module evaluation');
 import { Suspense, lazy, ReactNode } from "react";
+console.log('[APP.TSX] ✅ React hooks imported');
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,7 +12,9 @@ import CookieConsent from "./components/CookieConsent";
 import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "./lib/auth";
 import { TouristasProvider } from "./contexts/TouristasContext";
+console.log('[APP.TSX] 📦 About to import I18nProvider...');
 import { I18nProvider } from "./contexts/I18nContext";
+console.log('[APP.TSX] ✅ I18nProvider imported successfully');
 import TouristasChat from "./components/TouristasChat";
 import { TouristasToggle } from "./components/TouristasToggle";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -60,6 +64,8 @@ const DashboardSettings = lazy(() => import("./pages/dashboard/DashboardSettings
 const MyHotels = lazy(() => import("./pages/dashboard/MyHotels"));
 const FeaturedHotelsManagement = lazy(() => import("./pages/dashboard/FeaturedHotelsManagement"));
 const ResetPasswordPage = lazy(() => import("./pages/auth/ResetPasswordPage"));
+const SignInPage = lazy(() => import("./pages/auth/SignInPage"));
+const SignUpPage = lazy(() => import("./pages/auth/SignUpPage"));
 const AgodaTestPage = lazy(() => import('./pages/AgodaTestPage'));
 const AgodaDirectTestPage = lazy(() => import('./pages/AgodaDirectTestPage'));
 const HotelMatchingTestPage = lazy(() => import('./pages/HotelMatchingTestPage'));
@@ -76,7 +82,9 @@ const Requests = lazy(() => import("./components/guest/Requests").then(m => ({ d
 const AreaGuide = lazy(() => import("./components/guest/AreaGuide").then(m => ({ default: m.AreaGuide })));
 const GuestSettings = lazy(() => import("./components/guest/Settings"));
 
+console.log('[APP.TSX] 🎯 Creating QueryClient and components');
 const queryClient = new QueryClient();
+console.log('[APP.TSX] ✅ QueryClient created');
 
 // Layout wrapper to conditionally show navigation/footer
 const LayoutWrapper = ({ children }: { children: ReactNode }) => {
@@ -96,7 +104,9 @@ const LayoutWrapper = ({ children }: { children: ReactNode }) => {
   );
 };
 
-const App = () => (
+const App = () => {
+  console.log('[APP.TSX] 🎨 App component rendering');
+  return (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
@@ -166,6 +176,8 @@ const App = () => (
                   <Route path="/favorites" element={<FavoritesPage />} />
                   <Route path="/settings" element={<SettingsPage />} />
                   {/* Auth routes */}
+                  <Route path="/signin" element={<SignInPage />} />
+                  <Route path="/signup" element={<SignUpPage />} />
                   <Route path="/reset-password" element={<ResetPasswordPage />} />
                   <Route path="/agoda-test" element={<AgodaTestPage />} />
                   <Route path="/agoda-direct-test" element={<AgodaDirectTestPage />} />
@@ -204,6 +216,7 @@ const App = () => (
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 export default App;

@@ -127,6 +127,16 @@ export default function Footer() {
               <li><Link to="/privacy-policy" className="hover:text-white transition-colors">{t('footer.privacyPolicy')}</Link></li>
               <li><Link to="/terms-of-service" className="hover:text-white transition-colors">{t('footer.termsOfService')}</Link></li>
             </ul>
+            <h5 className="font-heading font-semibold mt-6 mb-3 text-sifnos-beige">{t('footer.forHotelOwners')}</h5>
+            <ul className="space-y-2 text-white/70 text-sm">
+              <li><Link to="/pricing" className="hover:text-white transition-colors">{t('footer.listYourHotel')}</Link></li>
+              <li><Link to="/hotel-owner/signup" className="hover:text-white transition-colors">{t('footer.ownerPortal')}</Link></li>
+            </ul>
+            <h5 className="font-heading font-semibold mt-6 mb-3 text-sifnos-beige">{t('footer.forGuests')}</h5>
+            <ul className="space-y-2 text-white/70 text-sm">
+              <li><Link to="/travel-guide" className="hover:text-white transition-colors">{t('footer.guestGuide')}</Link></li>
+              <li><Link to="/faq" className="hover:text-white transition-colors">{t('footer.howItWorks')}</Link></li>
+            </ul>
           </div>
         </div>
 
