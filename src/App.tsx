@@ -68,6 +68,7 @@ const GuestHome = lazy(() => import("./components/guest/GuestHome").then(m => ({
 const GuestGuide = lazy(() => import("./components/guest/GuestGuide").then(m => ({ default: m.GuestGuide })));
 const Requests = lazy(() => import("./components/guest/Requests").then(m => ({ default: m.Requests })));
 const AreaGuide = lazy(() => import("./components/guest/AreaGuide").then(m => ({ default: m.AreaGuide })));
+const GuestSettings = lazy(() => import("./components/guest/Settings"));
 
 const queryClient = new QueryClient();
 
@@ -127,7 +128,7 @@ const App = () => (
                     <Route path="guide" element={<GuestGuide />} />
                     <Route path="area" element={<AreaGuide />} />
                     <Route path="requests" element={<Requests />} />
-                    <Route path="settings" element={<div className="p-4 text-center text-muted-foreground">Settings - Coming Soon</div>} />
+                    <Route path="settings" element={<GuestSettings />} />
                   </Route>
 
                   {/* Main Site Routes */}
