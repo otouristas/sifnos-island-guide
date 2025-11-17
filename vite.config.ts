@@ -225,9 +225,8 @@ export default defineConfig(({ mode }) => ({
         manualChunks(id) {
           // Split vendor code into separate chunks
           if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
-              return 'react-vendor';
-            }
+            // Keep React, React-DOM, and React-Router in the main vendor chunk
+            // to ensure they're always available when contexts load
             if (id.includes('@supabase')) {
               return 'supabase';
             }
@@ -238,6 +237,10 @@ export default defineConfig(({ mode }) => ({
               return 'icons';
             }
             return 'vendor';
+          }
+          // Keep contexts in the main bundle to ensure React is loaded first
+          if (id.includes('src/contexts/')) {
+            return 'contexts';
           }
           // Split pages into separate chunks
           if (id.includes('src/pages/')) {
