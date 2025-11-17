@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import SEO from "./components/SEO";
 import SitemapGenerator from "./components/SitemapGenerator";
 import CookieConsent from "./components/CookieConsent";
@@ -62,7 +62,29 @@ const BestBeachesSifnosPage = lazy(() => import('./pages/BestBeachesSifnosPage')
 const LuxuryHotelsSifnosPage = lazy(() => import('./pages/LuxuryHotelsSifnosPage'));
 const TravelPackagesPage = lazy(() => import('./pages/TravelPackagesPage'));
 
+// Guest portal components
+const GuestShell = lazy(() => import("./components/guest/layout/GuestShell").then(m => ({ default: m.GuestShell })));
+const GuestHome = lazy(() => import("./components/guest/GuestHome").then(m => ({ default: m.GuestHome })));
+
 const queryClient = new QueryClient();
+
+// Layout wrapper to conditionally show navigation/footer
+const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
+  const location = useLocation();
+  const isGuestPortal = location.pathname.startsWith('/h/');
+  
+  return (
+    <>
+      {!isGuestPortal && <Navigation />}
+      {!isGuestPortal && <div className="h-14 md:h-[72px]" />}
+      {children}
+      {!isGuestPortal && <Footer />}
+      {!isGuestPortal && <CookieConsent />}
+      {!isGuestPortal && <TouristasToggle />}
+      {!isGuestPortal && <TouristasChat />}
+    </>
+  );
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -88,16 +110,24 @@ const App = () => (
         <BrowserRouter>
           <ErrorBoundary>
             <ScrollToTop />
-            <Navigation />
-            {/* Spacer for fixed header */}
-            <div className="h-14 md:h-[72px]" />
-            <main>
-              <Suspense fallback={
-                <div className="container mx-auto py-12 px-4">
-                  <LoadingSkeleton type="text" count={3} />
-                </div>
-              }>
-                <Routes>
+            <LayoutWrapper>
+              <main>
+                <Suspense fallback={
+                  <div className="container mx-auto py-12 px-4">
+                    <LoadingSkeleton type="text" count={3} />
+                  </div>
+                }>
+                  <Routes>
+                  {/* Guest Portal Routes */}
+                  <Route path="/h/:hotelSlug/g/:guestToken" element={<GuestShell />}>
+                    <Route index element={<GuestHome />} />
+                    <Route path="guide" element={<div className="p-4 text-center text-muted-foreground">Guest Guide - Coming Soon</div>} />
+                    <Route path="area" element={<div className="p-4 text-center text-muted-foreground">Area Guide - Coming Soon</div>} />
+                    <Route path="requests" element={<div className="p-4 text-center text-muted-foreground">Requests - Coming Soon</div>} />
+                    <Route path="settings" element={<div className="p-4 text-center text-muted-foreground">Settings - Coming Soon</div>} />
+                  </Route>
+
+                  {/* Main Site Routes */}
                   <Route path="/" element={<HomePage />} />
                   <Route path="/hotels" element={<HotelsPage />} />
                   {/* Hotel detail route */}
@@ -154,10 +184,7 @@ const App = () => (
                 </Routes>
               </Suspense>
             </main>
-            <Footer />
-            <CookieConsent />
-            <TouristasToggle />
-            <TouristasChat />
+            </LayoutWrapper>
           </ErrorBoundary>
         </BrowserRouter>
         </TouristasProvider>
