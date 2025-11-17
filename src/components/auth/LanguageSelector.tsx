@@ -7,6 +7,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useI18n, Language } from "@/contexts/I18nContext";
+import { useLanguageRouter } from "@/contexts/LanguageRouter";
 
 const languages: Array<{ code: Language; name: string; flag: string }> = [
   { code: "en", name: "English", flag: "🇬🇧" },
@@ -20,12 +21,16 @@ const languages: Array<{ code: Language; name: string; flag: string }> = [
 ];
 
 export const LanguageSelector = () => {
-  const { language, setLanguage } = useI18n();
+  const { language } = useI18n();
+  const { changeLanguage } = useLanguageRouter();
   const currentLang = languages.find(l => l.code === language) || languages[0];
 
   return (
-    <Select value={language} onValueChange={(value) => setLanguage(value as Language)}>
-      <SelectTrigger className="w-[140px] border-none bg-transparent hover:bg-accent/50 transition-colors">
+    <Select value={language} onValueChange={(value) => changeLanguage(value as Language)}>
+      <SelectTrigger 
+        className="w-[140px] border-none bg-transparent hover:bg-accent/50 transition-colors"
+        aria-label={`Select language - Current: ${currentLang.name}`}
+      >
         <Globe className="h-4 w-4 mr-2" />
         <SelectValue>
           <span className="mr-2">{currentLang.flag}</span>

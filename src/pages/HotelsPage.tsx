@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import FilterSidebar from '@/components/hotel/FilterSidebar';
 import CompareHotels from '@/components/hotel/CompareHotels';
 import LoadingSkeleton from '@/components/shared/LoadingSkeleton';
+import { generateHotelUrl } from '@/lib/url-utils';
 import { 
   Select, 
   SelectContent, 

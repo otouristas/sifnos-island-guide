@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import { Link } from 'react-router-dom';
-import { X, Send, MessageSquare } from 'lucide-react';
+import { X, Send, MessageSquare, Star, Copy, Share2, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useTouristas } from '@/contexts/TouristasContext';
@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { hotelTypes } from '@/data/hotelTypes';
 import { sifnosLocations } from '@/data/locations';
 import { determineHotelLogoUrl, determineHotelImageUrl } from '@/utils/image-utils';
+import { useToast } from '@/hooks/use-toast';
 
 interface Message {
   id: string;
@@ -35,8 +36,10 @@ export function TouristasChat() {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [allHotels, setAllHotels] = useState<HotelData[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
   // Fetch hotels on mount
   useEffect(() => {
@@ -64,6 +67,29 @@ export function TouristasChat() {
     fetchHotels();
   }, []);
 
+  // Load chat history from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('touristas-chat-history');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setMessages(parsed.map((msg: any) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp)
+        })));
+      } catch (e) {
+        console.error('Failed to load chat history');
+      }
+    }
+  }, []);
+
+  // Save messages to localStorage
+  useEffect(() => {
+    if (messages.length > 1) { // Don't save just greeting
+      localStorage.setItem('touristas-chat-history', JSON.stringify(messages));
+    }
+  }, [messages]);
+
   // Initial greeting when chat opens (supports pre-filled prompts)
   useEffect(() => {
     if (!isOpen) return;
@@ -71,14 +97,14 @@ export function TouristasChat() {
     if (messages.length === 0) {
       const greeting: Message = {
         id: Date.now().toString(),
-        content: "Welcome to Touristas AI! I'm your complete Sifnos travel expert. I can help you with:\n\n🏨 Hotels & Accommodation\n🚢 Ferries & Transportation\n🏖️ Beaches & Activities\n🍽️ Restaurants & Dining\n📍 Local Tips & Recommendations\n\nWhat would you like to know about Sifnos?",
+        content: "Welcome! I'm Touristas AI, your Sifnos travel assistant. I can help you with:\n\n• Hotels & Accommodation\n• Ferries & Transportation\n• Beaches & Activities\n• Restaurants & Dining\n• Local Tips & Recommendations\n\nWhat would you like to know about Sifnos?",
         sender: 'touristas',
         timestamp: new Date(),
         suggestions: ['Budget hotels', 'Luxury hotels', 'How to get to Sifnos', 'Best beaches']
       };
       setMessages([greeting]);
     }
-  }, [isOpen]);
+  }, [isOpen, messages.length]);
 
   // Handle initial prompt separately
   useEffect(() => {
@@ -325,7 +351,7 @@ export function TouristasChat() {
       
       const aiMessages = [
         ...messages.map(msg => ({
-          role: msg.sender === 'user' ? 'user' : 'assistant',
+          role: (msg.sender === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
           content: msg.content,
           id: msg.id
         })),
@@ -385,9 +411,24 @@ export function TouristasChat() {
 
     } catch (error) {
       console.error('Error calling AI:', error);
-      // Fallback to pattern matching if AI fails
-      const aiResponse = getAIResponse(textToSend);
-      setMessages(prev => [...prev, aiResponse]);
+      setError('Sorry, something went wrong. Please try again.');
+      
+      // Show error message in chat
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "I apologize, but I'm having trouble processing your request. Please try again or rephrase your question.",
+        sender: 'touristas',
+        timestamp: new Date(),
+        suggestions: ['Budget hotels', 'Luxury hotels', 'Best beaches', 'Show all hotels']
+      };
+      
+      setMessages(prev => [...prev, errorMessage]);
+      
+      toast({
+        title: "Error",
+        description: "Failed to process your request. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsTyping(false);
     }
@@ -397,74 +438,167 @@ export function TouristasChat() {
     handleSend(suggestion);
   };
 
+  const copyHotelDetails = (hotel: any) => {
+    const details = `${hotel.name}
+Location: ${hotel.location}
+Price: €${hotel.price}/night
+Rating: ${hotel.rating}/5
+${hotel.short_description || ''}`;
+    
+    navigator.clipboard.writeText(details);
+    toast({
+      title: "Copied!",
+      description: "Hotel details copied to clipboard",
+    });
+  };
+
+  const shareConversation = () => {
+    const conversationText = messages
+      .map(msg => `${msg.sender === 'user' ? 'You' : 'Touristas AI'}: ${msg.content}`)
+      .join('\n\n');
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'Touristas AI Conversation',
+        text: conversationText,
+      }).catch(() => {
+        // Fallback to clipboard
+        navigator.clipboard.writeText(conversationText);
+        toast({
+          title: "Copied!",
+          description: "Conversation copied to clipboard",
+        });
+      });
+    } else {
+      navigator.clipboard.writeText(conversationText);
+      toast({
+        title: "Copied!",
+        description: "Conversation copied to clipboard",
+      });
+    }
+  };
+
+  const clearHistory = () => {
+    const greeting: Message = {
+      id: Date.now().toString(),
+      content: "Welcome! I'm Touristas AI, your Sifnos travel assistant. I can help you with:\n\n• Hotels & Accommodation\n• Ferries & Transportation\n• Beaches & Activities\n• Restaurants & Dining\n• Local Tips & Recommendations\n\nWhat would you like to know about Sifnos?",
+      sender: 'touristas',
+      timestamp: new Date(),
+      suggestions: ['Budget hotels', 'Luxury hotels', 'How to get to Sifnos', 'Best beaches']
+    };
+    setMessages([greeting]);
+    localStorage.removeItem('touristas-chat-history');
+    toast({
+      title: "History cleared",
+      description: "Chat history has been cleared",
+    });
+  };
+
   if (!isOpen) {
     return null;
   }
 
   return (
-    <div className="fixed inset-0 sm:inset-auto sm:bottom-6 sm:right-6 w-full sm:w-[450px] h-full sm:h-[700px] z-50 animate-fade-in">
+    <div 
+      className="fixed inset-0 sm:inset-auto sm:bottom-6 sm:right-6 w-full sm:w-[450px] h-full sm:h-[700px] sm:max-h-[calc(100vh-3rem)] z-50 animate-fade-in"
+      role="complementary"
+      aria-label="Touristas AI Chat Assistant"
+    >
       <div className="h-full bg-background border-2 border-border rounded-none sm:rounded-2xl shadow-2xl flex flex-col">
         {/* Header */}
-        <div className="bg-primary text-primary-foreground px-6 py-4 rounded-t-none sm:rounded-t-2xl flex items-center justify-between border-b border-border">
+        <div 
+          className="bg-[#1E2E48] text-white px-4 sm:px-6 py-3 sm:py-4 rounded-t-none sm:rounded-t-2xl flex items-center justify-between border-b border-border"
+          role="banner"
+          aria-label="Chat header"
+        >
           <div>
-            <h3 className="font-heading font-bold text-xl">Touristas AI</h3>
-            <p className="text-xs text-primary-foreground/80">Your Sifnos Travel Assistant</p>
+            <h3 className="font-heading font-bold text-lg sm:text-xl">Touristas AI</h3>
+            <p className="text-xs text-white/80">Your Sifnos Travel Assistant</p>
           </div>
-          <Button
-            onClick={closeChat}
-            variant="ghost"
-            size="icon"
-            className="text-primary-foreground hover:bg-primary-foreground/10"
-            aria-label="Close chat"
-          >
-            <X className="h-6 w-6" />
-          </Button>
+          <div className="flex items-center gap-1 sm:gap-2">
+            <Button
+              onClick={shareConversation}
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/10 h-8 w-8 sm:h-10 sm:w-10"
+              aria-label="Share conversation"
+              title="Share conversation"
+            >
+              <Share2 className="h-4 w-4 sm:h-5 sm:w-5" />
+            </Button>
+            <Button
+              onClick={clearHistory}
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/10 h-8 w-8 sm:h-10 sm:w-10"
+              aria-label="Clear history"
+              title="Clear history"
+            >
+              <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" />
+            </Button>
+            <Button
+              onClick={closeChat}
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/10 h-8 w-8 sm:h-10 sm:w-10"
+              aria-label="Close chat"
+            >
+              <X className="h-5 w-5 sm:h-6 sm:w-6" />
+            </Button>
+          </div>
         </div>
 
         {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-muted/30">
+        <div 
+          className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-3 sm:space-y-4 bg-muted/30"
+          role="log"
+          aria-live="polite"
+          aria-label="Chat conversation"
+        >
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`flex gap-3 ${
+              className={`flex gap-2 sm:gap-3 ${
                 message.sender === 'user' ? 'flex-row-reverse' : ''
               }`}
+              role="article"
+              aria-label={`${message.sender === 'user' ? 'Your' : 'Touristas AI'} message`}
             >
               {/* Avatar */}
-              <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
+              <div className={`flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${
                 message.sender === 'touristas' 
-                  ? 'bg-primary text-primary-foreground' 
-                  : 'bg-accent text-accent-foreground'
+                  ? 'bg-[#1E2E48] text-white' 
+                  : 'bg-[#FFD700] text-[#1E2E48]'
               }`}>
                 {message.sender === 'touristas' ? (
-                  <MessageSquare className="h-5 w-5" />
+                  <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5" />
                 ) : (
-                  <span className="font-bold">U</span>
+                  <span className="font-bold text-sm">U</span>
                 )}
               </div>
 
               {/* Message Content */}
-              <div className="flex-1 space-y-3">
-                <div className={`rounded-xl px-4 py-3 ${
+              <div className="flex-1 space-y-2 sm:space-y-3 min-w-0">
+                <div className={`rounded-xl px-3 py-2 sm:px-4 sm:py-3 break-words ${
                   message.sender === 'touristas'
                     ? 'bg-background border border-border'
-                    : 'bg-secondary text-secondary-foreground'
+                    : 'bg-[#E3D7C3] text-[#1E2E48]'
                 }`}>
-                  <p className="text-sm leading-relaxed">{message.content}</p>
+                  <p className="text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
                 </div>
 
                 {/* Hotel Cards */}
                 {message.hotels && message.hotels.length > 0 && (
-                  <div className="space-y-3">
+                  <div className="space-y-2 sm:space-y-3">
                     {message.hotels.map((hotel) => (
                       <Link
                         key={hotel.id}
                         to={`/hotels/${hotel.name.toLowerCase().replace(/\s+/g, '-')}`}
                         onClick={closeChat}
-                        className="block bg-background border-2 border-border hover:border-accent rounded-xl p-3 transition-all duration-200 hover:shadow-lg group"
+                        className="block bg-background border-2 border-border hover:border-[#FFD700] rounded-lg sm:rounded-xl p-2 sm:p-3 transition-all duration-200 hover:shadow-lg group"
                       >
-                        <div className="flex gap-3">
-                          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-muted relative">
+                        <div className="flex gap-2 sm:gap-3">
+                          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-md sm:rounded-lg overflow-hidden flex-shrink-0 bg-muted relative">
                             {(() => {
                               // Try to get hotel logo first
                               const logoUrl = determineHotelLogoUrl(hotel);
@@ -518,14 +652,24 @@ export function TouristasChat() {
                             })()}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="font-heading font-bold text-sm text-foreground group-hover:text-accent transition-colors mb-1 truncate">
+                            <h4 className="font-bold text-sm sm:text-base text-foreground group-hover:text-[#1E2E48] truncate mb-1">
                               {hotel.name}
                             </h4>
-                            <p className="text-xs text-muted-foreground mb-2">{hotel.location}</p>
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm font-bold text-accent">€{hotel.price}/night</span>
-                              <span className="text-xs text-muted-foreground">★ {hotel.rating}</span>
+                            <p className="text-xs sm:text-sm text-muted-foreground truncate mb-1">{hotel.location}</p>
+                            <div className="flex items-center gap-1 sm:gap-2 mt-1">
+                              <span className="text-xs sm:text-sm font-bold text-[#1E2E48]">
+                                €{hotel.price}
+                              </span>
+                              <span className="text-xs text-muted-foreground">/night</span>
                             </div>
+                            {hotel.rating && (
+                              <div className="flex items-center gap-1 mt-1">
+                                <Star className="h-3 w-3 sm:h-3.5 sm:w-3.5 fill-[#FFD700] text-[#FFD700]" />
+                                <span className="text-xs sm:text-sm font-medium">
+                                  {hotel.rating.toFixed(1)}
+                                </span>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </Link>
@@ -535,12 +679,12 @@ export function TouristasChat() {
 
                 {/* Suggestion Chips */}
                 {message.suggestions && message.suggestions.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {message.suggestions.map((suggestion, idx) => (
                       <button
                         key={idx}
                         onClick={() => handleSuggestionClick(suggestion)}
-                        className="px-3 py-1.5 text-xs font-medium rounded-lg bg-background border border-border hover:border-accent hover:bg-accent/5 transition-colors"
+                        className="px-2 py-1 sm:px-3 sm:py-1.5 text-xs sm:text-sm bg-background border border-[#1E2E48] text-[#1E2E48] rounded-full hover:bg-[#1E2E48] hover:text-white transition-colors whitespace-nowrap"
                       >
                         {suggestion}
                       </button>
@@ -553,15 +697,15 @@ export function TouristasChat() {
 
           {/* Typing Indicator */}
           {isTyping && (
-            <div className="flex gap-3">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
-                <MessageSquare className="h-5 w-5" />
+            <div className="flex gap-2 sm:gap-3">
+              <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#1E2E48] text-white flex items-center justify-center">
+                <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
-              <div className="bg-background border border-border rounded-xl px-4 py-3">
+              <div className="bg-background border border-border rounded-xl px-3 py-2 sm:px-4 sm:py-3">
                 <div className="flex gap-1">
-                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" />
-                  <div className="w-2 h-2 bg-accent rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
-                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                  <div className="w-2 h-2 bg-[#1E2E48] rounded-full animate-bounce" />
+                  <div className="w-2 h-2 bg-[#1E2E48] rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
+                  <div className="w-2 h-2 bg-[#1E2E48] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
                 </div>
               </div>
             </div>
@@ -571,28 +715,35 @@ export function TouristasChat() {
         </div>
 
         {/* Input Area */}
-        <div className="p-4 border-t border-border bg-background rounded-b-none sm:rounded-b-2xl">
+        <div className="border-t border-border p-3 sm:p-4 bg-background rounded-b-none sm:rounded-b-2xl">
           <form
             onSubmit={(e) => {
               e.preventDefault();
               handleSend();
             }}
             className="flex gap-2"
+            role="search"
+            aria-label="Ask Touristas AI"
           >
             <Input
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about hotels in Sifnos..."
-              className="flex-1"
+              placeholder="Ask about hotels, beaches, or travel tips..."
+              className="flex-1 text-sm sm:text-base"
+              disabled={isTyping}
+              aria-label="Type your question here"
             />
-            <Button type="submit" size="icon" className="flex-shrink-0">
-              <Send className="h-4 w-4" />
+            <Button 
+              type="submit" 
+              size="icon"
+              className="bg-[#FFD700] hover:bg-[#FFD700]/90 text-[#1E2E48] flex-shrink-0"
+              disabled={isTyping || !input.trim()}
+              aria-label="Send message"
+            >
+              <Send className="h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
           </form>
-          <p className="text-xs text-center text-muted-foreground mt-2">
-            Powered by Touristas AI
-          </p>
         </div>
       </div>
     </div>

@@ -1,0 +1,800 @@
+PageSpeed Insights logo
+PageSpeed Insights
+Report from Nov 17, 2025, 11:17:26 AM
+https://hotelssifnos.com/
+Enter a valid URL
+
+
+smartphone
+Mobile
+
+computer
+Desktop
+
+Discover what your real users are experiencing
+No Data
+
+Diagnose performance issues
+58
+Performance
+77
+Accessibility
+96
+Best Practices
+92
+SEO
+58
+FCP
++0
+LCP
++0
+TBT
++30
+CLS
++25
+SI
++3
+Performance
+Values are estimated and may vary. The performance score is calculated directly from these metrics.See calculator.
+0–49
+50–89
+90–100
+Final Screenshot
+
+Metrics
+Expand view
+First Contentful Paint
+5.9 s
+Largest Contentful Paint
+23.3 s
+Total Blocking Time
+0 ms
+Cumulative Layout Shift
+0
+Speed Index
+7.3 s
+Captured at Nov 17, 2025, 11:17 AM GMT+2
+Emulated Moto G Power with Lighthouse 13.0.1
+Single page session
+Initial page load
+Slow 4G throttling
+Using HeadlessChromium 137.0.7151.119 with lr
+View Treemap
+Screenshot
+Screenshot
+Screenshot
+Screenshot
+Screenshot
+Screenshot
+Screenshot
+Screenshot
+Show audits relevant to:
+
+All
+
+FCP
+
+LCP
+
+TBT
+
+CLS
+Insights
+Use efficient cache lifetimes Est savings of 12,641 KiB
+A long cache lifetime can speed up repeat visits to your page. Learn more about caching.LCPFCPUnscored
+Request
+Cache TTL
+Transfer Size
+hotelssifnos.com 1st party
+12,639 KiB
+/sifnos-hero.jpg(hotelssifnos.com)
+None
+2,549 KiB
+/uploads/touristas-ai-logo.svg(hotelssifnos.com)
+None
+620 KiB
+/uploads/touristas-ai-logo.svg?v=176…-477(hotelssifnos.com)
+None
+620 KiB
+/uploads/touristas-ai-logo.svg?v=176…-344(hotelssifnos.com)
+None
+620 KiB
+/uploads/touristas-ai-logo.svg?v=176…-378(hotelssifnos.com)
+None
+620 KiB
+/uploads/touristas-ai-logo.svg?v=176…-643(hotelssifnos.com)
+None
+620 KiB
+…filadaki-studios/home-page_9151.jpg.jpeg?v=176…-566(hotelssifnos.com)
+None
+444 KiB
+…filadaki-studios/home-page_9151.jpg.jpeg?v=176…-329(hotelssifnos.com)
+None
+444 KiB
+…filadaki-studios/home-page_9151.jpg.jpeg?v=176…-728(hotelssifnos.com)
+None
+444 KiB
+…filadaki-studios/home-page_9151.jpg.jpeg?v=176…-228(hotelssifnos.com)
+None
+444 KiB
+…villa-olivia-clara/feature-image.jpeg?v=176…-599(hotelssifnos.com)
+None
+376 KiB
+…villa-olivia-clara/feature-image.jpeg?v=176…-274(hotelssifnos.com)
+None
+376 KiB
+…villa-olivia-clara/feature-image.jpeg?v=176…-231(hotelssifnos.com)
+None
+376 KiB
+…villa-olivia-clara/feature-image.jpeg?v=176…-20(hotelssifnos.com)
+None
+376 KiB
+…alk-hotel-sifnos/alk-hotel-feature.jpeg?v=176…-16(hotelssifnos.com)
+None
+349 KiB
+…alk-hotel-sifnos/alk-hotel-feature.jpeg?v=176…-572(hotelssifnos.com)
+None
+349 KiB
+…morpheas-pension/sifnos-accommodation.jpg.jpeg?v=176…-686(hotelssifnos.com)
+None
+243 KiB
+…morpheas-pension/sifnos-accommodation.jpg.jpeg?v=176…-85(hotelssifnos.com)
+None
+243 KiB
+…morpheas-pension/sifnos-accommodation.jpg.jpeg?v=176…-283(hotelssifnos.com)
+None
+243 KiB
+…morpheas-pension/sifnos-accommodation.jpg.jpeg?v=176…-638(hotelssifnos.com)
+None
+243 KiB
+/assets/index-B1-gBHpi.js(hotelssifnos.com)
+None
+211 KiB
+…beaches/apollonia.webp(hotelssifnos.com)
+None
+130 KiB
+…beaches/apollonia.webp?v=176…-840(hotelssifnos.com)
+None
+130 KiB
+…beaches/plats-gialos.webp(hotelssifnos.com)
+None
+123 KiB
+…beaches/plats-gialos.webp?v=176…-514(hotelssifnos.com)
+None
+123 KiB
+/assets/ui-lib-Brw2gD2o.js(hotelssifnos.com)
+None
+112 KiB
+…beaches/kastro.webp(hotelssifnos.com)
+None
+108 KiB
+…beaches/kastro.webp?v=176…-958(hotelssifnos.com)
+None
+108 KiB
+…beaches/faros.webp(hotelssifnos.com)
+None
+95 KiB
+…beaches/faros.webp?v=176…-249(hotelssifnos.com)
+None
+95 KiB
+…beaches/kamares.webp(hotelssifnos.com)
+None
+93 KiB
+…beaches/kamares.webp?v=176…-92(hotelssifnos.com)
+None
+93 KiB
+…beaches/vathi.webp(hotelssifnos.com)
+None
+91 KiB
+…beaches/vathi.webp?v=176…-236(hotelssifnos.com)
+None
+91 KiB
+…hotels/meropirooms-hero.webp?v=176…-208(hotelssifnos.com)
+None
+61 KiB
+…hotels/meropirooms-hero.webp?v=176…-441(hotelssifnos.com)
+None
+61 KiB
+…hotels/meropirooms-hero.webp?v=176…-444(hotelssifnos.com)
+None
+61 KiB
+…hotels/meropirooms-hero.webp?v=176…-38(hotelssifnos.com)
+None
+61 KiB
+/assets/react-ven….js(hotelssifnos.com)
+None
+52 KiB
+/assets/supabase-DBGI7_AU.js(hotelssifnos.com)
+None
+28 KiB
+/assets/index-DKXTcupQ.css(hotelssifnos.com)
+None
+21 KiB
+…morpheas-pension/logo.png?v=176…-503(hotelssifnos.com)
+None
+12 KiB
+…morpheas-pension/logo.png?v=176…-347(hotelssifnos.com)
+None
+12 KiB
+/assets/touristas-DSNTVh3m.js(hotelssifnos.com)
+None
+9 KiB
+…filadaki-studios/filadaki-logo.png?v=176…-885(hotelssifnos.com)
+None
+9 KiB
+…filadaki-studios/filadaki-logo.png?v=176…-753(hotelssifnos.com)
+None
+9 KiB
+/~flock.js(hotelssifnos.com)
+25m
+9 KiB
+…hotels/meropi-logo.svg?v=176…-104(hotelssifnos.com)
+None
+6 KiB
+…hotels/meropi-logo.svg?v=176…-383(hotelssifnos.com)
+None
+6 KiB
+…hotels/meropi-logo.svg?v=176…-425(hotelssifnos.com)
+None
+6 KiB
+…hotels/meropi-logo.svg?v=176…-996(hotelssifnos.com)
+None
+6 KiB
+…alk-hotel-sifnos/logo.png(hotelssifnos.com)
+None
+5 KiB
+…alk-hotel-sifnos/logo.png?v=176…-409(hotelssifnos.com)
+None
+5 KiB
+mailerlite.com
+15 KiB
+/js/universal.js(assets.mailerlite.com)
+5d
+14 KiB
+…1518896/forms?callback=ml.fn.renderPopupsAndPromotions(assets.mailerlite.com)
+3m
+1 KiB
+/css/universal.css(assets.mailerlite.com)
+5d
+1 KiB
+Render blocking requests Est savings of 470 ms
+Requests are blocking the page's initial render, which may delay LCP. Deferring or inlining can move these network requests out of the critical path.LCPFCPUnscored
+URL
+Transfer Size
+Duration
+hotelssifnos.com 1st party
+20.6 KiB	1,250 ms
+/assets/index-DKXTcupQ.css(hotelssifnos.com)
+20.6 KiB
+1,250 ms
+Google Fonts cdn 
+1.8 KiB	750 ms
+/css2?family=…(fonts.googleapis.com)
+1.8 KiB
+750 ms
+Improve image delivery Est savings of 3,290 KiB
+Reducing the download time of images can improve the perceived load time of the page and LCP. Learn more about optimizing image sizeLCPFCPUnscored
+URL
+Resource Size
+Est Savings
+hotelssifnos.com 1st party
+5,390.0 KiB	3,290.2 KiB
+main > section.relative > div.absolute > div.absolute
+<div class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image: url(&quot;/sifnos-hero.jpg&quot;);">
+/sifnos-hero.jpg(hotelssifnos.com)
+2,548.8 KiB
+595.7 KiB
+Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.
+595.7 KiB
+Filadaki Villas
+<img src="https://hotelssifnos.com/uploads/hotels/filadaki-studios/home-page_9151.jp…" alt="Filadaki Villas" class="w-full h-48 object-cover group-hover:scale-105 transition-transform durati…">
+…filadaki-studios/home-page_9151.jpg.jpeg?v=176…-728(hotelssifnos.com)
+443.4 KiB
+431.2 KiB
+Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.
+157.8 KiB
+This image file is larger than it needs to be (1861x943) for its displayed dimensions (391x192). Use responsive images to reduce the image download size.
+424.4 KiB
+Filadaki Villas
+<img src="https://hotelssifnos.com/uploads/hotels/filadaki-studios/home-page_9151.jp…" alt="Filadaki Villas" class="w-full h-full object-cover group-hover:scale-110 transition-transform dura…">
+…filadaki-studios/home-page_9151.jpg.jpeg?v=176…-228(hotelssifnos.com)
+443.4 KiB
+431.2 KiB
+Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.
+171.4 KiB
+This image file is larger than it needs to be (1772x943) for its displayed dimensions (391x192). Use responsive images to reduce the image download size.
+423.5 KiB
+Villa Olivia Clara
+<img src="https://hotelssifnos.com/uploads/hotels/villa-olivia-clara/feature-image.j…" alt="Villa Olivia Clara" class="w-full h-full object-cover group-hover:scale-110 transition-transform dura…">
+…villa-olivia-clara/feature-image.jpeg?v=176…-20(hotelssifnos.com)
+375.8 KiB
+366.5 KiB
+This image file is larger than it needs to be (2560x1366) for its displayed dimensions (360x240). Use responsive images to reduce the image download size.
+366.5 KiB
+Villa Olivia Clara
+<img src="https://hotelssifnos.com/uploads/hotels/villa-olivia-clara/feature-image.j…" alt="Villa Olivia Clara" class="w-full h-48 object-cover group-hover:scale-105 transition-transform durati…">
+…villa-olivia-clara/feature-image.jpeg?v=176…-231(hotelssifnos.com)
+375.8 KiB
+365.0 KiB
+This image file is larger than it needs to be (2560x1301) for its displayed dimensions (378x252). Use responsive images to reduce the image download size.
+365.0 KiB
+ALK HOTEL™
+<img src="https://hotelssifnos.com/uploads/hotels/alk-hotel-sifnos/alk-hotel-feature…" alt="ALK HOTEL™" class="w-full h-48 object-cover group-hover:scale-105 transition-transform durati…">
+…alk-hotel-sifnos/alk-hotel-feature.jpeg?v=176…-572(hotelssifnos.com)
+348.6 KiB
+333.1 KiB
+Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.
+80.8 KiB
+This image file is larger than it needs to be (1800x914) for its displayed dimensions (378x252). Use responsive images to reduce the image download size.
+328.4 KiB
+Morpheas Pension & Apartments
+<img src="https://hotelssifnos.com/uploads/hotels/morpheas-pension/sifnos-accommodat…" alt="Morpheas Pension &amp; Apartments" class="w-full h-full object-cover group-hover:scale-110 transition-transform dura…">
+…morpheas-pension/sifnos-accommodation.jpg.jpeg?v=176…-638(hotelssifnos.com)
+242.7 KiB
+231.2 KiB
+Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.
+113.7 KiB
+This image file is larger than it needs to be (1220x650) for its displayed dimensions (366x192). Use responsive images to reduce the image download size.
+221.2 KiB
+Morpheas Pension & Apartments
+<img src="https://hotelssifnos.com/uploads/hotels/morpheas-pension/sifnos-accommodat…" alt="Morpheas Pension &amp; Apartments" class="w-full h-48 object-cover group-hover:scale-105 transition-transform durati…">
+…morpheas-pension/sifnos-accommodation.jpg.jpeg?v=176…-283(hotelssifnos.com)
+242.7 KiB
+230.5 KiB
+Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.
+115.5 KiB
+This image file is larger than it needs to be (1240x630) for its displayed dimensions (378x198). Use responsive images to reduce the image download size.
+219.4 KiB
+Apollonia, Sifnos
+<img src="https://hotelssifnos.com/uploads/beaches/apollonia.webp?v=1763371049601-840" alt="Apollonia, Sifnos" class="w-full h-48 object-cover group-hover:scale-105 transition-transform durati…">
+…beaches/apollonia.webp?v=176…-840(hotelssifnos.com)
+129.2 KiB
+113.5 KiB
+Increasing the image compression factor could improve this image's download size.
+10.6 KiB
+This image file is larger than it needs to be (1200x607) for its displayed dimensions (380x253). Use responsive images to reduce the image download size.
+112.1 KiB
+Kamares, Sifnos
+<img src="https://hotelssifnos.com/uploads/beaches/kamares.webp?v=1763371049601-92" alt="Kamares, Sifnos" class="w-full h-48 object-cover group-hover:scale-105 transition-transform durati…">
+…beaches/kamares.webp?v=176…-92(hotelssifnos.com)
+92.4 KiB
+77.7 KiB
+Increasing the image compression factor could improve this image's download size.
+38.3 KiB
+This image file is larger than it needs to be (810x410) for its displayed dimensions (380x237). Use responsive images to reduce the image download size.
+67.3 KiB
+Meropi Rooms and Apartments
+<img src="https://hotelssifnos.com/uploads/hotels/meropirooms-hero.webp?v=1763371049…" alt="Meropi Rooms and Apartments" class="w-full h-full object-cover group-hover:scale-110 transition-transform dura…">
+…hotels/meropirooms-hero.webp?v=176…-38(hotelssifnos.com)
+61.0 KiB
+46.2 KiB
+This image file is larger than it needs to be (917x488) for its displayed dimensions (360x302). Use responsive images to reduce the image download size.
+46.2 KiB
+Meropi Rooms and Apartments
+<img src="https://hotelssifnos.com/uploads/hotels/meropirooms-hero.webp?v=1763371049…" alt="Meropi Rooms and Apartments" class="w-full h-48 object-cover group-hover:scale-105 transition-transform durati…">
+…hotels/meropirooms-hero.webp?v=176…-444(hotelssifnos.com)
+61.0 KiB
+43.9 KiB
+This image file is larger than it needs to be (917x467) for its displayed dimensions (378x317). Use responsive images to reduce the image download size.
+43.9 KiB
+Morpheas Pension & Apartments logo
+<img src="https://hotelssifnos.com/uploads/hotels/morpheas-pension/logo.png?v=176337…" alt="Morpheas Pension &amp; Apartments logo" class="h-8 w-auto object-contain">
+…morpheas-pension/logo.png?v=176…-347(hotelssifnos.com)
+11.6 KiB
+11.4 KiB
+This image file is larger than it needs to be (256x256) for its displayed dimensions (32x32). Use responsive images to reduce the image download size.
+11.4 KiB
+Filadaki Villas logo
+<img src="https://hotelssifnos.com/uploads/hotels/filadaki-studios/filadaki-logo.png…" alt="Filadaki Villas logo" class="h-8 w-auto object-contain">
+…filadaki-studios/filadaki-logo.png?v=176…-753(hotelssifnos.com)
+8.8 KiB
+8.4 KiB
+Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.
+7.4 KiB
+This image file is larger than it needs to be (149x60) for its displayed dimensions (79x32). Use responsive images to reduce the image download size.
+6.3 KiB
+ALK Hotel
+<img src="https://hotelssifnos.com/uploads/hotels/alk-hotel-sifnos/logo.png?v=176337…" alt="ALK Hotel" class="w-12 h-12 object-contain">
+…alk-hotel-sifnos/logo.png?v=176…-409(hotelssifnos.com)
+5.0 KiB
+4.7 KiB
+This image file is larger than it needs to be (150x120) for its displayed dimensions (48x38). Use responsive images to reduce the image download size.
+4.5 KiB
+Forced reflow
+A forced reflow occurs when JavaScript queries geometric properties (such as offsetWidth) after styles have been invalidated by a change to the DOM state. This can result in poor performance. Learn more about forced reflows and possible mitigations.Unscored
+Top function call
+Total reflow time
+/assets/react-ven….js:2:9454(hotelssifnos.com)
+39 ms
+Source
+Total reflow time
+/assets/index-B1-gBHpi.js:7:198121(hotelssifnos.com)
+39 ms
+LCP request discovery
+Optimize LCP by making the LCP image discoverable from the HTML immediately, and avoiding lazy-loadingLCPUnscored
+lazy load not applied
+fetchpriority=high should be applied
+Request is discoverable in initial document
+main > section.relative > div.absolute > div.absolute
+<div class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image: url(&quot;/sifnos-hero.jpg&quot;);">
+Network dependency tree
+Avoid chaining critical requests by reducing the length of chains, reducing the download size of resources, or deferring the download of unnecessary resources to improve page load.LCPUnscored
+Maximum critical path latency: 512 ms
+Initial Navigation
+https://hotelssifnos.com - 92 ms, 3.58 KiB
+/assets/index-DKXTcupQ.css(hotelssifnos.com) - 214 ms, 20.58 KiB
+/css2?family=…(fonts.googleapis.com) - 108 ms, 1.78 KiB
+…v20/UcC73FwrK….woff2(fonts.gstatic.com) - 511 ms, 48.09 KiB
+…v15/QGYvz_MVc….woff2(fonts.gstatic.com) - 512 ms, 32.27 KiB
+/assets/index-B1-gBHpi.js(hotelssifnos.com) - 346 ms, 211.42 KiB
+Preconnected origins
+preconnect hints help the browser establish a connection earlier in the page load, saving time when the first request for that origin is made. The following are the origins that the page preconnected to.
+no origins were preconnected
+Preconnect candidates
+Add preconnect hints to your most important origins, but try to use no more than 4.
+Origin
+Est LCP savings
+https://wdzlruiekcznbcicjgrz.supabase.co
+300 ms
+LCP breakdown
+Each subpart has specific improvement strategies. Ideally, most of the LCP time should be spent on loading the resources, not within delays.LCPUnscored
+Subpart
+Duration
+Time to first byte
+0 ms
+Resource load delay
+460 ms
+Resource load duration
+330 ms
+Element render delay
+1,530 ms
+main > section.relative > div.absolute > div.absolute
+<div class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image: url(&quot;/sifnos-hero.jpg&quot;);">
+3rd parties
+3rd party code can significantly impact load performance. Reduce and defer loading of 3rd party code to prioritize your page's content.Unscored
+3rd party
+Transfer size
+Main thread time
+Google Tag Manager tag-manager 
+262 KiB	125 ms
+/gtag/js?id=AW-170…(www.googletagmanager.com)
+120 KiB
+63 ms
+/gtag/js?id=G-5DCW2TRJKZ(www.googletagmanager.com)
+140 KiB
+62 ms
+…5ba0/sw_iframe.html?origin=https%3A%2F%2Fhotelssifnos.com(www.googletagmanager.com)
+2 KiB
+1 ms
+mailerlite.com
+15 KiB	3 ms
+/js/universal.js(assets.mailerlite.com)
+14 KiB
+3 ms
+…1518896/forms?callback=ml.fn.renderPopupsAndPromotions(assets.mailerlite.com)
+1 KiB
+0 ms
+/css/universal.css(assets.mailerlite.com)
+1 KiB
+0 ms
+Google/Doubleclick Ads ad 
+3 KiB	1 ms
+…viewthrou…/170…?random=…(googleads.g.doubleclick.net)
+3 KiB
+1 ms
+Google Fonts cdn 
+82 KiB	0 ms
+…v20/UcC73FwrK….woff2(fonts.gstatic.com)
+48 KiB
+0 ms
+…v15/QGYvz_MVc….woff2(fonts.gstatic.com)
+32 KiB
+0 ms
+/css2?family=…(fonts.googleapis.com)
+2 KiB
+0 ms
+Other Google APIs/SDKs utility 
+2 KiB	0 ms
+…1p-user-list/170…?random=…(www.google.nl)
+1 KiB
+0 ms
+…1p-user-list/170…?random=…(www.google.com)
+1 KiB
+0 ms
+/ccm/collect?frm=…(www.google.com)
+1 KiB
+0 ms
+Google Analytics analytics 
+1 KiB	0 ms
+/g/collect?v=…(www.google-analytics.com)
+1 KiB
+0 ms
+supabase.co
+16 KiB	0 ms
+…v1/hotels?select=…(wdzlruiekcznbcicjgrz.supabase.co)
+6 KiB
+0 ms
+…v1/hotels?select=…(wdzlruiekcznbcicjgrz.supabase.co)
+5 KiB
+0 ms
+…v1/hotels?select=…(wdzlruiekcznbcicjgrz.supabase.co)
+2 KiB
+0 ms
+…v1/hotels?select=…(wdzlruiekcznbcicjgrz.supabase.co)
+2 KiB
+0 ms
+…v1/hotels?select=…(wdzlruiekcznbcicjgrz.supabase.co)
+1 KiB
+0 ms
+These insights are also available in the Chrome DevTools Performance Panel - record a trace to view more detailed information.
+Diagnostics
+Reduce unused JavaScript Est savings of 326 KiB
+Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity. Learn how to reduce unused JavaScript.LCPFCPUnscored
+URL
+Transfer Size
+Est Savings
+hotelssifnos.com 1st party
+349.4 KiB	228.0 KiB
+/assets/index-B1-gBHpi.js(hotelssifnos.com)
+210.3 KiB
+137.6 KiB
+/assets/ui-lib-Brw2gD2o.js(hotelssifnos.com)
+111.7 KiB
+69.8 KiB
+/assets/supabase-DBGI7_AU.js(hotelssifnos.com)
+27.5 KiB
+20.6 KiB
+Google Tag Manager tag-manager 
+258.8 KiB	97.6 KiB
+/gtag/js?id=G-5DCW2TRJKZ(www.googletagmanager.com)
+139.5 KiB
+54.5 KiB
+/gtag/js?id=AW-170…(www.googletagmanager.com)
+119.4 KiB
+43.2 KiB
+Reduce unused CSS Est savings of 16 KiB
+Reduce unused rules from stylesheets and defer CSS not used for above-the-fold content to decrease bytes consumed by network activity. Learn how to reduce unused CSS.LCPFCPUnscored
+URL
+Transfer Size
+Est Savings
+hotelssifnos.com 1st party
+20.1 KiB	15.6 KiB
+/assets/index-DKXTcupQ.css(hotelssifnos.com)
+20.1 KiB
+15.6 KiB
+Image elements do not have explicit width and height
+Set an explicit width and height on image elements to reduce layout shifts and improve CLS. Learn how to set image dimensionsCLSUnscored
+URL
+hotelssifnos.com 1st party
+Morpheas Pension & Apartments logo
+<img src="https://hotelssifnos.com/uploads/hotels/morpheas-pension/logo.png?v=176337…" alt="Morpheas Pension &amp; Apartments logo" class="h-8 w-auto object-contain">
+…morpheas-pension/logo.png?v=176…-347(hotelssifnos.com)
+Meropi Rooms and Apartments logo
+<img src="https://hotelssifnos.com/uploads/hotels/meropi-logo.svg?v=1763371049601-996" alt="Meropi Rooms and Apartments logo" class="h-8 w-auto object-contain">
+…hotels/meropi-logo.svg?v=176…-996(hotelssifnos.com)
+Filadaki Villas logo
+<img src="https://hotelssifnos.com/uploads/hotels/filadaki-studios/filadaki-logo.png…" alt="Filadaki Villas logo" class="h-8 w-auto object-contain">
+…filadaki-studios/filadaki-logo.png?v=176…-753(hotelssifnos.com)
+Avoid enormous network payloads Total size was 13,030 KiB
+Large network payloads cost users real money and are highly correlated with long load times. Learn how to reduce payload sizes.Unscored
+URL
+Transfer Size
+hotelssifnos.com 1st party
+7,424.4 KiB
+/sifnos-hero.jpg(hotelssifnos.com)
+2,549.2 KiB
+/uploads/touristas-ai-logo.svg(hotelssifnos.com)
+620.0 KiB
+/uploads/touristas-ai-logo.svg?v=176…-344(hotelssifnos.com)
+620.0 KiB
+/uploads/touristas-ai-logo.svg?v=176…-378(hotelssifnos.com)
+620.0 KiB
+/uploads/touristas-ai-logo.svg?v=176…-477(hotelssifnos.com)
+620.0 KiB
+/uploads/touristas-ai-logo.svg?v=176…-643(hotelssifnos.com)
+620.0 KiB
+…filadaki-studios/home-page_9151.jpg.jpeg?v=176…-566(hotelssifnos.com)
+443.8 KiB
+…filadaki-studios/home-page_9151.jpg.jpeg?v=176…-329(hotelssifnos.com)
+443.8 KiB
+…filadaki-studios/home-page_9151.jpg.jpeg?v=176…-228(hotelssifnos.com)
+443.8 KiB
+…filadaki-studios/home-page_9151.jpg.jpeg?v=176…-728(hotelssifnos.com)
+443.8 KiB
+Avoid long main-thread tasks 1 long task found
+Lists the longest tasks on the main thread, useful for identifying worst contributors to input delay. Learn how to avoid long main-thread tasksTBTUnscored
+URL
+Start Time
+Duration
+hotelssifnos.com 1st party
+64 ms
+/assets/react-ven….js(hotelssifnos.com)
+5,281 ms
+64 ms
+More information about the performance of your application. These numbers don't directly affect the Performance score.
+Passed audits (14)
+Show
+77
+Accessibility
+These checks highlight opportunities to improve the accessibility of your web app. Automatic detection can only detect a subset of issues and does not guarantee the accessibility of your web app, so manual testing is also encouraged.
+Names and labels
+Buttons do not have an accessible name
+When a button doesn't have an accessible name, screen readers announce it as "button", making it unusable for users who rely on screen readers. Learn how to make buttons more accessible.
+Failing Elements
+🇬🇧
+<button type="button" role="combobox" aria-controls="radix-:r1:" aria-expanded="false" aria-autocomplete="none" dir="ltr" data-state="closed" class="flex h-10 items-center justify-between rounded-md border border-input px-3…">
+div.fixed > div.bg-white > div.flex > button.text-gray-400
+<button class="text-gray-400 hover:text-gray-600">
+Form elements do not have associated labels
+Labels ensure that form controls are announced properly by assistive technologies, like screen readers. Learn more about form element labels.
+Failing Elements
+form.bg-white > div.grid > div.flex > input.h-12
+<input type="date" class="h-12 rounded-lg px-4 text-sm bg-white border border-gray-300 text-sifnos-d…" value="">
+form.bg-white > div.grid > div.flex > input.h-12
+<input type="date" class="h-12 rounded-lg px-4 text-sm bg-white border border-gray-300 text-sifnos-d…" value="">
+form.bg-white > div.grid > div.flex > input.h-12
+<input type="number" min="1" max="10" class="h-12 rounded-lg px-4 text-sm bg-white border border-gray-300 text-sifnos-d…" value="2">
+Select elements do not have associated label elements.
+Form elements without effective labels can create frustrating experiences for screen reader users. Learn more about the select element.
+Failing Elements
+Anywhere in Sifnos Kamares Platis Gialos Apollonia Vathi Faros
+<select class="h-12 rounded-lg px-4 text-sm bg-white border border-gray-300 text-sifnos-d…">
+Links do not have a discernible name
+Link text (and alternate text for images, when used as links) that is discernible, unique, and focusable improves the navigation experience for screen reader users. Learn how to make links accessible.
+Failing Elements
+div.grid > div > div.flex > a.text-white/70
+<a href="#" class="text-white/70 hover:text-sifnos-beige transition-colors">
+div.grid > div > div.flex > a.text-white/70
+<a href="#" class="text-white/70 hover:text-sifnos-beige transition-colors">
+div.grid > div > div.flex > a.text-white/70
+<a href="#" class="text-white/70 hover:text-sifnos-beige transition-colors">
+div.grid > div > div.flex > a.text-white/70
+<a href="#" class="text-white/70 hover:text-sifnos-beige transition-colors">
+Image elements do not have [alt] attributes that are redundant text.
+Informative elements should aim for short, descriptive alternative text. Alternative text that is exactly the same as the text adjacent to the link or image is potentially confusing for screen reader users, because the text will be read twice. Learn more about the alt attribute.Unscored
+Failing Elements
+Touristas AI
+<img src="https://hotelssifnos.com/uploads/touristas-ai-logo.svg?v=1763371049601-643" alt="Touristas AI" class="h-6 w-6 mr-2">
+These are opportunities to improve the semantics of the controls in your application. This may enhance the experience for users of assistive technology, like a screen reader.
+Contrast
+Background and foreground colors do not have a sufficient contrast ratio.
+Low-contrast text is difficult or impossible for many users to read. Learn how to provide sufficient color contrast.
+Failing Elements
+Local Partner
+<div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-se…">
+Premium
+<div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-se…">
+Local Sifnos hotel
+<span>
+Local Partner Premium Meropi Rooms and Apartments Kamares Contact for Rates D…
+<div class="rounded-lg border bg-card text-card-foreground overflow-hidden hover:shado…">
+Trending Now
+<span class="text-sm font-semibold text-orange-600">
+Trending Now
+<div class="inline-flex items-center gap-2 px-4 py-2 bg-orange-100 rounded-full mb-4">
+Trending
+<div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-se…">
+Trending
+<div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-se…">
+Trending
+<div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-se…">
+Trending
+<div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-se…">
+These are opportunities to improve the legibility of your content.
+Navigation
+Heading elements are not in a sequentially-descending order
+Properly ordered headings that do not skip levels convey the semantic structure of the page, making it easier to navigate and understand when using assistive technologies. Learn more about heading order.
+Failing Elements
+Kamares
+<h3 class="text-lg font-bold text-white mb-1">
+Instant Recommendations
+<h4 class="font-heading font-semibold text-foreground mb-1">
+These are opportunities to improve keyboard navigation in your application.
+Additional items to manually check (10)
+Show
+These items address areas which an automated testing tool cannot cover. Learn more in our guide on conducting an accessibility review.
+Passed audits (20)
+Hide
+[aria-*] attributes match their roles
+[aria-hidden="true"] is not present on the document <body>
+[role]s have all required [aria-*] attributes
+[role] values are valid
+[aria-*] attributes have valid values
+[aria-*] attributes are valid and not misspelled
+Image elements have [alt] attributes
+[user-scalable="no"] is not used in the <meta name="viewport"> element and the [maximum-scale] attribute is not less than 5.
+ARIA attributes are used as specified for the element's role
+[aria-hidden="true"] elements do not contain focusable descendents
+Elements use only permitted ARIA attributes
+Document has a <title> element
+<html> element has a [lang] attribute
+<html> element has a valid value for its [lang] attribute
+Lists contain only <li> elements and script supporting elements (<script> and <template>).
+List items (<li>) are contained within <ul>, <ol> or <menu> parent elements
+No element has a [tabindex] value greater than 0
+Touch targets have sufficient size and spacing.
+Document has a main landmark.
+Deprecated ARIA roles were not used
+Not applicable (33)
+Show
+96
+Best Practices
+General
+Browser errors were logged to the console
+Missing source maps for large first-party JavaScript
+Trust and Safety
+Ensure CSP is effective against XSS attacks
+A strong Content Security Policy (CSP) significantly reduces the risk of cross-site scripting (XSS) attacks. Learn how to use a CSP to prevent XSSUnscored
+Description
+Directive
+Severity
+No CSP found in enforcement mode
+High
+Use a strong HSTS policy
+Deployment of the HSTS header significantly reduces the risk of downgrading HTTP connections and eavesdropping attacks. A rollout in stages, starting with a low max-age is recommended. Learn more about using a strong HSTS policy.Unscored
+Description
+Directive
+Severity
+No `preload` directive found
+preload
+Medium
+Ensure proper origin isolation with COOP
+The Cross-Origin-Opener-Policy (COOP) can be used to isolate the top-level window from other documents such as pop-ups. Learn more about deploying the COOP header.Unscored
+Description
+Directive
+Severity
+No COOP header found
+High
+Mitigate clickjacking with XFO or CSP
+The X-Frame-Options (XFO) header or the frame-ancestors directive in the Content-Security-Policy (CSP) header control where a page can be embedded. These can mitigate clickjacking attacks by blocking some or all sites from embedding the page. Learn more about mitigating clickjacking.Unscored
+Description
+Severity
+No frame control policy found
+High
+Mitigate DOM-based XSS with Trusted Types
+The require-trusted-types-for directive in the Content-Security-Policy (CSP) header instructs user agents to control the data passed to DOM XSS sink functions. Learn more about mitigating DOM-based XSS with Trusted Types.Unscored
+Description
+Severity
+No `Content-Security-Policy` header with Trusted Types directive found
+High
+Passed audits (11)
+Show
+Not applicable (2)
+Show
+92
+SEO
+These checks ensure that your page is following basic search engine optimization advice. There are many additional factors Lighthouse does not score here that may affect your search ranking, including performance on Core Web Vitals. Learn more about Google Search Essentials.
+Content Best Practices
+Links do not have descriptive text 1 link found
+Descriptive link text helps search engines understand your content. Learn how to make links more accessible.
+Link destination
+Link Text
+hotelssifnos.com 1st party
+/privacy-policy(hotelssifnos.com)
+Learn more
+Format your HTML in a way that enables crawlers to better understand your app’s content.
+Additional items to manually check (1)
+Show
+Run these additional validators on your site to check additional SEO best practices.
+Passed audits (9)
+Show
+More on PageSpeed Insights
+What's new
+Documentation
+Learn about Web Performance
+Ask questions on Stack Overflow
+Mailing list
+Related Content
+Updates
+Web Fundamentals
+Case Studies
+Podcasts
+Connect
+Twitter
+Youtube
+Google Developers Logo
+Chrome
+Firebase
+All products
+Terms and Privacy Policy
+For details, see the Google Developers Site Policies.

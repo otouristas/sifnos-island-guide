@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
 import SponsoredHotelCard from '@/components/SponsoredHotelCard';
@@ -14,6 +14,7 @@ import {
   BookOpenCheck,
   Bot,
 } from 'lucide-react';
+import { useI18n } from '@/contexts/I18nContext';
 
 // Import our component sections
 import HeroSection from '@/components/home/HeroSection';
@@ -26,48 +27,50 @@ import LocalInsightsSection from '@/components/home/LocalInsightsSection';
 import TrendingNowSection from '@/components/home/TrendingNowSection';
 import SeasonalRecommendationsSection from '@/components/home/SeasonalRecommendationsSection';
 
-const quickLinks = [
-  { to: '/hotels', label: 'All Hotels', icon: Building2 },
-  { to: '/hotel-types/luxury-hotels', label: 'Luxury Hotels', icon: Sparkles },
-  { to: '/hotel-types/villas', label: 'Private Villas', icon: Home },
-  { to: '/hotel-types/beach-hotels', label: 'Beach Hotels', icon: Waves },
-  { to: '/ferry-tickets', label: 'Ferry Tickets', icon: Ship },
-  { to: '/where-to-stay-sifnos', label: 'Where to Stay', icon: MapPin },
-];
-
-const planningLinks = [
-  {
-    to: '/ferry-tickets',
-    title: 'Ferry Tickets',
-    description: 'Book your ferry to Sifnos with best prices',
-    icon: Ship,
-  },
-  {
-    to: '/best-beaches-sifnos-guide',
-    title: 'Beach Guide',
-    description: 'Discover the best beaches & coastal hotels',
-    icon: Waves,
-  },
-  {
-    to: '/travel-guide',
-    title: 'Travel Guide',
-    description: 'Complete guide to attractions & activities',
-    icon: BookOpenCheck,
-  },
-  {
-    to: '/touristas-ai',
-    title: 'AI Assistant',
-    description: 'Get personalized recommendations',
-    icon: Bot,
-  },
-];
-
 export default function HomePage() {
+  const { t } = useI18n();
+  
+  const quickLinks = useMemo(() => ([
+    { to: '/hotels', label: t('quickLinks.allHotels'), icon: Building2 },
+    { to: '/hotel-types/luxury-hotels', label: t('quickLinks.luxuryHotels'), icon: Sparkles },
+    { to: '/hotel-types/villas', label: t('quickLinks.villas'), icon: Home },
+    { to: '/hotel-types/beach-hotels', label: t('quickLinks.beachHotels'), icon: Waves },
+    { to: '/ferry-tickets', label: t('quickLinks.ferryTickets'), icon: Ship },
+    { to: '/where-to-stay-sifnos', label: t('quickLinks.whereToStay'), icon: MapPin },
+  ]), [t]);
+
+  const planningLinks = useMemo(() => ([
+    {
+      to: '/ferry-tickets',
+      title: t('planning.ferryTicketsTitle'),
+      description: t('planning.ferryTicketsDesc'),
+      icon: Ship,
+    },
+    {
+      to: '/best-beaches-sifnos-guide',
+      title: t('planning.beachGuideTitle'),
+      description: t('planning.beachGuideDesc'),
+      icon: Waves,
+    },
+    {
+      to: '/travel-guide',
+      title: t('planning.travelGuideTitle'),
+      description: t('planning.travelGuideDesc'),
+      icon: BookOpenCheck,
+    },
+    {
+      to: '/touristas-ai',
+      title: t('planning.aiAssistantTitle'),
+      description: t('planning.aiAssistantDesc'),
+      icon: Bot,
+    },
+  ]), [t]);
+  
   return (
     <>
       <SEO 
-        title="Sifnos Hotels 2026: Boutique Stays, Villas & Beach Resorts"
-        description="Discover authentic Sifnos hotels, from luxury villas with pools to family-friendly beach resorts. Expert local guides + best rates. Book your Cycladic escape."
+        title={t('meta.homepageTitle')}
+        description={t('meta.homepageDescription')}
         keywords={[
           'sifnos hotels 2026', 'sifnos villas 2026', 'best sifnos hotels', 
           'luxury sifnos resorts', 'sifnos accommodation', 'sifnos boutique hotels',
@@ -86,7 +89,7 @@ export default function HomePage() {
         data={{
           breadcrumbs: [
             {
-              name: "Home",
+              name: t('common.home'),
               item: "https://hotelssifnos.com/"
             }
           ]
@@ -143,10 +146,10 @@ export default function HomePage() {
         <div className="max-w-[1400px] mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-heading font-bold text-sifnos-deep-blue mb-4">
-              Plan Your Perfect Sifnos Trip
+              {t('planning.title')}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Everything you need for an unforgettable island experience
+              {t('planning.subtitle')}
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
@@ -168,58 +171,58 @@ export default function HomePage() {
           {/* FAQ Accordion - SEO Optimized for Featured Snippets */}
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-heading font-bold text-sifnos-deep-blue mb-8 text-center">
-              Frequently Asked Questions
+              {t('faq.title')}
             </h2>
             <div className="space-y-4">
               <details className="group bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
                 <summary className="flex items-center justify-between cursor-pointer font-semibold text-sifnos-deep-blue text-lg">
-                  <h3>What is the best area to stay in Sifnos?</h3>
+                  <h3>{t('faq.q1')}</h3>
                   <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
                 </summary>
                 <p className="mt-4 text-gray-700 leading-relaxed">
-                  The best area to stay in Sifnos depends on your travel style. <Link to="/locations/platis-gialos" className="text-sifnos-deep-blue hover:underline font-medium">Platis Gialos</Link> offers the longest beach with family-friendly hotels. <Link to="/locations/apollonia" className="text-sifnos-deep-blue hover:underline font-medium">Apollonia</Link> provides central access and nightlife. <Link to="/locations/artemonas" className="text-sifnos-deep-blue hover:underline font-medium">Artemonas</Link> attracts couples seeking elegant village atmosphere. <Link to="/locations/kamares" className="text-sifnos-deep-blue hover:underline font-medium">Kamares</Link> suits travelers wanting port convenience.
+                  {t('faq.a1')}
                 </p>
               </details>
               <details className="group bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
                 <summary className="flex items-center justify-between cursor-pointer font-semibold text-sifnos-deep-blue text-lg">
-                  <h3>How many days do you need in Sifnos?</h3>
+                  <h3>{t('faq.q2')}</h3>
                   <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
                 </summary>
                 <p className="mt-4 text-gray-700 leading-relaxed">
-                  Most travelers need 3-4 days in Sifnos to experience the island properly. This allows time to visit the best beaches (Platis Gialos, Kamares, Vathi), explore historic villages (Kastro, Apollonia), enjoy the renowned food scene, and take a pottery workshop.
+                  {t('faq.a2')}
                 </p>
               </details>
               <details className="group bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
                 <summary className="flex items-center justify-between cursor-pointer font-semibold text-sifnos-deep-blue text-lg">
-                  <h3>Is Sifnos expensive?</h3>
+                  <h3>{t('faq.q3')}</h3>
                   <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
                 </summary>
                 <p className="mt-4 text-gray-700 leading-relaxed">
-                  Sifnos offers accommodation for all budgets. Budget hotels start around €40-€80 per night, mid-range options range €80-€150, while luxury hotels and villas cost €200-€500+ per night. Dining costs €25-€80 per day depending on preferences. Overall, Sifnos is more affordable than Mykonos or Santorini.
+                  {t('faq.a3')}
                 </p>
               </details>
               <details className="group bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
                 <summary className="flex items-center justify-between cursor-pointer font-semibold text-sifnos-deep-blue text-lg">
-                  <h3>When is the best time to visit Sifnos?</h3>
+                  <h3>{t('faq.q4')}</h3>
                   <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
                 </summary>
                 <p className="mt-4 text-gray-700 leading-relaxed">
-                  The best time to visit Sifnos is from May to October when the weather is warm and ideal for swimming. July and August are peak months with higher temperatures and crowds. For a more peaceful experience with pleasant weather, consider visiting in June or September when the sea is still warm but the crowds have thinned out.
+                  {t('faq.a4')}
                 </p>
               </details>
               <details className="group bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
                 <summary className="flex items-center justify-between cursor-pointer font-semibold text-sifnos-deep-blue text-lg">
-                  <h3>How do I get to Sifnos from Athens?</h3>
+                  <h3>{t('faq.q5')}</h3>
                   <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
                 </summary>
                 <p className="mt-4 text-gray-700 leading-relaxed">
-                  Sifnos is accessible by ferry from Piraeus port in Athens. The journey takes approximately 2.5 to 5 hours depending on the type of ferry (high-speed or conventional). There is no airport on Sifnos, so sea travel is the only option. <Link to="/ferry-tickets" className="text-sifnos-deep-blue hover:underline font-medium">Book ferry tickets</Link> in advance during peak season.
+                  {t('faq.a5')}
                 </p>
               </details>
             </div>
             <div className="text-center mt-10">
               <Link to="/faq" className="inline-flex items-center gap-2 px-8 py-4 border-2 border-sifnos-deep-blue text-sifnos-deep-blue rounded-xl hover:bg-sifnos-deep-blue hover:text-white transition-all duration-300 font-semibold text-lg hover:-translate-y-1 shadow-lg hover:shadow-xl">
-                View All FAQs
+                {t('faq.viewAllFaqs')}
                 <span className="text-xl">→</span>
               </Link>
             </div>
@@ -233,24 +236,24 @@ export default function HomePage() {
         data={{
           faq: [
             {
-              question: 'What is the best area to stay in Sifnos?',
-              answer: 'The best area to stay in Sifnos depends on your travel style. Platis Gialos offers the longest beach with family-friendly hotels. Apollonia provides central access and nightlife. Artemonas attracts couples seeking elegant village atmosphere. Kamares suits travelers wanting port convenience.'
+              question: t('faq.q1'),
+              answer: t('faq.a1')
             },
             {
-              question: 'How many days do you need in Sifnos?',
-              answer: 'Most travelers need 3-4 days in Sifnos to experience the island properly. This allows time to visit the best beaches (Platis Gialos, Kamares, Vathi), explore historic villages (Kastro, Apollonia), enjoy the renowned food scene, and take a pottery workshop.'
+              question: t('faq.q2'),
+              answer: t('faq.a2')
             },
             {
-              question: 'Is Sifnos expensive?',
-              answer: 'Sifnos offers accommodation for all budgets. Budget hotels start around €40-€80 per night, mid-range options range €80-€150, while luxury hotels and villas cost €200-€500+ per night. Dining costs €25-€80 per day depending on preferences. Overall, Sifnos is more affordable than Mykonos or Santorini.'
+              question: t('faq.q3'),
+              answer: t('faq.a3')
             },
             {
-              question: 'When is the best time to visit Sifnos?',
-              answer: 'The best time to visit Sifnos is from May to October when the weather is warm and ideal for swimming. July and August are peak months with higher temperatures and crowds. For a more peaceful experience with pleasant weather, consider visiting in June or September when the sea is still warm but the crowds have thinned out.'
+              question: t('faq.q4'),
+              answer: t('faq.a4')
             },
             {
-              question: 'How do I get to Sifnos from Athens?',
-              answer: 'Sifnos is accessible by ferry from Piraeus port in Athens. The journey takes approximately 2.5 to 5 hours depending on the type of ferry (high-speed or conventional). There is no airport on Sifnos, so sea travel is the only option. Book ferry tickets in advance during peak season.'
+              question: t('faq.q5'),
+              answer: t('faq.a5')
             }
           ]
         }}

@@ -403,7 +403,7 @@ export default function LocationPage() {
                       to={`/best-beaches-sifnos-guide#${beach.slug}`}
                       className="text-sifnos-deep-blue text-sm font-medium hover:underline mt-2 inline-block"
                     >
-                      Learn more →
+                      View {beach.name} Beach Details →
                     </Link>
                   )}
                 </div>

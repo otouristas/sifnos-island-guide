@@ -1,6 +1,6 @@
+import { MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTouristas } from '@/contexts/TouristasContext';
-import TouristasLogo from '@/components/TouristasLogo';
 
 export function TouristasToggle() {
   const { isOpen, openChat } = useTouristas();
@@ -13,10 +13,13 @@ export function TouristasToggle() {
     <Button
       onClick={openChat}
       size="lg"
-      className="fixed bottom-6 right-6 z-50 shadow-2xl rounded-full h-14 px-6 gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
+      className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 shadow-2xl rounded-full h-12 sm:h-14 px-4 sm:px-6 gap-2 bg-[#1E2E48] hover:bg-[#1E2E48]/90 text-white"
+      aria-label="Open Touristas AI chat assistant"
     >
-      <TouristasLogo size="md" className="mr-2" />
-      <span className="font-heading font-bold">Touristas AI</span>
+      <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6" />
+      <span className="font-heading font-bold text-sm sm:text-base hidden xs:inline">
+        Touristas AI
+      </span>
     </Button>
   );
 }

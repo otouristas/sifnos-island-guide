@@ -24,13 +24,83 @@
     "sifnosIsland": "Île de Sifnos",
     "greece": "Grèce",
     "viewMap": "Voir la Carte",
-    "more": "plus"
+    "more": "plus",
+    "search": "Rechercher",
+    "guests": "Invités",
+    "location": "Emplacement",
+    "checkIn": "Arrivée",
+    "checkOut": "Départ"
   },
   "homepage": {
-    "heroTitle": "Découvrez Votre Séjour Parfait à Sifnos",
-    "heroSubtitle": "Hôtels, villas et hébergements authentiques soigneusement sélectionnés sur ce joyau des Cyclades",
+    "heroTitle": "Votre Séjour",
+    "heroTitle2": "Parfait à Sifnos",
+    "heroTitle3": "Vous Attend",
+    "heroSubtitle": "Découvrez des hôtels et villas soigneusement sélectionnés à Sifnos – luxe boutique, escapades en bord de mer et séjours adaptés aux familles pour 2026",
     "askTouristasAI": "Demander à Touristas AI",
-    "browseAllHotels": "Parcourir Tous les Hôtels"
+    "browseAllHotels": "Parcourir Tous les Hôtels",
+    "badge": "Séjours Cycladiques Sélectionnés",
+    "locationAny": "N'importe où à Sifnos",
+    "locationKamares": "Kamares",
+    "locationPlatisGialos": "Platis Gialos",
+    "locationApollonia": "Apollonia",
+    "locationVathi": "Vathi",
+    "locationFaros": "Faros",
+    "guarantee1": "Hôtels et villas sélectionnés uniquement",
+    "guarantee2": "Recommandations indépendantes et honnêtes",
+    "guarantee3": "Réservation sécurisée via des partenaires de confiance",
+    "signatureLocation1Title": "Kamares",
+    "signatureLocation1Desc": "Port du coucher de soleil & eaux calmes",
+    "signatureLocation2Title": "Platis Gialos",
+    "signatureLocation2Desc": "Restaurants en bord de mer & suites",
+    "signatureLocation3Title": "Apollonia",
+    "signatureLocation3Desc": "Culture cycladique & vie nocturne"
+  },
+  "whyChoose": {
+    "title": "Pourquoi Choisir Hotels Sifnos",
+    "subtitle": "Votre partenaire de confiance pour des expériences authentiques sur les îles grecques",
+    "feature1Title": "Garantie du Meilleur Prix",
+    "feature1Desc": "Comparez les prix sur plusieurs plateformes et obtenez les meilleures offres disponibles",
+    "feature1Stat": "100%",
+    "feature1StatLabel": "Égalisation de Prix",
+    "feature2Title": "Recherche Alimentée par IA",
+    "feature2Desc": "Recommandations intelligentes adaptées à vos préférences et votre style de voyage",
+    "feature2Stat": "95%",
+    "feature2StatLabel": "Précision",
+    "feature3Title": "Avis Vérifiés",
+    "feature3Desc": "Commentaires authentiques de vrais voyageurs ayant séjourné dans nos hôtels partenaires",
+    "feature3Stat": "5 000+",
+    "feature3StatLabel": "Avis",
+    "feature4Title": "Support 24/7",
+    "feature4Desc": "Assistance locale experte chaque fois que vous avez besoin d'aide pour planifier votre voyage",
+    "feature4Stat": "< 2h",
+    "feature4StatLabel": "Temps de Réponse",
+    "badge1": "Hôtels Répertoriés",
+    "badge2": "Voyageurs Satisfaits",
+    "badge3": "Pays Atteints",
+    "badge4": "Années d'Expérience"
+  },
+  "seo": {
+    "title": "Trouvez Votre Séjour Parfait à Sifnos",
+    "intro1": "Sifnos, avec ses villages blancs éblouissants, ses plages dorées et sa riche tradition culinaire, est l'une des îles les plus enchanteresses des Cyclades. Trouver l'hébergement parfait est essentiel pour découvrir tout ce que ce paradis grec a à offrir, et HotelsSifnos se consacre à vous aider à faire ce choix parfait.",
+    "intro2": "Nous vous invitons à parcourir nos hôtels soigneusement sélectionnés, à comparer les caractéristiques et les prix, et à réserver en toute confiance en sachant que notre équipe a personnellement vérifié la qualité et l'exactitude des informations que nous fournissons. Votre",
+    "intro2Link": "escapade parfaite à Sifnos",
+    "intro2End": "commence ici !",
+    "linkAllHotels": "Voir Tous les Hôtels de Sifnos",
+    "linkLuxury": "Hébergements de Luxe",
+    "linkBeach": "Hôtels de Plage",
+    "linkBudget": "Options Économiques"
+  },
+  "hotelTypes": {
+    "title": "Trouvez Votre Hébergement Parfait à Sifnos",
+    "intro": "Que vous recherchiez un",
+    "introLuxury": "hôtel de luxe",
+    "introLuxuryDesc": "avec une vue imprenable sur la mer, une",
+    "introBoutique": "charmante propriété boutique",
+    "introBoutiqueDesc": "dans un village traditionnel, ou un",
+    "introFamily": "complexe familial",
+    "introFamilyDesc": "avec des installations pour enfants, nos",
+    "introListings": "listes d'hôtels",
+    "introListingsDesc": "complètes couvrent toute la gamme d'hébergements disponibles sur l'île."
   },
   "footer": {
     "poweredBy": "alimenté par",
@@ -44,16 +114,11 @@
     "listYourHotel": "Inscrivez Votre Hôtel",
     "privacyPolicy": "Politique de Confidentialité",
     "termsOfService": "Conditions d'Utilisation",
-    "allRightsReserved": "Tous droits réservés"
-  },
-  "common": {
-    "review": "Avis",
-    "reviews": "avis",
-    "basedOn": "basé sur",
-    "sifnosIsland": "Île de Sifnos",
-    "greece": "Grèce",
-    "viewMap": "Voir la Carte",
-    "more": "plus"
+    "allRightsReserved": "Tous droits réservés",
+    "contactInfo": "Coordonnées",
+    "email": "Email",
+    "phone": "Téléphone",
+    "hours": "Support 24/7 Disponible"
   },
   "hotel": {
     "viewMoreImages": "Voir Plus d'Images",
@@ -81,7 +146,18 @@
     "bookNow": "Réserver Maintenant",
     "close": "Fermer",
     "previous": "Précédent",
-    "next": "Suivant"
+    "next": "Suivant",
+    "perNight": "par nuit",
+    "from": "À partir de",
+    "readReviews": "Lire les Avis",
+    "seeAllPhotos": "Voir Toutes les Photos"
+  },
+  "meta": {
+    "defaultTitle": "Hotels Sifnos - Trouvez les Meilleurs Hôtels de l'Île de Sifnos, Grèce",
+    "defaultDescription": "Découvrez les meilleurs hôtels de Sifnos avec notre sélection de complexes de luxe, séjours boutique et villas en bord de mer. Comparez les installations, consultez les photos, lisez les avis vérifiés et réservez directement avec des tarifs en ligne exclusifs.",
+    "hotelsPageTitle": "Tous les Hôtels à Sifnos | Comparez et Réservez les Meilleurs Hébergements",
+    "hotelsPageDescription": "Parcourez tous les hôtels, villas et hébergements à Sifnos. Filtrez par emplacement, prix, équipements et notes pour trouver votre séjour parfait.",
+    "hotelDetailTitle": "{{hotelName}} - Hôtel Sifnos | Photos, Avis et Meilleurs Tarifs",
+    "hotelDetailDescription": "{{hotelName}} à {{location}}, Sifnos. Consultez les photos, lisez les avis des clients, vérifiez les équipements et réservez au meilleur prix. {{rating}} étoiles notées par les voyageurs."
   }
 }
-

@@ -220,11 +220,44 @@ export default defineConfig(({ mode }) => ({
     },
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-lib': ['@/components/ui/index'],
-          'supabase': ['@supabase/supabase-js'],
-          'touristas': ['@/components/touristas/index']
+        manualChunks(id) {
+          // Vendor chunks
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
+              return 'react-vendor';
+            }
+            if (id.includes('@supabase')) {
+              return 'supabase';
+            }
+            if (id.includes('@tanstack/react-query')) {
+              return 'react-query';
+            }
+            if (id.includes('lucide-react')) {
+              return 'icons';
+            }
+            // All other node_modules
+            return 'vendor';
+          }
+          
+          // UI components
+          if (id.includes('/components/ui/')) {
+            return 'ui-components';
+          }
+          
+          // Dashboard pages
+          if (id.includes('/pages/dashboard/')) {
+            return 'dashboard';
+          }
+          
+          // Touristas AI
+          if (id.includes('/components/touristas/') || id.includes('TouristasChat')) {
+            return 'touristas';
+          }
+          
+          // Hotel components
+          if (id.includes('/components/hotel/')) {
+            return 'hotel-components';
+          }
         },
         // Fixed file naming pattern by removing the [time] placeholder
         entryFileNames: mode === 'production' ? 'assets/[name]-[hash].js' : 'assets/[name].js',

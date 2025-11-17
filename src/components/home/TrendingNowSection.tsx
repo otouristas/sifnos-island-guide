@@ -7,10 +7,12 @@ import { Badge } from '@/components/ui/badge';
 import { generateHotelUrl } from '@/lib/url-utils';
 import { determineHotelLogoUrl } from '@/utils/image-utils';
 import { getHotelImageUrl } from '@/utils/hotel-utils';
+import { useI18n } from '@/contexts/I18nContext';
 
 export default function TrendingNowSection() {
   const [trendingHotels, setTrendingHotels] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useI18n();
 
   useEffect(() => {
     const fetchTrendingHotels = async () => {
@@ -44,22 +46,22 @@ export default function TrendingNowSection() {
       <div className="max-w-[1400px] mx-auto px-6">
         <div className="flex items-center justify-between mb-12">
           <div>
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-100 rounded-full mb-4">
-              <TrendingUp className="h-5 w-5 text-orange-600" />
-              <span className="text-sm font-semibold text-orange-600">Trending Now</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-600 rounded-full mb-4">
+              <TrendingUp className="h-5 w-5 text-white" />
+              <span className="text-sm font-semibold text-white">{t('trending.badge')}</span>
             </div>
             <h2 className="text-4xl md:text-5xl font-heading font-bold text-sifnos-deep-blue mb-2">
-              Popular Hotels This Season
+              {t('trending.title')}
             </h2>
             <p className="text-lg text-gray-600">
-              These are the most searched and booked hotels in Sifnos right now
+              {t('trending.subtitle')}
             </p>
           </div>
           <Link 
             to="/hotels"
             className="hidden md:block text-sifnos-deep-blue hover:text-sifnos-turquoise font-semibold"
           >
-            View All →
+            {t('trending.viewAllArrow')} →
           </Link>
         </div>
 
@@ -79,7 +81,7 @@ export default function TrendingNowSection() {
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute top-3 right-3">
-                      <Badge className="bg-orange-500 text-white">
+                      <Badge className="bg-orange-600 text-white font-semibold">
                         <TrendingUp size={12} className="mr-1" />
                         Trending
                       </Badge>
@@ -129,7 +131,7 @@ export default function TrendingNowSection() {
             to="/hotels"
             className="inline-flex items-center gap-2 px-8 py-4 border-2 border-sifnos-deep-blue text-sifnos-deep-blue rounded-xl hover:bg-sifnos-deep-blue hover:text-white transition-all duration-300 font-semibold text-lg"
           >
-            Browse All Hotels
+            {t('trending.viewAll')}
             <span className="text-xl">→</span>
           </Link>
         </div>

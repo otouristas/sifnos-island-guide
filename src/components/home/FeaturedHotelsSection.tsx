@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase, logSupabaseResponse } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -13,87 +13,48 @@ import {
 } from '@/components/ui/carousel';
 import UnifiedHotelCard from '@/components/UnifiedHotelCard';
 import { Sparkles, Waves, Home, Users, Building2, Wallet } from 'lucide-react';
-
-const filterOptions = [
-  { id: 'all', label: 'All Hotels', icon: Home },
-  { id: 'luxury', label: 'Luxury', icon: Sparkles },
-  { id: 'beach', label: 'Beach', icon: Waves },
-  { id: 'villas', label: 'Villas', icon: Building2 },
-  { id: 'family', label: 'Family', icon: Users },
-  { id: 'budget', label: 'Budget', icon: Wallet },
-];
+import { useI18n } from '@/contexts/I18nContext';
 
 export default function FeaturedHotelsSection() {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('all');
   const { toast } = useToast();
+  const { t } = useI18n();
+  
+  const filterOptions = useMemo(() => ([
+    { id: 'all', label: t('featuredHotels.filterAll'), icon: Home },
+    { id: 'luxury', label: t('featuredHotels.filterLuxury'), icon: Sparkles },
+    { id: 'beach', label: t('featuredHotels.filterBeach'), icon: Waves },
+    { id: 'villas', label: t('featuredHotels.filterVillas'), icon: Building2 },
+    { id: 'family', label: t('featuredHotels.filterFamily'), icon: Users },
+    { id: 'budget', label: t('featuredHotels.filterBudget'), icon: Wallet },
+  ]), [t]);
 
   useEffect(() => {
     const fetchHotels = async () => {
       try {
         setLoading(true);
-        const now = new Date().toISOString();
         
-        // Query featured hotels first, then fallback to top-rated
-        const { data: featuredData, error: featuredError } = await supabase
+        // Query top-rated hotels (featured field doesn't exist in schema)
+        const { data, error } = await supabase
           .from('hotels')
           .select(`
             *,
             hotel_amenities(amenity),
             hotel_photos(id, photo_url, is_main_photo)
           `)
-          .eq('is_featured', true)
-          .order('featured_priority', { ascending: false })
           .order('rating', { ascending: false })
-          .limit(20); // Get more to filter by dates
-        
-        // Filter by date range in JavaScript
-        const nowDate = new Date(now);
-        const validFeaturedHotels = (featuredData || []).filter(hotel => {
-          const startDate = hotel.featured_start_date ? new Date(hotel.featured_start_date) : null;
-          const endDate = hotel.featured_end_date ? new Date(hotel.featured_end_date) : null;
-          
-          // Hotel is valid if:
-          // - No start date OR start date <= now
-          // - AND no end date OR end date >= now
-          const validStart = !startDate || startDate <= nowDate;
-          const validEnd = !endDate || endDate >= nowDate;
-          
-          return validStart && validEnd;
-        }).slice(0, 12);
-        
-        let data = validFeaturedHotels;
-        let error = featuredError;
-        
-        // If no featured hotels or not enough, supplement with top-rated
-        if (!error && (!data || data.length < 12)) {
-          const { data: topRatedData, error: topRatedError } = await supabase
-            .from('hotels')
-            .select(`
-              *,
-              hotel_amenities(amenity),
-              hotel_photos(id, photo_url, is_main_photo)
-            `)
-            .order('rating', { ascending: false })
-            .limit(12 - (data?.length || 0));
-          
-          if (!topRatedError && topRatedData) {
-            // Combine featured and top-rated, avoiding duplicates
-            const featuredIds = new Set((data || []).map(h => h.id));
-            const additionalHotels = topRatedData.filter(h => !featuredIds.has(h.id));
-            data = [...(data || []), ...additionalHotels].slice(0, 12);
-          }
-        }
+          .limit(12);
         
         if (error) throw error;
         
         logSupabaseResponse('fetch featured hotels', data, error);
         
-        // Process hotels - mark featured ones
+        // Process hotels
         const processedHotels = data?.map(hotel => ({
           ...hotel,
-          isSponsored: hotel.is_featured || false,
+          isSponsored: false,
           source: 'local'
         })) || [];
         
@@ -129,7 +90,7 @@ export default function FeaturedHotelsSection() {
         <div className="container mx-auto px-4">
           <div className="text-center">
             <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
-            <p className="mt-4 text-muted-foreground">Loading featured hotels...</p>
+            <p className="mt-4 text-muted-foreground">{t('featuredHotels.loadingText')}</p>
           </div>
         </div>
       </section>
@@ -143,13 +104,13 @@ export default function FeaturedHotelsSection() {
         <div className="text-center mb-12">
           <Badge variant="outline" className="mb-4 px-4 py-1.5 text-sm font-medium border-sifnos-beige/30">
             <Sparkles className="h-3.5 w-3.5 mr-1.5 text-sifnos-beige" />
-            Curated Selection
+            {t('featuredHotels.badge')}
           </Badge>
           <h2 className="text-4xl md:text-5xl font-heading font-bold text-sifnos-deep-blue mb-4">
-            Discover Our Handpicked Collection
+            {t('featuredHotels.title')}
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Carefully selected hotels, villas, and apartments for your perfect Sifnos escape
+            {t('featuredHotels.subtitle')}
           </p>
         </div>
 
@@ -216,7 +177,7 @@ export default function FeaturedHotelsSection() {
               size="lg" 
               className="gap-2 bg-sifnos-deep-blue text-white hover:bg-sifnos-deep-blue/90 px-8 py-6 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
             >
-              View All {filteredHotels.length}+ Hotels
+              {t('featuredHotels.viewAll', { count: filteredHotels.length.toString() })}
               <span className="text-xl">→</span>
             </Button>
           </Link>

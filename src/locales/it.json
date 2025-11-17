@@ -24,13 +24,83 @@
     "sifnosIsland": "Isola di Sifnos",
     "greece": "Grecia",
     "viewMap": "Vedi Mappa",
-    "more": "più"
+    "more": "più",
+    "search": "Cerca",
+    "guests": "Ospiti",
+    "location": "Posizione",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out"
   },
   "homepage": {
-    "heroTitle": "Scopri il Tuo Soggiorno Perfetto a Sifnos",
-    "heroSubtitle": "Hotel, ville e alloggi autentici selezionati con cura in questo gioiello delle Cicladi",
+    "heroTitle": "Il Tuo Soggiorno",
+    "heroTitle2": "Perfetto a Sifnos",
+    "heroTitle3": "Ti Aspetta",
+    "heroSubtitle": "Scopri hotel e ville selezionati con cura a Sifnos – lusso boutique, fughe sul mare e soggiorni per famiglie per il 2026",
     "askTouristasAI": "Chiedi a Touristas AI",
-    "browseAllHotels": "Sfoglia Tutti gli Hotel"
+    "browseAllHotels": "Sfoglia Tutti gli Hotel",
+    "badge": "Soggiorni Cicladici Selezionati",
+    "locationAny": "Ovunque a Sifnos",
+    "locationKamares": "Kamares",
+    "locationPlatisGialos": "Platis Gialos",
+    "locationApollonia": "Apollonia",
+    "locationVathi": "Vathi",
+    "locationFaros": "Faros",
+    "guarantee1": "Solo hotel e ville selezionati",
+    "guarantee2": "Raccomandazioni indipendenti e oneste",
+    "guarantee3": "Prenotazione sicura tramite partner fidati",
+    "signatureLocation1Title": "Kamares",
+    "signatureLocation1Desc": "Porto del tramonto e acque calme",
+    "signatureLocation2Title": "Platis Gialos",
+    "signatureLocation2Desc": "Ristoranti sul mare e suite",
+    "signatureLocation3Title": "Apollonia",
+    "signatureLocation3Desc": "Cultura cicladica e vita notturna"
+  },
+  "whyChoose": {
+    "title": "Perché Scegliere Hotels Sifnos",
+    "subtitle": "Il tuo partner di fiducia per autentiche esperienze nelle isole greche",
+    "feature1Title": "Garanzia del Miglior Prezzo",
+    "feature1Desc": "Confronta i prezzi su più piattaforme e ottieni le migliori offerte disponibili",
+    "feature1Stat": "100%",
+    "feature1StatLabel": "Corrispondenza Prezzi",
+    "feature2Title": "Ricerca Potenziata dall'IA",
+    "feature2Desc": "Raccomandazioni intelligenti su misura per le tue preferenze e il tuo stile di viaggio",
+    "feature2Stat": "95%",
+    "feature2StatLabel": "Precisione",
+    "feature3Title": "Recensioni Verificate",
+    "feature3Desc": "Feedback autentico da veri viaggiatori che hanno soggiornato nei nostri hotel partner",
+    "feature3Stat": "5.000+",
+    "feature3StatLabel": "Recensioni",
+    "feature4Title": "Supporto 24/7",
+    "feature4Desc": "Assistenza locale esperta ogni volta che hai bisogno di aiuto per pianificare il tuo viaggio",
+    "feature4Stat": "< 2h",
+    "feature4StatLabel": "Tempo di Risposta",
+    "badge1": "Hotel Elencati",
+    "badge2": "Viaggiatori Felici",
+    "badge3": "Paesi Raggiunti",
+    "badge4": "Anni di Esperienza"
+  },
+  "seo": {
+    "title": "Trova il Tuo Soggiorno Perfetto a Sifnos",
+    "intro1": "Sifnos, con i suoi splendidi villaggi bianchi, le spiagge dorate e la ricca tradizione culinaria, è una delle isole più incantevoli delle Cicladi. Trovare la sistemazione perfetta è essenziale per vivere tutto ciò che questo paradiso greco ha da offrire, e HotelsSifnos è dedicato ad aiutarti a fare quella scelta perfetta.",
+    "intro2": "Ti invitiamo a sfogliare i nostri hotel accuratamente selezionati, a confrontare caratteristiche e prezzi, e a prenotare con fiducia sapendo che il nostro team ha verificato personalmente la qualità e l'accuratezza delle informazioni che forniamo. La tua",
+    "intro2Link": "fuga perfetta a Sifnos",
+    "intro2End": "inizia qui!",
+    "linkAllHotels": "Vedi Tutti gli Hotel di Sifnos",
+    "linkLuxury": "Sistemazioni di Lusso",
+    "linkBeach": "Hotel sulla Spiaggia",
+    "linkBudget": "Opzioni Economiche"
+  },
+  "hotelTypes": {
+    "title": "Trova la Tua Sistemazione Perfetta a Sifnos",
+    "intro": "Che tu stia cercando un",
+    "introLuxury": "hotel di lusso",
+    "introLuxuryDesc": "con vista mozzafiato sul mare, una",
+    "introBoutique": "affascinante proprietà boutique",
+    "introBoutiqueDesc": "in un villaggio tradizionale, o un",
+    "introFamily": "resort per famiglie",
+    "introFamilyDesc": "con strutture per bambini, i nostri",
+    "introListings": "elenchi di hotel",
+    "introListingsDesc": "completi coprono l'intera gamma di sistemazioni disponibili sull'isola."
   },
   "footer": {
     "poweredBy": "alimentato da",
@@ -44,7 +114,11 @@
     "listYourHotel": "Inserisci il Tuo Hotel",
     "privacyPolicy": "Informativa sulla Privacy",
     "termsOfService": "Termini di Servizio",
-    "allRightsReserved": "Tutti i diritti riservati"
+    "allRightsReserved": "Tutti i diritti riservati",
+    "contactInfo": "Informazioni di Contatto",
+    "email": "Email",
+    "phone": "Telefono",
+    "hours": "Supporto 24/7 Disponibile"
   },
   "hotel": {
     "viewMoreImages": "Vedi Altre Immagini",
@@ -72,7 +146,18 @@
     "bookNow": "Prenota Ora",
     "close": "Chiudi",
     "previous": "Precedente",
-    "next": "Successivo"
+    "next": "Successivo",
+    "perNight": "a notte",
+    "from": "Da",
+    "readReviews": "Leggi Recensioni",
+    "seeAllPhotos": "Vedi Tutte le Foto"
+  },
+  "meta": {
+    "defaultTitle": "Hotels Sifnos - Trova i Migliori Hotel dell'Isola di Sifnos, Grecia",
+    "defaultDescription": "Scopri i migliori hotel di Sifnos con la nostra selezione di resort di lusso, soggiorni boutique e ville sul mare. Confronta le strutture, visualizza le foto, leggi le recensioni verificate e prenota direttamente con tariffe online esclusive.",
+    "hotelsPageTitle": "Tutti gli Hotel a Sifnos | Confronta e Prenota le Migliori Sistemazioni",
+    "hotelsPageDescription": "Sfoglia tutti gli hotel, ville e sistemazioni a Sifnos. Filtra per posizione, prezzo, servizi e valutazioni per trovare il tuo soggiorno perfetto.",
+    "hotelDetailTitle": "{{hotelName}} - Hotel Sifnos | Foto, Recensioni e Migliori Tariffe",
+    "hotelDetailDescription": "{{hotelName}} a {{location}}, Sifnos. Visualizza le foto, leggi le recensioni degli ospiti, controlla i servizi e prenota al miglior prezzo. {{rating}} stelle valutate dai viaggiatori."
   }
 }
-

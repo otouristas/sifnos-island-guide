@@ -45,21 +45,33 @@ const translationsMap: Record<Language, Record<string, any>> = {
 
 export const I18nProvider = ({ children }: I18nProviderProps) => {
   const [language, setLanguageState] = useState<Language>(() => {
-    // Get from localStorage or default to English
-    const saved = localStorage.getItem('language') as Language;
-    return saved && ['en', 'el', 'fr', 'it', 'de', 'sv', 'ru', 'tr'].includes(saved) 
-      ? saved 
-      : 'en';
+    // Language will be set from URL via LanguageRouter
+    // Default to English initially
+    return 'en';
   });
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem('language', lang);
     document.documentElement.lang = lang;
+    
+    // Update HTML dir attribute for RTL languages if needed
+    if (lang === 'ar') {
+      document.documentElement.dir = 'rtl';
+    } else {
+      document.documentElement.dir = 'ltr';
+    }
   };
 
   useEffect(() => {
     document.documentElement.lang = language;
+    
+    // Set dir for RTL languages
+    if (language === 'ar') {
+      document.documentElement.dir = 'rtl';
+    } else {
+      document.documentElement.dir = 'ltr';
+    }
   }, [language]);
 
   // Get translations directly from map
