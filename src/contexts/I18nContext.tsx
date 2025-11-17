@@ -6,6 +6,18 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 console.log('[I18N] ✅ React hooks imported');
 console.log('[I18N] createContext:', typeof createContext);
 
+// Static imports for all translations (fixes React undefined issue)
+import enTranslations from '../locales/en.json';
+import elTranslations from '../locales/el.json';
+import frTranslations from '../locales/fr.json';
+import itTranslations from '../locales/it.json';
+import deTranslations from '../locales/de.json';
+import svTranslations from '../locales/sv.json';
+import ruTranslations from '../locales/ru.json';
+import trTranslations from '../locales/tr.json';
+
+console.log('[I18N] ✅ All translations imported statically');
+
 export type Language = 'en' | 'el' | 'fr' | 'it' | 'de' | 'sv' | 'ru' | 'tr';
 
 interface I18nContextType {
@@ -33,20 +45,19 @@ interface I18nProviderProps {
   children: ReactNode;
 }
 
-// Dynamic translation loader
-console.log('[I18N] 📦 Defining loadTranslations function');
-const loadTranslations = async (lang: Language): Promise<Record<string, any>> => {
-  console.log('[I18N] 🔄 Loading translations for:', lang);
-  try {
-    const translations = await import(`../locales/${lang}.json`);
-    return translations.default;
-  } catch (error) {
-    console.error(`Failed to load translations for ${lang}`, error);
-    // Fallback to English
-    const enTranslations = await import('../locales/en.json');
-    return enTranslations.default;
-  }
+// Translation map with static imports
+const translationMap: Record<Language, any> = {
+  en: enTranslations,
+  el: elTranslations,
+  fr: frTranslations,
+  it: itTranslations,
+  de: deTranslations,
+  sv: svTranslations,
+  ru: ruTranslations,
+  tr: trTranslations,
 };
+
+console.log('[I18N] 📦 Translation map created');
 
 export const I18nProvider = ({ children }: I18nProviderProps) => {
   console.log('[I18N] 🎨 I18nProvider rendering');
@@ -58,7 +69,12 @@ export const I18nProvider = ({ children }: I18nProviderProps) => {
       : 'en';
   });
 
-  const [translations, setTranslations] = useState<Record<string, any>>({});
+  const [translations, setTranslations] = useState<Record<string, any>>(() => {
+    // Initialize with the saved language's translations
+    const saved = localStorage.getItem('language') as Language;
+    const initialLang = saved && ['en', 'el', 'fr', 'it', 'de', 'sv', 'ru', 'tr'].includes(saved) ? saved : 'en';
+    return translationMap[initialLang];
+  });
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
@@ -67,10 +83,12 @@ export const I18nProvider = ({ children }: I18nProviderProps) => {
   };
 
   useEffect(() => {
+    console.log('[I18N] 🔄 Language changed to:', language);
     document.documentElement.lang = language;
     
-    // Load translations for the selected language
-    loadTranslations(language).then(setTranslations);
+    // Update translations from static map
+    setTranslations(translationMap[language]);
+    console.log('[I18N] ✅ Translations updated for:', language);
   }, [language]);
 
   // Translation function with nested key support (e.g., "common.home")
