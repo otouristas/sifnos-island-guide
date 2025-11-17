@@ -63,6 +63,38 @@ export const GuestProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
+    // Handle demo guest experience
+    if (guestToken === 'demo-guest-token' && hotelSlug === 'demo-hotel') {
+      setValue({
+        hotel: {
+          id: 'demo-id',
+          slug: 'demo-hotel',
+          name: 'Demo Cycladic Suites',
+          primaryColor: '#1E2E48',
+          secondaryColor: '#E3D7C3',
+          guestWelcomeMessage: 'Welcome to Demo Cycladic Suites! This is a demonstration of our digital guest portal. Explore all features to see how we enhance your stay with technology.',
+          guestWifiName: 'DemoSuites_Guest_WiFi',
+          guestWifiPassword: 'Welcome2024!',
+          checkInTime: '15:00',
+          checkOutTime: '11:00',
+          phone: '+30 22840 33333',
+          email: 'demo@cycladicsuites.com',
+          address: 'Main Street, Apollonia, Sifnos 84003, Greece'
+        },
+        booking: {
+          id: 'demo-booking-id',
+          guestName: 'Demo Guest',
+          guestEmail: 'demo@example.com',
+          checkIn: new Date(Date.now() + 86400000).toISOString().split('T')[0], // Tomorrow
+          checkOut: new Date(Date.now() + 86400000 * 4).toISOString().split('T')[0], // 4 days later
+          roomName: 'Deluxe Sea View Suite',
+          bookingStatus: 'confirmed'
+        },
+        loading: false
+      });
+      return;
+    }
+
     const loadGuestData = async () => {
       try {
         const { data, error } = await supabase.functions.invoke('validate-guest-token', {
