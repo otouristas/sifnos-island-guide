@@ -15,7 +15,7 @@ interface RecoveryEmailRequest {
   abandonedBookingId: string;
 }
 
-const serve(async (req: Request): Promise<Response> => {
+serve(async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
