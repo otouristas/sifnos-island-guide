@@ -117,7 +117,6 @@ const clearCache = (): Plugin => {
         <meta http-equiv="Expires" content="0" />
         <meta name="version" content="${buildId}" />
         <meta name="build-timestamp" content="${new Date(timestamp).toISOString()}" />
-        <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
         <link rel="preconnect" href="https://wdzlruiekcznbcicjgrz.supabase.co" crossorigin>
         <script>
           // Enhanced cache refresh strategy
