@@ -1,9 +1,6 @@
-console.log('[GUEST] 🚀 Starting GuestContext.tsx module evaluation');
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-console.log('[GUEST] ✅ React hooks imported');
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-console.log('[GUEST] ✅ Dependencies imported');
 
 interface Hotel {
   id: string;
@@ -39,13 +36,11 @@ interface GuestContextValue {
   error?: string;
 }
 
-console.log('[GUEST] 🎯 Creating GuestContext');
 const GuestContext = createContext<GuestContextValue>({
   hotel: null,
   booking: null,
   loading: true,
 });
-console.log('[GUEST] ✅ GuestContext created successfully');
 
 export const useGuestContext = () => useContext(GuestContext);
 

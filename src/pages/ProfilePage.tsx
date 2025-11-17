@@ -331,6 +331,7 @@ function FavoritesContent() {
 
 // Travel Preferences Tab Component
 function TravelPreferencesTab({ user, profile }: { user: any; profile: any }) {
+  const { t } = useI18n();
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   

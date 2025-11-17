@@ -1,12 +1,4 @@
-console.log('[I18N] 🚀 Starting I18nContext.tsx module evaluation');
-console.log('[I18N] React available before import?', typeof window !== 'undefined' ? 'yes' : 'SSR');
-
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-console.log('[I18N] ✅ React hooks imported');
-console.log('[I18N] createContext:', typeof createContext);
-
-// Static imports for all translations (fixes React undefined issue)
 import enTranslations from '../locales/en.json';
 import elTranslations from '../locales/el.json';
 import frTranslations from '../locales/fr.json';
@@ -16,8 +8,6 @@ import svTranslations from '../locales/sv.json';
 import ruTranslations from '../locales/ru.json';
 import trTranslations from '../locales/tr.json';
 
-console.log('[I18N] ✅ All translations imported statically');
-
 export type Language = 'en' | 'el' | 'fr' | 'it' | 'de' | 'sv' | 'ru' | 'tr';
 
 interface I18nContextType {
@@ -26,12 +16,7 @@ interface I18nContextType {
   t: (key: string, params?: Record<string, string>) => string;
 }
 
-console.log('[I18N] 🎯 About to call createContext...');
-console.log('[I18N] createContext function:', createContext);
-
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
-
-console.log('[I18N] ✅ I18nContext created successfully:', I18nContext);
 
 export const useI18n = () => {
   const context = useContext(I18nContext);
@@ -57,10 +42,7 @@ const translationMap: Record<Language, any> = {
   tr: trTranslations,
 };
 
-console.log('[I18N] 📦 Translation map created');
-
 export const I18nProvider = ({ children }: I18nProviderProps) => {
-  console.log('[I18N] 🎨 I18nProvider rendering');
   const [language, setLanguageState] = useState<Language>(() => {
     // Get from localStorage or default to English
     // Use try-catch to handle cases where localStorage might not be available
@@ -94,14 +76,10 @@ export const I18nProvider = ({ children }: I18nProviderProps) => {
   };
 
   useEffect(() => {
-    console.log('[I18N] 🔄 Language changed to:', language);
     if (typeof document !== 'undefined') {
       document.documentElement.lang = language;
     }
-    
-    // Update translations from static map
     setTranslations(translationMap[language]);
-    console.log('[I18N] ✅ Translations updated for:', language);
   }, [language]);
 
   // Translation function with nested key support (e.g., "common.home")
