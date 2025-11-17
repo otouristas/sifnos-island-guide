@@ -10,7 +10,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "./lib/auth";
 import { TouristasProvider } from "./contexts/TouristasContext";
 import { I18nProvider } from "./contexts/I18nContext";
-import { TouristasChat } from "./components/TouristasChat";
+import TouristasChat from "./components/TouristasChat";
 import { TouristasToggle } from "./components/TouristasToggle";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 

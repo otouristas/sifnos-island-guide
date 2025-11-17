@@ -140,11 +140,10 @@ export const getWebsiteContext = async (): Promise<string> => {
         short_description,
         rating, 
         price,
-        type,
+        hotel_types,
         is_featured,
         featured_tier,
         featured_priority,
-        hotel_types (name),
         hotel_amenities (amenity)
       `)
       .order('is_featured', { ascending: false })
@@ -207,7 +206,7 @@ export const getWebsiteContext = async (): Promise<string> => {
       regularHotels.forEach(hotel => {
         context += `**${hotel.name}**\n`;
         context += `- Location: ${hotel.location}\n`;
-        context += `- Type: ${hotel.type || 'Hotel'}\n`;
+        context += `- Type: ${hotel.hotel_types?.join(', ') || 'Hotel'}\n`;
         if (hotel.price) {
           context += `- Price Range: €${hotel.price}/night\n`;
         }

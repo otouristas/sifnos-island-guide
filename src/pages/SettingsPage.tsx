@@ -288,21 +288,26 @@ function NotificationSettingsTab({ user }: { user: any }) {
       if (!user) return;
       
       setIsLoading(true);
-      try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('notification_preferences')
-          .eq('id', user.id)
-          .single();
-        
-        if (!error && data?.notification_preferences) {
-          setNotificationPrefs({
-            emailNotifications: data.notification_preferences.email_notifications ?? true,
-            whatsappNotifications: data.notification_preferences.whatsapp_notifications ?? false,
-            priceAlerts: data.notification_preferences.price_alerts ?? true,
-            newHotelsAlerts: data.notification_preferences.new_hotels_alerts ?? true,
-          });
-        }
+    try {
+      // Note: notification_preferences column doesn't exist in user_profiles table yet
+      // This functionality is disabled until the column is added via migration
+      
+      /* TODO: Add notification_preferences column to user_profiles table
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .select('notification_preferences')
+        .eq('id', user.id)
+        .maybeSingle();
+      
+      if (!error && data?.notification_preferences) {
+        setNotificationPrefs({
+          emailNotifications: data.notification_preferences.email_notifications ?? true,
+          whatsappNotifications: data.notification_preferences.whatsapp_notifications ?? false,
+          priceAlerts: data.notification_preferences.price_alerts ?? true,
+          newHotelsAlerts: data.notification_preferences.new_hotels_alerts ?? true,
+        });
+      }
+      */
       } catch (error) {
         console.error('Error fetching notification preferences:', error);
       } finally {
@@ -318,8 +323,12 @@ function NotificationSettingsTab({ user }: { user: any }) {
     
     setIsSaving(true);
     try {
+      // Note: notification_preferences column doesn't exist in user_profiles table yet
+      // This functionality is disabled until the column is added via migration
+      
+      /* TODO: Add notification_preferences column to user_profiles table
       const { error } = await supabase
-        .from('profiles')
+        .from('user_profiles')
         .update({
           notification_preferences: {
             email_notifications: notificationPrefs.emailNotifications,
@@ -331,6 +340,7 @@ function NotificationSettingsTab({ user }: { user: any }) {
         .eq('id', user.id);
       
       if (error) throw error;
+      */
       
       alert('Notification preferences saved successfully!');
     } catch (error) {

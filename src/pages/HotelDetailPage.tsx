@@ -1048,31 +1048,31 @@ export default function HotelDetailPage() {
               title: `Hotels in ${hotel.location}`,
               url: `/locations/${hotel.location.toLowerCase().replace(/\s+/g, '-')}`,
               description: `Discover more accommodations in ${hotel.location}`,
-              type: 'location'
+              type: 'location' as const
             },
             {
-              title: hotel.hotel_types?.[0]?.name || 'Similar Hotels',
-              url: hotel.hotel_types?.[0]?.name ? `/hotel-types/${hotel.hotel_types[0].name.toLowerCase().replace(/\s+/g, '-')}` : '/hotels',
-              description: `Browse all ${hotel.hotel_types?.[0]?.name || 'similar'} hotels in Sifnos`,
-              type: 'hotel-type'
+              title: hotel.hotel_types?.[0] || 'Similar Hotels',
+              url: hotel.hotel_types?.[0] ? `/hotel-types/${hotel.hotel_types[0].toLowerCase().replace(/\s+/g, '-')}` : '/hotels',
+              description: `Browse all ${hotel.hotel_types?.[0] || 'similar'} hotels in Sifnos`,
+              type: 'hotel-type' as const
             },
             {
               title: 'Complete Travel Guide',
               url: '/travel-guide',
               description: 'Everything you need to know about Sifnos',
-              type: 'guide'
+              type: 'guide' as const
             },
             {
               title: 'Best Beaches Guide',
               url: '/best-beaches-sifnos-guide',
               description: 'Discover the most beautiful beaches in Sifnos',
-              type: 'guide'
+              type: 'guide' as const
             },
             {
               title: 'Ferry Tickets',
               url: '/ferry-tickets',
               description: 'Book your ferry to Sifnos',
-              type: 'ferry'
+              type: 'ferry' as const
             }
           ].filter(item => item.url)}
           columns={3}

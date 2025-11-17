@@ -358,8 +358,12 @@ function TravelPreferencesTab({ user, profile }: { user: any; profile: any }) {
     
     setIsSaving(true);
     try {
+      // Note: travel_preferences column doesn't exist in user_profiles table yet
+      // This functionality is disabled until the column is added via migration
+      
+      /* TODO: Add travel_preferences column to user_profiles table
       const { error } = await supabase
-        .from('profiles')
+        .from('user_profiles')
         .update({
           travel_preferences: {
             budget_per_night: values.budgetPerNight || null,
@@ -371,6 +375,7 @@ function TravelPreferencesTab({ user, profile }: { user: any; profile: any }) {
         .eq('id', user.id);
       
       if (error) throw error;
+      */
       
       // Show success message
       alert('Travel preferences saved successfully!');
